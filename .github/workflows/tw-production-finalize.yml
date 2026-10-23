@@ -36,6 +36,13 @@ jobs:
       PREVALIDATED_PREVIEW_SHA: ff243c908a0b57b6faee3ee53c545d838a39dc4b
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -45,15 +52,17 @@ jobs:
           mkdir -p artifacts/tw-production-finalize
           printf 'release_merge_sha=%s\nrepository=%s\nref=%s\nproduct_master_mutation=0\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/tw-production-finalize/release.txt
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install, lint, typecheck, build and full tests
         run: |
-          npm install --ignore-scripts
+          npm install --package-lock=false --ignore-scripts
           npm run lint
           npm run typecheck
           npm run build:release
           npm test
           printf 'repository_gate=PASS\nautomated_test_gate=PASS\nbuild_gate=PASS\n' >> artifacts/tw-production-finalize/release.txt
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Local Runtime smoke
         shell: bash
         run: |
@@ -69,11 +78,13 @@ jobs:
           node -e 'const h=require("./artifacts/tw-production-finalize/local-health.json"); const tw=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-TW"); if(!h.ok||!tw||!tw.selectable||tw.status!=="READY"||tw.sourceHash!==process.env.EXPECTED_TW_MANIFEST_SHA) process.exit(1)'
           printf 'canonical_runtime_gate=PASS\nruntime_adapter_gate=PASS\n' >> artifacts/tw-production-finalize/release.txt
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install browser QA dependencies
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Local TW/EW browser and regression QA
         shell: bash
         run: |
@@ -90,6 +101,7 @@ jobs:
           node test/browser/release-regression-browser-qa.mjs
           printf 'browser_qa_gate=PASS\nregression_gate=PASS\n' >> artifacts/tw-production-finalize/release.txt
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Credential, project and rollback preflight
         shell: bash
         run: |
@@ -106,6 +118,7 @@ jobs:
           node -e 'const fs=require("fs"); const x=require("./artifacts/tw-production-finalize/previous-production.json"); const d=x.deployments?.[0]; if(!d?.uid||!d?.url) process.exit(1); fs.appendFileSync(process.env.GITHUB_ENV,`ROLLBACK_DEPLOY_ID=${d.uid}\nROLLBACK_DEPLOY_URL=https://${d.url}\nROLLBACK_COMMIT_SHA=${d.meta?.releaseCommitSha??d.meta?.githubCommitSha??"UNKNOWN"}\n`)'
           printf 'credential_gate=PASS\nproject_access_gate=PASS\nprevious_ready_observation=INSUFFICIENT_FOR_RECOVERY\n' >> artifacts/tw-production-finalize/release.txt
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify prevalidated protected Preview handoff
         shell: bash
         run: |
@@ -115,6 +128,7 @@ jobs:
           node -e 'const d=require("./artifacts/tw-production-finalize/preview-deployment.json"); if(d.readyState!=="READY"||d.id!==process.env.PREVALIDATED_PREVIEW_DEPLOY_ID||d.meta?.releaseCommitSha!==process.env.PREVALIDATED_PREVIEW_SHA||d.meta?.releaseSeries!==process.env.RELEASE_SERIES||d.meta?.releasePackageVersion!==process.env.RELEASE_PACKAGE_VERSION) process.exit(1)'
           printf 'preview_deployment=PASS\npreview_browser_qa=PASS\npreview_http_4xx_5xx=0\npreview_url=%s\npreview_source_sha=%s\npreview_qa_handoff=CONNECTED_VERCEL_SHARE_URL\n' "$PREVALIDATED_PREVIEW_URL" "$PREVALIDATED_PREVIEW_SHA" >> artifacts/tw-production-finalize/release.txt
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Deploy fixed merge SHA to Production
         shell: bash
         run: |
@@ -122,6 +136,7 @@ jobs:
           node scripts/vercel-rest-deploy.mjs production artifacts/tw-production-finalize/production-deployment.json
           node -e 'const fs=require("fs"); const d=require("./artifacts/tw-production-finalize/production-deployment.json"); fs.appendFileSync(process.env.GITHUB_ENV,`PRODUCTION_DEPLOY_ID=${d.deploymentId}\n`)'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify Production identity and canonical alias
         shell: bash
         run: |
@@ -131,6 +146,7 @@ jobs:
           [[ "$status" == 200 ]] || exit 48
           node -e 'const d=require("./artifacts/tw-production-finalize/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||d.meta?.releaseSeries!==process.env.RELEASE_SERIES||!d.alias?.includes(process.env.PRODUCTION_HOST)) process.exit(1)'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production root, Runtime and browser smoke
         env:
           QA_BASE_URL: ${{ env.PRODUCTION_URL }}
@@ -149,6 +165,7 @@ jobs:
           node test/browser/release-regression-browser-qa.mjs
           printf 'production_smoke=PASS\nproduction_browser_qa=PASS\nproduction_ready=TRUE\nreleased=TRUE\nproduction_deployment_id=%s\nproduction_source_sha=%s\nproduction_url=%s\nrollback_deployment_id=%s\nrollback_deployment_url=%s\nrollback_commit_sha=%s\n' "$DEPLOY_ID" "$GITHUB_SHA" "$PRODUCTION_URL" "$ROLLBACK_DEPLOY_ID" "$ROLLBACK_DEPLOY_URL" "$ROLLBACK_COMMIT_SHA" >> artifacts/tw-production-finalize/release.txt
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Preserve failure for fixed verified-target recovery
         if: failure()
         shell: bash
@@ -157,10 +174,11 @@ jobs:
           printf 'recovery_state=FIXED_PACKET_AND_ACTUAL_HUMAN_DECISION_REQUIRED\nproduction_rollback_operations=0\nready_only_target_is_not_verified=TRUE\n' > artifacts/tw-production-finalize/recovery-hold.txt
           echo 'RECOVERY_HOLD: use adopted Shared authorize-recovery with verified target and separate actual Human Recovery Decision'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload Production finalization audit
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tw-production-finalization-audit
-          path: artifacts/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/
           if-no-files-found: warn

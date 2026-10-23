@@ -28,13 +28,22 @@ jobs:
       PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
       - name: Install
-        run: npm install --ignore-scripts
+        run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Full tests
         run: npm test
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Vercel credential and project preflight
         env:
           VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
@@ -55,8 +64,10 @@ jobs:
           fi
           node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           echo "VERCEL_CREDENTIAL_GATE=PASS"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Deploy exact main release SHA
         run: node scripts/vercel-rest-deploy.mjs production artifacts/estimate-output-production/deployment.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify Production identity and canonical alias
         shell: bash
         run: |
@@ -67,6 +78,7 @@ jobs:
           if [[ "$status" != "200" ]]; then exit 48; fi
           node -e 'const d=require("./artifacts/estimate-output-production/vercel-production.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) { console.error({readyState:d.readyState,target:d.target,releaseCommitSha:d.meta?.releaseCommitSha,alias:d.alias}); process.exit(1); }'
           echo "PRODUCTION_DEPLOYMENT_GATE=PASS"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production smoke
         shell: bash
         run: |
@@ -84,18 +96,21 @@ jobs:
           done
           echo "PRODUCTION_SMOKE_GATE=BLOCKED"
           exit 49
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install Chromium
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production estimate-output browser QA
         env:
           QA_BASE_URL: ${{ env.PRODUCTION_URL }}
         run: npm run test:browser:estimate-output
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload production audit
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: estimate-output-production-audit
-          path: artifacts/estimate-output-production/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/estimate-output-production/
           if-no-files-found: warn

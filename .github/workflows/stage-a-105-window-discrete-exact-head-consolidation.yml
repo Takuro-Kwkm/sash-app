@@ -39,6 +39,10 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -55,6 +59,7 @@ jobs:
           echo "EXACT_HEAD_GATE=PASS sha=$actual"
           echo 'TW_SOURCE_AND_PROOF_INVARIANCE_GATE=PASS'
           echo 'NONTW_SOURCE_INVARIANCE_GATE=PASS'
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Download TW 25-window exact evidence
         uses: actions/download-artifact@v4
         with:
@@ -115,6 +120,7 @@ jobs:
           console.log('APP_INTEGRATION_READY=false');
           console.log('RELEASE_INPUT_GATE=BLOCKED');
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Fail-closed 105-window discrete gate
         shell: bash
         run: |
@@ -133,10 +139,11 @@ jobs:
           console.log('APP_INTEGRATION_READY=false');
           console.log('RELEASE_INPUT_GATE=BLOCKED');
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload 105-window discrete evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-105-window-discrete-exact-head-consolidation
-          path: artifacts/stage-a-105-window-discrete-exact-head-consolidation/report.json
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-105-window-discrete-exact-head-consolidation/report.json
           if-no-files-found: error

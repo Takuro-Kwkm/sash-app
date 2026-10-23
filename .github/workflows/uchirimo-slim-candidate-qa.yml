@@ -17,46 +17,77 @@ jobs:
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-slim/checkpoint-inventory-plan
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: node scripts/uchirimo-full-selector-proof.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/governance/uchirimo-slim-checkpoint-inventory.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-v12-checkpoint-inventory
-          path: artifacts/uchirimo-slim/checkpoint-inventory.json
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/checkpoint-inventory.json
   recurring-candidate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '22.23.4'
       - run: echo '4a3518c3f5706aa4cff6ddcc10532edcade4f00f84a81ad63e3d74fa98d85930  data/uchirimo-slim/working-candidate.json' | sha256sum --check
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/governance/uchirimo-slim-recurring-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-candidate-recurring-qa
-          path: artifacts/uchirimo-slim/recurring-qa.json
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/recurring-qa.json
   migration-equivalence:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '22.23.4'
       - run: node --test test/70-runtime-manifest-ew-integration.test.mjs test/70-runtime-manifest-tw-integration.test.mjs test/71-runtime-ui-tw-gate.test.mjs test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/74-new-construction-ui-v16.test.mjs test/81-ew-v12-formal-glazing-semantic.test.mjs test/82-ew-custom-glass-validation.test.mjs test/82-uchirimo-slim-canonical.test.mjs test/83-uchirimo-glass-rule-model.test.mjs test/84-uchirimo-factorized-selector.test.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: cp data/uchirimo-slim/runtime-support.json /tmp/uchirimo-runtime-support-before.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/governance/uchirimo-slim-runtime-support.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: cmp /tmp/uchirimo-runtime-support-before.json data/uchirimo-slim/runtime-support.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/governance/uchirimo-slim-normalize.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: cmp data/uchirimo-slim/working-candidate.json artifacts/uchirimo-slim/uchirimo-slim-working-candidate.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
   selector-migration-differential:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -66,52 +97,79 @@ jobs:
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-slim/differential-plan
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: node scripts/uchirimo-full-selector-proof.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/governance/uchirimo-slim-selector-differential.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-selector-migration-differential
-          path: artifacts/uchirimo-slim/selector-differential.json
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/selector-differential.json
   dimension-boundary-differential:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-dimension-differential.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-dimension-boundary-differential
-          path: artifacts/uchirimo-slim/dimension-boundary-differential.json
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/dimension-boundary-differential.json
   candidate-browser-preview:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: UCHIRIMO_SLIM_PREVIEW_INPUT=data/uchirimo-slim/working-candidate.json node scripts/build-uchirimo-runtime-review-preview.mjs artifacts/uchirimo-slim/review-preview/index.html
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node test/browser/uchirimo-slim-preview-browser-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-candidate-browser-preview
           path: |
-            artifacts/uchirimo-slim/review-preview/index.html
-            artifacts/uchirimo-slim/browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/review-preview/index.html
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/browser-qa/
   parent-migration-differential:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -122,46 +180,71 @@ jobs:
       UCHIRIMO_SLIM_PARENT_SHARD: 3186
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: node scripts/uchirimo-full-selector-proof.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/governance/uchirimo-slim-parent-differential.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-parent-migration-differential
-          path: artifacts/uchirimo-slim/parent-differential/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/parent-differential/
   representative-http-e2e:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-http-e2e.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-http-e2e
-          path: artifacts/uchirimo-slim/http-e2e.json
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/http-e2e.json
   residual-heavy-sample:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 7
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-residual-replay.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-residual-heavy-3795
-          path: artifacts/uchirimo-slim/residual-heavy-3795/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/residual-heavy-3795/
   residual-heavy-3796:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -171,15 +254,23 @@ jobs:
       UCHIRIMO_SLIM_TIMEOUT_MS: '600000'
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-residual-replay.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-residual-heavy-3796
-          path: artifacts/uchirimo-slim/residual-heavy-3796/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/residual-heavy-3796/
   residual-3797-checkpoint-sample:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -189,33 +280,50 @@ jobs:
       UCHIRIMO_SLIM_TIMEOUT_MS: '600000'
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-residual-replay.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-residual-3797-checkpoint-sample
-          path: artifacts/uchirimo-slim/residual-heavy-3797/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/residual-heavy-3797/
 
   factorized-recurring-selector:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-factorized-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/governance/uchirimo-slim-factorized-samples.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-factorized-selector
           path: |
-            artifacts/uchirimo-slim/factorized-qa/
-            artifacts/uchirimo-slim/factorized-samples.json
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/factorized-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/factorized-samples.json
   factorized-plan-migration:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -227,18 +335,27 @@ jobs:
       UCHIRIMO_FACTORIZED_OUT: artifacts/uchirimo-slim/factorized-legacy-plan
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
       - run: node scripts/uchirimo-full-selector-proof.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/governance/uchirimo-slim-factorized-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-factorized-plan-migration
           path: |
-            artifacts/uchirimo-slim/factorized-legacy-plan/
-            artifacts/uchirimo-slim/factorized-old-plan/all-partitions.json
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/factorized-legacy-plan/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/factorized-old-plan/all-partitions.json
   factorized-coverage-consolidation:
     if: github.event_name == 'pull_request'
     needs: [factorized-recurring-selector, factorized-plan-migration]
@@ -246,6 +363,13 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
@@ -258,8 +382,9 @@ jobs:
           name: uchirimo-slim-factorized-plan-migration
           path: artifacts/uchirimo-slim/
       - run: node scripts/governance/uchirimo-slim-factorized-coverage.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: uchirimo-slim-factorized-coverage
-          path: artifacts/uchirimo-slim/factorized-coverage.json
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/factorized-coverage.json

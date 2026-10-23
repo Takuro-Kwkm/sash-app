@@ -38,6 +38,10 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -51,6 +55,7 @@ jobs:
           git diff --quiet "$BROWSER_EVIDENCE_HEAD" "$HEAD_SHA" -- src/ test/browser/stage-a-full-browser-qa.mjs
           echo 'FINAL_BROWSER_EVIDENCE_INVALIDATION_GATE=PASS'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Download Full Browser QA evidence
         shell: bash
         env:
@@ -81,11 +86,12 @@ jobs:
           NODE
           echo "BROWSER_REPORT=$report" >> "$GITHUB_ENV"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install and static regression gates
         shell: bash
         run: |
           set -euo pipefail
-          npm install --ignore-scripts
+          npm install --package-lock=false --ignore-scripts
           npm run lint
           npm run typecheck
           node --check src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs
@@ -95,6 +101,7 @@ jobs:
           npm test
           echo 'AUTOMATED_TEST_GATE=PASS'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Runtime smoke
         shell: bash
         run: |
@@ -117,13 +124,15 @@ jobs:
           console.log('RUNTIME_ADAPTER_GATE=PASS');
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install focused browser regression dependency
         shell: bash
         run: |
           set -euo pipefail
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Existing-flow browser regression
         shell: bash
         run: |
@@ -133,6 +142,7 @@ jobs:
           node test/browser/work-management-browser-qa.mjs
           echo 'REGRESSION_GATE=PASS'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Stop local Runtime UI
         if: always()
         shell: bash
@@ -141,6 +151,7 @@ jobs:
             kill "$(cat /tmp/stage-a-final-server.pid)" 2>/dev/null || true
           fi
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Repository and Product Master boundary gate
         shell: bash
         env:
@@ -165,6 +176,7 @@ jobs:
           NODE
           echo 'PRODUCT_MASTER_MUTATION=0'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Consolidate Stage A final gates
         shell: bash
         run: |
@@ -208,16 +220,17 @@ jobs:
           console.log(`FINAL_EVIDENCE_DIGEST=${result.evidence_digest}`);
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload Stage A final gate evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-final-regression-repository-gate
           path: |
-            artifacts/stage-a-final-gate/
-            artifacts/estimate-output-browser-qa/
-            artifacts/release-regression-browser-qa/
-            artifacts/work-management-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-final-gate/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/estimate-output-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/release-regression-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/work-management-browser-qa/
             /tmp/stage-a-final-health.json
             /tmp/stage-a-final-server.log
           if-no-files-found: warn

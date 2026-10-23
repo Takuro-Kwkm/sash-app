@@ -52,10 +52,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify recovery machinery before scheduling selectors
         if: ${{ inputs.generation == 0 }}
         run: |
@@ -66,6 +71,7 @@ jobs:
           node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
           node scripts/governance/uchirimo-v12-recovery-integration.test.mjs
           node scripts/governance/uchirimo-controller-checkpoint.test.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Compute generation identities
         id: generation
         shell: bash
@@ -76,11 +82,13 @@ jobs:
           if(!Number.isInteger(current)||current<0)throw new Error('UCHIRIMO_V12_GENERATION_INVALID:'+process.env.GEN);
           appendFileSync(process.env.GITHUB_OUTPUT,'previous_generation='+String(Math.max(0,current-1))+'\n');
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Build frozen canonical parent plan
         env:
           UCHIRIMO_SELECTOR_MODE: plan-all
           UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-parent-plan
         run: node scripts/uchirimo-full-selector-proof.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Enforce frozen parent denominator
         run: |
           node --input-type=module <<'NODE'
@@ -88,6 +96,7 @@ jobs:
           const plan=JSON.parse(readFileSync('artifacts/uchirimo-v12-parent-plan/all-partitions.json','utf8'));
           if(plan.status!=='PASS'||plan.shard_count!==3956||new Set(plan.partitions.map((r)=>r.partition_key)).size!==3956)throw new Error('UCHIRIMO_V12_PARENT_DENOMINATOR_INVALID:'+String(plan.shard_count));
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Restore latest compatible cumulative controller checkpoint
         id: compatible-checkpoint
         if: ${{ inputs.generation == 0 }}
@@ -97,6 +106,7 @@ jobs:
           UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
           UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller
         run: node scripts/governance/uchirimo-controller-checkpoint-discovery.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Download preferred bootstrap carry-forward bundle
         id: bootstrap-download
         if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
@@ -122,13 +132,14 @@ jobs:
             echo "UCHIRIMO_BOOTSTRAP_BUNDLE=UNAVAILABLE_FALLBACK_TO_COMPATIBLE_HISTORY"
           fi
           node scripts/governance/uchirimo-partition-carry-forward.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload generation-zero carry-forward evidence
         id: carry-upload
         if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.CARRY_ARTIFACT }}
-          path: artifacts/uchirimo-selector-proof-carry-forward/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-selector-proof-carry-forward/
           if-no-files-found: error
       - name: Initialize controller generation zero
         if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
@@ -142,6 +153,7 @@ jobs:
           UCHIRIMO_V12_CARRY_ARTIFACT_DIGEST: ${{ steps.carry-upload.outputs.artifact-digest }}
           UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller
         run: node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Download prior controller state
         id: prior-controller-artifact
         if: ${{ inputs.generation > 0 }}
@@ -169,6 +181,7 @@ jobs:
           test -f artifacts/uchirimo-v12-prior/split-certificates.json
           test -f artifacts/uchirimo-v12-prior/parent-status.json
           echo "UCHIRIMO_V12_PRIOR_STATE=AVAILABLE artifact_outcome=${{ steps.prior-controller-artifact.outcome }} cache_hit=${{ steps.prior-controller-cache.outputs.cache-hit }}"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Resume authorized next generation
         if: ${{ inputs.generation > 0 }}
         env:
@@ -181,15 +194,16 @@ jobs:
           UCHIRIMO_V12_PARENT_STATUS: artifacts/uchirimo-v12-prior/parent-status.json
           UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller
         run: node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
-          path: artifacts/uchirimo-v12-parent-plan/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-parent-plan/
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
-          path: artifacts/uchirimo-v12-controller/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-controller/
           if-no-files-found: error
 
   plan-0:
@@ -207,10 +221,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -233,10 +252,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=0 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-0
-          path: artifacts/uchirimo-v12-plan-0/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-0/
           if-no-files-found: error
 
 
@@ -255,10 +275,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -281,10 +306,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=1 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-1
-          path: artifacts/uchirimo-v12-plan-1/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-1/
           if-no-files-found: error
 
 
@@ -303,10 +329,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -329,10 +360,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=2 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-2
-          path: artifacts/uchirimo-v12-plan-2/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-2/
           if-no-files-found: error
 
 
@@ -351,10 +383,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -377,10 +414,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=3 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-3
-          path: artifacts/uchirimo-v12-plan-3/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-3/
           if-no-files-found: error
 
 
@@ -399,10 +437,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -425,10 +468,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=4 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-4
-          path: artifacts/uchirimo-v12-plan-4/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-4/
           if-no-files-found: error
 
 
@@ -447,10 +491,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -473,10 +522,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=5 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-5
-          path: artifacts/uchirimo-v12-plan-5/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-5/
           if-no-files-found: error
 
 
@@ -495,10 +545,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -521,10 +576,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=6 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-6
-          path: artifacts/uchirimo-v12-plan-6/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-6/
           if-no-files-found: error
 
 
@@ -543,10 +599,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -569,10 +630,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=7 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-7
-          path: artifacts/uchirimo-v12-plan-7/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-7/
           if-no-files-found: error
 
 
@@ -591,10 +653,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -617,10 +684,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=8 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-8
-          path: artifacts/uchirimo-v12-plan-8/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-8/
           if-no-files-found: error
 
 
@@ -639,10 +707,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -665,10 +738,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=9 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-9
-          path: artifacts/uchirimo-v12-plan-9/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-9/
           if-no-files-found: error
 
 
@@ -687,10 +761,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -713,10 +792,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=10 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-10
-          path: artifacts/uchirimo-v12-plan-10/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-10/
           if-no-files-found: error
 
 
@@ -735,10 +815,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -761,10 +846,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=11 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-11
-          path: artifacts/uchirimo-v12-plan-11/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-11/
           if-no-files-found: error
 
 
@@ -783,10 +869,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -809,10 +900,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=12 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-12
-          path: artifacts/uchirimo-v12-plan-12/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-12/
           if-no-files-found: error
 
 
@@ -831,10 +923,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -857,10 +954,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=13 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-13
-          path: artifacts/uchirimo-v12-plan-13/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-13/
           if-no-files-found: error
 
 
@@ -879,10 +977,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -905,10 +1008,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=14 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-14
-          path: artifacts/uchirimo-v12-plan-14/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-14/
           if-no-files-found: error
 
 
@@ -927,10 +1031,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -953,10 +1062,11 @@ jobs:
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=15 \
           node scripts/governance/uchirimo-balanced-scheduler.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-15
-          path: artifacts/uchirimo-v12-plan-15/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-plan-15/
           if-no-files-found: error
 
 
@@ -985,10 +1095,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -996,12 +1111,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1030,10 +1146,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1041,12 +1162,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1075,10 +1197,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1086,12 +1213,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1120,10 +1248,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1131,12 +1264,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1165,10 +1299,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1176,12 +1315,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1210,10 +1350,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1221,12 +1366,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1255,10 +1401,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1266,12 +1417,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1300,10 +1452,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1311,12 +1468,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1345,10 +1503,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1356,12 +1519,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1390,10 +1554,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1401,12 +1570,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1435,10 +1605,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1446,12 +1621,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1480,10 +1656,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1491,12 +1672,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1525,10 +1707,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1536,12 +1723,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1570,10 +1758,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1581,12 +1774,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1615,10 +1809,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1626,12 +1825,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
 
@@ -1660,10 +1860,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Execute batch
         if: ${{ matrix.skip != true }}
         shell: bash
@@ -1671,12 +1876,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_identity }}
-          path: artifacts/uchirimo-v12-execution/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-execution/
           if-no-files-found: warn
 
   advance:
@@ -1694,10 +1900,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -1730,16 +1941,18 @@ jobs:
           UCHIRIMO_V12_PLAN_SUMMARY_INPUT: artifacts/uchirimo-v12-plans
           UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller-state
         run: node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ env.GEN }}
-          path: artifacts/uchirimo-v12-controller-state/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-v12-controller-state/
           if-no-files-found: error
       - name: Stage controller state for secondary durable cache
         shell: bash
         run: |
           rm -rf artifacts/uchirimo-v12-prior
           cp -R artifacts/uchirimo-v12-controller-state artifacts/uchirimo-v12-prior
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Save controller state to secondary durable cache
         uses: actions/cache/save@v4
         with:
@@ -1756,6 +1969,7 @@ jobs:
           console.log('UCHIRIMO_V12_NEXT_ACTION='+state.next_action);
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
   dispatch-next:
     needs: ["governance-authority", "advance"]
     # Expected compute-timeout matrix failures are consumed by `advance` and
@@ -1784,6 +1998,7 @@ jobs:
             -f "inputs[uchirimo_v12_source_run_id]=$SOURCE_RUN_ID"
           echo "UCHIRIMO_V12_NEXT_GENERATION_DISPATCHED=$NEXT_GEN source_run=$SOURCE_RUN_ID"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
   blocked:
     needs: ["governance-authority", "advance"]
     if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.result == 'success' && needs.advance.outputs.next_action == 'BLOCKED' }}
@@ -1793,6 +2008,7 @@ jobs:
           echo "UCHIRIMO_V12_CONTROLLER=BLOCKED"
           exit 1
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
   finalize:
     needs: ["governance-authority", "advance"]
     if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.result == 'success' && needs.advance.outputs.next_action == 'FINAL_AGGREGATE' }}
@@ -1813,10 +2029,15 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -1844,6 +2065,7 @@ jobs:
           appendFileSync(process.env.GITHUB_OUTPUT,'artifact_id='+String(row.current_carry_forward_artifact_id??'')+'\n');
           appendFileSync(process.env.GITHUB_OUTPUT,'artifact_digest='+String(row.current_carry_forward_artifact_digest??'')+'\n');
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Download generation-zero carry payload once
         if: ${{ steps.carry-source.outputs.has_carry == 'true' }}
         uses: actions/download-artifact@v4
@@ -1883,6 +2105,7 @@ jobs:
           if(process.env.EXPECTED_DIGEST&&normalizeArtifactDigest(row.digest)!==normalizeArtifactDigest(process.env.EXPECTED_DIGEST))throw new Error('UCHIRIMO_V12_CARRY_ARTIFACT_DIGEST_MISMATCH');
           console.log('UCHIRIMO_V12_CARRY_ARTIFACT_METADATA=PASS id='+row.id);
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Materialize canonical parent evidence
         env:
           UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
@@ -1892,6 +2115,7 @@ jobs:
           UCHIRIMO_V12_CARRY_FORWARD_DIR: artifacts/uchirimo-v12-carry-forward
           UCHIRIMO_V12_FINALIZED_OUT: artifacts/uchirimo-v12-finalized
         run: node scripts/governance/uchirimo-v11-recovery-finalizer.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Aggregate canonical 3956 parents
         env:
           UCHIRIMO_SELECTOR_MODE: aggregate
@@ -1899,15 +2123,17 @@ jobs:
           UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
           UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-full-selector-proof
         run: node scripts/uchirimo-full-selector-proof.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Stamp proof dependency metadata
         id: fingerprint
         run: |
           node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family UCHIRIMO_SELECTOR --fingerprint-out artifacts/governance/uchirimo-selector-proof-fingerprint.json
           node scripts/governance/proof-dependency-fingerprint.mjs --mode stamp --family UCHIRIMO_SELECTOR --artifact artifacts/uchirimo-full-selector-proof/report.json --metadata artifacts/uchirimo-full-selector-proof/source-metadata.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-selector-proof-aggregate-${{ env.HEAD_SHA }}
-          path: artifacts/uchirimo-full-selector-proof/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-full-selector-proof/
           if-no-files-found: error
       - name: Mark canonical selector complete
         id: done
@@ -1915,3 +2141,4 @@ jobs:
           echo "complete=true" >> "$GITHUB_OUTPUT"
           echo "next_action=COMPLETE" >> "$GITHUB_OUTPUT"
           echo "UCHIRIMO_V12_SELECTOR=COMPLETE"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}

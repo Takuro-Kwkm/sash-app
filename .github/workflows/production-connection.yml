@@ -17,16 +17,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           ref: ${{ env.HEAD_SHA }}
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/setup-node@v4
         with: {node-version: 24.22.1}
       - uses: actions/setup-python@v5
         with: {python-version: '3.12.14'}
       - name: Validate Current v2 authority and fail-closed native routing
         run: python3 scripts/production/validate-architecture-connection.py
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify admitted native Build Profile pointer and output boundary
         run: python -B scripts/production/validate-product-master-profile.py
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Check native adapters and existing application
         run: |
           python -m py_compile scripts/production/*.py
@@ -35,7 +43,9 @@ jobs:
           npm test
           mkdir -p artifacts/production
           node scripts/production/ew-parity.mjs artifacts/production/ew-parity.json
-      - run: npm install --no-save playwright@1.58.2 && npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+      - run: npm install --package-lock=false --no-save playwright@1.58.2 && npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Build actual EW Runtime and verify three UI widths
         env:
           EW_PREVIEW_HTML: artifacts/production/index.html
@@ -43,9 +53,10 @@ jobs:
         run: |
           node scripts/build-ew-runtime-review-preview.mjs artifacts/production/index.html
           node test/browser/ew-october-2026-browser-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: production-ew-${{ env.HEAD_SHA }}
-          path: artifacts/production/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/production/
           if-no-files-found: error

@@ -38,3 +38,4 @@ jobs:
           echo 'NEXT_ACTIVE_ROUTE=DEPENDENCY_WEIGHTED_EXACT_COUNT'
           echo 'APP_INTEGRATION_READY=false'
           echo 'RELEASE_INPUT_GATE=BLOCKED'
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}

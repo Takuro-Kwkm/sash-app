@@ -16,16 +16,27 @@ jobs:
       HEAD_SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
       - run: npm run lint && npm run typecheck && npm test
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Official R8 adoption and unrelated-series protection
         run: |
           git fetch origin 7584ed0a9e37f12e448e1d17303bd149200cb6b1
           node scripts/verify-rechent-r8-adoption.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: npm run build:release
-      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+      - run: npm install --package-lock=false --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Browser journeys and shared workflow regression
         run: |
           npm run start:qa > /tmp/rechent-qa.log 2>&1 &
@@ -44,11 +55,12 @@ jobs:
           node test/browser/theme-browser-qa.mjs
           node scripts/build-eight-series-review.mjs artifacts/rechent-review/index.html rechent
           node test/browser/rechent-inline-preview-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: rechent-local-qa-${{ github.sha }}
-          path: artifacts/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/
   preview:
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -61,6 +73,13 @@ jobs:
       VERCEL_DEPLOY_SOURCE: gitSource
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -72,9 +91,13 @@ jobs:
           token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
           if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
           echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/vercel-rest-deploy.mjs preview artifacts/rechent-preview/deployment.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/prepare-rechent-preview-access.mjs artifacts/rechent-preview/deployment.json
-      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+      - run: npm install --package-lock=false --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Exact commit deployed browser gate
         env:
           QA_BASE_URL: ${{ env.DEPLOY_URL }}
@@ -85,19 +108,27 @@ jobs:
           echo 'DEPLOYED_BROWSER_GATE=PASS_ADAPTER_REGRESSION_SCOPE'
           echo 'PRODUCT_MASTER_MUTATION=0'
           echo 'PRODUCTION_DEPLOY=NOT_EXECUTED'
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: rechent-deployed-qa-${{ github.sha }}
           path: |
-            artifacts/rechent-preview/
-            artifacts/rechent-estimate-integration/
-            artifacts/rechent-entry-door-cover-global-flow-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/rechent-preview/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/rechent-estimate-integration/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/rechent-entry-door-cover-global-flow-browser-qa/
   integration-ready:
     needs: [qa, preview]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -114,7 +145,8 @@ jobs:
           # Keep only deployed browser reports to prevent local/deployed ambiguity.
           rm -rf artifacts/gate-input/local/rechent-estimate-integration artifacts/gate-input/local/rechent-entry-door-cover-global-flow-browser-qa
           node scripts/evaluate-rechent-r8-integration-ready.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: rechent-integration-ready-${{ github.sha }}
-          path: artifacts/rechent-integration-ready/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/rechent-integration-ready/

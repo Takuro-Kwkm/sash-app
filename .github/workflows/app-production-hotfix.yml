@@ -48,7 +48,12 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24.22.1
@@ -62,10 +67,12 @@ jobs:
           npm run lint
           npm run typecheck
           npm test
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Browser setup
         run: |
-          npm install --no-save --ignore-scripts playwright@1.55.0
+          npm install --package-lock=false --no-save --ignore-scripts playwright@1.55.0
           npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Local runtime, UI and output QA
         shell: bash
         run: |
@@ -80,11 +87,12 @@ jobs:
           GITHUB_SHA="$HEAD_SHA" npm run verify:app-release
           GITHUB_SHA="$HEAD_SHA" npm run test:browser:release
           QA_RUNTIME_QA_CONTRACT=contracts/production/runtime-ui-qa/replus-v1.2-r1.json QA_EXPECTED_COMMIT="$HEAD_SHA" node test/browser/composed-runtime-browser-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: app-release-review-${{ github.event.pull_request.head.sha }}
-          path: artifacts/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/
 
   production-hotfix:
     if: github.event_name != 'pull_request'
@@ -111,6 +119,10 @@ jobs:
           ref: ${{ inputs.expected_sha || github.sha }}
           fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24.22.1
@@ -137,18 +149,21 @@ jobs:
           console.log('HOTFIX_SCOPE_GATE=PASS '+marker.change);
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install and application regression
         run: |
-          npm install --ignore-scripts
+          npm install --package-lock=false --ignore-scripts
           npm run lint
           npm run typecheck
           npm test
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install browser QA dependencies
         run: |
-          npm install --no-save --ignore-scripts playwright@1.55.0
+          npm install --package-lock=false --no-save --ignore-scripts playwright@1.55.0
           npx playwright install --with-deps chromium
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify actual local release before deployment
         shell: bash
         run: |
@@ -164,6 +179,7 @@ jobs:
           npm run test:browser:release
           QA_RUNTIME_QA_CONTRACT=contracts/production/runtime-ui-qa/replus-v1.2-r1.json QA_EXPECTED_COMMIT="$GITHUB_SHA" node test/browser/composed-runtime-browser-qa.mjs
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Prepare Vercel credential
         shell: bash
         run: |
@@ -176,6 +192,7 @@ jobs:
           node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           echo 'VERCEL_CREDENTIAL_GATE=PASS'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Build exact candidate Preview or exact Main staged Production
         shell: bash
         run: |
@@ -183,6 +200,7 @@ jobs:
           if [[ "$DEPLOY_MODE" == 'preview' ]]; then export VERCEL_DEPLOY_SOURCE=inline; fi
           node scripts/vercel-rest-deploy.mjs "$DEPLOY_MODE" artifacts/app-hotfix-production/deployment.json
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify staged build and preserved production alias
         shell: bash
         run: |
@@ -196,10 +214,11 @@ jobs:
           console.log('STAGED_NOT_RELEASED: new staged native QA, exact Main CI and actual fixed Release packet required before Shared authorize-publication and existing provider promotion');
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload hotfix evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: app-production-hotfix-${{ github.sha }}
-          path: artifacts/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/
           if-no-files-found: warn

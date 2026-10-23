@@ -21,8 +21,13 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - name: Verify exact HEAD
         run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -30,7 +35,8 @@ jobs:
         run: |
           node scripts/verify-tw-202610-adoption.mjs
           python -m pip install -r contracts/tw-202610/central-snapshot/requirements.txt
-          python contracts/tw-202610/central-snapshot/scripts/validate-tw-202610.py --report "$GITHUB_WORKSPACE/artifacts/tw-202610/central-contract-validation.json"
+          python contracts/tw-202610/central-snapshot/scripts/validate-tw-202610.py --report "${NODE_SECURITY_PREDECESSOR:-$GITHUB_WORKSPACE}/artifacts/tw-202610/central-contract-validation.json"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify TW delta and unchanged product behavior
         run: |
           npm run lint
@@ -38,8 +44,10 @@ jobs:
           npm test
           node scripts/governance/inner-window-frame-integration-qa.mjs
           node scripts/build-eight-series-review.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install browser validation dependencies
-        run: npm install --no-save playwright@1.58.2 && npx playwright install --with-deps chromium
+        run: npm install --package-lock=false --no-save playwright@1.58.2 && npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Build actual current-or-candidate TW preview
         run: |
           node --input-type=module - <<'JS'
@@ -53,10 +61,12 @@ jobs:
           const result=spawnSync(process.execPath,['scripts/build-tw-runtime-review-preview.mjs','artifacts/tw-202610/index.html'],{stdio:'inherit',env:{...process.env,...(!current?{TW_CANDIDATE_JSON:'artifacts/tw-202610/candidate.json'}:{})}});
           process.exit(result.status??1);
           JS
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify three widths, real storage, reload, estimate, PDF, Excel, print and dependency
         env:
           TW_PREVIEW_HTML: artifacts/tw-202610/index.html
         run: node test/browser/tw-october-2026-browser-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify live registered Runtime when v0.5 is active
         run: |
           VERSION=$(node --input-type=module -e "import {getRuntimeAppIntegration} from './src/catalog/runtime-master/runtime-app-bridge.mjs';console.log(getRuntimeAppIntegration('SER-LIXIL-TW').packageVersion)")
@@ -67,13 +77,14 @@ jobs:
             node test/browser/tw-runtime-browser-qa.mjs
             node test/browser/estimate-output-browser-qa.mjs
           fi
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tw-202610-${{ env.HEAD_SHA }}
           path: |
-            artifacts/tw-202610/
-            artifacts/tw-202610-browser/
-            artifacts/tw-202610-live/
-            artifacts/tw-runtime-browser-qa/
-            artifacts/estimate-output-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/tw-202610/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/tw-202610-browser/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/tw-202610-live/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/tw-runtime-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/estimate-output-browser-qa/

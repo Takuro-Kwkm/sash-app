@@ -15,14 +15,24 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
-      - run: npm install --ignore-scripts
+      - run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: npm run lint && npm run typecheck && npm test
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Exercise actual Runtime on desktop and mobile
         env:
           HEAD_SHA: ${{ github.sha }}
@@ -42,18 +52,19 @@ jobs:
           npm run test:browser:estimate-output
           node scripts/build-seven-series-review.mjs
           node test/browser/seven-series-preview-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: seven-series-slim-browser-qa-${{ github.sha }}
           path: |
-            artifacts/seven-series-review/
-            artifacts/eight-series-business-flow/
-            artifacts/uchirimo-runtime-browser-qa/
-            artifacts/global-window-selection-flow-browser-qa/
-            artifacts/release-regression-browser-qa/
-            artifacts/work-management-browser-qa/
-            artifacts/estimate-output-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/seven-series-review/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/eight-series-business-flow/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-runtime-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/global-window-selection-flow-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/release-regression-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/work-management-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/estimate-output-browser-qa/
           if-no-files-found: warn
 
   adopted-slim-qa:
@@ -64,20 +75,30 @@ jobs:
       UCHIRIMO_FACTORIZED_OUT: artifacts/seven-series-adopted-factorized
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
       - run: node scripts/governance/uchirimo-slim-factorized-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/governance/uchirimo-slim-dimension-differential.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: node scripts/build-seven-series-review.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: seven-series-adopted-slim-${{ github.sha }}
           path: |
-            artifacts/seven-series-adopted-factorized/
-            artifacts/uchirimo-slim/dimension-boundary-differential.json
-            artifacts/seven-series-review/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/seven-series-adopted-factorized/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-slim/dimension-boundary-differential.json
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/seven-series-review/
 
   preview:
     needs: [browser-qa, adopted-slim-qa]
@@ -92,6 +113,13 @@ jobs:
       VERCEL_DEPLOY_SOURCE: files
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -103,8 +131,10 @@ jobs:
           token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
           if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
           echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Deploy exact HEAD preview
         run: node scripts/vercel-rest-deploy.mjs preview artifacts/seven-series-slim/deployment.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify preview identity and service
         run: |
           node --input-type=module <<'NODE'
@@ -113,9 +143,10 @@ jobs:
           if(d.readyState!=='READY'||d.githubSha!==process.env.GITHUB_SHA||d.releaseCommitSha!==process.env.GITHUB_SHA||d.mode!=='preview')throw new Error('PREVIEW_IDENTITY_INVALID');
           console.log('PREVIEW_IDENTITY=PASS '+d.deploymentUrl);
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: seven-series-slim-preview-${{ github.sha }}
-          path: artifacts/seven-series-slim/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/seven-series-slim/
           if-no-files-found: warn

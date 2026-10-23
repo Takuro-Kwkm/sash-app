@@ -28,6 +28,10 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -55,6 +59,7 @@ jobs:
           }
           console.log('APPROVED_APPLICATION_GATE=PASS '+marker.approved_application_head);
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Application, R8 adoption, build and governance
         run: |
           npm run lint
@@ -63,6 +68,7 @@ jobs:
           node scripts/verify-rechent-r8-adoption.mjs
           npm run build:release
           node scripts/governance/inner-window-frame-integration-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Prepare existing production credential
         env:
           VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
@@ -71,8 +77,10 @@ jobs:
           token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
           if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
           echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Deploy exact merged SHA
         run: node scripts/vercel-rest-deploy.mjs production artifacts/rechent-production/deployment.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify Production identity, alias and R8 metadata
         run: |
           curl -fsS -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID" > artifacts/rechent-production/vercel-deployment.json
@@ -86,6 +94,7 @@ jobs:
           assert.ok(d.alias.includes(process.env.PRODUCTION_HOST));
           console.log('PRODUCTION_IDENTITY_ALIAS_GATE=PASS');
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production health and runtime identity
         run: |
           curl -fsS "$PRODUCTION_URL/api/health" > artifacts/rechent-production/health.json
@@ -101,7 +110,9 @@ jobs:
           assert.ok(rows.filter(row=>row.status==='READY'&&row.selectable).length>=9);
           console.log('PRODUCTION_RUNTIME_GATE=PASS');
           NODE
-      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+      - run: npm install --package-lock=false --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production browser and shared business-flow regression
         env:
           QA_BASE_URL: ${{ env.PRODUCTION_URL }}
@@ -115,8 +126,9 @@ jobs:
           node test/browser/theme-browser-qa.mjs
           echo 'RECHENT_R8_PRODUCTION_BROWSER_GATE=PASS'
           echo 'RELEASED=TRUE'
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: rechent-production-${{ github.sha }}
-          path: artifacts/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/

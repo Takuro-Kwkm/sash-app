@@ -34,8 +34,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 1
+          fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -49,6 +53,7 @@ jobs:
           node --check scripts/stage-a-custom-normalization-v4-targeted-diagnostic.mjs
           echo "EXACT_HEAD_GATE=PASS sha=$actual"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Run targeted CUSTOM normalization diagnostic
         shell: bash
         run: |
@@ -56,10 +61,11 @@ jobs:
           mkdir -p artifacts/stage-a-custom-normalization-v4-targeted
           node scripts/stage-a-custom-normalization-v4-targeted-diagnostic.mjs | tee artifacts/stage-a-custom-normalization-v4-targeted/diagnostic.log
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload targeted diagnostic evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-custom-normalization-v4-targeted
-          path: artifacts/stage-a-custom-normalization-v4-targeted/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-normalization-v4-targeted/
           if-no-files-found: error

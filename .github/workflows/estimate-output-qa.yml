@@ -28,17 +28,27 @@ jobs:
       PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
       - name: Install
-        run: npm install --ignore-scripts
+        run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Unit and route tests
         run: npm test
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install Chromium
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Estimate output browser QA
         run: |
           npm run start:qa > /tmp/sash-estimate-output.log 2>&1 &
@@ -49,6 +59,7 @@ jobs:
             sleep 0.5
           done
           npm run test:browser:estimate-output
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Vercel credential and project preflight
         if: "${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0')) }}"
         env:
@@ -71,17 +82,21 @@ jobs:
           node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           echo "VERCEL_CREDENTIAL_GATE=PASS"
           echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Deploy PR merge SHA Preview
         if: "${{ github.event_name == 'pull_request' }}"
         run: node scripts/vercel-rest-deploy.mjs preview artifacts/estimate-output-browser-qa/deployment.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify Preview identity
         if: "${{ github.event_name == 'pull_request' }}"
         run: |
           node -e 'const d=require("./artifacts/estimate-output-browser-qa/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           echo "PREVIEW_DEPLOYMENT_GATE=PASS"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Deploy exact main SHA Production
         if: "${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}"
         run: node scripts/vercel-rest-deploy.mjs production artifacts/estimate-output-browser-qa/production-deployment.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify Production identity and canonical alias
         if: "${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}"
         shell: bash
@@ -93,6 +108,7 @@ jobs:
           if [[ "$status" != "200" ]]; then exit 48; fi
           node -e 'const d=require("./artifacts/estimate-output-browser-qa/vercel-production.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) { console.error({readyState:d.readyState,target:d.target,releaseCommitSha:d.meta?.releaseCommitSha,alias:d.alias}); process.exit(1); }'
           echo "PRODUCTION_DEPLOYMENT_GATE=PASS"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production smoke
         if: "${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}"
         shell: bash
@@ -111,15 +127,17 @@ jobs:
           done
           echo "PRODUCTION_SMOKE_GATE=BLOCKED"
           exit 49
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production estimate-output browser QA
         if: "${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}"
         env:
           QA_BASE_URL: ${{ env.PRODUCTION_URL }}
         run: npm run test:browser:estimate-output
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload estimate output QA artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: estimate-output-browser-qa
-          path: artifacts/estimate-output-browser-qa/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/estimate-output-browser-qa/
           if-no-files-found: warn

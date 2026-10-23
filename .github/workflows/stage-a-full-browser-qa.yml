@@ -41,6 +41,10 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -59,6 +63,7 @@ jobs:
           node --check test/browser/stage-a-full-browser-qa.mjs
           echo 'FULL_BROWSER_EVIDENCE_INVALIDATION_GATE=PASS'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Download pinned evidence artifacts
         shell: bash
         env:
@@ -82,14 +87,16 @@ jobs:
           download_artifact "$MULTI_BROWSER_ARTIFACT_ID" artifacts/evidence/multienum
           echo 'PINNED_EVIDENCE_DOWNLOAD_GATE=PASS'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install app dependencies and Chromium
         shell: bash
         run: |
           set -euo pipefail
-          npm install --ignore-scripts
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --ignore-scripts
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Resolve evidence paths
         shell: bash
         run: |
@@ -104,6 +111,7 @@ jobs:
           echo "STAGE_A_DISCRETE_REPORT=$discrete" >> "$GITHUB_ENV"
           echo "STAGE_A_MULTI_BROWSER_REPORT=$multi" >> "$GITHUB_ENV"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Start exact-head local Runtime UI
         shell: bash
         run: |
@@ -120,12 +128,14 @@ jobs:
           cat /tmp/stage-a-full-browser-server.log || true
           exit 1
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Run Desktop and Smartphone Full Browser QA
         shell: bash
         run: |
           set -euo pipefail
           node test/browser/stage-a-full-browser-qa.mjs | tee /tmp/stage-a-full-browser-qa.log
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Stop local Runtime UI
         if: always()
         shell: bash
@@ -134,13 +144,14 @@ jobs:
             kill "$(cat /tmp/stage-a-full-browser-server.pid)" 2>/dev/null || true
           fi
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload full browser evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-full-browser-qa
           path: |
-            artifacts/stage-a-full-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-full-browser-qa/
             /tmp/stage-a-full-browser-qa.log
             /tmp/stage-a-full-browser-server.log
           if-no-files-found: warn

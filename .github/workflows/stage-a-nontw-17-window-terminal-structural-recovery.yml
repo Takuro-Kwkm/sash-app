@@ -44,3 +44,4 @@ jobs:
           echo 'SUPERSEDED_BY=STRUCTURAL_AUDIT_CACHE_V3_PILOT'
           echo 'APP_INTEGRATION_READY=false'
           echo 'RELEASE_INPUT_GATE=BLOCKED'
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
