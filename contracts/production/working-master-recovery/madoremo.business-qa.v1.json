@@ -1,0 +1,30 @@
+{
+  "profile_id": "sash-existing-xlsx-working-sales-qa-v1",
+  "status": "ADOPTED",
+  "scope": "EXISTING_WORKING_SALES_QA",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:YKK AP::マドリモ 戸建用",
+  "manufacturer": "YKK AP",
+  "working_folder_id": "10ZngaKM6i5sEzg81-YyD6C_jNNap_d4b",
+  "native_adapter": "scripts/production/working-master-business-qa.py",
+  "native_prepare": "scripts/production/prepare-working-master-business-qa.py",
+  "target_gate": "QA_READY",
+  "predecessor_profile": {
+    "profile_id": "sash-existing-xlsx-working-recovery-v1",
+    "path": "contracts/production/working-master-recovery/madoremo.v1.json",
+    "sha256": "934e13837f9410b972e49c7d1529d0afd54d9e735228e2088b754cd53becfd3d"
+  },
+  "mutation_policy": "WORKING_CANDIDATE_ONLY; no Formal/Registry/Runtime/UI/Release writes",
+  "shared_owners": [
+    "product_master/build.py",
+    "product_master/validators/validate.py",
+    "harness/workflow.py",
+    "harness/production.py"
+  ],
+  "source_policy": "Actual official bytes and reviewed tables/figures/notes; preserve source Working and unresolveds; no historical PASS reuse",
+  "implementation_hashes": {
+    "scripts/production/working-master-business-qa.py": "479e98491eec6c329b7a49b9c967264a262fbdfc87d64f0d157075e3f50822c0",
+    "scripts/production/prepare-working-master-business-qa.py": "08ed2cfc4384094a5822ac1323a4c98daa3b81e2b6820ce95851497d45f2d20c",
+    "scripts/production/validate-working-master-xlsx-profile.py": "f5fd1c16b74a2d0dca16ccadcc44c544cccfbadc901ef21eaff973880ee0a3ef"
+  }
+}

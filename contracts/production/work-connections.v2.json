@@ -504,15 +504,41 @@
         "マドリモ 戸建用"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
-      "current_formal_version": "v1.0-R2",
+      "connection_state": "CONNECTED",
+      "connection_scope": "EXISTING_WORKING_SALES_QA",
+      "current_working_version": "v1.0-R2",
       "formal_registry_selector": "YKK AP::マドリモ 戸建用",
-      "safe_failure": {
-        "state": "FAIL_CLOSED",
-        "code": "NATIVE_ADAPTER_UNAVAILABLE",
-        "writes": 0,
-        "fallback": false,
-        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      "default_gate": "QA_READY",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "YKK AP",
+        "series": "マドリモ 戸建用",
+        "state": "WORKING_RECOVERY_R2"
+      },
+      "source_selector": {
+        "from": "LIVE_NATIVE_WORKING + REVIEWED_OFFICIAL_BYTES",
+        "role": "REVIEWED_CURRENT_SALES_SCOPE",
+        "scope": "Working candidate only; preserve original R2 bytes"
+      },
+      "native_adapter": "scripts/production/working-master-business-qa.py",
+      "prepare_adapter": "scripts/production/prepare-working-master-business-qa.py",
+      "validators": [
+        "native-working-identity",
+        "native-xlsx-bundle-readback",
+        "official-source-byte-review",
+        "shared-domain-qa",
+        "sales-request-handoff"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed Work is INSPECT_ONLY",
+      "build_profile": {
+        "profile_id": "sash-existing-xlsx-working-sales-qa-v1",
+        "path": "contracts/production/working-master-recovery/madoremo.business-qa.v1.json",
+        "sha256": "c37e0de6af37621167895c65a0bb0fe2ddce9e5570a50139bbacf8028f2a4b05"
+      },
+      "unsupported_gates": {
+        "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
+        "INTEGRATION": "NATIVE_RUNTIME_ADAPTER_UNAVAILABLE",
+        "RELEASE": "NOT_AUTHORIZED_BY_WORKING_QA_PROFILE"
       }
     },
     {
