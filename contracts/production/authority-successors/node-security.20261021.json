@@ -3,7 +3,7 @@
   "repository": "Takuro-Kwkm/sash-app",
   "predecessor_native_commit": "6f10c1c088b465f3884a33eb4727918f68a0d8e4",
   "predecessor_central_commit": "873842d159d92a1e5b4728b7cf652b50126ad0b1",
-  "native_source_commit": "57f57fa202ac2f42871d4e79ae1ab698436524a3",
-  "shared_implementation_sha": "2ea4082e88d3df63e8745e0d1b85af4ce7ccb748",
+  "native_source_commit": "10bba7cae38e9dee65da338f83a8399080edd5ea",
+  "shared_implementation_sha": "76e86020e314306698fdfce024dd3f218efecc2a",
   "terminal_policy": "NODE_RUNTIME_SECURITY_ONLY; SAVED_BINDING_INSPECT_ONLY; NO_PRODUCT_ADOPTION; NO_RELEASE_ADMISSION; NO_QA_SKIP"
 }
