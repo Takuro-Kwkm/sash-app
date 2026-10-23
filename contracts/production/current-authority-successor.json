@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
   "path": "contracts/production/authority-successors/node-security.20261021.json",
-  "sha256": "3aa562964ee395f95fc602d42d790be9c92cdaa415d4ff456b1dbd6c16b2ba54",
-  "implementation_sha": "47b4acf683907a4aa9ead002370be91b9d80ca87"
+  "sha256": "b483a244a08f2d8e05380c91b28d092ae5c981ef879b4a1ac05a6cedadc9341a",
+  "implementation_sha": "96c9fb40c6333fffbb97be38cade9e2eff7b6e09"
 }
