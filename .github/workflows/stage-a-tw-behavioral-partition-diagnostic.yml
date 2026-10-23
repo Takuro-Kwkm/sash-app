@@ -45,3 +45,4 @@ jobs:
           echo 'NEXT_ACTIVE_ROUTE=TW_BEHAVIORAL_PROJECTION_COUNT_PILOT'
           echo 'APP_INTEGRATION_READY=false'
           echo 'RELEASE_INPUT_GATE=BLOCKED'
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}

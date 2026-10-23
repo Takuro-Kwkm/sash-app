@@ -25,3 +25,4 @@ jobs:
         run: |
           echo 'RETIRED_ROUTE: use Project Governance / Uchirimo durable recovery'
           exit 1
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}

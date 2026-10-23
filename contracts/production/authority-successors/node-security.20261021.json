@@ -1,0 +1,9 @@
+{
+  "schema": "NODE_SECURITY_NATIVE_20261021_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "predecessor_native_commit": "6f10c1c088b465f3884a33eb4727918f68a0d8e4",
+  "predecessor_central_commit": "873842d159d92a1e5b4728b7cf652b50126ad0b1",
+  "native_source_commit": "6d50f3125e19bd8426a906d4d6b77832f2675c1f",
+  "shared_implementation_sha": "0f0f881025832552f166205527f25f17acb8e30c",
+  "terminal_policy": "NODE_RUNTIME_SECURITY_ONLY; SAVED_BINDING_INSPECT_ONLY; NO_PRODUCT_ADOPTION; NO_RELEASE_ADMISSION; NO_QA_SKIP"
+}

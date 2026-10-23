@@ -39,23 +39,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-nonbath-root-closure.yml
       - uses: actions/setup-node@v4
-        with: {node-version: 24}
+        with: {node-version: 24.22.1}
       - name: Install locked runtime dependencies
         run: |
-          npm install --ignore-scripts
+          npm install --package-lock=false --ignore-scripts
           git diff --exit-code -- package.json package-lock.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Preserve legacy evidence and freeze non-overlapping work
         run: node scripts/governance/uchirimo-durable-recovery.mjs prepare artifacts/uchirimo-durable-plan
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Bind plan artifact to the attempt that ran prepare
         id: plan_identity
         if: success()
         run: echo "plan_attempt=${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ github.run_attempt }}
-          path: artifacts/uchirimo-durable-plan/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-durable-plan/
           if-no-files-found: error
           compression-level: 1
   worker:
@@ -78,12 +85,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-nonbath-root-closure.yml
       - uses: actions/setup-node@v4
-        with: {node-version: 24}
+        with: {node-version: 24.22.1}
       - name: Install locked runtime dependencies
         run: |
-          npm install --ignore-scripts
+          npm install --package-lock=false --ignore-scripts
           git diff --exit-code -- package.json package-lock.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ needs.prepare.outputs.plan_attempt }}
@@ -91,8 +103,10 @@ jobs:
       - name: Restore only certified same-HEAD continuation
         if: env.RESUME_RUN_ID != ''
         run: node scripts/governance/uchirimo-durable-recovery.mjs restore "$PLAN" "$OUT" "$LANE" "$RESUME_RUN_ID"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Continue frozen frontier wave 1
         run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Preserve wave 1 without overwrite
         if: always()
         uses: actions/upload-artifact@v4
@@ -103,6 +117,7 @@ jobs:
           compression-level: 1
       - name: Continue frozen frontier wave 2
         run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Preserve wave 2 without overwrite
         if: always()
         uses: actions/upload-artifact@v4
@@ -113,6 +128,7 @@ jobs:
           compression-level: 1
       - name: Continue frozen frontier wave 3
         run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Preserve wave 3 without overwrite
         if: always()
         uses: actions/upload-artifact@v4
@@ -123,6 +139,7 @@ jobs:
           compression-level: 1
       - name: Continue frozen frontier wave 4
         run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Preserve wave 4 without overwrite
         if: always()
         uses: actions/upload-artifact@v4
@@ -133,6 +150,7 @@ jobs:
           compression-level: 1
       - name: Continue frozen frontier wave 5
         run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Preserve wave 5 without overwrite
         if: always()
         uses: actions/upload-artifact@v4
@@ -143,6 +161,7 @@ jobs:
           compression-level: 1
       - name: Continue frozen frontier wave 6
         run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Preserve wave 6 without overwrite
         if: always()
         uses: actions/upload-artifact@v4
@@ -163,12 +182,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-nonbath-root-closure.yml
       - uses: actions/setup-node@v4
-        with: {node-version: 24}
+        with: {node-version: 24.22.1}
       - name: Install locked runtime dependencies
         run: |
-          npm install --ignore-scripts
+          npm install --package-lock=false --ignore-scripts
           git diff --exit-code -- package.json package-lock.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ needs.prepare.outputs.plan_attempt }}
@@ -178,11 +202,13 @@ jobs:
           for lane in 0 1 2 3 4 5 6 7; do
             node scripts/governance/uchirimo-durable-recovery.mjs restore artifacts/uchirimo-durable-plan/plan.json "artifacts/uchirimo-durable-latest/lane-$lane" "$lane" "$CURRENT_RUN" || echo "MISSING_OR_INVALID_LANE=$lane"
           done
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify exact coverage, hashes and parent closure
         run: node scripts/governance/uchirimo-durable-recovery.mjs aggregate artifacts/uchirimo-durable-plan/plan.json artifacts/uchirimo-durable-latest artifacts/uchirimo-durable-aggregate
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: uchirimo-durable-aggregate-${{ env.HEAD_SHA }}-${{ github.run_attempt }}
-          path: artifacts/uchirimo-durable-aggregate/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-durable-aggregate/
           if-no-files-found: error

@@ -66,16 +66,23 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-recovery-pilot.yml
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
-        run: npm install --ignore-scripts
+        run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify exact HEAD
         run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+        working-directory: ${{ github.workspace }}
       - name: Run one isolated heavy partition to natural completion
         run: node scripts/governance/uchirimo-selector-batch-runner.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify terminal artifact integrity
         shell: bash
         run: |
@@ -93,15 +100,17 @@ jobs:
           if(actual!==report.case_artifact_sha256)throw new Error('ENDURANCE_CASE_SHA_MISMATCH');
           console.log('UCHIRIMO_RECOVERY_V3_ENDURANCE=PASS states='+report.visited_state_count+' terminals='+report.terminal_context_count+' peak_heap_mb='+report.observed_peak_heap_mb);
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Remove large terminal digest after integrity verification
         if: always()
         run: rm -f artifacts/uchirimo-recovery-v3-endurance/shard-*-terminal-digests.jsonl
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload lightweight endurance evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: uchirimo-recovery-v3-endurance-${{ env.HEAD_SHA }}
-          path: artifacts/uchirimo-recovery-v3-endurance/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-recovery-v3-endurance/
           if-no-files-found: error
 
   recovery-gate:
@@ -137,6 +146,7 @@ jobs:
           echo "FULL_COVERAGE_QA_GATE=BLOCKED"
           exit 1
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
   # ---------------------------------------------------------------------------
   # Lane A: Current Release Scope. Source of Truth is release-scope.json.
   # No Uchirimo exhaustive proof or Uchirimo browser artifact is required here.
@@ -183,14 +193,19 @@ jobs:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-recovery-pilot.yml
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Install
-        run: npm install --ignore-scripts
+        run: npm install --package-lock=false --ignore-scripts
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify exact HEAD and Current Release Scope invariants
         shell: bash
         run: |
@@ -223,6 +238,7 @@ jobs:
           console.log('UCHIRIMO_RELEASE_ELIGIBILITY='+String(deferred.release_eligibility).toUpperCase());
           NODE
 
+        working-directory: ${{ github.workspace }}
       - name: Current Release Scope static and regression QA
         shell: bash
         run: |
@@ -246,6 +262,7 @@ jobs:
             test/83-thermosl-r2-glass-manufacturability.test.mjs \
             2>&1 | tee artifacts/current-release-scope/scoped-regression.tap
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Current-head exterior CUSTOM geometry and transition proof
         shell: bash
         run: |
@@ -271,11 +288,13 @@ jobs:
           console.log('CURRENT_RELEASE_SCOPE_CUSTOM_SIZE_COVERAGE=PASS');
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install browser QA dependencies
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Current Release Scope browser Full Coverage
         shell: bash
         run: |
@@ -448,6 +467,7 @@ jobs:
           node test/browser/stage-a-full-browser-qa.mjs
           node test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify Current Release Scope browser evidence
         shell: bash
         run: |
@@ -474,19 +494,20 @@ jobs:
           console.log('UCHIRIMO_QA_STATUS=UNVERIFIED');
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload Current Release Scope QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: current-release-scope-global-evidence-${{ env.HEAD_SHA }}
           path: |
-            artifacts/current-release-scope/
-            artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
-            artifacts/stage-a-full-browser-qa/
-            artifacts/stage-a-custom-dimension-source-shape/
-            artifacts/stage-a-custom-selector-reachability/
-            artifacts/stage-a-custom-runtime-geometry-equivalence/
-            artifacts/stage-a-custom-transition-proof-v4/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/current-release-scope/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-full-browser-qa/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-dimension-source-shape/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-selector-reachability/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-runtime-geometry-equivalence/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-transition-proof-v4/
           if-no-files-found: error
 
   current-release-final:
@@ -509,10 +530,14 @@ jobs:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-recovery-pilot.yml
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Download Current Release Scope QA evidence
         uses: actions/download-artifact@v4
@@ -644,12 +669,13 @@ jobs:
           NODE
           echo "current_release_scope_ready=true" >> "$GITHUB_OUTPUT"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload Current Release Scope Final evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: current-release-scope-final-${{ env.HEAD_SHA }}
-          path: artifacts/current-release-scope-final/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/current-release-scope-final/
           if-no-files-found: error
 
   heavy-recovery-analysis:
@@ -670,6 +696,10 @@ jobs:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-recovery-pilot.yml
       - name: Detect recovery-analysis source change
         id: changes
         shell: bash
@@ -685,16 +715,18 @@ jobs:
             echo "UCHIRIMO_HEAVY_ANALYSIS_TRIGGER=SKIP_NO_SOURCE_CHANGE"
           fi
 
+        working-directory: ${{ github.workspace }}
       - name: Setup Node 24
         if: ${{ steps.changes.outputs.required == 'true' }}
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Install
         if: ${{ steps.changes.outputs.required == 'true' }}
-        run: npm install --ignore-scripts
+        run: npm install --package-lock=false --ignore-scripts
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Reconstruct heavy partition evidence from source run
         id: analysis
         if: ${{ steps.changes.outputs.required == 'true' }}
@@ -705,6 +737,7 @@ jobs:
           node --check scripts/governance/uchirimo-heavy-partition-analysis.mjs
           node scripts/governance/uchirimo-heavy-partition-analysis.mjs
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify analysis-only coverage shape
         id: verify
         if: ${{ steps.changes.outputs.required == 'true' && steps.analysis.outcome == 'success' }}
@@ -727,6 +760,7 @@ jobs:
           console.log('RELEASE_INPUT_GATE=BLOCKED');
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Record deferred recovery status
         if: ${{ always() }}
         shell: bash
@@ -743,10 +777,11 @@ jobs:
           echo "UCHIRIMO_RELEASE_ELIGIBILITY=FALSE"
           echo "FULL_COVERAGE_QA_GATE=BLOCKED"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload heavy recovery analysis evidence
         if: ${{ always() && steps.changes.outputs.required == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: uchirimo-heavy-recovery-analysis-${{ env.HEAD_SHA }}
-          path: artifacts/uchirimo-heavy-recovery/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/uchirimo-heavy-recovery/
           if-no-files-found: warn

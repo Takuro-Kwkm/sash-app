@@ -21,25 +21,33 @@ jobs:
         with:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/project-governance-gate.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Core application and unchanged fact regression
         run: npm run lint && npm run typecheck && npm test
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Current formal identities and fresh canonical frame scope
         run: node scripts/governance/inner-window-frame-integration-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Eight-series preview model
         run: node scripts/build-eight-series-review.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Governance summary
         run: |
           echo 'Current scope: 8 Window series; affected INNER_WINDOW canonical frame R3.' >> "$GITHUB_STEP_SUMMARY"
           echo 'Affected legacy PASS import: 0. TW and EW October catalog identity adoptions are verified separately; four other exterior identities and both inner-window identities retain their frozen pins.' >> "$GITHUB_STEP_SUMMARY"
           echo 'Historical Slim factorized tests remain a frozen witness, not R3 proof.' >> "$GITHUB_STEP_SUMMARY"
           echo 'This job verifies existing inner-window identities and shared application regression. Product-specific Browser and APP_INTEGRATION_READY verdicts are evaluated by their dedicated integration workflow. Human review remains separate.' >> "$GITHUB_STEP_SUMMARY"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: inner-window-frame-governance-${{ env.HEAD_SHA }}
           path: |
-            artifacts/inner-window-frame-integration/
-            artifacts/eight-series-review/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/inner-window-frame-integration/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/eight-series-review/

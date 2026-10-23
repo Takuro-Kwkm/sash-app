@@ -35,9 +35,13 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-custom-transition-proof-v4.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Exact HEAD and prerequisite source-invariance gate
         shell: bash
         run: |
@@ -50,6 +54,7 @@ jobs:
           node --check scripts/stage-a-custom-transition-proof-v4.mjs
           echo "EXACT_HEAD_GATE=PASS sha=$HEAD_SHA"
           echo "CUSTOM_GEOMETRY_EVIDENCE_INVARIANCE_GATE=PASS source_head=$CUSTOM_GEOMETRY_EVIDENCE_HEAD"
+        working-directory: ${{ github.workspace }}
       - name: Download exact CUSTOM geometry V5 evidence
         uses: actions/download-artifact@v4
         with:
@@ -71,6 +76,7 @@ jobs:
           if(geo.status!=='PASS'||geo.mismatch_count!==0||geo.arrangement_proof_class_count!==3456||geo.boundary_triplet_count!==1682)throw new Error('CUSTOM_TRANSITION_V4_GEOMETRY_PREREQ_INVALID');
           console.log('CUSTOM_TRANSITION_V4_PREREQ_GATE=PASS');
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Prove mode-aware dimension-separated CUSTOM transitions
         shell: bash
         run: |
@@ -100,10 +106,11 @@ jobs:
           }
           NODE
           exit "$rc"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload transition V4 evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-custom-transition-proof-v4
-          path: artifacts/stage-a-custom-transition-proof-v4/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-transition-proof-v4/
           if-no-files-found: error

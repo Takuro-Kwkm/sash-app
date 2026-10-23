@@ -43,11 +43,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 1
+          fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-custom-selector-geometry-recovery.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Exact SHA and syntax gate
         shell: bash
@@ -63,6 +67,7 @@ jobs:
           echo "EXACT_HEAD_GATE=PASS sha=$actual"
           echo 'CUSTOM_PROOF_SCRIPT_SYNTAX_GATE=PASS'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Regenerate CUSTOM source and guard evidence
         shell: bash
         run: |
@@ -82,6 +87,7 @@ jobs:
           console.log(`FORMAL_SPLIT_CUSTOM_GUARD_SHAPE_GATE=PASS rules=${g.rule_count}`);
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Regenerate exact CUSTOM boundary partition
         shell: bash
         run: |
@@ -96,6 +102,7 @@ jobs:
           console.log(`CUSTOM_GEOMETRY_PARTITION_GATE=PASS windows=${p.window_count} rules=${p.rule_count} classes=${p.arrangement_proof_class_count} triplets=${p.boundary_triplet_count}`);
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Prove CUSTOM selector UI reachability V3 normalized directed
         shell: bash
         run: |
@@ -113,6 +120,7 @@ jobs:
           console.log(`CUSTOM_SELECTOR_REACHABILITY_DIGEST=${r.evidence_digest}`);
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Prove full CUSTOM Runtime geometry equivalence
         shell: bash
         run: |
@@ -132,15 +140,16 @@ jobs:
           console.log('RELEASE_INPUT_GATE=BLOCKED');
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload CUSTOM recovery evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-custom-selector-geometry-recovery
           path: |
-            artifacts/stage-a-custom-dimension-source-shape/
-            artifacts/stage-a-formal-split-custom-guard-shape/
-            artifacts/stage-a-custom-dimension-boundary-partition/
-            artifacts/stage-a-custom-selector-reachability/
-            artifacts/stage-a-custom-runtime-geometry-equivalence/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-dimension-source-shape/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-formal-split-custom-guard-shape/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-dimension-boundary-partition/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-selector-reachability/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-runtime-geometry-equivalence/
           if-no-files-found: error

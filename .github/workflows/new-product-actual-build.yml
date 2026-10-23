@@ -24,7 +24,12 @@ jobs:
         with:
           ref: ${{ env.EXPECTED_HEAD }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/new-product-actual-build.yml
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+        working-directory: ${{ github.workspace }}
       - uses: actions/setup-python@v5
         with:
           python-version: 3.12.14
@@ -34,33 +39,43 @@ jobs:
           python -B scripts/production/test_product_conditions_scope.py
           python -B scripts/production/test_sash_authority_successor.py
           python -B scripts/production/unpack-product-master-conditions.py "$SHARED_HARNESS_ROOT"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: python -m pip install -r "$SHARED_HARNESS_ROOT/requirements.txt"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: python -m pip install openpyxl==3.1.5
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Assess bounded infrastructure changes through the existing router
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
           EVENT: ${{ github.event_name }}
         run: |
+          python -B scripts/production/node-security.py unpack "$RUNNER_TEMP/node-security-current-shared"
           base="${BASE_SHA:-$(git rev-parse HEAD^)}"
-          python -B scripts/ci/sash-change-observation.py --central "$SHARED_HARNESS_ROOT" --base "$base" --head "$EXPECTED_HEAD" --event "$EVENT" --out artifacts/authority/sash-change-observation.json
+          python -B scripts/ci/sash-change-observation.py --central "$RUNNER_TEMP/node-security-current-shared" --base "$base" --head "$EXPECTED_HEAD" --event "$EVENT" --out artifacts/authority/sash-change-observation.json
+        working-directory: ${{ github.workspace }}
       - name: Verify new-product environment without a registered product
         run: |
-          python -c 'import json,os; print(json.dumps({os.environ["GITHUB_REPOSITORY"]:os.environ["GITHUB_WORKSPACE"]}))' > /tmp/native-new-product-repositories.json
+          python -c 'import json,os; print(json.dumps({os.environ["GITHUB_REPOSITORY"]:os.environ.get("NODE_SECURITY_PREDECESSOR", os.environ["GITHUB_WORKSPACE"])}))' > /tmp/native-new-product-repositories.json
           python -B "$SHARED_HARNESS_ROOT/scripts/verify-new-product-environment.py" --repositories /tmp/native-new-product-repositories.json --out artifacts/authority/new-product-environment.json
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Real native profile, failure safety and actual isolated E2E
         run: |
           python -B scripts/production/validate-architecture-connection.py
           python -B scripts/production/validate-product-master-profile.py
           python -B scripts/production/test-product-master-build.py
           python -B scripts/production/test_actual_build.py
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify JSON successor preserves existing Formal and QA boundaries
         run: |
           python -B scripts/production/test_json_master_formal.py "$SHARED_HARNESS_ROOT"
           python -B -m unittest discover -s scripts/production -p test_json_master_change.py -v
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Keep exact runner assessment and native environment evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sash-authority-successor-${{ env.EXPECTED_HEAD }}
-          path: artifacts/authority/*.json
+          path: |
+            ${{ github.workspace }}/artifacts/authority/*.json
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/authority/*.json
           if-no-files-found: error

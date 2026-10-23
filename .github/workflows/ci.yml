@@ -20,11 +20,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/ci.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
-        run: npm install --ignore-scripts
+        run: npm install --package-lock=false --ignore-scripts
+        working-directory: ${{ github.workspace }}
       - name: Syntax checks
         run: |
           node --check scripts/start-step8-ui.mjs
@@ -42,8 +50,10 @@ jobs:
           node --check src/catalog/runtime-master/formal-product-runtime-loader.mjs
           node --check src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs
           node --check src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs
+        working-directory: ${{ github.workspace }}
       - name: Full repository tests
         run: npm test
+        working-directory: ${{ github.workspace }}
       - name: Runtime smoke
         run: |
           npm run start:qa > /tmp/sash-v2.log 2>&1 &
@@ -61,10 +71,12 @@ jobs:
           node -e 'const r=require("/tmp/integrations.json"); const a430=r.find(x=>x.id==="SER-YKK-APW430"); if(!a430 || !a430.selectable || a430.status!=="READY" || a430.packageVersion!=="20260917-R2" || a430.sourceHash!=="1b012a78abfbbb2a6647272f92126d37c3a75d0a52d8b03de4d30e2afe9bcfcc") process.exit(1)'
           node -e 'const r=require("/tmp/integrations.json"); const a431=r.find(x=>x.id==="SER-YKK-APW431"); if(!a431 || !a431.selectable || a431.status!=="READY" || a431.packageVersion!=="v1.1" || a431.sourceHash!=="7b4331b62d80a356fdd39549c942bb30db8a6e34e9e7d0fd2277c0bccc4f4f27") process.exit(1)'
           node -e 'const r=require("/tmp/integrations.json"); const u=r.find(x=>x.id==="SER-YKKAP-UCHIRIMO"); if(!u || !u.selectable || u.status!=="READY" || u.sourceHash!=="be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d") process.exit(1)'
+        working-directory: ${{ github.workspace }}
       - name: Install browser QA dependencies
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
+        working-directory: ${{ github.workspace }}
       - name: Runtime desktop/mobile browser QA, work-management QA and existing-series regression
         run: |
           npm run start:qa > /tmp/sash-v2-browser.log 2>&1 &
@@ -80,6 +92,7 @@ jobs:
           node test/browser/formal-runtime-resync-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
           node test/browser/work-management-browser-qa.mjs
+        working-directory: ${{ github.workspace }}
       - name: Upload browser QA artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -100,13 +113,21 @@ jobs:
       VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/ci.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Initialize release build audit
         run: |
           mkdir -p artifacts/release-build
           printf 'release_candidate_sha=%s\nrepository=%s\nref=%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/release-build/release.txt
+        working-directory: ${{ github.workspace }}
       - name: Secure credential, SHA and project preflight
         shell: bash
         run: |
@@ -131,14 +152,17 @@ jobs:
           printf 'credential_gate=PASS\nproject_access_gate=PASS\n' >> artifacts/release-build/release.txt
           echo "VERCEL_CREDENTIAL_GATE=PASS"
           echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+        working-directory: ${{ github.workspace }}
       - name: Create exact RC Preview deployment through Vercel REST API
         run: node scripts/vercel-rest-deploy.mjs preview artifacts/release-build/deployment.json
+        working-directory: ${{ github.workspace }}
       - name: Verify Preview deployment identity
         run: |
           node -e 'const d=require("./artifacts/release-build/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           printf 'vercel_build_gate=PASS\nrelease_preview_gate=PASS\ndeployment_id=%s\ndeployment_url=%s\n' "$DEPLOY_ID" "$DEPLOY_URL" >> artifacts/release-build/release.txt
           echo "VERCEL_BUILD_GATE=PASS"
           echo "RELEASE_PREVIEW_GATE=PASS"
+        working-directory: ${{ github.workspace }}
       - name: Upload release build audit
         if: always()
         uses: actions/upload-artifact@v4
@@ -163,13 +187,21 @@ jobs:
       PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/ci.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Initialize deployment audit
         run: |
           mkdir -p artifacts/production-deploy
           printf 'release_merge_sha=%s\nrepository=%s\nref=%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/production-deploy/release.txt
+        working-directory: ${{ github.workspace }}
       - name: Secure credential, SHA and project preflight
         shell: bash
         run: |
@@ -191,8 +223,10 @@ jobs:
           printf 'credential_gate=PASS\nproject_access_gate=PASS\n' >> artifacts/production-deploy/release.txt
           echo "VERCEL_CREDENTIAL_GATE=PASS"
           echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+        working-directory: ${{ github.workspace }}
       - name: Create exact merge-SHA Production deployment through Vercel REST API
         run: node scripts/vercel-rest-deploy.mjs production artifacts/production-deploy/deployment.json
+        working-directory: ${{ github.workspace }}
       - name: Verify Production deployment identity and canonical alias
         shell: bash
         run: |
@@ -202,6 +236,7 @@ jobs:
           if [[ "$status" != "200" ]]; then exit 48; fi
           node -e 'const d=require("./artifacts/production-deploy/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) { console.error({readyState:d.readyState,target:d.target,releaseCommitSha:d.meta?.releaseCommitSha,alias:d.alias}); process.exit(1); }'
           echo "PRODUCTION_ALIAS_GATE=PASS"
+        working-directory: ${{ github.workspace }}
       - name: Production smoke on canonical URL
         shell: bash
         run: |
@@ -221,10 +256,12 @@ jobs:
           done
           echo "PRODUCTION_SMOKE_GATE=BLOCKED"
           exit 49
+        working-directory: ${{ github.workspace }}
       - name: Install Production browser QA dependencies
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
+        working-directory: ${{ github.workspace }}
       - name: Production EW desktop/mobile browser QA and existing-series regression
         env:
           QA_BASE_URL: ${{ env.PRODUCTION_URL }}
@@ -233,6 +270,7 @@ jobs:
           node test/browser/release-regression-browser-qa.mjs
           printf 'production_browser_qa=PASS\n' >> artifacts/production-deploy/release.txt
           echo "PRODUCTION_BROWSER_QA_GATE=PASS"
+        working-directory: ${{ github.workspace }}
       - name: Upload Production deployment audit
         if: always()
         uses: actions/upload-artifact@v4

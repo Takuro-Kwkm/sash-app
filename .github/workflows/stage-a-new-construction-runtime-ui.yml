@@ -40,6 +40,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-new-construction-runtime-ui.yml
       - name: Exact SHA and discrete-runtime invariance gate
         shell: bash
         run: |
@@ -51,6 +55,7 @@ jobs:
           echo "EXACT_HEAD_GATE=PASS sha=$actual"
           echo "DISCRETE_RUNTIME_INVARIANCE_GATE=PASS evidence_head=$DISCRETE_EVIDENCE_HEAD"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Current Stage A gate state
         shell: bash
         run: |
@@ -77,3 +82,4 @@ jobs:
           echo 'SUPERSEDED_ROUTE=LEGACY_MULTI_ENUM_PREFLIGHT_AND_EXPLICIT_EXHAUSTIVE_SHARDS'
           echo 'RETRY_AUTHORIZED=false'
           echo 'REOPEN_CONDITION=DISCRETE_RUNTIME_OR_DISCRETE_PROOF_MODEL_CHANGE'
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}

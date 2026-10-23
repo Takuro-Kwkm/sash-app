@@ -33,8 +33,13 @@ jobs:
       - name: Checkout exact branch HEAD
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           ref: ${{ env.EXACT_HEAD }}
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/entry-door-cover-global-flow-gate.yml
       - name: Prove checkout SHA
         shell: bash
         run: |
@@ -43,14 +48,16 @@ jobs:
           echo "ENTRY_DOOR_COVER_EXACT_HEAD=$actual"
           test "$actual" = "$EXACT_HEAD"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Install
-        run: npm install --ignore-scripts
+        run: npm install --package-lock=false --ignore-scripts
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Source and single-engine gates
         shell: bash
         run: |
@@ -73,11 +80,13 @@ jobs:
           echo 'SINGLE_FLOW_ENGINE_GATE=PASS_ENTRY_DOOR_COVER'
           echo 'SERIES_OVERRIDE_ELIMINATION_GATE=PASS_ENTRY_DOOR_COVER'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Runtime UI lint and typecheck
         run: |
           npm run lint
           npm run typecheck
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Formal runtime integrity and semantic flow proof
         shell: bash
         run: |
@@ -90,6 +99,7 @@ jobs:
           echo 'FLOW_TRANSITION_GATE=PASS_ENTRY_DOOR_COVER_RESOLVER'
           echo 'SURVEY_LAYER_VALUE_SOURCE_GATE=BLOCKED_FAIL_CLOSED_EXPECTED'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Runtime API smoke
         shell: bash
         run: |
@@ -105,11 +115,13 @@ jobs:
           node -e 'const h=require("/tmp/health.json"); if(!h.ok) process.exit(1); const x=h.runtimeMasterIntegrations.find(x=>x.id==="SER-LIXIL-RECHENT-D3-NF"); if(!x||x.status!=="READY"||x.selectable!==true||x.uiCategory!=="ENTRY_DOOR_COVER") process.exit(1)'
           echo 'RUNTIME_ADAPTER_GATE=PASS_RECHENT'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install Chromium
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Desktop and smartphone browser flow QA
         shell: bash
         run: |
@@ -124,12 +136,13 @@ jobs:
           node test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs
           echo 'FULL_BROWSER_FLOW_QA_GATE=PASS_RECHENT_DESKTOP_SMARTPHONE'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload exact-head evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: rechent-entry-door-cover-global-flow-${{ env.EXACT_HEAD }}
-          path: artifacts/rechent-entry-door-cover-global-flow-browser-qa/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/rechent-entry-door-cover-global-flow-browser-qa/
           if-no-files-found: warn
 
       - name: Gate summary
@@ -140,3 +153,4 @@ jobs:
           echo 'SURVEY_LAYER_VALUE_SOURCE_GATE=DEFERRED_SITE_SURVEY_SCOPE'
           echo 'APP_INTEGRATION_READY=NOT_EVALUATED_BY_THIS_PRODUCT_SELECTION_GATE'
           echo 'RELEASE_INPUT_GATE=BLOCKED'
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}

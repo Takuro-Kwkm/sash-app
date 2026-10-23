@@ -36,9 +36,13 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/seven-series-slim-production.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Assert current Slim release authority
         shell: bash
@@ -64,9 +68,10 @@ jobs:
           console.log('CURRENT_QA_DENOMINATOR=SLIM_CANONICAL_ONLY');
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install and exact release regression
         run: |
-          npm install --ignore-scripts
+          npm install --package-lock=false --ignore-scripts
           npm run lint
           npm run typecheck
           npm test
@@ -74,6 +79,7 @@ jobs:
           node scripts/governance/uchirimo-slim-dimension-differential.mjs
           node scripts/build-seven-series-review.mjs
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Prepare Vercel credential
         shell: bash
         run: |
@@ -87,9 +93,11 @@ jobs:
           echo 'VERCEL_CREDENTIAL_GATE=PASS'
           echo 'VERCEL_PROJECT_ACCESS_GATE=PASS'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Deploy exact main SHA to Production
         run: node scripts/vercel-rest-deploy.mjs production artifacts/seven-series-production/deployment.json
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify Production identity and canonical alias
         shell: bash
         run: |
@@ -105,6 +113,7 @@ jobs:
           node -e 'const d=require("./artifacts/seven-series-production/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) process.exit(1)'
           echo 'PRODUCTION_ALIAS_GATE=PASS'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production seven-series Runtime smoke
         shell: bash
         run: |
@@ -131,11 +140,13 @@ jobs:
           echo 'SEVEN_SERIES_RUNTIME_SMOKE=BLOCKED'
           exit 49
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install Production browser QA dependencies
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production end-to-end QA
         env:
           QA_BASE_URL: ${{ env.PRODUCTION_URL }}
@@ -149,6 +160,7 @@ jobs:
           npm run test:browser:estimate-output
           echo 'PRODUCTION_BROWSER_QA_GATE=PASS'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Write release evidence
         if: always()
         shell: bash
@@ -163,10 +175,11 @@ jobs:
             echo "deployment_url=${DEPLOY_URL:-}"
           } > artifacts/seven-series-production/release.txt
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload Production evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: seven-series-slim-production-${{ github.sha }}
-          path: artifacts/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/
           if-no-files-found: warn

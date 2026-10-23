@@ -32,10 +32,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-samos2h-size-predicate-outcome-diagnostic.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Exact SHA gate
         shell: bash
         run: |
@@ -43,12 +47,14 @@ jobs:
           actual="$(git rev-parse HEAD)"
           test "$actual" = "$HEAD_SHA"
           echo "EXACT_HEAD_GATE=PASS sha=$actual"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Derive predicate-outcome size partitions
         shell: bash
         run: |
           set -euo pipefail
           node --check scripts/stage-a-samos2h-size-predicate-outcome-diagnostic.mjs
           node scripts/stage-a-samos2h-size-predicate-outcome-diagnostic.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Validate V6.2 diagnostic invariants
         shell: bash
         run: |
@@ -75,10 +81,11 @@ jobs:
           console.log('APP_INTEGRATION_READY=false');
           console.log('RELEASE_INPUT_GATE=BLOCKED');
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload V6.2 diagnostic evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-samos2h-size-predicate-outcome-v6-2
-          path: artifacts/stage-a-samos2h-size-predicate-outcome/report.json
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-samos2h-size-predicate-outcome/report.json
           if-no-files-found: error

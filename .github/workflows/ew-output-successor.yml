@@ -56,14 +56,18 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/ew-output-successor.yml
       - name: Verify conditions successor and inspect preserved predecessor
         run: |-
           python3 -B scripts/production/product-conditions-scope.py --predecessor /tmp/product-conditions-predecessor
           python3 -B scripts/production/test_product_conditions_scope.py
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/setup-node@v4
         with:
-          node-version: 24.19.0
+          node-version: 24.22.1
       - uses: actions/setup-python@v5
         with:
           python-version: 3.12.14
@@ -72,16 +76,19 @@ jobs:
       - run: python -B scripts/production/test_ew_output_successor.py
         working-directory: /tmp/product-conditions-predecessor
       - run: node --test test/74-estimate-output.test.mjs
-      - run: npm install --ignore-scripts --no-save playwright@1.55.0
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+      - run: npm install --package-lock=false --ignore-scripts --no-save playwright@1.55.0
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - run: npx playwright install --with-deps chromium
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Native EW and eight-series browser/output regression
         env:
-          SASH_RELEASE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          SASH_RELEASE_COMMIT_SHA: ${{ env.NODE_SECURITY_PREDECESSOR_COMMIT || github.event.pull_request.head.sha || github.sha }}
           EW_QA_URL: http://127.0.0.1:4173
-          EW_EXPECTED_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+          EW_EXPECTED_COMMIT: ${{ env.NODE_SECURITY_PREDECESSOR_COMMIT || github.event.pull_request.head.sha || github.sha }}
           EW_QA_OUTPUT: artifacts/order5-ew-output/ew
           QA_BASE_URL: http://127.0.0.1:4173
-          QA_EXPECTED_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+          QA_EXPECTED_COMMIT: ${{ env.NODE_SECURITY_PREDECESSOR_COMMIT || github.event.pull_request.head.sha || github.sha }}
           QA_OUTPUT_DIR: artifacts/order5-ew-output/eight-series
         shell: bash
         run: |
@@ -96,8 +103,9 @@ jobs:
           done
           node test/browser/ew-october-2026-browser-qa.mjs
           node test/browser/eight-series-business-flow-qa.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - uses: actions/upload-artifact@v4
         with:
           name: order5-ew-output
-          path: artifacts/order5-ew-output
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/order5-ew-output
           if-no-files-found: error

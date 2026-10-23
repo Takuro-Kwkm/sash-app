@@ -36,3 +36,4 @@ jobs:
           echo 'REOPEN_CONDITION=NEW_CONFLICT_GRAPH_V4_MODEL'
           echo 'APP_INTEGRATION_READY=false'
           echo 'RELEASE_INPUT_GATE=BLOCKED'
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}

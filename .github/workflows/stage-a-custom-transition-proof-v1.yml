@@ -42,9 +42,13 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
 
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-custom-transition-proof-v1.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Exact HEAD and prerequisite source-invariance gate
         shell: bash
@@ -64,6 +68,7 @@ jobs:
           echo "EXACT_HEAD_GATE=PASS sha=$actual"
           echo "CUSTOM_GEOMETRY_EVIDENCE_INVARIANCE_GATE=PASS source_head=$CUSTOM_GEOMETRY_EVIDENCE_HEAD"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Download exact CUSTOM geometry V5 evidence
         uses: actions/download-artifact@v4
         with:
@@ -87,6 +92,7 @@ jobs:
           console.log(`CUSTOM_TRANSITION_PREREQ_GATE=PASS contexts=${reach.unique_context_count} classes=${geo.arrangement_proof_class_count} triplets=${geo.boundary_triplet_count}`);
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Prove all CUSTOM state transitions
         shell: bash
         run: |
@@ -110,10 +116,11 @@ jobs:
           console.log('RELEASE_INPUT_GATE=BLOCKED');
           NODE
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload transition evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-custom-transition-proof-v1
-          path: artifacts/stage-a-custom-transition-proof/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-transition-proof/
           if-no-files-found: error

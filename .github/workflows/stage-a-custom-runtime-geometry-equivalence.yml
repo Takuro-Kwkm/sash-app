@@ -43,10 +43,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-custom-runtime-geometry-equivalence.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Exact SHA gate
         shell: bash
         run: |
@@ -54,6 +58,7 @@ jobs:
           actual="$(git rev-parse HEAD)"
           test "$actual" = "$HEAD_SHA"
           echo "EXACT_HEAD_GATE=PASS sha=$actual"
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Syntax gate
         shell: bash
         run: |
@@ -64,12 +69,14 @@ jobs:
           node --check scripts/stage-a-custom-selector-reachability-diagnostic.mjs
           node --check scripts/stage-a-custom-runtime-geometry-equivalence.mjs
           echo 'CUSTOM_RUNTIME_GEOMETRY_SCRIPT_SYNTAX_GATE=PASS'
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Rebuild formal CUSTOM source evidence
         shell: bash
         run: |
           set -euo pipefail
           node scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
           node scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Fail closed on partition-internal rule types not modeled by current partition proof
         shell: bash
         run: |
@@ -82,16 +89,19 @@ jobs:
           if(unsupported.length)throw new Error(`CURRENT_PARTITION_MODEL_MISSING_INTERNAL_BOUNDARIES ${JSON.stringify(unsupported)}`);
           console.log(`CUSTOM_PARTITION_INTERNAL_TYPE_GATE=PASS rules=${r.total_custom_rule_count}`);
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Rebuild exact CUSTOM boundary partition
         shell: bash
         run: |
           set -euo pipefail
           node scripts/stage-a-custom-dimension-boundary-partition-proof.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Rebuild exhaustive selector reachability
         shell: bash
         run: |
           set -euo pipefail
           node scripts/stage-a-custom-selector-reachability-diagnostic.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Validate pre-equivalence gates
         shell: bash
         run: |
@@ -109,11 +119,13 @@ jobs:
           if(r.status!=='PASS'||r.source_rule_count!==152||r.unreachable_context_count!==0)throw new Error('selector reachability gate failed');
           console.log(`CUSTOM_PRE_EQUIVALENCE_GATES=PASS windows=${p.window_count} rules=${p.rule_count} classes=${p.arrangement_proof_class_count} triplets=${p.boundary_triplet_count} contexts=${r.unique_context_count}`);
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Prove full Runtime geometry equivalence
         shell: bash
         run: |
           set -euo pipefail
           node scripts/stage-a-custom-runtime-geometry-equivalence.mjs
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Validate Runtime geometry equivalence evidence
         shell: bash
         run: |
@@ -131,15 +143,16 @@ jobs:
           console.log('APP_INTEGRATION_READY=false');
           console.log('RELEASE_INPUT_GATE=BLOCKED');
           NODE
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload CUSTOM geometry evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-custom-runtime-geometry-equivalence
           path: |
-            artifacts/stage-a-custom-dimension-source-shape/
-            artifacts/stage-a-formal-split-custom-guard-shape/
-            artifacts/stage-a-custom-dimension-boundary-partition/
-            artifacts/stage-a-custom-selector-reachability/
-            artifacts/stage-a-custom-runtime-geometry-equivalence/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-dimension-source-shape/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-formal-split-custom-guard-shape/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-dimension-boundary-partition/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-selector-reachability/
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/stage-a-custom-runtime-geometry-equivalence/
           if-no-files-found: error

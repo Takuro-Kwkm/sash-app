@@ -30,20 +30,29 @@ jobs:
       PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify runtime maintenance scope and retain predecessor
+        if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/ew-production-finalize.yml
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Initialize audit
         run: |
           mkdir -p artifacts/production-finalize
           printf 'release_merge_sha=%s\nrepository=%s\nref=%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/production-finalize/release.txt
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install and repository tests
         run: |
-          npm install --ignore-scripts
+          npm install --package-lock=false --ignore-scripts
           npm test
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Runtime smoke before deploy
         shell: bash
         run: |
@@ -57,11 +66,13 @@ jobs:
           done
           node -e 'const h=require("/tmp/health.json"); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); if(!h.ok||!ew||!ew.selectable||ew.status!=="READY"||ew.sourceHash!==process.env.EXPECTED_EW_RUNTIME_SHA) process.exit(1)'
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Install browser QA dependencies
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --package-lock=false --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Local EW desktop/mobile and regression QA
         shell: bash
         run: |
@@ -77,6 +88,7 @@ jobs:
           node test/browser/release-regression-browser-qa.mjs
           printf 'local_browser_qa=PASS\n' >> artifacts/production-finalize/release.txt
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Secure credential, SHA and project preflight
         shell: bash
         run: |
@@ -102,9 +114,11 @@ jobs:
           echo "VERCEL_CREDENTIAL_GATE=PASS"
           echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Deploy exact merge SHA to Production
         run: node scripts/vercel-rest-deploy.mjs production artifacts/production-finalize/deployment.json
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify Production deployment identity and canonical alias
         shell: bash
         run: |
@@ -116,6 +130,7 @@ jobs:
           printf 'deployment_identity=PASS\ndeployment_id=%s\ndeployment_url=%s\n' "$DEPLOY_ID" "$DEPLOY_URL" >> artifacts/production-finalize/release.txt
           echo "PRODUCTION_ALIAS_GATE=PASS"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production root and Runtime smoke
         shell: bash
         run: |
@@ -135,6 +150,7 @@ jobs:
           echo "PRODUCTION_SMOKE_GATE=BLOCKED"
           exit 49
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Production EW desktop/mobile and existing-series regression QA
         env:
           QA_BASE_URL: ${{ env.PRODUCTION_URL }}
@@ -144,10 +160,11 @@ jobs:
           printf 'production_browser_qa=PASS\n' >> artifacts/production-finalize/release.txt
           echo "PRODUCTION_BROWSER_QA_GATE=PASS"
 
+        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Upload Production finalization audit
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ew-production-finalization-audit
-          path: artifacts/
+          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/
           if-no-files-found: warn

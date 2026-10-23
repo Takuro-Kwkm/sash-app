@@ -1,0 +1,44 @@
+name: Node.js security current integration
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: node-security-${{ github.event_name }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  current-integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify exact current source
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.14'
+      - name: Acquire pinned shared validation dependencies
+        run: |
+          python -B scripts/production/node-security.py unpack "$RUNNER_TEMP/node-security-shared"
+          python -m pip install -r "$RUNNER_TEMP/node-security-shared/requirements.txt"
+          python -m pip check
+      - name: Verify current scope and retained predecessor contracts
+        run: |
+          python -c 'import json,os; print(json.dumps({os.environ["GITHUB_REPOSITORY"]: os.environ["GITHUB_WORKSPACE"]}))' > "$RUNNER_TEMP/node-security-repositories.json"
+          python -B "$RUNNER_TEMP/node-security-shared/scripts/architecture-work.py" resolve --repositories "$RUNNER_TEMP/node-security-repositories.json"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.1'
+      - name: Verify patched runtime
+        run: node --input-type=module -e 'if(process.versions.node !== "24.22.1") process.exit(1); console.log(process.version)'
+      - run: npm install --ignore-scripts --package-lock=false
+      - name: Validate current application inputs
+        run: npm run lint && npm run typecheck && npm test && npm run build:deployment
