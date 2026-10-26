@@ -36,7 +36,8 @@ def selected_native_row(c, raw, after=False):
     adapter = domain_adapter(c)
     if adapter:
         return adapter.native_row(raw, c['registry_before']['manufacturer'], c['registry_before']['series'],
-                                  ['FORMAL_PASS'] if after or document(c['profile']).get('baseline_kind') == 'EXISTING_FORMAL_JSON' else ['WORKING_RECOVERY'])
+                                  ['FORMAL_PASS'] if after or document(c['profile']).get('baseline_kind') == 'EXISTING_FORMAL_JSON'
+                                  else document(c['profile']).get('baseline_states', ['WORKING_RECOVERY']))
     from harness.production import native_registry
     return native_registry(raw, c['registry_before']['manufacturer'], c['registry_before']['series'])
 

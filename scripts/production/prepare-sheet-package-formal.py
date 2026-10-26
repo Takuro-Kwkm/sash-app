@@ -56,6 +56,10 @@ def prepare(shared, checkout, captures, destination, instruction):
     # These are planned native transaction targets, not immutable live authorities.
     # Their exact before/after identities stay pinned in input/plan and native receipts.
     owned = {'formal_authoring_metadata', 'canonical_listing'}
+    if p.get('scoped_working_formal'):
+        require(p.get('transaction_owned_observations') == ['native_registry'],
+                'NATIVE_TRANSACTION_OWNERSHIP', 'Only the exact native Registry CAS is transaction-owned', 'PREPARE')
+        owned.add('native_registry')
     binding.update(checkout=str(checkout),
                    observations={key: observation_fingerprint(v) for key, v in observations.items() if key not in owned},
                    native_transaction_before={key: observation_fingerprint(v) for key, v in observations.items() if key in owned})

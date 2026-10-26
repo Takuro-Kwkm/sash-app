@@ -19,7 +19,9 @@ class WorkingRecoverySuccessor(unittest.TestCase):
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             selection = json.loads((target / 'contracts/production/current-authority-successor.json').read_bytes())
-            self.assertEqual(selection['path'], 'contracts/production/authority-successors/working-recovery.v35.json')
+            self.assertIn(selection['path'], {
+                'contracts/production/authority-successors/working-recovery.v35.json',
+                'contracts/production/authority-successors/scoped-working-formal.v37.json'})
             proof = module.validate(target)
             self.assertEqual(proof['status'], 'PASS', proof)
             self.assertFalse(proof['qa_skip_authority'])
@@ -33,6 +35,7 @@ class WorkingRecoverySuccessor(unittest.TestCase):
                      'contracts/production/working-recovery-shared.v35.json',
                      'contracts/production/working-recovery-shared.v35.bundle',
                      'scripts/production/working-master-xlsx-recovery.py']
+            names.extend(module.VERSIONS[selection['path']][:2])
             protected = next(name for name in proof['verified_unchanged_sha256']
                              if name.startswith('src/') and name.endswith(('.mjs', '.ts', '.js')))
             names.append(protected)

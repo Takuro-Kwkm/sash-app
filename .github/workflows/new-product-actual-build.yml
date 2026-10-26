@@ -43,6 +43,10 @@ jobs:
           python -B scripts/production/test-working-master-recovery.py "$SHARED_HARNESS_ROOT"
           python -B scripts/production/test-working-master-business-qa.py "$SHARED_HARNESS_ROOT"
           python -B scripts/production/test_working_recovery_successor.py
+      - name: Verify scoped Working Formal and immutable Human/native CAS boundary
+        run: |
+          python -B scripts/production/validate-scoped-working-formal.py
+          SHARED_HARNESS_ROOT="$SHARED_HARNESS_ROOT" python -B scripts/production/test_scoped_working_formal.py
       - name: Assess bounded infrastructure changes through the existing router
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
