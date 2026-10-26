@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
   "path": "contracts/production/authority-successors/scoped-working-formal.v37.json",
-  "sha256": "e493304aafd10f4385fdf10dec37922807736239099e1ca7e2d7ac44f7d1cc17",
-  "implementation_sha": "99510d7d735c641251006c88c0802cba7fac1c04"
+  "sha256": "333e92bd4eb3435ae3b4f2c9c8c193a05295747ebd2a3e50ffb60f591aa205b6",
+  "implementation_sha": "9cf37660df4455195bc21d66247c2b39c6c94e21"
 }
