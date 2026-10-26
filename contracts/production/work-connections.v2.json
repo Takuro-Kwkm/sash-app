@@ -539,6 +539,10 @@
         "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
         "INTEGRATION": "NATIVE_RUNTIME_ADAPTER_UNAVAILABLE",
         "RELEASE": "NOT_AUTHORIZED_BY_WORKING_QA_PROFILE"
+      },
+      "formal_profile": {
+        "path": "contracts/production/working-master-recovery/madoremo.formal.v1.json",
+        "sha256": "3d706f3e1905f90e64ff72c80381b38b6dfe46efc842d1f18019ff9fa0b71bea"
       }
     },
     {

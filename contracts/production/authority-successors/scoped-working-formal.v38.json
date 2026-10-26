@@ -1,0 +1,8 @@
+{
+  "schema": "CURRENT_AUTHORITY_SCOPED_WORKING_FORMAL_V38",
+  "predecessor_central_commit": "db34ed6864af5333fa49a7f991d017422499e9c9",
+  "predecessor_native_commit": "3be39f9ef29950c4d3d190997bd087e7fe71134a",
+  "native_source_commit": "4a61282b5470a259083dfc32c99a49a0f6cd22f6",
+  "shared_implementation_sha": "1624ff3c2f6409edb7b2b1c81128e27caa80e400",
+  "terminal_policy": "SCOPED_WORKING_FORMAL_AFTER_EXTERNAL_HUMAN_AND_NATIVE_CAS; SAVED_BINDING_INSPECT_ONLY; NO_RUNTIME_UI_RELEASE; NO_QA_SKIP"
+}

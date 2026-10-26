@@ -13,6 +13,12 @@ META = 'contracts/production/sash-verification-shared.v29.json'
 BUNDLE = 'contracts/production/sash-verification-shared.v29.bundle'
 
 VERSIONS = {
+    'contracts/production/authority-successors/scoped-working-formal.v38.json': (
+        'contracts/production/scoped-working-formal-shared.v38.json',
+        'contracts/production/scoped-working-formal-shared.v38.bundle',
+        'SCOPED_WORKING_FORMAL_SHARED_GIT_CARRIER_V38',
+        'SCOPED_WORKING_FORMAL_HUMAN_NATIVE_CAS_ONLY; NO_INSTALLED_SHARED_COPY',
+        'harness.scoped_working_formal_scope'),
     RECORD: (META, BUNDLE, 'SASH_VERIFICATION_SHARED_GIT_CARRIER_V29',
              'INFRASTRUCTURE_COMPATIBILITY_ONLY; NO_INSTALLED_SHARED_COPY',
              'harness.sash_verification_scope'),
