@@ -21,7 +21,7 @@ class WorkingRecoverySuccessor(unittest.TestCase):
             selection = json.loads((target / 'contracts/production/current-authority-successor.json').read_bytes())
             self.assertIn(selection['path'], {
                 'contracts/production/authority-successors/working-recovery.v35.json',
-                'contracts/production/authority-successors/scoped-working-formal.v37.json'})
+                'contracts/production/authority-successors/scoped-working-formal.v38.json'})
             proof = module.validate(target)
             self.assertEqual(proof['status'], 'PASS', proof)
             self.assertFalse(proof['qa_skip_authority'])
