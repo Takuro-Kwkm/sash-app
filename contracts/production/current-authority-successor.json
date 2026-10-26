@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
-  "path": "contracts/production/authority-successors/working-recovery.v35.json",
-  "sha256": "bd7e71bbf946fb6a34135db784720d578be5aacc34a4aae891ac806e266cb04f",
-  "implementation_sha": "091f02c2e8f008c068e55bbd812f43a60b04ba02"
+  "path": "contracts/production/authority-successors/scoped-working-formal.v37.json",
+  "sha256": "e493304aafd10f4385fdf10dec37922807736239099e1ca7e2d7ac44f7d1cc17",
+  "implementation_sha": "99510d7d735c641251006c88c0802cba7fac1c04"
 }
