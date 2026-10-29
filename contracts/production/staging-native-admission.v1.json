@@ -1,0 +1,93 @@
+{
+  "schema": "STAGING_NATIVE_OPERATION_INPUTS_V1",
+  "subject": {
+    "kind": "APPLICATION_ENVIRONMENT",
+    "repository": "Takuro-Kwkm/sash-app",
+    "provider": "VERCEL",
+    "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+    "project_id": "prj_OCqMeC5sN3y920jp7x1w1ZfPlVip",
+    "business_environment": "Staging",
+    "provider_target": "production"
+  },
+  "destination": {
+    "provider": "VERCEL",
+    "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+    "project_id": "prj_OCqMeC5sN3y920jp7x1w1ZfPlVip",
+    "alias": "https://sash-app-public-saas-staging.vercel.app"
+  },
+  "state_owner": "EXISTING_SHARED_V2_BINDING_JOURNAL_CHECKPOINT_RESUME",
+  "application_source_sha": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+  "assets": {
+    "Source": {
+      "version": "c48-serving-evidence-v18-v1",
+      "ref": {
+        "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/outputs/STAGING-NATIVE-CONNECTION-20261028/asset-inventory-fixed-20261029/asset-source.json",
+        "sha256": "a023ca96dc700e563dda4005c9a52d98dda75e6d0bd4d4856c1de2374f2337a7",
+        "location": "Retained original acquisition evidence; not native adoption",
+        "observed_at": "2026-10-29"
+      }
+    },
+    "Formal": {
+      "version": "c48-serving-evidence-v18-v1",
+      "ref": {
+        "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/outputs/STAGING-NATIVE-CONNECTION-20261028/asset-inventory-fixed-20261029/asset-formal.json",
+        "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+        "location": "Retained original acquisition evidence; not native adoption",
+        "observed_at": "2026-10-29"
+      }
+    },
+    "Contract": {
+      "version": "c48-serving-evidence-v18-v1",
+      "ref": {
+        "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/outputs/STAGING-NATIVE-CONNECTION-20261028/ui-v18-acquired-review-20261029/asset-contract-v18.json",
+        "sha256": "33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341",
+        "location": "Retained original acquisition evidence; not native adoption",
+        "observed_at": "2026-10-29"
+      }
+    },
+    "Runtime": {
+      "version": "c48-serving-evidence-v18-v1",
+      "ref": {
+        "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/outputs/STAGING-NATIVE-CONNECTION-20261028/asset-inventory-fixed-20261029/asset-runtime.json",
+        "sha256": "19017fa0b35ecc899a9cca4c59866763f923b09e4148632557914a3788b97616",
+        "location": "Retained original acquisition evidence; not native adoption",
+        "observed_at": "2026-10-29"
+      }
+    },
+    "UI": {
+      "version": "c48-serving-evidence-v18-v1",
+      "ref": {
+        "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/outputs/STAGING-NATIVE-CONNECTION-20261028/asset-inventory-fixed-20261029/asset-ui.json",
+        "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+        "location": "Retained original acquisition evidence; not native adoption",
+        "observed_at": "2026-10-29"
+      }
+    }
+  },
+  "upstream": null,
+  "upstream_work_id": null,
+  "canonical_baselines": {
+    "PROJECT_CONFIGURATION": null,
+    "ENVIRONMENT_CONFIGURATION": null,
+    "EMERGENCY_RECOVERY": null
+  },
+  "project_baseline_proposal": {
+    "status": "PENDING_ADOPTION",
+    "fields": {
+      "framework": null,
+      "nodeVersion": "24.x"
+    }
+  },
+  "unresolved": [
+    "Formal historical equality six members",
+    "Native collection adoption",
+    "Real native upstream",
+    "Canonical desired baseline / env omission semantics",
+    "Project Git not connected; application branch not observed"
+  ],
+  "correction_cycles": {
+    "used": 2,
+    "limit": 2,
+    "reset": false
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "STAGING_NATIVE_CONNECTION_V1",
+  "state": "PENDING_ADOPTION",
+  "subject": {
+    "kind": "APPLICATION_ENVIRONMENT",
+    "repository": "Takuro-Kwkm/sash-app",
+    "provider": "VERCEL",
+    "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+    "project_id": "prj_OCqMeC5sN3y920jp7x1w1ZfPlVip",
+    "business_environment": "Staging",
+    "provider_target": "production"
+  },
+  "destination": {
+    "provider": "VERCEL",
+    "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+    "project_id": "prj_OCqMeC5sN3y920jp7x1w1ZfPlVip",
+    "alias": "https://sash-app-public-saas-staging.vercel.app"
+  },
+  "operations": [
+    "PROJECT_CONFIGURATION",
+    "ENVIRONMENT_CONFIGURATION",
+    "EMERGENCY_RECOVERY"
+  ],
+  "profile": {
+    "path": "contracts/production/release-profiles/staging-non-product.v1.json",
+    "sha256": "84a9a1e1d92dfa2c9626cc570c164681885d6c3ec25dd2f8846f337d72131293"
+  },
+  "validator": "scripts/production/validate-staging-native-admission.py",
+  "native_adapter": "scripts/production/staging-recovery-connection.py",
+  "execution_authority": "NONE"
+}
