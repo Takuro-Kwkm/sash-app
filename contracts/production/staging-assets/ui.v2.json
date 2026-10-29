@@ -1,0 +1,412 @@
+{
+  "schema": "NATIVE_STAGING_ASSET_COLLECTION_V2",
+  "mode": "NEW_BASELINE_REVIEW",
+  "role": "UI",
+  "version": "captured-staging-baseline-20261029-v1",
+  "baseline_git_sha": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+  "predecessor": {
+    "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+    "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+  },
+  "members": [
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/estimate-output/model.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/d77f2450e982b8aba0c870fd68af9d1d601095751adaae28773445744253fa71",
+      "sha256": "d77f2450e982b8aba0c870fd68af9d1d601095751adaae28773445744253fa71",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/estimate-output/model.mjs",
+        "blob": "2064eca476d9cb893a5e43f19c76996f11272665"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 0
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/estimate-output/pdf-renderer.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/0da7daf48d34dd2c338aed14d5007a140a984ebd70aff4aaf5de578cc71aa0b7",
+      "sha256": "0da7daf48d34dd2c338aed14d5007a140a984ebd70aff4aaf5de578cc71aa0b7",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/estimate-output/pdf-renderer.mjs",
+        "blob": "e75080478ff8722f7dfe31726e7a19b2b38d3d75"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 1
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/estimate-output/xlsx-renderer.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/4c1230350bca67f7b67bcfbd9fd11cec5716365b7292ddef6b63dc134dd58b98",
+      "sha256": "4c1230350bca67f7b67bcfbd9fd11cec5716365b7292ddef6b63dc134dd58b98",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/estimate-output/xlsx-renderer.mjs",
+        "blob": "4079908520067f1ba34bb60da3b72478a03234cc"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 2
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/public-saas/ui/app.js",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/94d6dea555e1d370382abc6b9f142d4654869417b7ddbc8bc4622d32241162a5",
+      "sha256": "94d6dea555e1d370382abc6b9f142d4654869417b7ddbc8bc4622d32241162a5",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/public-saas/ui/app.js",
+        "blob": "e062b76d30de61c12ed76ef7bbf2d94e17c200b4"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 3
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/public-saas/ui/client-monitoring.js",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/9c3b4927b265d89ef5e7a919f1183ec6a5532295a70701d2834a62903bce85e1",
+      "sha256": "9c3b4927b265d89ef5e7a919f1183ec6a5532295a70701d2834a62903bce85e1",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/public-saas/ui/client-monitoring.js",
+        "blob": "9431ff3dbf20595d12f16a825fd5dba37678cc8a"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 4
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/public-saas/ui/index.html",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/e5e6ea95990fe443ce33ccb242759b3bdd97482d423d5ad9a88f00f98bb82c45",
+      "sha256": "e5e6ea95990fe443ce33ccb242759b3bdd97482d423d5ad9a88f00f98bb82c45",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/public-saas/ui/index.html",
+        "blob": "44da4bba88d78d2a71604c88ca8089418f16b3e9"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 5
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/public-saas/ui/styles.css",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/9fbc93952d4abd0d11161fdc8190f3ca97310fd675b8734a71bcd1125da06838",
+      "sha256": "9fbc93952d4abd0d11161fdc8190f3ca97310fd675b8734a71bcd1125da06838",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/public-saas/ui/styles.css",
+        "blob": "2d6704527aeaef5bad49c022e60feb15dccf9bec"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 6
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/ui/web/app.js",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/778cc09146bfa43144853462fab16731b7288b53418f740c68707be4e8b34edb",
+      "sha256": "778cc09146bfa43144853462fab16731b7288b53418f740c68707be4e8b34edb",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/ui/web/app.js",
+        "blob": "fc6090a95fa66950f5e71c13a74202bdd1087512"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 7
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/ui/web/estimate-output-integration.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/549f84e2a09d4b064bff6e0b9162042cdbf970ba12538cca376b18a25fdd7a4d",
+      "sha256": "549f84e2a09d4b064bff6e0b9162042cdbf970ba12538cca376b18a25fdd7a4d",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/ui/web/estimate-output-integration.mjs",
+        "blob": "1b2c00e55fb672163dcdd3a70159dba5b7335619"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 8
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/ui/web/estimate-output.css",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/f705f00eaf2af35cc6ccafe53923c7ff6667847fa5c27f9b60045b14488287fb",
+      "sha256": "f705f00eaf2af35cc6ccafe53923c7ff6667847fa5c27f9b60045b14488287fb",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/ui/web/estimate-output.css",
+        "blob": "474085c42d12b67cf24f7b2e0768d54a5d7cef05"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 9
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/ui/web/index.html",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/653406ff3f3fd2676e6308db68d93d992492153ab7c24ae1eeb8733fc2adcec0",
+      "sha256": "653406ff3f3fd2676e6308db68d93d992492153ab7c24ae1eeb8733fc2adcec0",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/ui/web/index.html",
+        "blob": "d8d7084a72c6f8b2bc053af54db30832917bf5c2"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 10
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/ui/web/product-configuration-editor.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/d3aa20314a393ae1e01c9dc61528fe43d60f31a4dcb8f0cca24b8fb3d571712f",
+      "sha256": "d3aa20314a393ae1e01c9dc61528fe43d60f31a4dcb8f0cca24b8fb3d571712f",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/ui/web/product-configuration-editor.mjs",
+        "blob": "d07ffbb313becaea2d221265a830b42496d000f0"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 11
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/ui/web/styles-wave3.css",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/fc3762eeccd205f404a7f2f4df58d3b1e1b0f95e5bfac88294eb0763a6e40dbe",
+      "sha256": "fc3762eeccd205f404a7f2f4df58d3b1e1b0f95e5bfac88294eb0763a6e40dbe",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/ui/web/styles-wave3.css",
+        "blob": "da86b1174ee529a39a2c8031ac6c742463d7302e"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 12
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/ui/web/styles.css",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/b01cb731057e4f6715d006b9fbedd9a4064bbedc5e805999cacf3c5072138901",
+      "sha256": "b01cb731057e4f6715d006b9fbedd9a4064bbedc5e805999cacf3c5072138901",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/ui/web/styles.css",
+        "blob": "1a7394179a21b5cf810f9b1cec7c9c298bd379c4"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 13
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/ui/web/work-management.css",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/6d1c52be7d4bab9da2422f81ba2d52de3cf6ffd2a9541d13b903ad368a7f9b4e",
+      "sha256": "6d1c52be7d4bab9da2422f81ba2d52de3cf6ffd2a9541d13b903ad368a7f9b4e",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/ui/web/work-management.css",
+        "blob": "7076d6a71dd0b5bf8f29b30789cd07e4afdddd4e"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 14
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/work-management/domain.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/f6afe8cd7dd9f0955580d644fd94153f1b4825080e9302966babf400488e2836",
+      "sha256": "f6afe8cd7dd9f0955580d644fd94153f1b4825080e9302966babf400488e2836",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/work-management/domain.mjs",
+        "blob": "3d09fcb46c1305f486f5d2b07bc5cd2cdddc90b6"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 15
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/work-management/repositories.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/bf565ff5144157b58fc8b82e3c5f5436426ed16fd7cfa49635f1d43d7d0cbc17",
+      "sha256": "bf565ff5144157b58fc8b82e3c5f5436426ed16fd7cfa49635f1d43d7d0cbc17",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/work-management/repositories.mjs",
+        "blob": "467c10612310d9f0bbf6737e78588413b9fa0751"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 16
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/work-management/service.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/03e2cce018f40da19b617205bb4c982014cc9d27161f4b0cdf60646df2e02d44",
+      "sha256": "03e2cce018f40da19b617205bb4c982014cc9d27161f4b0cdf60646df2e02d44",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/work-management/service.mjs",
+        "blob": "04079f8a8199727f3441ecbf772d2390d0046ee0"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 17
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/work-management/storage.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/823d8e2aa316602024751f844096ff9078d2da58f58869e5e0b9af7c04d4dfb8",
+      "sha256": "823d8e2aa316602024751f844096ff9078d2da58f58869e5e0b9af7c04d4dfb8",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/work-management/storage.mjs",
+        "blob": "9c3927543481787840810b54913695056a4cd6b9"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1",
+          "sha256": "d67b89553475b5db3c26640d5f11840b9444b07852b91846f86a975dfc87e5a1"
+        },
+        "member_index": 18
+      },
+      "historical_identity_verified": null
+    }
+  ]
+}

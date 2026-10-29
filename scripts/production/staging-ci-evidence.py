@@ -377,9 +377,83 @@ def fetch_inputs(shared, release_id, asset_id, package_sha256, package_size,
             'asset_id':asset_id,'package_sha256':package_sha256,'package_size':package_size,'qa_authority':False}
 
 
+def baseline_ci(shared, cache_root, output, repository, base_sha, env=None):
+    """One declared suite on approved actual input; this never dispatches CI."""
+    import unittest
+    from harness.core import fingerprint
+    from harness.staging_admission import prepare_review_context, baseline_review_input, git, check, ADOPTION_PROFILE
+    from harness.ci_input_observation import verify_staging_baseline_result
+    env = dict(os.environ if env is None else env)
+    policy = json.loads((NATIVE/ADOPTION_PROFILE).read_text())
+    check(repository in policy['ci'] and env.get('GITHUB_EVENT_NAME') == 'pull_request'
+          and env.get('GITHUB_RUN_ATTEMPT') == '1' and int(env.get('GITHUB_RUN_ID', '0')) > 0,
+          'BASELINE_CI_EVENT', 'Real exact first candidate run required')
+    job_policy = policy['ci'][repository]
+    check(env.get('GITHUB_JOB') == job_policy['job'] and re.fullmatch('[0-9a-f]{40}',base_sha or ''),
+          'BASELINE_CI_JOB', 'Exact job/base required')
+    output = Path(output).absolute()
+    projected = prepare_review_context(shared,NATIVE,cache_root,output.parent/'baseline-input.json')
+    os.environ.update(STAGING_SHARED_CHECKOUT=str(shared),STAGING_NATIVE_CHECKOUT=str(NATIVE),
+                      STAGING_BASELINE_CONTEXT=projected['input']['path'],PYTHONDONTWRITEBYTECODE='1')
+    sys.path[:0]=[str(shared),str(Path(shared)/'tests'),str(NATIVE/'scripts/production')]
+    modules = policy['baseline_test_modules']
+    suite = unittest.TestLoader().loadTestsFromNames(modules)
+    def ids(group):
+        result=[]
+        for case in group:
+            result.extend(ids(case) if isinstance(case,unittest.TestSuite) else [case.id()])
+        return result
+    expected = sorted(ids(suite))
+    check(expected == policy['baseline_test_cases'], 'BASELINE_TEST_INVENTORY', 'Declared source case inventory differs')
+    class Result(unittest.TextTestResult):
+        def __init__(self,*args,**kwargs):
+            super().__init__(*args,**kwargs);self.case_rows=[]
+        def addSuccess(self,test):
+            super().addSuccess(test);self.case_rows.append({'id':test.id(),'status':'PASS'})
+        def addFailure(self,test,err):
+            super().addFailure(test,err);self.case_rows.append({'id':test.id(),'status':'FAIL'})
+        def addError(self,test,err):
+            super().addError(test,err);self.case_rows.append({'id':test.id(),'status':'ERROR'})
+        def addSkip(self,test,reason):
+            super().addSkip(test,reason);self.case_rows.append({'id':test.id(),'status':'SKIP'})
+    outcome=unittest.TextTestRunner(verbosity=2,failfast=True,resultclass=Result).run(suite)
+    shared_head=git(shared,'rev-parse','HEAD').decode().strip();native_head=git(NATIVE,'rev-parse','HEAD').decode().strip()
+    checkout=shared if repository.endswith('/product-ui-contracts') else NATIVE
+    head=shared_head if repository.endswith('/product-ui-contracts') else native_head
+    details=job_policy['input_policy']
+    profiles={p:{'sha256':sha(NATIVE/p),'json_fingerprint':fingerprint(json.loads((NATIVE/p).read_text()))} for p in details['profile_paths']}
+    environment={k:env.get(k,'') for k in ('RUNNER_OS','RUNNER_ARCH','ImageOS','ImageVersion')}
+    environment['runtimes']={'python3':'Python '+platform.python_version()}
+    inputs={'schema':'CI_JOB_INPUT_OBSERVATION_V1','repository':repository,'head_sha':head,'base_sha':base_sha,
+            'checkout_sha':head,'checkout_parents':[],'run_id':int(env['GITHUB_RUN_ID']),'run_attempt':1,
+            'workflow_path':job_policy['workflow'],'workflow_sha256':sha(Path(checkout)/job_policy['workflow']),
+            'job_key':job_policy['job'],'event':'pull_request','observation_stage':'after-runtime-setup',
+            'environment':environment,'environment_sha256':fingerprint(environment),'profile_inputs':profiles,
+            'qa_authority':False,'profile_usage_proven':False}
+    doc=json.loads(Path(projected['input']['path']).read_text());cases=sorted(outcome.case_rows,key=lambda c:c['id'])
+    record={'schema':'STAGING_BASELINE_CI_RESULT_V1','status':'SUCCESS' if outcome.wasSuccessful() and not outcome.skipped else 'FAILED',
+            'repository':repository,'head_sha':head,'shared_head':shared_head,'native_head':native_head,
+            'run_id':int(env['GITHUB_RUN_ID']),'run_attempt':1,'expected_modules':modules,'expected_cases':expected,
+            'cases':cases,'case_inventory_sha256':fingerprint([c['id'] for c in cases]),'assets':doc['assets'],
+            'baseline_sha256':doc['baseline']['sha256'],'projection_sha256':projected['projection_sha256'],
+            'review':projected['review'],'job_inputs':inputs}
+    output.parent.mkdir(parents=True,exist_ok=True);output.write_text(json.dumps(record,sort_keys=True)+'\n')
+    if outcome.wasSuccessful() and not outcome.skipped:
+        verify_staging_baseline_result(record,modules,doc['assets'],doc['baseline']['sha256'],shared_head,native_head,policy['baseline_test_cases'])
+    return record
+
+
+def with_baseline_result(record, path):
+    """Legacy result is retained; new policy requires an independently bounded result."""
+    value=json.loads(Path(path).read_text()) if path and Path(path).is_file() else None
+    if value is None or value.get('status')!='SUCCESS':
+        return {**record,'schema':'STAGING_NATIVE_SCOPE_RESULT_V2','status':'INCOMPLETE','baseline_review':value}
+    return {**record,'schema':'STAGING_NATIVE_SCOPE_RESULT_V2','baseline_review':value}
+
+
 def main(argv=None):
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=('prepare-inputs','inputs','result','source-check','pack-inputs','fetch-inputs'))
+    parser.add_argument('command',choices=('prepare-inputs','inputs','result','source-check','pack-inputs','fetch-inputs','prepare-review-context','baseline-ci'))
     parser.add_argument('--central',required=True)
     parser.add_argument('--package-root');parser.add_argument('--cache-root')
     parser.add_argument('--authorization-sha256');parser.add_argument('--base')
@@ -388,11 +462,22 @@ def main(argv=None):
     parser.add_argument('--request');parser.add_argument('--request-sha256')
     parser.add_argument('--release-id',type=int);parser.add_argument('--asset-id',type=int)
     parser.add_argument('--package-sha256');parser.add_argument('--package-size',type=int)
+    parser.add_argument('--ci-repository');parser.add_argument('--baseline-result')
     args=parser.parse_args(argv)
     shared=Path(args.central).resolve();sys.path.insert(0,str(shared))
     from harness.core import Blocked
     try:
-        if args.command=='pack-inputs':
+        if args.command in ('prepare-review-context','baseline-ci'):
+            from harness.staging_admission import TransportContext, prepare_review_context
+            package=Path(args.package_root)
+            TransportContext.from_envelope({'manifest':capture(package/'manifest.json'),'authorization':capture(package/'authorization.json'),
+                'authorization_sha256':args.authorization_sha256,'cache_root':args.cache_root},shared,NATIVE)
+            if args.command=='prepare-review-context':
+                record=prepare_review_context(shared,NATIVE,args.cache_root,args.out)
+            else:
+                record=baseline_ci(shared,args.cache_root,args.out,args.ci_repository,args.base)
+                if record['status']!='SUCCESS': return 2
+        elif args.command=='pack-inputs':
             record=pack_inputs(shared,args.request,args.request_sha256,args.out)
         elif args.command=='fetch-inputs':
             record=fetch_inputs(shared,args.release_id,args.asset_id,args.package_sha256,args.package_size,
@@ -407,6 +492,7 @@ def main(argv=None):
         elif args.command=='result':
             tests=json.loads(Path(args.tests).read_text()) if args.tests and Path(args.tests).is_file() else None
             record=result_record(json.loads(Path(args.inputs).read_text()),tests)
+            record=with_baseline_result(record,args.baseline_result)
         else:
             from harness.staging_admission import review_ci_candidate_scope
             transport = None
@@ -418,7 +504,7 @@ def main(argv=None):
                     'authorization_sha256':args.authorization_sha256,'cache_root':args.cache_root},shared,NATIVE)
             record=review_ci_candidate_scope(shared,NATIVE,capture(args.source_context),args.source_context_sha256,transport)
         raw=json.dumps(record,sort_keys=True)+'\n'
-        if args.out and args.command != 'pack-inputs':
+        if args.out and args.command not in ('pack-inputs','prepare-review-context','baseline-ci'):
             destination=Path(args.out);destination.parent.mkdir(parents=True,exist_ok=True);destination.write_text(raw)
         else: print(raw,end='')
         return 0

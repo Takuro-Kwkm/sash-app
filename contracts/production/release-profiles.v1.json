@@ -56,7 +56,11 @@
       },
       "state": "PENDING_ADOPTION",
       "path": "contracts/production/release-profiles/staging-non-product.v1.json",
-      "capability": "METADATA_PREFLIGHT_ONLY_NOT_APPLICATION_RELEASE"
+      "capability": "METADATA_PREFLIGHT_ONLY_NOT_APPLICATION_RELEASE",
+      "baseline_review": {
+        "path": "contracts/production/staging-baseline-review-work.v1.json",
+        "capability": "NEW_BASELINE_REVIEW_ONLY_NOT_ADOPTED"
+      }
     }
   ]
 }

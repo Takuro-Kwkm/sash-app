@@ -19,6 +19,7 @@
   "required_steps": [
     "Observe fixed job inputs",
     "Check actual candidate inputs",
+    "Verify Staging baseline review",
     "Scoped native checks",
     "Emit scoped result",
     "Upload input observation",
@@ -29,7 +30,15 @@
     "profile_paths": [
       "contracts/production/staging-native-ci-policy.v1.json",
       "contracts/production/release-profiles/staging-non-product.v1.json",
-      "contracts/production/staging-native-admission.v1.json"
+      "contracts/production/staging-native-admission.v1.json",
+      "contracts/production/staging-baseline-review-work.v1.json",
+      "contracts/production/staging-subject-index.v1.json",
+      "contracts/production/staging-baseline-adoption-profile.v1.json",
+      "contracts/production/staging-assets/source.v2.json",
+      "contracts/production/staging-assets/formal.v2.json",
+      "contracts/production/staging-assets/contract.v2.json",
+      "contracts/production/staging-assets/runtime.v2.json",
+      "contracts/production/staging-assets/ui.v2.json"
     ],
     "observation_stage": "after-runtime-setup",
     "observation_after_step": "Acquire approved originals",
@@ -47,5 +56,13 @@
     "inputs": "ci-inputs-<run_id>-<attempt>-staging-native-admission",
     "result": "staging-result-<run_id>-<attempt>-staging-native-admission",
     "max_bytes": 1000000
-  }
+  },
+  "baseline_review_required": true,
+  "baseline_test_modules": [
+    "test_staging_baseline_work",
+    "test_staging_admission",
+    "test_architecture_ga",
+    "test_ci_input_observation",
+    "test_staging_native_admission"
+  ]
 }

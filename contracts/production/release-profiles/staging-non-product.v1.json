@@ -26,15 +26,15 @@
   "ci_policy": "contracts/production/staging-native-ci-policy.v1.json",
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "4c5634b0de09764a99a46188f945a2663bf5675f",
+    "ref": "3d2e224eb9bd8b907d354eee8168705c5b7ae51b",
     "state": "EXACT_C_AFTER_P2_REQUIRED"
   },
   "shared_files": {
     "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
-    "contracts/staging-native-admission.v1.json": "25d0323efddad35aeb62f54ba6719166d0c1c9c5ad679b7957885fb42de6440f",
+    "contracts/staging-native-admission.v1.json": "2fe377cbdd69140343ba7bccbc5e4a09b885b2da7b281fecc3e8ae8aac28d184",
     "harness/__init__.py": "93ad39fb60540fe9d283decf284486166826c9b7f81efbf856e3778e50ec3082",
     "harness/approved_continuation.py": "a7dc753387de7c7e434a2f4944f46e76ee005933f27c272d98d154ab92d3d8d5",
-    "harness/architecture.py": "2db9c14602e3f511d9600ed55cfc2895d946c1a874386cdff853c6449ecf9694",
+    "harness/architecture.py": "c05d4b8201a41c93b736bb1edf2620400b50f345ad1d072c52254e9305b559aa",
     "harness/artifacts.py": "cf264fe46b02451613e6229b5c6127f2a7c4383802f630814b5ce3546d386ded",
     "harness/authority_observation.py": "0a7a7a558a189b452b590fec08fdd039415d63dd97e4a88121855701bc870257",
     "harness/builder_inventory_scope.py": "1c2c2f5bcd10fdfb1aef9bc9404b038011e3d0972dca9b7753bbf0d7f29a5a31",
@@ -43,7 +43,7 @@
     "harness/candidate_review_scope.py": "7caf31d07b0cfe8a6869fc44a2c1f02f4b02829d627e49456859e72613170f7c",
     "harness/candidate_value_scope.py": "1e4c59cd90ab2f01ecc56585cce30c3d0cc02db3c9a03843b5a9f562422a9913",
     "harness/changed_path.py": "bccb5c91c2a2f6055286a914fd0afa88159b97b5e4622f5a711638f6a65471d0",
-    "harness/ci_input_observation.py": "d16080e584fcfbc27e673e5c57644ede3defc193e9d014a43c7c189e9a7f43b0",
+    "harness/ci_input_observation.py": "cbd9a657a504a4f87c5fbc07d3598e3e49af179ea7066c6a10486ae786a59a42",
     "harness/ci_submission_successor.py": "68a408f6ce5ffe7621c0dcb7a1a3f2a1430d6b79d829d977baf3cc87bf099c9f",
     "harness/cli.py": "66f77f109e3980c1a48d8c8c2907dc677b118a8b466bcd8e45d252a7b04e1f8f",
     "harness/core.py": "e35467a495a4c800fc5dc4bc642fad234f1fc3da07a7bf39727eefd4112bb203",
@@ -64,12 +64,12 @@
     "harness/release_publication.py": "7717d6120ded6d7dc2837bfef21d97d8edae19ae4a0b293d9d5546103051c198",
     "harness/release_restore.py": "9a2903eea8887efa66b55ec92f9909e1353ff7ea631b90459d0ba548bb4b6a7a",
     "harness/release_ui_admission.py": "85196e05b0a060ea7c708e59d8fca5684ef8449f23ddd1afa7ad94f03a7d76d0",
-    "harness/resolvers.py": "cb1704e92446cb6552f9da80ad30928928ed1aa4d05aedcce13ee69e07229a57",
+    "harness/resolvers.py": "353d500d5741bcfc7b914e2be86886b60f3307d52b4e7c390d4b0b1738b9e328",
     "harness/sash_verification_scope.py": "3c16c2285032ab7c00d5269482f3bf864330138df732bc3e66369b24a09349cc",
     "harness/scoped_working_formal_scope.py": "23c31e50d5588cd49ee7959453cc72059dc7eb0f162fc8d591feacbd30ae5d68",
     "harness/source_reference_review.py": "82cb39bab1c789af881792a517e292ef11124cd8ffa8144bd3d99d59079db764",
     "harness/source_review_scope.py": "2b79627a0318aad86c8c66a0a7b3348b3707f4ba047b821e59256238e19e69aa",
-    "harness/staging_admission.py": "7bbc14bf6c24e7263624b0b71b0664bb2f2a26eee0b44180c89a33725c2060eb",
+    "harness/staging_admission.py": "ff7dd971c15e4cad8e286979dd1292a0561b12dff726f36287c009f310653554",
     "harness/staging_recovery.py": "fc4fe8f8b742684814f0afd0bcae4959f750d613f6bdbd56709a0eaa14d179f1",
     "harness/storage_admission.py": "a08698ec6894f04307639edd4deefae3d6d871f8cdb4070f04c9706375b7b2b7",
     "harness/verification_scope.py": "476facab877abaee12207cd451b601b54ab771d8b14387766d900226e8927a60",
@@ -77,20 +77,30 @@
     "harness/verified_downstream_continuation.py": "6f504b820f823594e950e790cd0ac6c9eada57465b3ab1548f1e1ce61b310e22",
     "harness/workflow.py": "85a161c5ce1380d21fa3cb234fcc07b402e0cd6ddc52dd0a6ed0d3729c6c66bf",
     "harness/working_recovery_scope.py": "423d0fc8165b1afd5c4871ed350152cd9504070251f0e7ccf8f4345443387764",
-    "registries/current-architecture.v2.json": "74239ed6ffbc021fe8053d53fd1b406971f1214f6f23ba971b6a570ce195cbd7",
+    "registries/current-architecture.v2.json": "af83bbec9f9e06e3b3922abf969492a234fc01775745e06e14a5c89bce708e0e",
     "schemas/common-release.v1.schema.json": "a15705dfe0334796c08e80e107955d2d931aab557742096f587085d1c2effd78",
     "scripts/architecture-work.py": "7722d8e93431a705bb782bf9384612f478c5fcb6d989b8fe5d6fc2b4f44fb4e7",
     "scripts/production-work.py": "4ed2969209a8f175949bb3d3d42f74345c5fb1ae39f4955d642bc317580658a6",
-    ".github/workflows/validate.yml": "524f62cef4e6cd83d4c02ab3bc78da03269404e95980afdca348ac4e332dc29a"
+    ".github/workflows/validate.yml": "08c1d23b8fbc4cdad8938be52bea91ed4213d8084dcd44c473282b1949b50522"
   },
   "native_files": {
-    "contracts/production/staging-native-admission.v1.json": "9881b976e47895ade411f23fd3ca03c298990b2964bc9a76885bd6151b5f29a6",
-    "contracts/production/staging-native-ci-policy.v1.json": "3c28cccc20f4ed4a43e898cfe011a934191b9625d9d5a729f48f75a9a758fd85",
-    "contracts/production/release-profiles.v1.json": "84e0937598f339d25c02a36354476ad6708e81dd1a71780369e7e54eb378f08b",
+    "contracts/production/staging-native-admission.v1.json": "bc72531ed9fd5659eca41c8b46e31519e9a8ab43e0c35b87a2b32ca8c1db5afd",
+    "contracts/production/staging-native-ci-policy.v1.json": "ab8144d16810ff6c10262a98eb01cb12f54eecb396b95d00b54a3e8fd8e7ce0b",
+    "contracts/production/release-profiles.v1.json": "69448314f932e24ea896f625879a118c94879c2f1e93ad23ab58b6ea9f47119d",
     "scripts/production/staging-recovery-connection.py": "8aae527c9d0c36359926f4a7ce81f9a1df4ac80d30e8b4cf26a7d2d7afd93009",
     "scripts/production/validate-staging-native-admission.py": "de5315e9f46a93eeeb461b27f02bc934d375a905d6ef5a383df0011134b84849",
-    ".github/workflows/staging-native-admission.yml": "3d5792ffe96420d5c5183ba2c8369e0458c227e929d1bc98e850b5edbb67ded0",
-    "scripts/production/staging-ci-evidence.py": "b562d0035ae68c210c8f9ef4a0d4c4f0a0f23da9aad9dd305de1ce43cece0937"
+    ".github/workflows/staging-native-admission.yml": "5f471c92b94af3899a29698a349e7c0d476d9bbae94c94147f2236537a14407c",
+    "scripts/production/staging-ci-evidence.py": "5c9b6bbd2183acfc1a26506eda78cf9395db8dc85f4e4884bba99226da7a3303",
+    "contracts/production/staging-baseline-review-work.v1.json": "6f23121ce393471f386f0146467ac473e9351df129917d94d41ff67997f1d42d",
+    "contracts/production/staging-subject-index.v1.json": "13e0adb7bf6b620bff0397871ec98a0283eb7dba7f58c10d5f7830abd6dbc1e0",
+    "scripts/production/validate-staging-baseline-review.py": "da85e9f28a02ae3921490655892d81146a109f1b3e44ebb90d80175664c08dd1",
+    "contracts/production/staging-project-baseline-candidate.v1.json": "cb4490da97c4eabef0b9d6c41dfadea22c375c4605a4dc3f1fa0cd7e0fe71ca6",
+    "contracts/production/staging-assets/source.v2.json": "2a6c825b346d677dbda31ea2a4a335650b0469d0afa877767d83858b7b59f52a",
+    "contracts/production/staging-assets/formal.v2.json": "48bb69158579b8dbddd64439a738fe5cee9c9f619caa5210e5722f8d6417ad3a",
+    "contracts/production/staging-assets/contract.v2.json": "78d6aa7c2c2cacc12c26ec59c63948e869d01f7515c3a3e7ea6bbc169bb1df94",
+    "contracts/production/staging-assets/runtime.v2.json": "5351549c71f3c4bf9348b39d62c8303234fb0d160e29c98f85b45ab072e17fa9",
+    "contracts/production/staging-assets/ui.v2.json": "1183b06393d86d9e84c5e65eec7661fd2911e8ac560770f56e2815650ea9996e",
+    "contracts/production/staging-baseline-adoption-profile.v1.json": "768b3b7beedb30db316da646c87961033927ac79bf70e48b3c626de1c6a0b15e"
   },
   "qa": {
     "local": "IMPACTED_NATIVE_NEGATIVE_AND_RETAINED_ROUTE_REGRESSION",
@@ -102,5 +112,15 @@
     "adoption": "P2_REQUIRED",
     "provider_write": "P3_REQUIRED",
     "ai_human_decision_allowed": false
+  },
+  "baseline_review": {
+    "state": "LOCAL_CANDIDATE_NOT_ADOPTED",
+    "path": "contracts/production/staging-baseline-review-work.v1.json",
+    "sha256": "6f23121ce393471f386f0146467ac473e9351df129917d94d41ff67997f1d42d",
+    "requires_successor_seal": false,
+    "adoption_profile": {
+      "path": "contracts/production/staging-baseline-adoption-profile.v1.json",
+      "sha256": "768b3b7beedb30db316da646c87961033927ac79bf70e48b3c626de1c6a0b15e"
+    }
   }
 }

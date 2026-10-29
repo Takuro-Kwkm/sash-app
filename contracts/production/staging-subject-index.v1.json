@@ -1,0 +1,25 @@
+{
+  "schema": "STAGING_NATIVE_SUBJECT_INDEX_V1",
+  "status": "CURRENT",
+  "registry_id": "STAGING_NATIVE_REVIEW_SUBJECTS",
+  "version": "1",
+  "subjects": [
+    {
+      "target": "APPLICATION_ENVIRONMENT:Takuro-Kwkm/sash-app:prj_OCqMeC5sN3y920jp7x1w1ZfPlVip:Staging",
+      "subject": {
+        "kind": "APPLICATION_ENVIRONMENT",
+        "repository": "Takuro-Kwkm/sash-app",
+        "provider": "VERCEL",
+        "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+        "project_id": "prj_OCqMeC5sN3y920jp7x1w1ZfPlVip",
+        "business_environment": "Staging",
+        "provider_target": "production"
+      },
+      "work_profile": {
+        "owner": "native",
+        "path": "contracts/production/staging-baseline-review-work.v1.json",
+        "sha256": "6f23121ce393471f386f0146467ac473e9351df129917d94d41ff67997f1d42d"
+      }
+    }
+  ]
+}

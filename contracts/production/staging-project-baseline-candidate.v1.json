@@ -1,0 +1,13 @@
+{
+  "schema": "STAGING_PROJECT_CONFIGURATION_METADATA_V1",
+  "destination": {
+    "provider": "VERCEL",
+    "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+    "project_id": "prj_OCqMeC5sN3y920jp7x1w1ZfPlVip",
+    "alias": "https://sash-app-public-saas-staging.vercel.app"
+  },
+  "settings": {
+    "framework": null,
+    "nodeVersion": "24.x"
+  }
+}

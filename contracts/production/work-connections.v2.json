@@ -921,11 +921,16 @@
       ],
       "profile": {
         "path": "contracts/production/release-profiles/staging-non-product.v1.json",
-        "sha256": "84a9a1e1d92dfa2c9626cc570c164681885d6c3ec25dd2f8846f337d72131293"
+        "sha256": "9915fc5c277befd7799aa580b2235094806c5563c3ba21e2a93efb25125d60f6"
       },
       "validator": "scripts/production/validate-staging-native-admission.py",
       "native_adapter": "scripts/production/staging-recovery-connection.py",
-      "execution_authority": "NONE"
+      "execution_authority": "NONE",
+      "baseline_review": {
+        "path": "contracts/production/staging-baseline-review-work.v1.json",
+        "sha256": "6f23121ce393471f386f0146467ac473e9351df129917d94d41ff67997f1d42d",
+        "state": "CANDIDATE_REVIEW_ONLY"
+      }
     }
   }
 }

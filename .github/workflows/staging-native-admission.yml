@@ -83,6 +83,12 @@ jobs:
         run: |
           python -c 'import json,os;json.dump({"Takuro-Kwkm/sash-app":os.getcwd()},open(os.environ["RUNNER_TEMP"]+"/staging-repositories.json","w"))'
           python -B scripts/production/validate-staging-native-admission.py --central "$GITHUB_WORKSPACE/shared" --repositories "$RUNNER_TEMP/staging-repositories.json" --ci --transport-manifest "$RUNNER_TEMP/staging-input-package/manifest.json" --transport-authorization "$RUNNER_TEMP/staging-input-package/authorization.json" --authorization-sha256 "$AUTHORIZATION_SHA256" --cache-root "$RUNNER_TEMP/staging-original-cache"
+      - name: Verify Staging baseline review
+        env:
+          AUTHORIZATION_SHA256: ${{ vars.STAGING_INPUT_AUTHORIZATION_SHA256 }}
+          EXPECTED_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          python -B native/scripts/production/staging-ci-evidence.py baseline-ci --central "$PWD/shared" --ci-repository Takuro-Kwkm/sash-app --base "$EXPECTED_BASE" --package-root "$RUNNER_TEMP/staging-input-package" --cache-root "$RUNNER_TEMP/staging-original-cache" --authorization-sha256 "$AUTHORIZATION_SHA256" --out "$RUNNER_TEMP/staging-baseline/baseline-review.json"
       - name: Scoped native checks
         env:
           STAGING_NATIVE_CHECKOUT: ${{ github.workspace }}/native
@@ -101,7 +107,7 @@ jobs:
           PY
       - name: Emit scoped result
         if: always()
-        run: python -B native/scripts/production/staging-ci-evidence.py result --central "$PWD/shared" --inputs "$RUNNER_TEMP/staging-observation/job-inputs.json" --tests "$RUNNER_TEMP/staging-tests.json" --out "$RUNNER_TEMP/staging-result/staging-result.json"
+        run: python -B native/scripts/production/staging-ci-evidence.py result --central "$PWD/shared" --inputs "$RUNNER_TEMP/staging-observation/job-inputs.json" --tests "$RUNNER_TEMP/staging-tests.json" --baseline-result "$RUNNER_TEMP/staging-baseline/baseline-review.json" --out "$RUNNER_TEMP/staging-result/staging-result.json"
       - name: Upload input observation
         if: always()
         uses: actions/upload-artifact@v4

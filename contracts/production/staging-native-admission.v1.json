@@ -89,5 +89,77 @@
     "used": 2,
     "limit": 2,
     "reset": false
+  },
+  "new_baseline_review": {
+    "mode": "NEW_BASELINE_REVIEW",
+    "status": "CANDIDATE_NOT_ADOPTED",
+    "assets": {
+      "Source": {
+        "version": "captured-staging-baseline-20261029-v1",
+        "path": "contracts/production/staging-assets/source.v2.json",
+        "sha256": "2a6c825b346d677dbda31ea2a4a335650b0469d0afa877767d83858b7b59f52a"
+      },
+      "Formal": {
+        "version": "captured-staging-baseline-20261029-v1",
+        "path": "contracts/production/staging-assets/formal.v2.json",
+        "sha256": "48bb69158579b8dbddd64439a738fe5cee9c9f619caa5210e5722f8d6417ad3a"
+      },
+      "Contract": {
+        "version": "captured-staging-baseline-20261029-v1",
+        "path": "contracts/production/staging-assets/contract.v2.json",
+        "sha256": "78d6aa7c2c2cacc12c26ec59c63948e869d01f7515c3a3e7ea6bbc169bb1df94"
+      },
+      "Runtime": {
+        "version": "captured-staging-baseline-20261029-v1",
+        "path": "contracts/production/staging-assets/runtime.v2.json",
+        "sha256": "5351549c71f3c4bf9348b39d62c8303234fb0d160e29c98f85b45ab072e17fa9"
+      },
+      "UI": {
+        "version": "captured-staging-baseline-20261029-v1",
+        "path": "contracts/production/staging-assets/ui.v2.json",
+        "sha256": "1183b06393d86d9e84c5e65eec7661fd2911e8ac560770f56e2815650ea9996e"
+      }
+    },
+    "baseline": {
+      "owner": "native",
+      "path": "contracts/production/staging-project-baseline-candidate.v1.json",
+      "sha256": "cb4490da97c4eabef0b9d6c41dfadea22c375c4605a4dc3f1fa0cd7e0fe71ca6"
+    },
+    "work_profile": {
+      "path": "contracts/production/staging-baseline-review-work.v1.json",
+      "sha256": "6f23121ce393471f386f0146467ac473e9351df129917d94d41ff67997f1d42d"
+    },
+    "subject_index": {
+      "path": "contracts/production/staging-subject-index.v1.json",
+      "sha256": "13e0adb7bf6b620bff0397871ec98a0283eb7dba7f58c10d5f7830abd6dbc1e0"
+    },
+    "adoption": null,
+    "upstream": null,
+    "upstream_work_id": null,
+    "historical_restoration": "HOLD",
+    "operations": [
+      "PROJECT_CONFIGURATION"
+    ],
+    "fields": [
+      "framework",
+      "nodeVersion"
+    ],
+    "source_index": {
+      "path": "objects/sha256/ddfadf72a7dc7bf3e6e628ef675947807067865df50d7cb6113fea24b94b9a62",
+      "sha256": "ddfadf72a7dc7bf3e6e628ef675947807067865df50d7cb6113fea24b94b9a62"
+    },
+    "predecessor": {
+      "shared": "4c5634b0de09764a99a46188f945a2663bf5675f",
+      "native": "573a50b162cc15721a4f5c1eb11253b5859d649c"
+    },
+    "current_observation": {
+      "path": "objects/sha256/78f1d2a48523e3b8c900a65060a9ddbae1fe3c94bc8f615bad40089cf357b89c",
+      "sha256": "78f1d2a48523e3b8c900a65060a9ddbae1fe3c94bc8f615bad40089cf357b89c"
+    },
+    "adoption_profile": {
+      "owner": "native",
+      "path": "contracts/production/staging-baseline-adoption-profile.v1.json",
+      "sha256": "768b3b7beedb30db316da646c87961033927ac79bf70e48b3c626de1c6a0b15e"
+    }
   }
 }

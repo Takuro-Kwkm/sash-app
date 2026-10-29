@@ -29,3 +29,15 @@ After separate external approval, a trusted host may upload that outer package a
 The receiver changes do not add workflows or select formal admission. Existing mandatory steps and result artifacts remain. enabled=true/max_runs=1 here is only the bounded CI candidate policy: real repository vars, secrets, exact C/N, side-effect clearance and external approval are absent. The local profile remains PENDING_ADOPTION with null shared ref until an actual C can be sealed. No fake commit is used. Provider-write remains false.
 
 Current continuation permits in-scope local repairs and impacted validation to completion. Historical P0/supplement one-shot restrictions describe those preserved old snapshots; they do not grant external execution or reset the old 2/2 ledger. Commit, upload, permissions, Push/PR/CI, merge/adoption and provider changes require their exact operation authority. Release assets have no promised automatic TTL; cleanup must be assigned and explicitly approved before upload.
+
+
+## New captured baseline candidate review
+
+Collection V2 distinguishes captured byte provenance from unproven historical equality. V1 recovery admission is unchanged. The APPLICATION_ENVIRONMENT branch delegates to existing production-work run/resume/checkpoint and workflow binding/journal; no second state engine. Review targets NATIVE_BASELINE_REVIEWED only, not adoption. Project comparison covers framework/nodeVersion only; environment/recovery stay HOLD. Candidate paths bind a local uncommitted review and require successor C/N sealing and transport rebinding before CI. P2 requires a separately admitted native Human/CI profile; provider writes remain false.
+
+
+## Portable review and external P2 exact-pair receipt
+
+Native-owned templates use owner/path/hash and produce a byte-bound derived execution profile before Work binding. Saved Work never changes paths on resume. The existing production/Workflow state owner is unchanged. Both CI jobs require Verify Staging baseline review with source-declared case IDs, actual original role byte review and an explicit input projection.
+
+The versioned native adoption profile contains policy only. An external payload binds sealed C/N, five role hashes, desired baseline, real saved Work/checkpoint, authenticated-host acquired CI evidence and actual imported Human source. Generic PENDING handling is unchanged; only reverified explicit exact-Staging context is admitted at V3. No post-CI activation commit, fabricated product ID, provider write or recovery exemption. Host admission authenticates original decisions: JSON hashes alone do not. Test fixture decisions are not real Human Decisions.

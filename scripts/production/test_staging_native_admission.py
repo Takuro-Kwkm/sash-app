@@ -338,3 +338,33 @@ class ReleasePackageTests(unittest.TestCase):
         self.assertEqual(result.returncode,0,result.stdout+result.stderr)
         self.assertEqual(json.loads(result.stdout)['state'],'LOCAL_PACKAGE_NOT_UPLOADED_NOT_ADOPTED')
         with self.zipfile.ZipFile(destination) as archive:self.assertEqual(set(archive.namelist()),EVIDENCE['PACKAGE_FILES'])
+
+
+class NewBaselineNativeBoundary(unittest.TestCase):
+    def test_new_profile_uses_existing_three_validator_steps(self):
+        profile=json.loads((ROOT/'contracts/production/staging-baseline-review-work.v1.json').read_text())
+        self.assertEqual([s['id'] for s in profile['steps']],['INPUTS_REVIEW','BASELINE_SCOPE_REVIEW','REVIEW_PACKET'])
+        self.assertTrue(all(s['kind']=='validator' for s in profile['steps']))
+        self.assertFalse(profile['provider_write_allowed'])
+        self.assertFalse(profile['application_release_allowed'])
+    def test_old_upstream_not_replaced_and_new_candidate_not_adopted(self):
+        cfg=json.loads((ROOT/'contracts/production/staging-native-admission.v1.json').read_text())
+        self.assertIsNone(cfg['upstream'])
+        self.assertIsNone(cfg['upstream_work_id'])
+        self.assertIsNone(cfg['new_baseline_review']['adoption'])
+        self.assertEqual(cfg['new_baseline_review']['historical_restoration'],'HOLD')
+
+
+class PortableBaselineCIContract(unittest.TestCase):
+    def test_native_template_and_index_have_no_host_absolute_path(self):
+        for name in ('staging-baseline-review-work.v1.json','staging-subject-index.v1.json'):
+            raw=(ROOT/'contracts/production'/name).read_text()
+            self.assertNotIn('/private/tmp/',raw)
+            self.assertIn('"owner": "native"',raw)
+    def test_result_without_baseline_receipt_is_incomplete(self):
+        self.assertEqual(EVIDENCE['with_baseline_result']({'status':'SUCCESS'},None)['status'],'INCOMPLETE')
+    def test_new_required_step_and_module_policy_not_optional(self):
+        policy=json.loads((ROOT/'contracts/production/staging-native-ci-policy.v1.json').read_text())
+        self.assertIn('Verify Staging baseline review',policy['required_steps'])
+        self.assertIn('test_staging_baseline_work',policy['baseline_test_modules'])
+        self.assertIn('baseline-ci',(ROOT/'.github/workflows/staging-native-admission.yml').read_text())
