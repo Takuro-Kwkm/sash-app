@@ -475,6 +475,14 @@ def main(argv=None):
             if args.command=='prepare-review-context':
                 record=prepare_review_context(shared,NATIVE,args.cache_root,args.out)
             else:
+                transport_path=Path(args.out).parent/'test-transport.json'
+                transport_path.parent.mkdir(parents=True,exist_ok=True)
+                with transport_path.open('x') as transport_file:
+                    json.dump({'manifest':capture(package/'manifest.json'),
+                        'authorization':capture(package/'authorization.json'),
+                        'authorization_sha256':args.authorization_sha256,
+                        'cache_root':args.cache_root},transport_file)
+                os.environ['STAGING_TEST_TRANSPORT']=str(transport_path.resolve())
                 record=baseline_ci(shared,args.cache_root,args.out,args.ci_repository,args.base)
                 if record['status']!='SUCCESS': return 2
         elif args.command=='pack-inputs':

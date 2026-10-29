@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+from staging_test_transport import flags as transport_flags, original_bytes
 
 ROOT=Path(__file__).resolve().parents[2]
 SHARED=Path(os.environ.get('STAGING_SHARED_CHECKOUT',ROOT.parent/'central'))
@@ -34,7 +35,7 @@ class NativeBoundaryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=str(Path(tempfile.gettempdir()).resolve())) as d:
             mapping=Path(d)/'map.json';mapping.write_text(json.dumps({'Takuro-Kwkm/sash-app':str(ROOT)}))
             r=subprocess.run([os.sys.executable,'-B',str(ROOT/'scripts/production/staging-recovery-connection.py'),
-                              '--central',str(SHARED),'--repositories',str(mapping),'--inspect'],capture_output=True,text=True)
+                              '--central',str(SHARED),'--repositories',str(mapping),'--inspect',*transport_flags()],capture_output=True,text=True)
             self.assertEqual(r.returncode,0,r.stdout+r.stderr)
             result=json.loads(r.stdout);self.assertEqual(result['state'],'STAGING_CONNECTION_CANDIDATE_INSPECTED')
             self.assertEqual(result['adoption'],'NOT_GRANTED')
@@ -43,7 +44,7 @@ class NativeBoundaryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=str(Path(tempfile.gettempdir()).resolve())) as d:
             mapping=Path(d)/'map.json';mapping.write_text(json.dumps({'Takuro-Kwkm/sash-app':d}))
             r=subprocess.run([os.sys.executable,'-B',str(ROOT/'scripts/production/staging-recovery-connection.py'),
-                              '--central',str(SHARED),'--repositories',str(mapping),'--inspect'],capture_output=True,text=True)
+                              '--central',str(SHARED),'--repositories',str(mapping),'--inspect',*transport_flags()],capture_output=True,text=True)
             self.assertEqual(r.returncode,2)
             self.assertEqual(json.loads(r.stdout)['state'],'FAIL_CLOSED')
 
@@ -56,7 +57,7 @@ class NativeBoundaryTests(unittest.TestCase):
             objects=[];archive=io.BytesIO()
             with zipfile.ZipFile(archive,'w') as z:
                 for asset in cfg['assets'].values():
-                    ref=asset['ref'];raw=Path(ref['path']).read_bytes();digest=hashlib.sha256(raw).hexdigest()
+                    ref=asset['ref'];raw=original_bytes(ref,SHARED,ROOT);digest=hashlib.sha256(raw).hexdigest()
                     name='objects/sha256/'+digest;z.writestr(name,raw)
                     objects.append({'original_ref':ref['path'],'sha256':digest,'size':len(raw),'object_path':name})
             head=lambda p:subprocess.check_output(['git','-C',str(p),'rev-parse','HEAD'],text=True).strip()
