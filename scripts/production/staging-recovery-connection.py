@@ -19,6 +19,7 @@ def main(argv=None):
     parser.add_argument('--cache-root')
     parser.add_argument('--transport-authorization')
     parser.add_argument('--authorization-sha256')
+    parser.add_argument('--source-context-json')
     args = parser.parse_args(argv)
     native = Path(__file__).resolve().parents[2]
     try:
@@ -40,6 +41,8 @@ def main(argv=None):
             envelope = {'schema': 'STAGING_NATIVE_INSPECTION_INPUT_V1', 'transport': {
                 'manifest': capture(args.transport_manifest), 'cache_root': str(Path(args.cache_root).resolve()),
                 'authorization': capture(args.transport_authorization), 'authorization_sha256': args.authorization_sha256}}
+            if args.source_context_json:
+                envelope['transport']['successor'] = json.loads(args.source_context_json)
             with tempfile.TemporaryDirectory() as temporary:
                 p = Path(temporary)/'inspection-input.json'; p.write_text(json.dumps(envelope))
                 return subprocess.run(command + ['--staging-plan', str(p)], check=False).returncode

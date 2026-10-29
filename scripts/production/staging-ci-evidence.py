@@ -463,6 +463,7 @@ def main(argv=None):
     parser.add_argument('--release-id',type=int);parser.add_argument('--asset-id',type=int)
     parser.add_argument('--package-sha256');parser.add_argument('--package-size',type=int)
     parser.add_argument('--ci-repository');parser.add_argument('--baseline-result')
+    parser.add_argument('--local-successor-context')
     args=parser.parse_args(argv)
     shared=Path(args.central).resolve();sys.path.insert(0,str(shared))
     from harness.core import Blocked
@@ -470,8 +471,12 @@ def main(argv=None):
         if args.command in ('prepare-review-context','baseline-ci'):
             from harness.staging_admission import TransportContext, prepare_review_context
             package=Path(args.package_root)
-            TransportContext.from_envelope({'manifest':capture(package/'manifest.json'),'authorization':capture(package/'authorization.json'),
-                'authorization_sha256':args.authorization_sha256,'cache_root':args.cache_root},shared,NATIVE)
+            envelope={'manifest':capture(package/'manifest.json'),'authorization':capture(package/'authorization.json'),
+                'authorization_sha256':args.authorization_sha256,'cache_root':args.cache_root}
+            if args.local_successor_context:
+                if args.command != 'prepare-review-context': raise ValueError('Local input lineage cannot authorize CI')
+                envelope['successor']=json.loads(Path(args.local_successor_context).read_text())
+            TransportContext.from_envelope(envelope,shared,NATIVE)
             if args.command=='prepare-review-context':
                 record=prepare_review_context(shared,NATIVE,args.cache_root,args.out)
             else:

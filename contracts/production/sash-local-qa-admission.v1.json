@@ -1,0 +1,7 @@
+{
+  "schema": "SASH_LOCAL_QA_ADMISSION_POLICY_V1",
+  "scope": "SASH_LOCAL_QA_READ_ONLY_SUCCESSOR",
+  "actions_dispatch_authority": false,
+  "merge_authority": false,
+  "release_profile_admission": false
+}

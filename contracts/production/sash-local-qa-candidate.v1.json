@@ -15,6 +15,7 @@
     "test_staging_native_admission",
     "test_staging_recovery",
     "test_staging_portable_router",
-    "test_sash_local_qa"
+    "test_sash_local_qa",
+    "test_sash_local_admission"
   ]
 }
