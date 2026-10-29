@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-from staging_test_transport import flags as transport_flags, original_bytes
+from staging_test_transport import flags as transport_flags, original_bytes, envelope as test_envelope
 
 ROOT=Path(__file__).resolve().parents[2]
 SHARED=Path(os.environ.get('STAGING_SHARED_CHECKOUT',ROOT.parent/'central'))
@@ -99,6 +99,10 @@ class NativeBoundaryTests(unittest.TestCase):
         profile=json.loads((ROOT/'contracts/production/release-profiles/staging-non-product.v1.json').read_text())
         self.assertEqual(profile['status'],'PENDING_ADOPTION')
         expected_shared=subprocess.check_output(['git','-C',str(SHARED),'rev-parse','HEAD'],text=True).strip()
+        transport=test_envelope()
+        if transport and 'successor' in transport:
+            from harness.sash_local_admission import verify_source, CENTRAL
+            expected_shared=verify_source(SHARED, ROOT, transport['successor'])['record']['input_predecessor'][CENTRAL]
         self.assertEqual(profile['shared_contract']['ref'],expected_shared)
         self.assertIn('fetch-inputs',workflow);self.assertNotIn('actions/download-artifact',workflow)
         self.assertIn('path: native',workflow);self.assertIn('path: shared',workflow)
