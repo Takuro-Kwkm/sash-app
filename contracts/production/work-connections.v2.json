@@ -470,15 +470,28 @@
         "APW330"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
+      "connection_state": "CONNECTED",
       "current_formal_version": "v1.0",
       "formal_registry_selector": "YKK AP::APW330",
-      "safe_failure": {
-        "state": "FAIL_CLOSED",
-        "code": "NATIVE_ADAPTER_UNAVAILABLE",
-        "writes": 0,
-        "fallback": false,
-        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      "connection_scope": "EXISTING_AUTHORING_WORKBOOK_SALES_QA",
+      "default_gate": "QA_READY",
+      "native_adapter": "scripts/production/working-master-business-qa.py",
+      "prepare_adapter": "scripts/production/prepare-native-workbook-qa.py",
+      "build_profile": {
+        "profile_id": "sash-existing-authoring-workbook-qa-v1",
+        "path": "contracts/production/working-master-recovery/apw330.v1.json",
+        "sha256": "4e976db3f33012bfc87098046846fb32c96bc3eb0472ecc3d4c3bed3080c97bf"
+      },
+      "baseline_selector": "LIVE_NATIVE_REGISTRY:YKK AP::APW330:v1.0:PACKAGE_BLOCKED",
+      "source_selector": "LIVE_REVIEWED_OFFICIAL_BYTES_AND_ORIGINAL_XLSX",
+      "resume_selector": "contracts/production/current-work.json",
+      "validators": [
+        "scripts/production/validate-native-workbook-profile.py"
+      ],
+      "unsupported_gates": {
+        "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
+        "RUNTIME_UI": "NATIVE_ADAPTER_UNAVAILABLE",
+        "RELEASE": "NATIVE_RELEASE_PROFILE_REQUIRED"
       }
     },
     {
