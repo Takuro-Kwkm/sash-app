@@ -1,8 +1,8 @@
 # APW330 native Formal connection
 
 Existing v1.0 is PACKAGE_BLOCKED, not an assumed Formal. The completed native
-APW330-SALES-QA-20261030-02 carries all 36 original authoring sheets separately,
-94 actual business tests, 8 request samples and the fixed current sales candidate.
+APW330-SALES-QA-20261030-03 carries all 36 original authoring sheets separately,
+103 actual business tests, 8 request samples and the fixed current sales candidate.
 Formal scope is 41 known sales-request fields; seven explicit unresolved fields
 are preserved and excluded from automatic results. Manufacturer final eligibility,
 price/BOM/code, future November additions and fabricator-specific dimensions

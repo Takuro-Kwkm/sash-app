@@ -32,10 +32,10 @@
   "baseline_states": [
     "PACKAGE_BLOCKED"
   ],
-  "completed_work_id": "APW330-SALES-QA-20261030-02",
-  "working_master_sha256": "4ef321332363966f64f8f50d9b49ac0546ba586a71e921cedd9b6cc1b756ce39",
-  "working_qa_sha256": "f87dd442d691bfe97f9cbb5eb4115645c122dd75a37cb73d4d34fe6516d616e2",
-  "working_package_sha256": "cc1082f6085e45186fedb9c7fcc761404a0c0cc9eb3fef521c743d75b4fe2de4",
+  "completed_work_id": "APW330-SALES-QA-20261030-03",
+  "working_master_sha256": "96f9b052baa27e881b4c254bfcfd24ad65688f3e2a155f9d0798516fdc0e68a6",
+  "working_qa_sha256": "f5d8a9c194b2c03c9290d8490e8415e8982b8cc394a87b4fd1091ca343d7e695",
+  "working_package_sha256": "c599d995573fcf0ab698ecc33a0199d7ccd60a1a3239d2a24d55ef1877a58500",
   "formal_scope_field_ids": [
     "window",
     "configuration",
