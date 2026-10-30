@@ -489,9 +489,12 @@
         "scripts/production/validate-native-workbook-profile.py"
       ],
       "unsupported_gates": {
-        "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
         "RUNTIME_UI": "NATIVE_ADAPTER_UNAVAILABLE",
         "RELEASE": "NATIVE_RELEASE_PROFILE_REQUIRED"
+      },
+      "formal_profile": {
+        "path": "contracts/production/working-master-recovery/apw330.formal.v1.json",
+        "sha256": "c274de464ab6898ac26b82b21f4929371438cd52b4f6d3a5cc2040b4b09e1ce8"
       }
     },
     {

@@ -26,7 +26,15 @@ def validate(root):
         v=validators['products'][row['product_id']]
         assert v['native_profile']==ref and v['state']=='READY' and v['no_fallback'] is True
         assert v['validators']==row['validators']==['scripts/production/validate-native-workbook-profile.py']
-        assert row['unsupported_gates']=={'FORMAL':'NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED','RUNTIME_UI':'NATIVE_ADAPTER_UNAVAILABLE','RELEASE':'NATIVE_RELEASE_PROFILE_REQUIRED'}
+        unsupported={'RUNTIME_UI':'NATIVE_ADAPTER_UNAVAILABLE','RELEASE':'NATIVE_RELEASE_PROFILE_REQUIRED'}
+        if row.get('formal_profile'):
+            assert v.get('formal_profile')==row['formal_profile']
+            import importlib.util
+            spec=importlib.util.spec_from_file_location('scoped_formal_profile',root/'scripts/production/validate-scoped-working-formal.py')
+            module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+            assert module.validate(root)['status']=='PASS'
+        else:unsupported['FORMAL']='NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED'
+        assert row['unsupported_gates']==unsupported
     return {'status':'PASS','scope':'NATIVE_PROFILE_CONNECTION_ONLY','product_qa':False,'formal':False}
 
 if __name__=='__main__':print(json.dumps(validate(Path(__file__).resolve().parents[2])))

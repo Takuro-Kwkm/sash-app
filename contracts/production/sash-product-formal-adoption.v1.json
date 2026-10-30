@@ -1,0 +1,22 @@
+{
+  "schema": "SASH_PRODUCT_FORMAL_ADOPTION_V1",
+  "bases": {
+    "Takuro-Kwkm/product-ui-contracts": "47fa567890e4cc11623481d8231f765a2ffc4988",
+    "Takuro-Kwkm/sash-app": "a64936738fdc3b5fbc38bbb06b449d616186950f"
+  },
+  "shared_implementation_sha": "79576d42a96964aa63233fd015a830badc9838fb",
+  "native_source_commit": "9e5dcf0182cf5406517dde58ce295d6e47173be0",
+  "native_inventory_sha256": "dd428e02776f8f185a4fbd366f4b0f945840c7a8565f2393e2871e914bfa7e30",
+  "predecessor_result": {
+    "status": "BLOCKED",
+    "blocking_reason": {
+      "code": "SHARED_HARNESS_FORK",
+      "reason": "harness/workflow.py",
+      "target_gate": "RESOLUTION",
+      "resolution_condition": "Correct the named input; resume the same work."
+    }
+  },
+  "new_bindings_only": true,
+  "actions_dispatch_authority": false,
+  "release_profile_admission": false
+}
