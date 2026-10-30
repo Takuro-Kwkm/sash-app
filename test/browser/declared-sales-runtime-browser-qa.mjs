@@ -17,7 +17,7 @@ try{
     await page.goto(BASE,{waitUntil:'networkidle'});
     const health=await(await context.request.get(BASE+'/api/health')).json();report.observedCommit=health.releaseCommitSha;
     if(process.env.QA_EXPECTED_COMMIT)assert.equal(report.observedCommit,process.env.QA_EXPECTED_COMMIT);
-    const snapshots=[],cases=[];
+    const snapshots=[],persistedSnapshots=[],cases=[];
     for(const row of contract.rows){
       const saved=await page.evaluate(async({row,contract})=>{
         const result=await(await fetch('/api/runtime-master/resolve?'+new URLSearchParams({productId:contract.product_id,selection:JSON.stringify(row.seed)}))).json();
@@ -48,7 +48,22 @@ try{
       for(const key of row.restored_cleared??[])assert.equal(saved.result.selection[key],undefined,key);
       snapshots.push(saved.snapshot);
       const url=`${BASE}/projects/${saved.project}/estimates/${saved.estimate}/openings/${saved.opening}`;
-      await page.goto(url,{waitUntil:'networkidle'});await page.waitForSelector('#dynamicForm[data-resolve-revision]');
+      await page.goto(url,{waitUntil:'networkidle'});
+      if(row.legacy_saved_values){
+        const revalidate=page.locator('[data-runtime-action="revalidate"]');
+        await revalidate.waitFor({state:'visible'});
+        const frozen=await page.evaluate(async saved=>{
+          const {BrowserStorageDocumentStore}=await import('/work-management/storage.mjs');const {createRepositoryBundle}=await import('/work-management/repositories.mjs');
+          return (await createRepositoryBundle(new BrowserStorageDocumentStore(localStorage)).openings.require(saved.opening)).product_configuration_snapshot;
+        },saved);
+        assert.deepEqual(frozen.configuration,row.seed,'Old snapshot must remain unchanged before explicit revalidation');
+        assert.equal(frozen.package_version,row.legacy_package_version??'LEGACY_CAPTURED_SNAPSHOT');
+        assert.equal(await page.locator('#dynamicForm').getAttribute('data-resolve-revision'),null);
+        const response=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
+        await revalidate.click();const result=await(await response).json();
+        for(const key of row.restored_cleared??[])assert.equal(result.selection[key],undefined,key);
+      }
+      await page.waitForSelector('#dynamicForm[data-resolve-revision]');
       assert.equal(await page.locator('#product').inputValue(),contract.product_id);
       for(const key of contract.hidden_fields)assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0);
       for(const key of contract.number_fields)assert.equal(await page.locator(`[data-spec-key="${key}"]`).getAttribute('type'),'number');
@@ -117,23 +132,26 @@ try{
       assert.deepEqual(actual.confirmation_requests,persisted.confirmation_requests);
       assert.deepEqual(actual.sales_request_handoff?.request_inputs,persisted.sales_request_handoff?.request_inputs);
       assert.equal(actual.runtime_manifest_identity,contract.manifest_file_id);
+      persistedSnapshots.push(actual);
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
       cases.push({id:row.id,saveReopen:'PASS',identity:'PASS',confirmations:'PASS',overflow:'PASS',transitions});
     }
-    const output=await page.evaluate(async snapshots=>{
+    const output=await page.evaluate(async({snapshots,persistedSnapshots})=>{
       const {createEstimateOutputModel}=await import('/estimate-output/model.mjs');const {createEstimatePdfBytes}=await import('/estimate-output/pdf-renderer.mjs');const {createEstimateXlsxBytes}=await import('/estimate-output/xlsx-renderer.mjs');
-      const model=createEstimateOutputModel({project:{project_id:'qa',project_name:'玄関ドア 営業見積依頼',request_company:'QA会社',sales_person:'QA'},estimate:{estimate_id:'qa',project_id:'qa',estimate_title:'営業依頼',estimate_no:1,revision_no:0},openings:snapshots.map((snapshot,i)=>({opening_id:String(i),opening_no:i+1,status:'COMPLETE',room_name:'QA',product_configuration_snapshot:snapshot}))});
-      return {model,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
-    },snapshots);
+      const context={project:{project_id:'qa',project_name:'玄関ドア 営業見積依頼',request_company:'QA会社',sales_person:'QA'},estimate:{estimate_id:'qa',project_id:'qa',estimate_title:'営業依頼',estimate_no:1,revision_no:0}};
+      const modelFor=values=>createEstimateOutputModel({...context,openings:values.map((snapshot,i)=>({opening_id:String(i),opening_no:i+1,status:'COMPLETE',room_name:'QA',product_configuration_snapshot:snapshot}))});
+      const model=modelFor(persistedSnapshots),baselineModel=modelFor(snapshots);
+      return {model,baselineModel,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
+    },{snapshots,persistedSnapshots});
     assert.equal(output.model.rows.length,contract.rows.length);
     assert.ok(output.model.rows.every(row=>row.price===null&&row.size.includes(contract.output_size_label??'新設枠発注寸法')));
     assert.deepEqual(output.model.rows.map(row=>row.request_quantity),contract.rows.map(row=>row.expected_quantity));
-    for(const [i,snapshot] of snapshots.entries()){
+    for(const [i,snapshot] of persistedSnapshots.entries()){
       const opening=snapshot.display_summary?.find(row=>row.semantic_slot==='window_type');
       if(opening)assert.equal(output.model.rows[i].opening_type,opening.value,'Canonical opening identity must reach its output column');
     }
     assert.ok(output.model.rows.at(-1).issues.length);assert.equal(output.model.rows.at(-1).state,'INVALID');
-    for(const [i,row] of contract.rows.entries())for(const text of row.output_contains??[])assert.ok(output.model.rows[i].major_specifications?.includes(text),text);
+    for(const [i,row] of contract.rows.entries())for(const text of row.output_contains??[])assert.ok(output.baselineModel.rows[i].major_specifications?.includes(text),text);
     await writeFile(`${OUT}/output-${width}.pdf`,new Uint8Array(output.pdf));
     await writeFile(`${OUT}/output-${width}.xlsx`,new Uint8Array(output.xlsx));
     await writeFile(`${OUT}/output-model-${width}.json`,JSON.stringify(output.model,null,2));
