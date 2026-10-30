@@ -2,14 +2,14 @@ import {applyGlobalWindowSelectionFlow} from './global-window-selection-flow-eng
 import {canonicalStageForSlot} from './canonical-window-semantic-schema.mjs';
 const fail=code=>{throw Object.assign(new Error(code),{code});};
 export function validateReviewedWindowFlow(contract){
-  if(!['REVIEWED_WINDOW_FLOW_V2','REVIEWED_WINDOW_FLOW_V3'].includes(contract?.schema)||!contract.revision||!contract.sourceFlow?.sha256||contract.formalAdoption!==false)fail('WINDOW_FLOW_CONTRACT_INVALID');
+  if(!['REVIEWED_WINDOW_FLOW_V2','REVIEWED_WINDOW_FLOW_V3','REVIEWED_WINDOW_FLOW_V4'].includes(contract?.schema)||!contract.revision||!contract.sourceFlow?.sha256||contract.formalAdoption!==false)fail('WINDOW_FLOW_CONTRACT_INVALID');
   const groups=new Map();
   for(const group of contract.groups??[]){
     if(!group.id||!group.label||!Number.isFinite(group.order)||groups.has(group.id))fail('WINDOW_FLOW_GROUP_INVALID');
     groups.set(group.id,group);
   }
   const roles=contract.fields??{},context=new Set(contract.contextFields??[]);
-  const deferred=(role,parent)=>contract.schema==='REVIEWED_WINDOW_FLOW_V3'&&(role.deferredEvaluationParents??[]).includes(parent);
+  const deferred=(role,parent)=>['REVIEWED_WINDOW_FLOW_V3','REVIEWED_WINDOW_FLOW_V4'].includes(contract.schema)&&(role.deferredEvaluationParents??[]).includes(parent);
   const visited=new Set(),visiting=new Set();
   function visit(key){
     if(visiting.has(key))fail('WINDOW_FLOW_DEPENDENCY_CYCLE');
@@ -20,9 +20,10 @@ export function validateReviewedWindowFlow(contract){
   for(const [key,role] of Object.entries(roles)){
     if(!key||!role.meaning||!role.sourceRefs?.length||!groups.has(role.group)||!Number.isFinite(role.rank)||!Array.isArray(role.parents)||canonicalStageForSlot(role.slot)!==role.stage)fail('WINDOW_FLOW_ROLE_INVALID');
     if(role.deferredEvaluationParents!==undefined){
-      if(contract.schema!=='REVIEWED_WINDOW_FLOW_V3'||!Array.isArray(role.deferredEvaluationParents))fail('WINDOW_FLOW_DEFERRED_PARENT_INVALID');
+      if(!['REVIEWED_WINDOW_FLOW_V3','REVIEWED_WINDOW_FLOW_V4'].includes(contract.schema)||!Array.isArray(role.deferredEvaluationParents))fail('WINDOW_FLOW_DEFERRED_PARENT_INVALID');
       for(const parent of role.deferredEvaluationParents){
-        if(!role.parents.includes(parent)||roles[parent]?.evaluationContext!==true||roles[parent]?.stage!=='SIZE'&&roles[parent]?.stage!=='INSTALLATION_SURVEY')fail('WINDOW_FLOW_DEFERRED_PARENT_INVALID');
+        const stages=contract.schema==='REVIEWED_WINDOW_FLOW_V4'?['SIZE','INSTALLATION_SURVEY','GLAZING']:['SIZE','INSTALLATION_SURVEY'];
+        if(!role.parents.includes(parent)||roles[parent]?.evaluationContext!==true||!stages.includes(roles[parent]?.stage))fail('WINDOW_FLOW_DEFERRED_PARENT_INVALID');
       }
     }
     for(const parent of role.parents){
@@ -37,7 +38,7 @@ export function validateReviewedWindowFlow(contract){
 }
 export function applyDeclaredWindowFlow(fields,integration){
   const contract=integration.uiFlowContract;
-  if(['REVIEWED_WINDOW_FLOW_V2','REVIEWED_WINDOW_FLOW_V3'].includes(contract?.schema)){
+  if(['REVIEWED_WINDOW_FLOW_V2','REVIEWED_WINDOW_FLOW_V3','REVIEWED_WINDOW_FLOW_V4'].includes(contract?.schema)){
     const groups=validateReviewedWindowFlow(contract),roles=contract.fields;
     const result=applyGlobalWindowSelectionFlow(fields,{
       uiCategory:integration.uiCategory,canonicalSlotOrder:contract.slotOrder,
@@ -53,7 +54,7 @@ export function applyDeclaredWindowFlow(fields,integration){
       const role=roles[field.key];
       for(const parent of field.parentFields??[]){
         if(!roles[parent]&&!contract.contextFields.includes(parent))fail('WINDOW_FLOW_PARENT_UNDECLARED');
-        if(positions.has(parent)&&positions.get(parent)>=positions.get(field.key)&&!(contract.schema==='REVIEWED_WINDOW_FLOW_V3'&&(role.deferredEvaluationParents??[]).includes(parent)))fail('WINDOW_FLOW_DEPENDENCY_ORDER_INVALID');
+        if(positions.has(parent)&&positions.get(parent)>=positions.get(field.key)&&!(['REVIEWED_WINDOW_FLOW_V3','REVIEWED_WINDOW_FLOW_V4'].includes(contract.schema)&&(role.deferredEvaluationParents??[]).includes(parent)))fail('WINDOW_FLOW_DEPENDENCY_ORDER_INVALID');
       }
       return {...field,helpText:role.helpText??field.helpText,readOnly:Boolean(field.readOnly||role.readOnly),disabled:Boolean(field.disabled||role.readOnly),presentationGroup:groups.get(role.group),fieldMeaning:role.meaning,flowRevision:contract.revision};
     });

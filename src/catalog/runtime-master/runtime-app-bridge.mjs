@@ -84,11 +84,11 @@ function resolveProductVariantAdapter(integration,variant,selection){
   const error=new Error(`Unsupported product variant adapter: ${definition.adapterType}`);error.code='PRODUCT_VARIANT_ADAPTER_NOT_REGISTERED';throw error;
 }
 
-async function resolveProductFacts(productId,selection={}){const integration=getRuntimeAppIntegration(productId);if(!integration){const error=new Error(`Unknown Runtime app product: ${productId}`);error.code='RUNTIME_APP_PRODUCT_NOT_FOUND';throw error;}if(!integration.selectable){const error=new Error(integration.blockReason??`Runtime app product is blocked: ${productId}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';error.integration=integration;throw error;}const variant=selectedProductVariant(integration,selection);const variantRaw=variant?resolveProductVariantAdapter(integration,variant,selection):null;if(variantRaw)return withProductVariant(toDirectUiResolverResult(variantRaw,integration),integration,variant);const entry=getRuntimeMasterEntry(integration.manufacturer,integration.series);if(!entry){const error=new Error(`Runtime Master Registry entry disappeared: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';throw error;}const runtime=await loadRegisteredRuntime(integration.manufacturer,integration.series);if(!runtime){const error=new Error(`Runtime Master could not be loaded: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_LOAD_FAILED';throw error;}let result;if(runtime.uiResolver)result=toDirectUiResolverResult(runtime.uiResolver(selection??{}),integration,runtime.sourcePackageIntegrity);else{const normalized=normalizeRuntimeSelection(runtime.master,selection);const evaluate=(value)=>runtime.resolver?runtime.resolver(value):evaluateConfiguration(runtime.master,value);const state=integration.uiCategory==='INNER_WINDOW'?evaluateInnerWindowPresentation(runtime.master,{...normalized,...Object.fromEntries(Object.entries(selection).filter(([key])=>integration.salesRequestExtension?.fields.some(field=>field.key===key)))},evaluate,integration.salesRequestExtension):evaluate(normalized);result=toRuntimeUiResult(runtime.master,state,integration,runtime.sourcePackageIntegrity);}return variant?withProductVariant(result,integration,variant):result;}
+async function resolveProductFacts(productId,selection={},context={changedFields:[]}){const integration=getRuntimeAppIntegration(productId);if(!integration){const error=new Error(`Unknown Runtime app product: ${productId}`);error.code='RUNTIME_APP_PRODUCT_NOT_FOUND';throw error;}if(!integration.selectable){const error=new Error(integration.blockReason??`Runtime app product is blocked: ${productId}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';error.integration=integration;throw error;}const variant=selectedProductVariant(integration,selection);const variantRaw=variant?resolveProductVariantAdapter(integration,variant,selection):null;if(variantRaw)return withProductVariant(toDirectUiResolverResult(variantRaw,integration),integration,variant);const entry=getRuntimeMasterEntry(integration.manufacturer,integration.series);if(!entry){const error=new Error(`Runtime Master Registry entry disappeared: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';throw error;}const runtime=await loadRegisteredRuntime(integration.manufacturer,integration.series);if(!runtime){const error=new Error(`Runtime Master could not be loaded: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_LOAD_FAILED';throw error;}let result;if(runtime.uiResolver)result=toDirectUiResolverResult(runtime.uiResolver(selection??{},context),integration,runtime.sourcePackageIntegrity);else{const normalized=normalizeRuntimeSelection(runtime.master,selection);const evaluate=(value)=>runtime.resolver?runtime.resolver(value):evaluateConfiguration(runtime.master,value);const state=integration.uiCategory==='INNER_WINDOW'?evaluateInnerWindowPresentation(runtime.master,{...normalized,...Object.fromEntries(Object.entries(selection).filter(([key])=>integration.salesRequestExtension?.fields.some(field=>field.key===key)))},evaluate,integration.salesRequestExtension):evaluate(normalized);result=toRuntimeUiResult(runtime.master,state,integration,runtime.sourcePackageIntegrity);}return variant?withProductVariant(result,integration,variant):result;}
 
-export async function resolveRuntimeAppProduct(productId,selection={}, {workflowScope='estimate'}={}){
+export async function resolveRuntimeAppProduct(productId,selection={}, {workflowScope='estimate',changedFields=[]}={}){
   if(workflowScope!=='estimate'&&workflowScope!=='site_survey')throw new TypeError('Unknown workflow scope');
-  if(workflowScope==='site_survey')return resolveProductFacts(productId,selection);
+  if(workflowScope==='site_survey')return resolveProductFacts(productId,selection,{changedFields});
   const input=selection;
   const inplus=productId==='SER-LIXIL-INPLUS';
   if(inplus)selection=withoutInplusAccessoryRequests(selection);
@@ -101,17 +101,17 @@ export async function resolveRuntimeAppProduct(productId,selection={}, {workflow
     const estimate=splitWorkflowSelection(selection).estimate;
     // The mode is app workflow metadata. Legacy Survey snapshots cannot turn
     // an estimate request into a Site Survey evaluation.
-    return projectEstimateResult(await resolveProductFacts(productId,{...estimate,runtime_mode:'PRODUCT_SELECTION'}),selection);
+    return projectEstimateResult(await resolveProductFacts(productId,{...estimate,runtime_mode:'PRODUCT_SELECTION'},{changedFields}),selection);
   }
-  if(!isBathroomEstimateContext(productId,selection))return projectSales(await resolveProductFacts(productId,selection));
+  if(!isBathroomEstimateContext(productId,selection))return projectSales(await resolveProductFacts(productId,selection,{changedFields}));
   const estimate=splitWorkflowSelection(selection).estimate;
-  let result=await resolveProductFacts(productId,estimate);
+  let result=await resolveProductFacts(productId,estimate,{changedFields});
   // A survey-only installation discriminator can select different Formal size
   // ranges. Evaluate every allowed branch, never guess or persist its value.
   const discriminator=result.fields.find(field=>field.key==='installation_environment'||field.key==='bathroom_installation_type');
   if(discriminator&&result.dimensionResult?.status==='PENDING'&&estimate.size_w!==undefined&&estimate.size_h!==undefined){
     const candidates=await Promise.all(discriminator.values.filter(value=>!value.disabled).map(async value=>{
-      const branch=await resolveProductFacts(productId,{...estimate,[discriminator.key]:value.value});
+      const branch=await resolveProductFacts(productId,{...estimate,[discriminator.key]:value.value},{changedFields});
       return {value:value.value,dimension:branch.dimensionResult};
     }));
     const dimensions=candidates.map(row=>row.dimension).filter(Boolean);

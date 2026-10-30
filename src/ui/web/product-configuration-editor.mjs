@@ -264,13 +264,14 @@ export class ProductConfigurationEditor {
       if(values.length)this.state.selection[key]=values;else delete this.state.selection[key];
     }else if(target.value)this.state.selection[key]=canonicalChoice(target.value);else delete this.state.selection[key];
     if(previousValue!==JSON.stringify(this.state.selection[key]))this.state.selection=applyDeclaredInputClears(this.state.selection,[key],this.state.resolved?.fields??[]);
-    await this.resolve({notify:true});
+    await this.resolve({notify:true,changedFields:previousValue!==JSON.stringify(this.state.selection[key])?[key]:[]});
   }
 
-  async resolve({notify=true}={}){
+  async resolve({notify=true,changedFields=[]}={}){
     const revision=++this.state.resolveRevision,productId=this.state.productId;
     if(!productId){this.root.querySelector('#dynamicForm').innerHTML='';return;}
     const query=new URLSearchParams({productId,selection:JSON.stringify(this.state.selection)});
+    if(changedFields.length)query.set('selectionContext',JSON.stringify({changedFields}));
     if(this.state.snapshot?.product_id===productId&&this.state.snapshot.package_version)query.set('configurationVersion',this.state.snapshot.package_version);
     const endpoint=this.state.productSource==='RUNTIME_MASTER'?'/api/runtime-master/resolve':'/api/catalog/resolve';
     let result=await getJson(`${endpoint}?${query}`);

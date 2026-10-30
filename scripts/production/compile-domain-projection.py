@@ -20,7 +20,13 @@ def selector(condition, assigned=None):
         return {kind: [selector(c, assigned) for c in condition[kind]]}
     if 'not' in condition:
         return {'not': selector(condition['not'], assigned)}
-    key, op, value = condition['field'], condition['op'], condition['value']
+    key, op = condition['field'], condition['op']
+    if 'value_expr' in condition:
+        expression = condition['value_expr']
+        assert set(expression) == {'field'} and op in ('eq', 'ne', 'gte', 'lte'), 'UNSUPPORTED_DOMAIN_EXPRESSION'
+        assert key not in assigned and expression['field'] not in assigned, 'DYNAMIC_VIEW_EXPRESSION_REQUIRES_REVIEW'
+        return {key: {'$compare': {'operator': op, 'field': expression['field']}}}
+    value = condition['value']
     if key in assigned:
         actual = assigned[key]
         checks = {'eq': lambda: actual == value, 'ne': lambda: actual != value,
@@ -55,7 +61,7 @@ def load_adopted_master(profile, root):
         assert manifest['product_master_revision'] == master['product']['revision'], 'REVISION_IDENTITY'
     else:
         assert master['lifecycle_status'] == 'FORMAL', 'ADOPTED_MASTER_REQUIRED'
-    assert master['schema_version'] == '1.0', 'MASTER_SCHEMA_UNSUPPORTED'
+    assert master['schema_version'] in ('1.0', '1.1'), 'MASTER_SCHEMA_UNSUPPORTED'
     assert master['product']['product_id'] == profile['source']['product_id'], 'PRODUCT_IDENTITY'
     assert master['product']['revision'] == profile['source']['revision'], 'REVISION_IDENTITY'
     return master
@@ -68,6 +74,9 @@ def compile_profile(profile, root):
     pid = profile['product']['id']
     module = {'product': profile['product'], **{k: [] for k in
               ('specificationDefinitions', 'allowedValues', 'requiredFieldRules', 'ruleSets', 'dependencies', 'evidence')}}
+    if profile.get('input_validation_policy'):
+        assert profile['input_validation_policy'] == 'INITIAL_STRICT_PARENT_REEVALUATE_V1', 'INPUT_VALIDATION_POLICY_UNSUPPORTED'
+        module['selectionInputPolicy'] = profile['input_validation_policy']
     hidden = {k for v in profile.get('selection_views', []) if 'applicability' not in v for k in v['source_fields']}
     views = []
     for declared in profile.get('selection_views', []):
@@ -95,7 +104,8 @@ def compile_profile(profile, root):
         presentation = profile['fields'][key]
         confirmation = presentation.get('role') == 'CONFIRMATION_ONLY'
         request = presentation.get('role') == 'SALES_REQUEST_INPUT'
-        assert f['roles']['sales_input'] and (f['knowledge_status'] == 'KNOWN' or confirmation or request), 'UNREVIEWED_FIELD'
+        evidence_only = presentation.get('role') == 'EVIDENCE_ONLY'
+        assert (not evidence_only and f['roles']['sales_input'] and (f['knowledge_status'] == 'KNOWN' or confirmation or request)) or (evidence_only and f['roles']['evidence_only'] and not f['roles']['sales_input'] and f['visibility_condition'] is False), 'UNREVIEWED_FIELD'
         if f['knowledge_status'] != 'KNOWN':
             assert any(key in g['field_ids'] and not g['result_in_scope'] and g['confirmation_in_scope'] for g in master['gaps']), 'UNCONTROLLED_UNKNOWN'
         assert all(r['action'] in ('REEVALUATE','CLEAR') for r in f['reset_condition']), 'UNSUPPORTED_RESET'
@@ -107,7 +117,7 @@ def compile_profile(profile, root):
                           dataType=datatype,
                           displayOrder=index, status='ACTIVE', selector=selector(f['visibility_condition']),
                           parentFields=f['dependency'], autoSelectSingle=False,
-                          evidenceIds=f['evidence_id'], helpText=f['notes'], uiHidden=key in hidden or confirmation)
+                          evidenceIds=f['evidence_id'], helpText=f['notes'], uiHidden=key in hidden or confirmation or evidence_only)
         if presentation.get('user_selectable') is True: definition['userSelectable'] = True
         if 'presentation_when' in presentation: definition['presentationWhen'] = selector(presentation['presentation_when'])
         if 'input_when' in presentation:
@@ -115,8 +125,9 @@ def compile_profile(profile, root):
         if presentation.get('additional_parents'):
             definition['parentFields'] = list(dict.fromkeys(definition['parentFields'] + presentation['additional_parents']))
         if presentation.get('auto_select_single'): definition['autoSelectSingle'] = True
-        if datatype == 'NUMBER': definition.update(unit=f['unit'], step=1)
-        if confirmation: definition.update(internal=True, technical=True)
+        if datatype == 'NUMBER':
+            definition.update(unit=f['unit'], step=presentation.get('step', 1))
+        if confirmation or evidence_only: definition.update(internal=True, technical=True)
         clear = [r['on_change'] for r in f['reset_condition'] if r['action'] == 'CLEAR']
         if clear: definition['clearOnParentChange'] = clear
         if presentation.get('clear_on_change'):
@@ -128,7 +139,7 @@ def compile_profile(profile, root):
             # Keep ENUM membership in the resolver, with number-input presentation.
             definition.update(uiControl='NUMBER', unit=f['unit'], step=1)
         module['specificationDefinitions'].append(definition)
-        if f['required'] and not confirmation and (f['knowledge_status'] == 'KNOWN' or presentation.get('request_required') is True):
+        if f['required'] and not confirmation and not evidence_only and (f['knowledge_status'] == 'KNOWN' or presentation.get('request_required') is True):
             module['requiredFieldRules'].append(dict(id=pid + ':required:' + key, productId=pid,
                 specificationKey=key, required=True, selector={'all': [selector(f['visibility_condition']), selector(f['required_when'])]}))
         if presentation.get('request_required_when'):
@@ -137,9 +148,12 @@ def compile_profile(profile, root):
         if f['data_type'] == 'boolean':
             opts = [dict(value=v, label='はい' if v else 'いいえ', when=True, evidence_ids=f['evidence_id']) for v in (False, True)]
         for i, o in enumerate(opts):
+            value_selector = selector(o['when'])
+            if 'value_condition' in f:
+                value_selector = {'all': [value_selector, selector(f['value_condition'], {key: o['value']})]}
             module['allowedValues'].append(dict(id=pid + ':value:' + key + ':' + str(i), productId=pid,
                 specificationKey=key, value=o['value'], displayLabel=presentation.get('value_labels', {}).get(str(o['value']), o['label']), displayOrder=i,
-                selector=selector(o['when']), status='ACTIVE', evidenceIds=o['evidence_ids']))
+                selector=value_selector, status='ACTIVE', evidenceIds=o['evidence_ids']))
     rules = []
     for c in master['constraints']:
         assert c['kind'] == 'FORBID', 'UNSUPPORTED_CONSTRAINT'
