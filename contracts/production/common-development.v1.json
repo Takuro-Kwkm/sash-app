@@ -20,7 +20,7 @@
       "sha256": "11721dd8132c2baba1403b7f6ef0d01f5902e4e9568dde5b6a11d4aa15ff7677"
     }
   },
-  "shared_adoption_sha256": "1fd3ca25866bed39564b61dbee6fc17513045d4e11328a69188bc0e5cc6b32a2",
+  "shared_adoption_sha256": "08f45e048cf0d8d0270c5dd10eaf4df7b2c23f156f22dbda8ca0d8d8fc2d5d8a",
   "connection_files": {
     "AGENTS.md": "efdcaaa776ef634f38518d8e9122e9c830a1ab0b582928bc1fe441c530d227a1",
     "scripts/production/export-common-development.mjs": "451459e8ecfd4a4af96d38dcfd2507ca5842432ce5421b5829bafe892219fb34",
