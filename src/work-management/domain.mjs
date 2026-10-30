@@ -116,7 +116,7 @@ function displaySummary(result) {
     const key=field.key,value=result?.selection?.[key];
     if(value===undefined||value===null||value==='')return null;
     const values=Array.isArray(value)?value:[value];
-    return {key,label:field.displayLabel,value:values.map((one)=>labels.get(`${key}:${String(one)}`)??String(one)).join('、')};
+    return {key,label:field.displayLabel,value:values.map((one)=>labels.get(`${key}:${String(one)}`)??String(one)).join('、'),...(field.semanticSlot?{semantic_slot:field.semanticSlot}:{})};
   }).filter(Boolean);
 }
 
