@@ -10,6 +10,7 @@ const implementationRefs=execFileSync('git',['ls-files','-z'],{cwd:here,encoding
 const checks={};
 const check=(name,cases,fn)=>{fn();checks[name]={status:'PASS',executed_cases:cases};};
 import {loadRegisteredRuntime} from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
+import {NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY,applyRuntimeUiCategoryOrder,shouldExposeNewConstructionRuntimeField} from '../../src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs';
 import {resolveRuntimeAppProduct} from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import {GLOBAL_WINDOW_STAGE_ORDER} from '../../src/catalog/runtime-master/global-window-selection-flow-engine.mjs';
 const product_id='SER-LIX-EW';
@@ -32,8 +33,19 @@ check('CLEAR_INVALID',2,()=>{assert.equal(cleared.selection.window_spec,undefine
 const restore=await resolveRuntimeAppProduct(product_id,JSON.parse(JSON.stringify(state.selection)));
 check('RESTORE',1,()=>assert.deepEqual(restore.selection,state.selection));
 check('HANDOFF',1,()=>{assert.equal(restore.productId,product_id);assert.deepEqual(restore.selection,state.selection);assert.ok(restore.runtimeMaster);});
+const active=new Map(state.fields.map(f=>[f.key,f]));
+const sourceFields=loaded.master.fields.map((f,index)=>({...f,key:f.field_name??f.key,field_name:f.field_name??f.key,
+ displayOrder:Number(f.display_order??f.displayOrder??index+1),runtimeIncluded:f.runtime_included,selectionMode:f.selection_mode,
+ showReadOnly:f.show_read_only,initialVisibility:f.initial_visibility,visibilityMode:f.visibility_mode}));
+const inventory=sourceFields.filter(shouldExposeNewConstructionRuntimeField).map(f=>{
+ const current=active.get(f.key);return {...f,...current,displayLabel:current?.displayLabel??f.display_label??f.label??f.key,
+ dataType:current?.dataType??f.data_type??'ENUM',visible:Boolean(current),required:current?.required??false,
+ values:current?.values??[],role:current?.readOnly||f.selection_mode==='DERIVED'?'DERIVED':'SELECTOR'};
+});
+for(const f of state.fields)if(!inventory.some(row=>row.key===f.key))inventory.push({...f,visible:true,role:f.readOnly?'DERIVED':'SELECTOR'});
+const projected=applyRuntimeUiCategoryOrder(inventory,{id:product_id,uiCategory:NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY});
 console.log(JSON.stringify({schema:'NATIVE_COMMON_PROJECTION_V1',implementation_refs:implementationRefs,repository:'Takuro-Kwkm/sash-app',product_id,status:'PASS',
   flow_stages:GLOBAL_WINDOW_STAGE_ORDER,master_identity:{version:loaded.normalizedManifest.packageVersion,source_integrity:loaded.sourcePackageIntegrity},
   source_refs:[ref('src/catalog/runtime-master-packages/lixil-ew-v1.4/runtime_manifest.json'),ref('src/catalog/runtime-master-packages/lixil-ew-v1.4/runtime.json.br.b64')],
   flow:ref('src/catalog/runtime-master/canonical-window-semantic-schema.mjs'),
-  fields:state.fields,master_fields:loaded.master.fields.map(f=>({field_id:f.field_id??f.field_name})),checks,scope:'NATIVE_CONNECTION_PROBE; BROWSER_AND_HUMAN_REVIEW_SEPARATE'}));
+  fields:projected,master_fields:loaded.master.fields.map(f=>({field_id:f.field_id??f.field_name})),checks,scope:'NATIVE_CONNECTION_PROBE; BROWSER_AND_HUMAN_REVIEW_SEPARATE'}));
