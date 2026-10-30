@@ -1,0 +1,3 @@
+# APW330 Runtime/UI adoption
+
+The accepted R13 candidate and common field names retain their exact identities. Product Master F1, its seven unresolved fields, and source revision stay unchanged. The normal Runtime loader can receive a private formal package through SASH_PRIVATE_FORMAL_RUNTIME_MANIFEST plus SASH_PRIVATE_FORMAL_RUNTIME_SHA256. A content-bound native Drive readback is mandatory. This successor admits no publication or production binding. Missing private installation does not fall back to a candidate/fixture. Native formal QA and actual save/readback remain required; source adoption alone never declares RUNTIME_UI_ADOPTED.

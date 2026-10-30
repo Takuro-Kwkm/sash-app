@@ -1,3 +1,4 @@
+import { standardWindowFieldLabel } from './window-field-labels.mjs';
 import { GLOBAL_WINDOW_STAGE_ORDER } from './canonical-window-semantic-schema.mjs';
 
 export { GLOBAL_WINDOW_STAGE_ORDER } from './canonical-window-semantic-schema.mjs';
@@ -76,7 +77,7 @@ export function applyGlobalWindowSelectionFlow(fields = [], contract = {}) {
         required: Boolean(field.required),
         readOnly: Boolean(field.readOnly),
         disabled: Boolean(field.disabled || field.readOnly || (['ENUM','MULTI_ENUM'].includes(field.dataType) && !field.values?.length)),
-        displayLabel: standardLabelForField(key, field.displayLabel),
+        displayLabel: standardWindowFieldLabel({ uiCategory, semanticSlot, key, fallback: standardLabelForField(key, field.displayLabel) }),
         __stageIndex: presentationExtensionForField(key)?.order ?? stageIndex,
         __slotIndex: Number.isFinite(presentationRank) ? presentationRank : slotIndex,
         __runtimeOrder: Number(field.displayOrder ?? 1000 + inputIndex),

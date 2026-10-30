@@ -1,0 +1,58 @@
+{
+  "schema": "NATIVE_RUNTIME_UI_ADOPTION_PROFILE_V1",
+  "profile_id": "apw330-preview-r13-ui1-adoption",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:YKK AP::APW330",
+  "formal_product_id": "SER-YKK-APW330",
+  "operation": "RUNTIME_UI_ADOPTION",
+  "shared_engine": "scripts/production-work.py",
+  "target_gate": "RUNTIME_UI_ADOPTED",
+  "product_fact_mutation_allowed": false,
+  "release": false,
+  "native_preparer": "scripts/production/private-runtime-ui-adoption-work.py",
+  "native_validator": "scripts/production/validate-private-runtime-ui-adoption.mjs",
+  "candidate_files": {
+    "projection.json": "84d8ca4418fd63ed524847a67898a6251898dae1fdd0065f65f42eb4b12f380d",
+    "index.json": "e4e8115b01d90d5da45ba0244bae6da1de6e8355676e68aa0cc19fef868816a9",
+    "candidates/module.json": "29879ed21c8a5bc53b87f3681e51c9cb240fb86213a17e2c78e27dd5c82cf4e1",
+    "review/browser-qa.json": "bfaf75956760564fd049fd2819fcb2a614832a9bbea6ed58ecb62b1929839fab",
+    "review/preview-correction-delta.json": "9632f87ac25c4a80f8bb95fdebc7453b7e28c68ca0a5f9214803b513c782b912",
+    "review/flow.json": "658fc5bb8d623a03a3693d069b4f76300656fb1c8f9c941e8d6079fa3120e41f",
+    "review/formal-provenance.json": "5464931e9f15e153c7300481db25acd27133545c4ba02890ffc403e340b18f67",
+    "review/independent-requirements.json": "3a107a621250dc79e0662934c4a64631cf8757c5eb0984ef37ad7e9ba205b86b",
+    "sources/PRODUCT_MASTER.json": "fef4b67b6f0622d7f6a343c45940196db80e97bb814d9222c371ac0a1a5422cc",
+    "sources/SALES_QA_REVIEW.json": "8a4e9589c75ba3a0506484d8d67512b721c4bd804383517031602b5a79a59d21",
+    "sources/UI_STANDARD_v2.1.txt": "f6694b98a7ee2a7dd97e15e9ee462546f6e058b2cede7abb9ab99768e1677264",
+    "sources/WORKING_MASTER_PREVIEW_CORRECTION.json": "23d6c7699da5eb8f59a3d50e0babf631fa2aaa5b3fd03f0e03ce5dc558047b42",
+    "sources/original-standard-sizes.json": "3ca86e23ac5d597156e26eaa5b92d5adac936c65127fef42e10354f0d1e47588",
+    "sources/request-samples.json": "d45dd949a8cc11e1a2f90bc14519d547c96606438a50b8500f6969a9b5b1bc4d"
+  },
+  "candidate": {
+    "index_sha256": "e4e8115b01d90d5da45ba0244bae6da1de6e8355676e68aa0cc19fef868816a9",
+    "module_sha256": "29879ed21c8a5bc53b87f3681e51c9cb240fb86213a17e2c78e27dd5c82cf4e1"
+  },
+  "approved_presentation": {
+    "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "4aaa70768c13129f412478926bbc800f8b72c8eec90a0febf59fc72c86833a21",
+    "src/catalog/runtime-master/window-field-labels.mjs": "606f62f417fcd516dd93831b01ee3c1e8fe899b3f808ebe19b9e175035fb21d7"
+  },
+  "formal_master": {
+    "version": "v1.0-R1-F1-20261030",
+    "sha256": "fef4b67b6f0622d7f6a343c45940196db80e97bb814d9222c371ac0a1a5422cc",
+    "unresolved_count": 7,
+    "carried_qa_passed": 79,
+    "carried_qa_failed": 0
+  },
+  "runtime_package": "PRIVATE_CAPTURE_REQUIRED",
+  "human_gate": "EXACT_USER_RUNTIME_UI_ADOPTION",
+  "storage": "SHARED_V2_STORAGE_AND_NATIVE_DRIVE_READBACK",
+  "terminal_policy": "PRODUCT_MASTER_FORMAL_INSPECT_ONLY; RUNTIME_UI_ADOPTION_SEPARATE; RELEASE_SEPARATE",
+  "native_worker": "scripts/production/private-runtime-ui-adoption.py",
+  "required_stages": [
+    "PREVIEW_IDENTITY",
+    "PACKAGE_TRANSFORM",
+    "STORAGE_READBACK",
+    "FORMAL_RUNTIME_QA",
+    "NATIVE_FORMAL_LOCATION_READBACK",
+    "RUNTIME_UI_ADOPTION"
+  ]
+}
