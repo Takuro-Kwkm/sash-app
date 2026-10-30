@@ -1,6 +1,7 @@
 const {chromium}=await import(process.env.QA_PLAYWRIGHT_MODULE??'playwright');
 import assert from 'node:assert/strict';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {assertHiddenNativeControl} from './runtime-control-assertions.mjs';
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4195';
 const OUT=process.env.QA_OUTPUT_DIR,contract=JSON.parse(await readFile(process.env.QA_RUNTIME_QA_CONTRACT));
@@ -62,7 +63,10 @@ try{
         assert.equal(await group.count(),1,key);
         assert.ok(await group.isVisible(),key);
         assert.ok(await group.locator('input[type="checkbox"]').count()>1,key);
-        assert.equal(await page.locator(`select[data-spec-key="${key}"]`).isVisible(),false,key);
+        const native=await page.locator(`select[data-spec-key="${key}"]`).evaluate(node=>{
+          const s=getComputedStyle(node);return {display:s.display,visibility:s.visibility,opacity:s.opacity,pointerEvents:s.pointerEvents,ariaHidden:node.getAttribute('aria-hidden'),tabIndex:node.tabIndex};
+        });
+        assertHiddenNativeControl(native);
       }
       for(const [key,expected] of Object.entries(row.control_expectations??{})){
         const control=page.locator(`[data-spec-key="${key}"]`);
@@ -124,6 +128,10 @@ try{
     assert.equal(output.model.rows.length,contract.rows.length);
     assert.ok(output.model.rows.every(row=>row.price===null&&row.size.includes(contract.output_size_label??'新設枠発注寸法')));
     assert.deepEqual(output.model.rows.map(row=>row.request_quantity),contract.rows.map(row=>row.expected_quantity));
+    for(const [i,snapshot] of snapshots.entries()){
+      const opening=snapshot.display_summary?.find(row=>row.semantic_slot==='window_type');
+      if(opening)assert.equal(output.model.rows[i].opening_type,opening.value,'Canonical opening identity must reach its output column');
+    }
     assert.ok(output.model.rows.at(-1).issues.length);assert.equal(output.model.rows.at(-1).state,'INVALID');
     for(const [i,row] of contract.rows.entries())for(const text of row.output_contains??[])assert.ok(output.model.rows[i].major_specifications?.includes(text),text);
     await writeFile(`${OUT}/output-${width}.pdf`,new Uint8Array(output.pdf));

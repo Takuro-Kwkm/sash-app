@@ -63,6 +63,7 @@
     "src/ui/web/product-configuration-editor.mjs",
     "src/work-management/domain.mjs",
     "test/browser/declared-sales-runtime-browser-qa.mjs",
+    "test/browser/runtime-control-assertions.mjs",
     "test/selection-input-context.test.mjs"
   ],
   "human_review_required": true,

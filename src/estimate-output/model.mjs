@@ -22,13 +22,15 @@ function summaryRows(snapshot){
 
 function summaryValue(snapshot,keys){
   const wanted=new Set(keys);
-  return summaryRows(snapshot).find((row)=>wanted.has(row.key))?.value??null;
+  const rows=summaryRows(snapshot),exact=rows.find((row)=>wanted.has(row.key));
+  if(exact)return exact.value;
+  return rows.find((row)=>TYPE_KEYS.has(row.semantic_slot)&&wanted.has(row.semantic_slot))?.value??null;
 }
 
 function majorSpecificationText(snapshot){
   const rows=summaryRows(snapshot);
   return rows
-    .filter((row)=>!OMIT_MAJOR_KEYS.has(row.key))
+    .filter((row)=>!OMIT_MAJOR_KEYS.has(row.key)&&!TYPE_KEYS.has(row.semantic_slot))
     .map((row)=>`${row.label??row.key}: ${row.value}`)
     .join(' / ')||null;
 }
