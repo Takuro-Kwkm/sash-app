@@ -1,0 +1,12 @@
+{
+  "schema": "COMMON_DEVELOPMENT_V1",
+  "state": "LOCAL_CANDIDATE_NOT_ADOPTED",
+  "repository": "Takuro-Kwkm/sash-app",
+  "shared_entry": "scripts/architecture-work.py",
+  "shared_engine": "harness/workflow.py",
+  "human_ui_review_required": true,
+  "existing_work": "KEEP_FIXED_BINDING",
+  "product_facts": "NATIVE_AUTHORITY",
+  "release": "EXISTING_NATIVE_LIFECYCLE",
+  "native_validator_registry": "contracts/production/validator-registry.v2.json"
+}
