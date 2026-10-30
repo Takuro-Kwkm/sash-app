@@ -1,0 +1,21 @@
+{
+  "schema": "SASH_PRIVATE_RUNTIME_ADOPTION_ADOPTION_V1",
+  "bases": {
+    "Takuro-Kwkm/product-ui-contracts": "c5ecd7927a324f8e7c65ffbd0e8fbd36d4dbaafe",
+    "Takuro-Kwkm/sash-app": "f02ddba2e818373c965fd7ff78580ff6f9a25ca0"
+  },
+  "shared_implementation_sha": "ca586c3fe20bfda0befcd41976ab2ec2d4ea9245",
+  "native_source_commit": "1d00206d6beac80de7700310ee7a774704d2ce18",
+  "native_inventory_sha256": "24f709169baf7a1b6aa7a4cf5e8869b49e1b6504e7101fab42f309a2654917a4",
+  "predecessor_result": {
+    "workflow_id": "APW330-COMMON-LABELS-20261030-01",
+    "state": "COMPLETED",
+    "completed_gates": [
+      "LOCAL_QA",
+      "SAVE_LOCAL_CORRECTION_SCOPE"
+    ]
+  },
+  "new_bindings_only": true,
+  "actions_dispatch_authority": false,
+  "release_profile_admission": false
+}
