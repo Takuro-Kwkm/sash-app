@@ -162,7 +162,11 @@
       "validators": [
         "scripts/production/validate-native-workbook-profile.py"
       ],
-      "no_fallback": true
+      "no_fallback": true,
+      "formal_profile": {
+        "path": "contracts/production/working-master-recovery/apw330.formal.v1.json",
+        "sha256": "a070dd7864493ee4f343083d60903924a8495e0b79582aba06d5cfc7188e8872"
+      }
     },
     "NATIVE_REGISTRY:YKK AP::APW331": {
       "state": "FAIL_CLOSED",
