@@ -9,5 +9,5 @@
 `README.md` と `docs/RECOVERY_BASELINE.md` の既存設計ルールを維持する。商品名によるif / switch / case、商品専用Form / Output / Mapper / AllowedValue Resolverを追加しない。商品差はProductMaster / SpecificationDefinition / RuleSet / Evidence / Selector / Dependencyのデータで表し、CommonRuleEngineとOutput Engineの共通性を保つ。Evidenceなしメーカー仕様を確定せず、内部Enumをユーザーへ露出しない。変更Scopeに応じてpackage.jsonのlint / typecheck / testと必要なBrowser QAを使う。
 
 共通の作成・変更・再接続経路は `contracts/production/common-development.v1.json`。
-この接続は隔離検証用候補であり、既存Workの実装・採用pinを変更しない。
+新規Workは採用済み共通実装を使う。既存Workの固定実装・採用pinは保持する。
 共通基盤の反映時は進行中の商品作業の書込み先を確認する。

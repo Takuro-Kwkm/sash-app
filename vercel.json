@@ -17,5 +17,8 @@
       "source": "/:path*",
       "destination": "/api/index.mjs?__path=:path*"
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": false
+  }
 }
