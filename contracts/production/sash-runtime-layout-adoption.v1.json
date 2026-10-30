@@ -1,0 +1,46 @@
+{
+  "schema": "SASH_RUNTIME_LAYOUT_ADOPTION_V1",
+  "bases": {
+    "Takuro-Kwkm/product-ui-contracts": "27edd3c21dde81f3d76330225b064d05b9f2cb9c",
+    "Takuro-Kwkm/sash-app": "33d44481816a6060e9fe37478fec8e71acb00a3c"
+  },
+  "shared_implementation_sha": "b51a248b94b8081dc2432c08dc2b262d52708288",
+  "native_source_commit": "21c76a56ca25272e152f56f2690435de0c3d3478",
+  "native_inventory_sha256": "2eec3006fc3a427b13d3c7cee1ca4e117a8cc56e30b66264b12d2135a89ac52c",
+  "predecessor_result": {
+    "workflow_id": "APW330-RUNTIME-UI-NATIVE-QA-20261030-03",
+    "state": "RECOVERABLE_BLOCKED",
+    "failed_gate": "BROWSER",
+    "error_category": "STEP_EXECUTION",
+    "blocking_reason": {
+      "code": "STEP_EXECUTION",
+      "reason": "BROWSER: worker failed; inspect its bounded result",
+      "target_gate": "BROWSER",
+      "resolution_condition": "Correct the named input; resume the same work."
+    },
+    "completed_gates": [
+      "FORMAL_IDENTITY",
+      "PROJECTION",
+      "FLOW_REVIEW_AUTHORIZATION",
+      "PARITY"
+    ],
+    "last_valid_state": "IN_PROGRESS",
+    "resumable": true,
+    "required_next_action": "Correct the named input; resume the same work.",
+    "pending_gates": [
+      "BROWSER",
+      "REVIEW",
+      "SAVE_FORMAL_IDENTITY_JSON",
+      "SAVE_PROJECTION_JSON",
+      "SAVE_FLOW_REVIEW_AUTHORIZATION_JSON",
+      "SAVE_DOMAIN_PARITY_JSON",
+      "SAVE_BROWSER_JSON",
+      "SAVE_BROWSER_REPORT_JSON",
+      "SAVE_REVIEW_JSON"
+    ],
+    "original_state": "BLOCKED"
+  },
+  "new_bindings_only": true,
+  "actions_dispatch_authority": false,
+  "release_profile_admission": false
+}
