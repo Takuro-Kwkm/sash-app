@@ -42,5 +42,25 @@
       "path": "contracts/production/release-profiles/giesta2-r14.v1.json"
     }
   ],
-  "publication": "NEW_EXACT_PRODUCT_SCOPE_HUMAN_DECISION_REQUIRED"
+  "publication": "NEW_EXACT_PRODUCT_SCOPE_HUMAN_DECISION_REQUIRED",
+  "application_environment_profiles": [
+    {
+      "subject": {
+        "kind": "APPLICATION_ENVIRONMENT",
+        "repository": "Takuro-Kwkm/sash-app",
+        "provider": "VERCEL",
+        "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+        "project_id": "prj_OCqMeC5sN3y920jp7x1w1ZfPlVip",
+        "business_environment": "Staging",
+        "provider_target": "production"
+      },
+      "state": "PENDING_ADOPTION",
+      "path": "contracts/production/release-profiles/staging-non-product.v1.json",
+      "capability": "METADATA_PREFLIGHT_ONLY_NOT_APPLICATION_RELEASE",
+      "baseline_review": {
+        "path": "contracts/production/staging-baseline-review-work.v1.json",
+        "capability": "NEW_BASELINE_REVIEW_ONLY_NOT_ADOPTED"
+      }
+    }
+  ]
 }

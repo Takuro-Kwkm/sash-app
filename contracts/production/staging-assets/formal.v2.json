@@ -1,0 +1,211 @@
+{
+  "schema": "NATIVE_STAGING_ASSET_COLLECTION_V2",
+  "mode": "NEW_BASELINE_REVIEW",
+  "role": "Formal",
+  "version": "captured-staging-baseline-20261029-v1",
+  "baseline_git_sha": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+  "predecessor": {
+    "path": "objects/sha256/28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+    "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38"
+  },
+  "members": [
+    {
+      "identity": "drive:1IaAFMgd93kzQhAFU_H3h5h_cZTIi3N_j:ORIGINAL_STORED_XLSX",
+      "version": "v0.9-R3",
+      "path": "objects/sha256/e56fd414c87ca0082c663899689880aec69567c5bb3971ef547d4389182fc059",
+      "sha256": "e56fd414c87ca0082c663899689880aec69567c5bb3971ef547d4389182fc059",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1IaAFMgd93kzQhAFU_H3h5h_cZTIi3N_j",
+        "declared_version": "v0.9-R3",
+        "revision_id": null,
+        "declared_title": null
+      },
+      "representation": "ORIGINAL_STORED_XLSX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+          "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38"
+        },
+        "member_index": 0
+      },
+      "historical_identity_verified": true
+    },
+    {
+      "identity": "drive:1EqEHI8TlP7ZmWAZQSssAEgrRmBlvj9_q:ORIGINAL_STORED_XLSX",
+      "version": "v0.7-R2",
+      "path": "objects/sha256/6eb13ce12cee968527ea591d608da21036b2eca9f98149ce9f966778a8ff4e91",
+      "sha256": "6eb13ce12cee968527ea591d608da21036b2eca9f98149ce9f966778a8ff4e91",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1EqEHI8TlP7ZmWAZQSssAEgrRmBlvj9_q",
+        "declared_version": "v0.7-R2",
+        "revision_id": null,
+        "declared_title": null
+      },
+      "representation": "ORIGINAL_STORED_XLSX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+          "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38"
+        },
+        "member_index": 1
+      },
+      "historical_identity_verified": true
+    },
+    {
+      "identity": "drive:1hKLlzCqi52tgOPtTHj8iyllN9vtQlF8ABrsCKkRLDsc:NATIVE_EXPORT_XLSX",
+      "version": "v1.2",
+      "path": "objects/sha256/0481737d8b45753ff8dabb1144302a03992f7c582e6ebb78b382aff9c599f59d",
+      "sha256": "0481737d8b45753ff8dabb1144302a03992f7c582e6ebb78b382aff9c599f59d",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1hKLlzCqi52tgOPtTHj8iyllN9vtQlF8ABrsCKkRLDsc",
+        "declared_version": "v1.2",
+        "revision_id": null,
+        "declared_title": null
+      },
+      "representation": "NATIVE_EXPORT_XLSX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+          "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38"
+        },
+        "member_index": 2
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "drive:1L2JxjIxbfITjVvCg46RwKkg2I9hDbYWa:ORIGINAL_STORED_XLSX",
+      "version": "v0.8-R7",
+      "path": "objects/sha256/9847bd3c72e562ce9ff18370790cfba7d35f85dc89a1c309a780c76707d1a0ab",
+      "sha256": "9847bd3c72e562ce9ff18370790cfba7d35f85dc89a1c309a780c76707d1a0ab",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1L2JxjIxbfITjVvCg46RwKkg2I9hDbYWa",
+        "declared_version": "v0.8-R7",
+        "revision_id": null,
+        "declared_title": null
+      },
+      "representation": "ORIGINAL_STORED_XLSX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+          "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38"
+        },
+        "member_index": 3
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "drive:1PTw6zXWoErpRQIdL9Md3yAd2thxnyaN4va1Wo6sEzWE:NATIVE_EXPORT_XLSX",
+      "version": "20260830-R1",
+      "path": "objects/sha256/11a4fb364c0b0ac3503a7eae222ee07047fae66febc67ba46ec409ce8b213e83",
+      "sha256": "11a4fb364c0b0ac3503a7eae222ee07047fae66febc67ba46ec409ce8b213e83",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1PTw6zXWoErpRQIdL9Md3yAd2thxnyaN4va1Wo6sEzWE",
+        "declared_version": "20260830-R1",
+        "revision_id": null,
+        "declared_title": null
+      },
+      "representation": "NATIVE_EXPORT_XLSX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+          "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38"
+        },
+        "member_index": 4
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "drive:1TBEn2tTbFjBLeIOeDs0fR3iIDcLEn3jI:ORIGINAL_STORED_XLSX",
+      "version": "v1.0",
+      "path": "objects/sha256/2dc67a247e56efd98bd9e5437b410eca02fd3ef0b4f62009216c964d673e922a",
+      "sha256": "2dc67a247e56efd98bd9e5437b410eca02fd3ef0b4f62009216c964d673e922a",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1TBEn2tTbFjBLeIOeDs0fR3iIDcLEn3jI",
+        "declared_version": "v1.0",
+        "revision_id": null,
+        "declared_title": null
+      },
+      "representation": "ORIGINAL_STORED_XLSX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+          "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38"
+        },
+        "member_index": 5
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "drive:11p2SkAXYNAAJwWYGBjmWOTVO6rZquyJf:ORIGINAL_STORED_XLSX",
+      "version": "v1.0-P7R1-R2",
+      "path": "objects/sha256/2aa77dd4b1b85c6c4096149a221050a684736d468188f59424feb468c6ac659d",
+      "sha256": "2aa77dd4b1b85c6c4096149a221050a684736d468188f59424feb468c6ac659d",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "11p2SkAXYNAAJwWYGBjmWOTVO6rZquyJf",
+        "declared_version": "v1.0-P7R1-R2",
+        "revision_id": null,
+        "declared_title": null
+      },
+      "representation": "ORIGINAL_STORED_XLSX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+          "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38"
+        },
+        "member_index": 6
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "drive:11TytloLYF2xrojuPK3q7kPbGl3F09Xth:ORIGINAL_STORED_XLSX",
+      "version": "v0.4-R2",
+      "path": "objects/sha256/977935f1c708db3fee96339adb164e4a0ad83995511d3a04404e01c5f9155fee",
+      "sha256": "977935f1c708db3fee96339adb164e4a0ad83995511d3a04404e01c5f9155fee",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "11TytloLYF2xrojuPK3q7kPbGl3F09Xth",
+        "declared_version": "v0.4-R2",
+        "revision_id": null,
+        "declared_title": null
+      },
+      "representation": "ORIGINAL_STORED_XLSX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+          "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38"
+        },
+        "member_index": 7
+      },
+      "historical_identity_verified": true
+    },
+    {
+      "identity": "drive:1kJg583B97mjmL1sm_vw0oI3H_6M0IFtp:ORIGINAL_STORED_XLSX",
+      "version": "integrated-v0.3",
+      "path": "objects/sha256/5f9c9f44d62741d2fad837e3250227d52a67f868a4e3f4a655151ca5def630ab",
+      "sha256": "5f9c9f44d62741d2fad837e3250227d52a67f868a4e3f4a655151ca5def630ab",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1kJg583B97mjmL1sm_vw0oI3H_6M0IFtp",
+        "declared_version": "integrated-v0.3",
+        "revision_id": null,
+        "declared_title": null
+      },
+      "representation": "ORIGINAL_STORED_XLSX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38",
+          "sha256": "28ea391739ce2311433eeb6e952434862c73d88a933af118e7d1ab8e041f4a38"
+        },
+        "member_index": 8
+      },
+      "historical_identity_verified": null
+    }
+  ]
+}

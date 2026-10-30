@@ -1,0 +1,68 @@
+{
+  "schema": "STAGING_NATIVE_CI_POLICY_V1",
+  "status": "PENDING_ADOPTION",
+  "workflow": ".github/workflows/staging-native-admission.yml",
+  "job": "staging-native-admission",
+  "event": "ready_for_review",
+  "candidate_checkout": "EXACT_PULL_REQUEST_HEAD",
+  "minimum_checks": [
+    "Staging Native Admission"
+  ],
+  "repo_required_checks_observed": [],
+  "dispatch_authority": false,
+  "enabled": true,
+  "max_runs": 1,
+  "predecessor_success_is_candidate_success": false,
+  "application_release_ci": "RETAIN_NATIVE_FLOOR_SEPARATELY",
+  "approval_source": "HOST_P1_EXACT_HEAD_VARS_NOT_SELF_REFERENTIAL_COMMIT",
+  "repository": "Takuro-Kwkm/sash-app",
+  "required_steps": [
+    "Observe fixed job inputs",
+    "Check actual candidate inputs",
+    "Verify Staging baseline review",
+    "Scoped native checks",
+    "Emit scoped result",
+    "Upload input observation",
+    "Upload scoped result"
+  ],
+  "job_input_policy": {
+    "workflow_path": ".github/workflows/staging-native-admission.yml",
+    "profile_paths": [
+      "contracts/production/staging-native-ci-policy.v1.json",
+      "contracts/production/release-profiles/staging-non-product.v1.json",
+      "contracts/production/staging-native-admission.v1.json",
+      "contracts/production/staging-baseline-review-work.v1.json",
+      "contracts/production/staging-subject-index.v1.json",
+      "contracts/production/staging-baseline-adoption-profile.v1.json",
+      "contracts/production/staging-assets/source.v2.json",
+      "contracts/production/staging-assets/formal.v2.json",
+      "contracts/production/staging-assets/contract.v2.json",
+      "contracts/production/staging-assets/runtime.v2.json",
+      "contracts/production/staging-assets/ui.v2.json"
+    ],
+    "observation_stage": "after-runtime-setup",
+    "observation_after_step": "Acquire approved originals",
+    "native_input_steps": [
+      "Check actual candidate inputs",
+      "Scoped native checks"
+    ],
+    "checkout_mode": "head",
+    "runner_label": "ubuntu-latest",
+    "runtimes": {
+      "python3": "Python 3.11."
+    }
+  },
+  "artifacts": {
+    "inputs": "ci-inputs-<run_id>-<attempt>-staging-native-admission",
+    "result": "staging-result-<run_id>-<attempt>-staging-native-admission",
+    "max_bytes": 1000000
+  },
+  "baseline_review_required": true,
+  "baseline_test_modules": [
+    "test_staging_baseline_work",
+    "test_staging_admission",
+    "test_architecture_ga",
+    "test_ci_input_observation",
+    "test_staging_native_admission"
+  ]
+}

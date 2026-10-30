@@ -1,0 +1,107 @@
+{
+  "schema": "STAGING_BASELINE_REVIEW_TEMPLATE_V2",
+  "status": "CURRENT",
+  "subject": {
+    "kind": "APPLICATION_ENVIRONMENT",
+    "repository": "Takuro-Kwkm/sash-app",
+    "provider": "VERCEL",
+    "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+    "project_id": "prj_OCqMeC5sN3y920jp7x1w1ZfPlVip",
+    "business_environment": "Staging",
+    "provider_target": "production"
+  },
+  "work_skill": "app-quality-review",
+  "provider_write_allowed": false,
+  "application_release_allowed": false,
+  "steps": [
+    {
+      "id": "INPUTS_REVIEW",
+      "kind": "validator",
+      "needs": [],
+      "script": {
+        "owner": "native",
+        "path": "scripts/production/validate-staging-baseline-review.py",
+        "sha256": "da85e9f28a02ae3921490655892d81146a109f1b3e44ebb90d80175664c08dd1"
+      },
+      "args": [
+        "--central",
+        "{root}",
+        "--input",
+        "{input}",
+        "--gate",
+        "INPUTS_REVIEW",
+        "--output",
+        "{work}/INPUTS_REVIEW.json"
+      ],
+      "output": "{work}/INPUTS_REVIEW.json",
+      "result_path": [
+        "status"
+      ],
+      "expected_result": "PASS",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "BASELINE_SCOPE_REVIEW",
+      "kind": "validator",
+      "needs": [
+        "INPUTS_REVIEW"
+      ],
+      "script": {
+        "owner": "native",
+        "path": "scripts/production/validate-staging-baseline-review.py",
+        "sha256": "da85e9f28a02ae3921490655892d81146a109f1b3e44ebb90d80175664c08dd1"
+      },
+      "args": [
+        "--central",
+        "{root}",
+        "--input",
+        "{input}",
+        "--gate",
+        "BASELINE_SCOPE_REVIEW",
+        "--output",
+        "{work}/BASELINE_SCOPE_REVIEW.json"
+      ],
+      "output": "{work}/BASELINE_SCOPE_REVIEW.json",
+      "result_path": [
+        "status"
+      ],
+      "expected_result": "PASS",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "REVIEW_PACKET",
+      "kind": "validator",
+      "needs": [
+        "BASELINE_SCOPE_REVIEW"
+      ],
+      "script": {
+        "owner": "native",
+        "path": "scripts/production/validate-staging-baseline-review.py",
+        "sha256": "da85e9f28a02ae3921490655892d81146a109f1b3e44ebb90d80175664c08dd1"
+      },
+      "args": [
+        "--central",
+        "{root}",
+        "--input",
+        "{input}",
+        "--gate",
+        "REVIEW_PACKET",
+        "--output",
+        "{work}/REVIEW_PACKET.json"
+      ],
+      "output": "{work}/REVIEW_PACKET.json",
+      "result_path": [
+        "status"
+      ],
+      "expected_result": "PASS",
+      "timeout_seconds": 120
+    }
+  ],
+  "targets": {
+    "NATIVE_BASELINE_REVIEWED": [
+      "INPUTS_REVIEW",
+      "BASELINE_SCOPE_REVIEW",
+      "REVIEW_PACKET"
+    ]
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "schema": "NATIVE_STAGING_ASSET_COLLECTION_V2",
+  "mode": "NEW_BASELINE_REVIEW",
+  "role": "Contract",
+  "version": "captured-staging-baseline-20261029-v1",
+  "baseline_git_sha": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+  "predecessor": {
+    "path": "objects/sha256/33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341",
+    "sha256": "33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341"
+  },
+  "members": [
+    {
+      "identity": "drive:1RhntN2QQAT6afuby2G0rJk6K7RNdASKj0fvxXS39Vzw:NATIVE_DOC_EXPORT_DOCX",
+      "version": "CAPTURED_BYTES_SHA256:bf34e2f35b490b7b14de4d58384750e90f3e9edd076823e09575e70b407446fc",
+      "path": "objects/sha256/bf34e2f35b490b7b14de4d58384750e90f3e9edd076823e09575e70b407446fc",
+      "sha256": "bf34e2f35b490b7b14de4d58384750e90f3e9edd076823e09575e70b407446fc",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1RhntN2QQAT6afuby2G0rJk6K7RNdASKj0fvxXS39Vzw",
+        "declared_version": null,
+        "revision_id": null,
+        "declared_title": "サッシ情報管理アプリ_Public_SaaS一般公開共通仕様書_v1.0"
+      },
+      "representation": "NATIVE_DOC_EXPORT_DOCX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341",
+          "sha256": "33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341"
+        },
+        "member_index": 0
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "drive:1RksDn-xLPSV63rqQWR55UdlkUOZL_nlptvZ6EnUfeYg:NATIVE_DOC_EXPORT_DOCX",
+      "version": "CAPTURED_BYTES_SHA256:d15b1ce739a746afe0ed724a9501f441cb82584baf3d0444e4a693e066a34297",
+      "path": "objects/sha256/d15b1ce739a746afe0ed724a9501f441cb82584baf3d0444e4a693e066a34297",
+      "sha256": "d15b1ce739a746afe0ed724a9501f441cb82584baf3d0444e4a693e066a34297",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1RksDn-xLPSV63rqQWR55UdlkUOZL_nlptvZ6EnUfeYg",
+        "declared_version": null,
+        "revision_id": null,
+        "declared_title": "サッシ情報管理アプリ_デプロイ・リリース共通仕様書_v1.2"
+      },
+      "representation": "NATIVE_DOC_EXPORT_DOCX",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341",
+          "sha256": "33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341"
+        },
+        "member_index": 1
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/736305423f13982cd2b55fa2a8da6d130a765ac1b2073bbd121a12943815123f",
+      "sha256": "736305423f13982cd2b55fa2a8da6d130a765ac1b2073bbd121a12943815123f",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
+        "blob": "5b4b14c436249c2630e5b418234b39c60700e1c5"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341",
+          "sha256": "33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341"
+        },
+        "member_index": 2
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/48f38aeecf5774776d90de16081aa7a36955865d224a0861a1d6780c90de6aba",
+      "sha256": "48f38aeecf5774776d90de16081aa7a36955865d224a0861a1d6780c90de6aba",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs",
+        "blob": "0ff64603c478edafcbaef1419382091c486bafd7"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341",
+          "sha256": "33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341"
+        },
+        "member_index": 3
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/f69d1f834ecd5eddb981675163d1ec6f4b3ef37517baf1bab699745b7d1ad999",
+      "sha256": "f69d1f834ecd5eddb981675163d1ec6f4b3ef37517baf1bab699745b7d1ad999",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
+        "blob": "4a1760bcff9163dc8bb6d71198a4a66fcc4a2f3e"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341",
+          "sha256": "33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341"
+        },
+        "member_index": 4
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "git:Takuro-Kwkm/sash-app@c48d646cc36d08574250bdbcec9cd45d480800cb:src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
+      "version": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+      "path": "objects/sha256/4b18233e578609ebc5d46f69c72c89bb5f74a910ad6c510a4acbd57f743b0b64",
+      "sha256": "4b18233e578609ebc5d46f69c72c89bb5f74a910ad6c510a4acbd57f743b0b64",
+      "source": {
+        "repository": "Takuro-Kwkm/sash-app",
+        "revision": "c48d646cc36d08574250bdbcec9cd45d480800cb",
+        "path": "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
+        "blob": "23be814f22f944de92b11275eb1765b69bafcbea"
+      },
+      "representation": "GIT_BLOB",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341",
+          "sha256": "33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341"
+        },
+        "member_index": 5
+      },
+      "historical_identity_verified": null
+    },
+    {
+      "identity": "drive:1BVFe2qZXlLUVhz37trFUjz6mJOwjvW0P:ORIGINAL_STORED_DOCX_REVISION",
+      "version": "v1.8",
+      "path": "objects/sha256/740072e5ba6817e31814496129eaebac4ec84e124060bbebe5dbaf909f95015c",
+      "sha256": "740072e5ba6817e31814496129eaebac4ec84e124060bbebe5dbaf909f95015c",
+      "source": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1BVFe2qZXlLUVhz37trFUjz6mJOwjvW0P",
+        "declared_version": "v1.8",
+        "revision_id": "0B1PsqngSohhlWDU0RlVlVGdySGtCZFZRamJGQzl1NDZpbHA4PQ",
+        "declared_title": null
+      },
+      "representation": "ORIGINAL_STORED_DOCX_REVISION",
+      "acquisition_evidence": {
+        "ref": {
+          "path": "objects/sha256/33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341",
+          "sha256": "33574656e9cb1f1bdf8aa8c6b91924c9da66b6912ac5ad5847cbfc532bf3e341"
+        },
+        "member_index": 6
+      },
+      "historical_identity_verified": null
+    }
+  ]
+}

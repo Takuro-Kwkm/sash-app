@@ -1,0 +1,21 @@
+{
+  "schema": "SASH_LOCAL_QA_CANDIDATE_V1",
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "repository": "Takuro-Kwkm/sash-app",
+  "mode": "NEW_READ_ONLY_BASELINE_WORK",
+  "actions_dispatch_authority": false,
+  "release_profile_admission": false,
+  "merge_authority": false,
+  "independent_review_required": true,
+  "modules": [
+    "test_staging_baseline_work",
+    "test_staging_admission",
+    "test_architecture_ga",
+    "test_ci_input_observation",
+    "test_staging_native_admission",
+    "test_staging_recovery",
+    "test_staging_portable_router",
+    "test_sash_local_qa",
+    "test_sash_local_admission"
+  ]
+}

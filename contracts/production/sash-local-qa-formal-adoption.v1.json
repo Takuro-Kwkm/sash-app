@@ -1,0 +1,16 @@
+{
+  "schema": "SASH_FIXED_LOCAL_IMPLEMENTATION_ADOPTION_V1",
+  "scope": "SASH_LOCAL_QA_EXPLICIT_CONTEXT",
+  "fixed_implementations": {
+    "Takuro-Kwkm/product-ui-contracts": "c94e68c01e876e821a216e6c394f71b7a71d47cf",
+    "Takuro-Kwkm/sash-app": "f37c520c926b2cfabf208871f6237ef86e5e9724"
+  },
+  "actions_dispatch_authority": false,
+  "release_profile_admission": false,
+  "old_work": "INSPECT_OR_RESUME_FIXED_BINDING",
+  "old_local_proof_merge_authority": false,
+  "entry": "scripts/architecture-work.py resolve --sash-local-context",
+  "execution": "RESTORE_FIXED_IMPLEMENTATION_AND_CHECKPOINT; EXISTING_V2_ENGINE",
+  "product_routes": "UNCHANGED",
+  "other_consumers": "UNCHANGED"
+}

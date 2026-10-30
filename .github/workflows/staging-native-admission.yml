@@ -1,0 +1,126 @@
+name: Staging Native Admission
+on:
+  pull_request:
+    types: [ready_for_review]
+    paths:
+      - 'contracts/production/**'
+      - 'scripts/production/**'
+      - '.github/workflows/staging-native-admission.yml'
+permissions:
+  contents: read
+jobs:
+  staging-native-admission:
+    if: vars.STAGING_NATIVE_ADMISSION_CI_APPROVED == 'true' && github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: native
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Read exact approved Central revision
+        id: shared
+        working-directory: native
+        env:
+          EXPECTED_NATIVE_HEAD: ${{ github.event.pull_request.head.sha }}
+          APPROVED_NATIVE_HEAD: ${{ vars.STAGING_NATIVE_APPROVED_HEAD }}
+          APPROVED_SHARED_HEAD: ${{ vars.STAGING_NATIVE_APPROVED_SHARED_HEAD }}
+        run: |
+          python3 - <<'PY'
+          import json,os,re
+          p=json.load(open('contracts/production/staging-native-ci-policy.v1.json'))
+          assert p['enabled'] is True and p['max_runs']==1
+          assert os.environ['APPROVED_NATIVE_HEAD']==os.environ['EXPECTED_NATIVE_HEAD']
+          assert re.fullmatch('[0-9a-f]{40}',os.environ['APPROVED_SHARED_HEAD'])
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:f.write('ref='+os.environ['APPROVED_SHARED_HEAD']+'\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: Takuro-Kwkm/product-ui-contracts
+          ref: ${{ steps.shared.outputs.ref }}
+          token: ${{ secrets.STAGING_CENTRAL_READ_TOKEN }}
+          path: shared
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install declared validator dependencies
+        run: python -m pip install -r shared/requirements.txt
+      - name: Receive approved input package
+        env:
+          STAGING_INPUT_READ_TOKEN: ${{ secrets.STAGING_INPUT_READ_TOKEN }}
+          INPUT_RELEASE_ID: ${{ vars.STAGING_INPUT_RELEASE_ID }}
+          INPUT_ASSET_ID: ${{ vars.STAGING_INPUT_ASSET_ID }}
+          INPUT_PACKAGE_SHA256: ${{ vars.STAGING_INPUT_PACKAGE_SHA256 }}
+          INPUT_PACKAGE_SIZE: ${{ vars.STAGING_INPUT_PACKAGE_SIZE }}
+          AUTHORIZATION_SHA256: ${{ vars.STAGING_INPUT_AUTHORIZATION_SHA256 }}
+          SOURCE_CONTEXT_SHA256: ${{ vars.STAGING_SOURCE_CONTEXT_SHA256 }}
+        run: |
+          python -B native/scripts/production/staging-ci-evidence.py fetch-inputs --central "$PWD/shared" --release-id "$INPUT_RELEASE_ID" --asset-id "$INPUT_ASSET_ID" --package-sha256 "$INPUT_PACKAGE_SHA256" --package-size "$INPUT_PACKAGE_SIZE" --package-root "$RUNNER_TEMP/staging-input-package" --authorization-sha256 "$AUTHORIZATION_SHA256" --source-context-sha256 "$SOURCE_CONTEXT_SHA256"
+      - name: Acquire approved originals
+        env:
+          AUTHORIZATION_SHA256: ${{ vars.STAGING_INPUT_AUTHORIZATION_SHA256 }}
+        run: |
+          python -B native/scripts/production/staging-ci-evidence.py prepare-inputs --central "$PWD/shared" --package-root "$RUNNER_TEMP/staging-input-package" --cache-root "$RUNNER_TEMP/staging-original-cache" --authorization-sha256 "$AUTHORIZATION_SHA256"
+      - name: Observe fixed job inputs
+        env:
+          AUTHORIZATION_SHA256: ${{ vars.STAGING_INPUT_AUTHORIZATION_SHA256 }}
+          EXPECTED_EVENT_ACTION: ${{ github.event.action }}
+          EXPECTED_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          python -B native/scripts/production/staging-ci-evidence.py inputs --central "$PWD/shared" --package-root "$RUNNER_TEMP/staging-input-package" --cache-root "$RUNNER_TEMP/staging-original-cache" --authorization-sha256 "$AUTHORIZATION_SHA256" --base "$EXPECTED_BASE" --out "$RUNNER_TEMP/staging-observation/job-inputs.json"
+      - name: Check actual candidate inputs
+        working-directory: native
+        env:
+          EXPECTED_NATIVE_HEAD: ${{ github.event.pull_request.head.sha }}
+          APPROVED_NATIVE_HEAD: ${{ vars.STAGING_NATIVE_APPROVED_HEAD }}
+          APPROVED_SHARED_HEAD: ${{ vars.STAGING_NATIVE_APPROVED_SHARED_HEAD }}
+          EXPECTED_EVENT_ACTION: ${{ github.event.action }}
+          AUTHORIZATION_SHA256: ${{ vars.STAGING_INPUT_AUTHORIZATION_SHA256 }}
+        run: |
+          python -c 'import json,os;json.dump({"Takuro-Kwkm/sash-app":os.getcwd()},open(os.environ["RUNNER_TEMP"]+"/staging-repositories.json","w"))'
+          python -B scripts/production/validate-staging-native-admission.py --central "$GITHUB_WORKSPACE/shared" --repositories "$RUNNER_TEMP/staging-repositories.json" --ci --transport-manifest "$RUNNER_TEMP/staging-input-package/manifest.json" --transport-authorization "$RUNNER_TEMP/staging-input-package/authorization.json" --authorization-sha256 "$AUTHORIZATION_SHA256" --cache-root "$RUNNER_TEMP/staging-original-cache"
+      - name: Verify Staging baseline review
+        env:
+          AUTHORIZATION_SHA256: ${{ vars.STAGING_INPUT_AUTHORIZATION_SHA256 }}
+          EXPECTED_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          python -B native/scripts/production/staging-ci-evidence.py baseline-ci --central "$PWD/shared" --ci-repository Takuro-Kwkm/sash-app --base "$EXPECTED_BASE" --package-root "$RUNNER_TEMP/staging-input-package" --cache-root "$RUNNER_TEMP/staging-original-cache" --authorization-sha256 "$AUTHORIZATION_SHA256" --out "$RUNNER_TEMP/staging-baseline/baseline-review.json"
+      - name: Scoped native checks
+        env:
+          STAGING_NATIVE_CHECKOUT: ${{ github.workspace }}/native
+          STAGING_SHARED_CHECKOUT: ${{ github.workspace }}/shared
+        run: |
+          python -B - <<'PY'
+          import json,os,sys,unittest
+          from pathlib import Path
+          c=Path(os.environ['STAGING_SHARED_CHECKOUT']);n=Path(os.environ['STAGING_NATIVE_CHECKOUT'])
+          sys.path[:0]=[str(c),str(c/'tests'),str(n/'scripts/production')]
+          suite=unittest.TestLoader().loadTestsFromNames(['test_staging_admission','test_staging_recovery','test_ci_input_observation','test_staging_native_admission'])
+          r=unittest.TextTestRunner(verbosity=2,failfast=True).run(suite)
+          p=Path(os.environ['RUNNER_TEMP'])/'staging-tests.json'
+          p.write_text(json.dumps({'run':r.testsRun,'failures':len(r.failures),'errors':len(r.errors),'skipped':len(r.skipped)}))
+          sys.exit(0 if r.wasSuccessful() else 1)
+          PY
+      - name: Emit scoped result
+        if: always()
+        run: python -B native/scripts/production/staging-ci-evidence.py result --central "$PWD/shared" --inputs "$RUNNER_TEMP/staging-observation/job-inputs.json" --tests "$RUNNER_TEMP/staging-tests.json" --baseline-result "$RUNNER_TEMP/staging-baseline/baseline-review.json" --out "$RUNNER_TEMP/staging-result/staging-result.json"
+      - name: Upload input observation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-inputs-${{ github.run_id }}-${{ github.run_attempt }}-staging-native-admission
+          path: ${{ runner.temp }}/staging-observation/job-inputs.json
+          retention-days: 1
+          if-no-files-found: error
+      - name: Upload scoped result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-result-${{ github.run_id }}-${{ github.run_attempt }}-staging-native-admission
+          path: ${{ runner.temp }}/staging-result/staging-result.json
+          retention-days: 1
+          if-no-files-found: error
