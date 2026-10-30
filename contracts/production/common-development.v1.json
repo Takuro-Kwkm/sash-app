@@ -1,0 +1,34 @@
+{
+  "schema": "COMMON_DEVELOPMENT_V1",
+  "state": "ADOPTED",
+  "repository": "Takuro-Kwkm/sash-app",
+  "shared_entry": "scripts/architecture-work.py",
+  "shared_engine": "harness/workflow.py",
+  "human_ui_review_required": true,
+  "existing_work": "KEEP_FIXED_BINDING",
+  "product_facts": "NATIVE_AUTHORITY",
+  "release": "EXISTING_NATIVE_LIFECYCLE",
+  "native_validator_registry": "contracts/production/validator-registry.v2.json",
+  "native_output_adapter": {
+    "path": "scripts/production/export-common-development.mjs",
+    "sha256": "451459e8ecfd4a4af96d38dcfd2507ca5842432ce5421b5829bafe892219fb34",
+    "products": [
+      "SER-LIX-EW"
+    ],
+    "shared_worker": {
+      "path": "scripts/validate-common-native.py",
+      "sha256": "11721dd8132c2baba1403b7f6ef0d01f5902e4e9568dde5b6a11d4aa15ff7677"
+    }
+  },
+  "shared_adoption_sha256": "1a24f48467dbbde9e63d9a78f911108c43e7ae6c8bcfd12fc6bf91ff883b814c",
+  "connection_files": {
+    "AGENTS.md": "efdcaaa776ef634f38518d8e9122e9c830a1ab0b582928bc1fe441c530d227a1",
+    "scripts/production/export-common-development.mjs": "451459e8ecfd4a4af96d38dcfd2507ca5842432ce5421b5829bafe892219fb34",
+    "vercel.json": "ba20c5da1803ae064033af9b80101987aaa93721113b2ff2e7537c7ebca3c6e2"
+  },
+  "retained_native": {
+    "SER-LIX-EW": {
+      "format": "SASH_EW_V1"
+    }
+  }
+}
