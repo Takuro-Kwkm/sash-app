@@ -6,6 +6,8 @@ import {resolve,join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {runtimeAppIntegrationInventory,resolveRuntimeAppProduct} from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import {formalComposedRuntimeEntries,readFormalComposedModule} from '../src/catalog/runtime-master/formal-composed-runtime-registry.mjs';
+import {execFileSync} from 'node:child_process';
+import {pathToFileURL} from 'node:url';
 import {productChoices} from '../src/ui/web/product-choice-model.mjs';
 
 test('formal compositions preserve all adopted rules and choices with only declared identity changes',()=>{
@@ -49,7 +51,19 @@ test('changed formal module bytes and escaping paths are refused',()=>{
     assert.throws(()=>readFormalComposedModule({...entry,path:'../outside.json'}),/FORMAL_COMPOSITION_PATH_INVALID/);
   }finally{rmSync(root,{recursive:true,force:true});}
 });
-test('the pre-existing runtime products keep identical initial and changed selection behavior',async()=>{
+test('pre-existing runtime behavior and original hashes stay intact except approved shared labels',async()=>{
   const baseline=JSON.parse(readFileSync('contracts/production/runtime-baselines/preexisting-products.v1.json'));
-  for(const c of baseline.cases){const actual=await resolveRuntimeAppProduct(c.id,c.selection);assert.equal(createHash('sha256').update(JSON.stringify(actual)).digest('hex'),c.responseSha256,c.id);}
+  const root=mkdtempSync(join(tmpdir(),'retained-runtime-label-baseline-'));
+  try{
+    const archive=join(root,'retained-source.tar');
+    execFileSync('git',['archive','--output='+archive,'f02ddba2e818373c965fd7ff78580ff6f9a25ca0']);
+    execFileSync('tar',['-xf',archive,'-C',root]);
+    const {resolveRuntimeAppProduct:prior}=await import(pathToFileURL(join(root,'src/catalog/runtime-master/runtime-app-bridge.mjs')).href);
+    const withoutLabels=value=>({...value,fields:value.fields.map(({displayLabel,...field})=>field)});
+    for(const c of baseline.cases){
+      const before=await prior(c.id,c.selection),actual=await resolveRuntimeAppProduct(c.id,c.selection);
+      assert.equal(createHash('sha256').update(JSON.stringify(before)).digest('hex'),c.responseSha256,c.id+': original baseline');
+      assert.deepEqual(withoutLabels(actual),withoutLabels(before),c.id+': approved common labels only');
+    }
+  }finally{rmSync(root,{recursive:true,force:true});}
 });
