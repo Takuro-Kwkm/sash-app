@@ -2,7 +2,7 @@
   "schema": "SASH_PRODUCT_WORK_ADOPTION_V1",
   "central_base": "b7d6d34152d948088148ac13f908f2a3650b8321",
   "native_base": "56e6064bfb78c4758e210068ed75d2ac361a00a3",
-  "shared_implementation_sha": "4a0962994d4fe9621ceac47e25614aca3faffe1b",
+  "shared_implementation_sha": "b7020cd147b50a5e752c1b809ad20f6980859bd5",
   "native_source_commit": "074e26d5494061181e431721a777a7b685106f0e",
   "native_inventory_sha256": "076df8a201beba81dfc7ce4045d42d503dae343b6d050e091f93585e831339ac",
   "predecessor_result": {
