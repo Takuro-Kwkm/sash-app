@@ -1,10 +1,12 @@
 import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
 const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
 const here=new URL('../../',import.meta.url);
 const ref=p=>({native_path:p,sha256:hash(fs.readFileSync(new URL(p,here)))});
 const read=p=>JSON.parse(fs.readFileSync(new URL(p,here)));
+const implementationRefs=execFileSync('git',['ls-files','-z'],{cwd:here,encoding:'utf8'}).split('\0').filter(p=>p&&["src/catalog/runtime-master/", "src/server/", "src/ui/", "contracts/ui-common/"].some(prefix=>p.startsWith(prefix))&&/\.(?:mjs|js|ts|tsx|jsx|css|html|json)$/.test(p)).sort().map(ref);
 const checks={};
 const check=(name,cases,fn)=>{fn();checks[name]={status:'PASS',executed_cases:cases};};
 import {loadRegisteredRuntime} from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
@@ -30,7 +32,7 @@ check('CLEAR_INVALID',2,()=>{assert.equal(cleared.selection.window_spec,undefine
 const restore=await resolveRuntimeAppProduct(product_id,JSON.parse(JSON.stringify(state.selection)));
 check('RESTORE',1,()=>assert.deepEqual(restore.selection,state.selection));
 check('HANDOFF',1,()=>{assert.equal(restore.productId,product_id);assert.deepEqual(restore.selection,state.selection);assert.ok(restore.runtimeMaster);});
-console.log(JSON.stringify({schema:'NATIVE_COMMON_PROJECTION_V1',repository:'Takuro-Kwkm/sash-app',product_id,status:'PASS',
+console.log(JSON.stringify({schema:'NATIVE_COMMON_PROJECTION_V1',implementation_refs:implementationRefs,repository:'Takuro-Kwkm/sash-app',product_id,status:'PASS',
   flow_stages:GLOBAL_WINDOW_STAGE_ORDER,master_identity:{version:loaded.normalizedManifest.packageVersion,source_integrity:loaded.sourcePackageIntegrity},
   source_refs:[ref('src/catalog/runtime-master-packages/lixil-ew-v1.4/runtime_manifest.json'),ref('src/catalog/runtime-master-packages/lixil-ew-v1.4/runtime.json.br.b64')],
   flow:ref('src/catalog/runtime-master/canonical-window-semantic-schema.mjs'),
