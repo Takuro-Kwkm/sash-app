@@ -36,6 +36,10 @@ function majorSpecificationText(snapshot){
 function sizeText(snapshot){
   const size=summaryValue(snapshot,['size']);
   if(size)return text(size);
+  const declared=snapshot?.sales_request_handoff?.dimensions;
+  if(declared?.label&&declared?.width!==null&&declared?.width!==undefined&&declared?.height!==null&&declared?.height!==undefined){
+    return `${text(declared.label)} W ${text(declared.width)} × H ${text(declared.height)}${declared.unit?' '+text(declared.unit):''}`;
+  }
   const width=summaryValue(snapshot,['custom_width','width','size_w','order_width'])??snapshot?.configuration?.custom_width??snapshot?.configuration?.width??snapshot?.configuration?.size_w??snapshot?.configuration?.order_width??null;
   const height=summaryValue(snapshot,['custom_height','height','size_h','order_height'])??snapshot?.configuration?.custom_height??snapshot?.configuration?.height??snapshot?.configuration?.size_h??snapshot?.configuration?.order_height??null;
   const secondaryHeight=summaryValue(snapshot,['custom_height_secondary'])??snapshot?.configuration?.custom_height_secondary??null;

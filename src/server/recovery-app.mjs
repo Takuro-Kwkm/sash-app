@@ -6,6 +6,7 @@ import { createCatalog, catalogInventory } from "../catalog/catalog-adapter.mjs"
 import { stabilizeSelection } from "../catalog/catalog-resolver.mjs";
 import { CURRENT_WINDOW_SERIES_MODULES } from "../catalog/modules/current-window-series.mjs";
 import { resolveRuntimeAppProduct, runtimeAppIntegrationInventory } from "../catalog/runtime-master/runtime-app-bridge.mjs";
+import {parseSelectionContext} from '../catalog/runtime-master/declared-selection-views.mjs';
 import { WORK_SCHEMA_VERSION } from "../work-management/domain.mjs";
 
 const HERE=dirname(fileURLToPath(import.meta.url));
@@ -67,7 +68,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     if(url.pathname==="/api/runtime-master/integrations") return json(res,200,runtimeIntegrationDeclarations);
     if(url.pathname==="/api/runtime-master/resolve"){
       const productId=url.searchParams.get("productId");if(!productId)return json(res,400,{error:"productId required"});
-      try{return json(res,200,await resolveRuntimeAppProduct(productId,parseSelection(url)));}
+      try{return json(res,200,await resolveRuntimeAppProduct(productId,parseSelection(url),parseSelectionContext(url.searchParams.get('selectionContext'))));}
       catch(error){return json(res,400,{error:error?.message??String(error),code:error?.code??"RUNTIME_RESOLVE_FAILED"});}
     }
     if(url.pathname==="/api/catalog") return json(res,200,catalog);

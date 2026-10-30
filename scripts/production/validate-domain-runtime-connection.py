@@ -5,6 +5,32 @@ import json
 from pathlib import Path
 
 
+def private_manifest(profile):
+    manifest=profile['private_candidate']
+    assert set(manifest)=={'schema','files','source_policy'} and manifest['schema']=='CAPTURED_PRIVATE_RUNTIME_INPUTS_V1', 'PRIVATE_CANDIDATE_MANIFEST'
+    files=manifest['files'];assert isinstance(files,dict) and {'index.json','projection.json','candidates/module.json','sources/PRODUCT_MASTER.json','review/formal-provenance.json','review/flow.json','review/browser-qa.json','review/independent-requirements.json'}<=set(files),'PRIVATE_CANDIDATE_INCOMPLETE'
+    for name,digest in files.items():
+        path=Path(name)
+        assert name==path.as_posix() and not path.is_absolute() and '..' not in path.parts and len(digest)==64 and all(c in '0123456789abcdef' for c in digest),'PRIVATE_CANDIDATE_PATH_OR_HASH'
+    assert profile['candidate_root']=='CAPTURED_PRIVATE_INPUTS_REQUIRED' and profile['runtime_index']=='CAPTURED:index.json','PRIVATE_CANDIDATE_SCOPE'
+    return files
+
+
+def capture_private_candidate(profile,base):
+    files=private_manifest(profile);original=Path(base);base=original.resolve()
+    assert original.is_dir() and not original.is_symlink(),'PRIVATE_CANDIDATE_CAPTURE_REQUIRED'
+    actual={}
+    for path in base.rglob('*'):
+        assert not path.is_symlink(),'PRIVATE_CANDIDATE_SYMLINK'
+        if path.is_file():actual[path.relative_to(base).as_posix()]=path
+    assert set(actual)==set(files),'PRIVATE_CANDIDATE_FILE_SET_CHANGED'
+    refs={}
+    for name,path in actual.items():
+        assert hashlib.sha256(path.read_bytes()).hexdigest()==files[name],'PRIVATE_CANDIDATE_BYTES_CHANGED:'+name
+        refs['candidate:'+name]={'path':str(path),'sha256':files[name]}
+    return refs
+
+
 def validate(root):
     root=Path(root).resolve();read=lambda path:json.loads((root/path).read_bytes())
     routing=read('contracts/production/work-connections.v2.json');validators=read('contracts/production/validator-registry.v2.json')
@@ -25,6 +51,11 @@ def validate(root):
         assert len(p['native_paths'])==len(set(p['native_paths']))
         for name in p['native_paths']:
             file=(root/name).resolve();assert file.is_relative_to(root) and file.is_file() and not file.is_symlink(), 'NATIVE_PATH'
+        if p.get('private_candidate'):
+            private_manifest(p)
+            assert p['product_fact_mutation_allowed'] is False and p['candidate_identity_source']=='CAPTURED_NATIVE_READBACK','PRIVATE_CANDIDATE_SCOPE'
+            count+=1
+            continue  # Admission of code/profile only; captured data is required at prepare/run.
         index=read(p['runtime_index']);assert index['adoption']=='CANDIDATE_ONLY' and len(index['products'])==1
         row=index['products'][0];assert row['id']==p['runtime_product_id'] and row['adapterType']=='COMPOSED_PRODUCT_MODULE_V1'
         module=root/p['candidate_root']/row['path'];assert hashlib.sha256(module.read_bytes()).hexdigest()==row['sha256'], 'MODULE_BYTES_CHANGED'

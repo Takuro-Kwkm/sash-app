@@ -166,6 +166,14 @@
       "formal_profile": {
         "path": "contracts/production/working-master-recovery/apw330.formal.v1.json",
         "sha256": "c274de464ab6898ac26b82b21f4929371438cd52b4f6d3a5cc2040b4b09e1ce8"
+      },
+      "runtime_ui_profile": {
+        "path": "contracts/production/runtime-candidates/apw330-r1.profile.json",
+        "sha256": "b790bd34218db017c06d80926b643c41928d0b3c30e7ba36b035b86ead3282f2"
+      },
+      "runtime_candidate_profile": {
+        "path": "contracts/production/runtime-candidates/apw330-r1.profile.json",
+        "sha256": "b790bd34218db017c06d80926b643c41928d0b3c30e7ba36b035b86ead3282f2"
       }
     },
     "NATIVE_REGISTRY:YKK AP::APW331": {

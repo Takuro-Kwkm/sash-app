@@ -1,6 +1,6 @@
 import {adaptProductModuleRuntimeV1} from './product-module-runtime-adapter.mjs';
 import {applyDeclaredSelectionLinks} from './declared-selection-policy.mjs';
-import {resolveDeclaredSelectionViews, declaredSelectionErrors, attachDeclaredSalesHandoff} from './declared-selection-views.mjs';
+import {resolveDeclaredSelectionViews, declaredSelectionErrors, attachDeclaredSalesHandoff,parseSelectionContext} from './declared-selection-views.mjs';
 
 const has=value=>value!==undefined&&value!==null&&value!=='';
 const own=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);
@@ -43,11 +43,11 @@ export function migrateCandidateSelection(input,migrations=[]){
   }
   return selection;
 }
-export function resolveMigratedCandidateSelection(reader,input,migrations=[]){
+export function resolveMigratedCandidateSelection(reader,input,migrations=[],context={changedFields:[]}){
   const migrated=migrateCandidateSelection(input,migrations);
   // Only defaults from the existing resolver supply prerequisite context.
-  const prepared=reader.uiResolver(migrated).selection;
-  return reader.uiResolver({...prepared,...migrated});
+  const prepared=reader.uiResolver(migrated,context).selection;
+  return reader.uiResolver({...prepared,...migrated},context);
 }
 export async function adaptComposedProductRuntime(document,entry,loadReference){
   const formal=document.schema==='FORMAL_COMPOSED_PRODUCT_MODULE_V1'&&document.formal_adoption===true&&entry.packageType==='FORMAL_COMPOSED_PRODUCT_RUNTIME';
@@ -68,14 +68,15 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
   const {applyRuntimeUiCategoryOrder}=await import('./new-construction-sash-runtime-ui-contract.mjs');
   const dimensionReview=declaredDimensionReview(document);
   const primary=adaptProductModuleRuntimeV1({documents:{RUNTIME_JSON_PACKAGE:document}},entry);
-  return {...primary,uiResolver:input=>{
+  return {...primary,uiResolver:(input,context={changedFields:[]})=>{
+    const {changedFields}=parseSelectionContext(context);
     const contract=document.composition,prefix=contract?.prefix;
     const localInput=Object.fromEntries(Object.entries(input??{}).filter(([key])=>!prefix||!key.startsWith(prefix)));
     const result=resolveDeclaredSelectionViews(primary,document,localInput);
     applyDeclaredDimensionReview(result,dimensionReview);
     result.dependencyFields=result.fields.map(field=>({key:field.key,parentFields:document.product_module.specificationDefinitions.find(d=>d.key===field.key)?.parentFields??[]}));
     for(const field of result.fields)field.parentFields=result.dependencyFields.find(d=>d.key===field.key).parentFields;
-    const errors=[...(result.validation?.errors??[]),...declaredSelectionErrors(document.product_module,localInput,result.selection)],warnings=[...(result.manualWarnings??[])],missing=[...(result.validation?.missingRequiredFields??[])];
+    const errors=[...(result.validation?.errors??[]),...declaredSelectionErrors(document.product_module,localInput,result.selection,changedFields)],warnings=[...(result.manualWarnings??[])],missing=[...(result.validation?.missingRequiredFields??[])];
     const transforms={};
     for(const rule of document.linear_transforms??[]){
       const value=result.selection[rule.input];

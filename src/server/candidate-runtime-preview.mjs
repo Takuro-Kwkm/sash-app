@@ -7,6 +7,7 @@ import {adaptComposedProductRuntime,resolveMigratedCandidateSelection} from '../
 import {runtimeMasterInventory,loadRegisteredRuntime} from '../catalog/runtime-master/runtime-master-registry.mjs';
 import {runtimeAppIntegrationInventory,getRuntimeAppIntegration} from '../catalog/runtime-master/runtime-app-bridge.mjs';
 import {applyDeclaredWindowFlow} from '../catalog/runtime-master/declared-window-flow.mjs';
+import {parseSelectionContext} from '../catalog/runtime-master/declared-selection-views.mjs';
 
 export function createCandidateRuntimePreview(){
   if(!candidateRuntimeEntries.length)throw new Error('CANDIDATE_INDEX_REQUIRED');
@@ -35,7 +36,8 @@ export function createCandidateRuntimePreview(){
           const input=JSON.parse(url.searchParams.get('selection')??'{}'),version=url.searchParams.get('configurationVersion');
           const legacy=Boolean(version&&version!==entry.packageVersion);
           const reader=adapters.get(entry.id);
-          const result=legacy?resolveMigratedCandidateSelection(reader,input,doc.selection_migrations):reader.uiResolver(input);
+          const context=parseSelectionContext(url.searchParams.get('selectionContext'));
+          const result=legacy?resolveMigratedCandidateSelection(reader,input,doc.selection_migrations,context):reader.uiResolver(input,context);
           if(legacy&&doc.selection_migrations?.length){
             result.configurationMigration={from:version,to:entry.packageVersion,originalSelection:input};
             result.manualWarnings.push('保存済みの選択を現在の項目に整理しました。本体色・カバー仕様・ガラスを確認してください。');

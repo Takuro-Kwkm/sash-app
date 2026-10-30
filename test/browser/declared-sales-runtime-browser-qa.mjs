@@ -24,6 +24,11 @@ try{
         const product=(await(await fetch('/api/runtime-master/integrations')).json()).find(p=>p.id===contract.product_id);
         const {createProductConfigurationSnapshot}=await import('/work-management/domain.mjs');
         const snapshot=createProductConfigurationSnapshot({product:{...product,sourceType:'RUNTIME_MASTER'},result});
+        if(row.legacy_saved_values){
+          snapshot.configuration=structuredClone(row.seed);
+          snapshot.package_version=row.legacy_package_version??'LEGACY_CAPTURED_SNAPSHOT';
+          snapshot.validation_state='NEEDS_REVALIDATION';
+        }
         const {BrowserStorageDocumentStore}=await import('/work-management/storage.mjs');
         const {createRepositoryBundle}=await import('/work-management/repositories.mjs');
         const {WorkManagementService}=await import('/work-management/service.mjs');
@@ -37,6 +42,9 @@ try{
       assert.equal(saved.result.sales_request_handoff.quantity,row.expected_quantity);
       assert.deepEqual(saved.result.confirmationRequests.map(r=>r.id).sort(),[...row.expected_confirmation_ids].sort());
       assert.equal(saved.result.orderReady,false);assert.equal(saved.result.pricing.price,null);
+      if(row.legacy_saved_values)assert.deepEqual(saved.snapshot.configuration,row.seed);
+      for(const [key,value] of Object.entries(row.handoff_inputs??{}))assert.deepEqual(saved.result.sales_request_handoff.request_inputs?.[key],value,key);
+      for(const key of row.restored_cleared??[])assert.equal(saved.result.selection[key],undefined,key);
       snapshots.push(saved.snapshot);
       const url=`${BASE}/projects/${saved.project}/estimates/${saved.estimate}/openings/${saved.opening}`;
       await page.goto(url,{waitUntil:'networkidle'});await page.waitForSelector('#dynamicForm[data-resolve-revision]');
@@ -45,6 +53,17 @@ try{
       for(const key of contract.number_fields)assert.equal(await page.locator(`[data-spec-key="${key}"]`).getAttribute('type'),'number');
       for(const key of row.number_fields??[])assert.equal(await page.locator(`[data-spec-key="${key}"]`).getAttribute('type'),'number');
       for(const key of row.hidden_fields??[])assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0);
+      for(const key of row.restored_cleared??[]){
+        const control=page.locator(`[data-spec-key="${key}"]`);
+        if(await control.count())assert.equal(await control.inputValue(),'',key);
+      }
+      for(const key of row.checkbox_groups??[]){
+        const group=page.locator(`[data-multi-key="${key}"][role="group"]`);
+        assert.equal(await group.count(),1,key);
+        assert.ok(await group.isVisible(),key);
+        assert.ok(await group.locator('input[type="checkbox"]').count()>1,key);
+        assert.equal(await page.locator(`select[data-spec-key="${key}"]`).isVisible(),false,key);
+      }
       for(const [key,expected] of Object.entries(row.control_expectations??{})){
         const control=page.locator(`[data-spec-key="${key}"]`);
         assert.equal(await control.evaluate(node=>node.tagName),expected.tag,key);
@@ -60,8 +79,16 @@ try{
       const transitions=[];
       for(const action of row.actions??[]){
         const control=page.locator(`[data-spec-key="${action.field}"]`),old=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
-        const response=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200&&JSON.parse(new URL(r.url()).searchParams.get('selection'))[action.field]===action.value);
-        if(['number','text'].includes(await control.getAttribute('type'))){await control.fill(String(action.value));await control.dispatchEvent('change');}
+        const response=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200&&JSON.stringify(JSON.parse(new URL(r.url()).searchParams.get('selection'))[action.field])===JSON.stringify(action.value));
+        if(Array.isArray(action.value)){
+          const group=page.locator(`[data-multi-key="${action.field}"][role="group"]`);
+          const boxes=await group.locator('input[type="checkbox"]').all();
+          const changes=[];
+          for(const box of boxes){const wanted=action.value.includes(await box.inputValue());if(await box.isChecked()!==wanted)changes.push({box,wanted});}
+          assert.equal(changes.length,1,'One real checkbox action per transition required');
+          await changes[0].box.setChecked(changes[0].wanted);
+        }
+        else if(['number','text'].includes(await control.getAttribute('type'))){await control.fill(String(action.value));await control.dispatchEvent('change');}
         else await control.selectOption(String(action.value));
         const result=await(await response).json();
         await page.waitForFunction(value=>document.querySelector('#dynamicForm')?.dataset.resolveRevision!==value,old);
@@ -82,7 +109,9 @@ try{
         return (await createRepositoryBundle(new BrowserStorageDocumentStore(localStorage)).openings.require(saved.opening)).product_configuration_snapshot;
       },saved);
       assert.deepEqual(actual.configuration,persisted.configuration);
+      for(const key of row.restored_cleared??[])assert.equal(actual.configuration[key],undefined,key);
       assert.deepEqual(actual.confirmation_requests,persisted.confirmation_requests);
+      assert.deepEqual(actual.sales_request_handoff?.request_inputs,persisted.sales_request_handoff?.request_inputs);
       assert.equal(actual.runtime_manifest_identity,contract.manifest_file_id);
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
       cases.push({id:row.id,saveReopen:'PASS',identity:'PASS',confirmations:'PASS',overflow:'PASS',transitions});
@@ -96,6 +125,7 @@ try{
     assert.ok(output.model.rows.every(row=>row.price===null&&row.size.includes(contract.output_size_label??'新設枠発注寸法')));
     assert.deepEqual(output.model.rows.map(row=>row.request_quantity),contract.rows.map(row=>row.expected_quantity));
     assert.ok(output.model.rows.at(-1).issues.length);assert.equal(output.model.rows.at(-1).state,'INVALID');
+    for(const [i,row] of contract.rows.entries())for(const text of row.output_contains??[])assert.ok(output.model.rows[i].major_specifications?.includes(text),text);
     await writeFile(`${OUT}/output-${width}.pdf`,new Uint8Array(output.pdf));
     await writeFile(`${OUT}/output-${width}.xlsx`,new Uint8Array(output.xlsx));
     await writeFile(`${OUT}/output-model-${width}.json`,JSON.stringify(output.model,null,2));

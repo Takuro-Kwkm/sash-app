@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import importlib.util
 
 
 def prepare(shared,checkout,captures,destination,instruction):
@@ -27,6 +28,12 @@ def prepare(shared,checkout,captures,destination,instruction):
             and p['shared_entrypoint']=='scripts/production-work.py','CANDIDATE_PROFILE_CHANGED','Admitted native profile required','PREPARE')
     validators=read_json(checkout/'contracts/production/validator-registry.v2.json')['products'][c['product_id']]
     require(validators['runtime_candidate_profile']==selected,'CANDIDATE_PROFILE_CHANGED','Native validator admission differs','PREPARE')
+    private_refs={}
+    if p.get('private_candidate'):
+        require(c.get('candidate_root') and not Path(c['candidate_root']).resolve().is_relative_to(checkout),'PRIVATE_CANDIDATE_CAPTURE_REQUIRED','Captured private input must remain outside public source checkout','PREPARE')
+        definition=importlib.util.spec_from_file_location('private_candidate',checkout/'scripts/production/validate-domain-runtime-connection.py')
+        private_module=importlib.util.module_from_spec(definition);definition.loader.exec_module(private_module)
+        private_refs=private_module.capture_private_candidate(p,c['candidate_root'])
     observed={k:read_json(v) for k,v in c['observations'].items()}
     require(connector_document(observed['central_branch'])['commit']['sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=shared,text=True).strip(),
             'CURRENT_AUTHORITY_UNVERIFIED','Fresh executing central HEAD required','PREPARE')
@@ -34,7 +41,8 @@ def prepare(shared,checkout,captures,destination,instruction):
     binding.update(checkout=str(checkout),observations={k:observation_fingerprint(v) for k,v in observed.items()})
     root.mkdir(parents=True)
     contract=dict(product_id=c['product_id'],profile=profile,checkout=str(checkout),node=c['node'],native_head=binding['head_sha'],
-                  inputs={k:ref(v) for k,v in c['inputs'].items()},upstream={**c['upstream'],'spec':ref(c['upstream']['spec'])})
+                  inputs={**{k:ref(v) for k,v in c['inputs'].items()},**private_refs},upstream={**c['upstream'],'spec':ref(c['upstream']['spec'])})
+    if private_refs:contract['candidate_root']=str(Path(c['candidate_root']).resolve())
     if c.get('playwright_module'):contract['playwright_module']=c['playwright_module']
     write_json(root/'contract.json',contract);write_json(root/'production-binding.json',binding)
     write_json(root/'live-state.json',dict(repository=read_json(c['branch']),observations=observed))

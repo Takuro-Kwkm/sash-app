@@ -24,7 +24,15 @@ def execute(shared, contract_path, stage, work, output):
     require(profile['status']=='ADOPTED' and profile['admission_state']=='CANDIDATE_ONLY'
             and not profile['formal_adoption'] and not profile['source_adoption'] and not profile['release'],
             'CANDIDATE_SCOPE', 'Native candidate profile only', stage)
-    base=checkout/profile['candidate_root']; index=read_json(base/'index.json'); entry=index['products'][0]
+    if profile.get('private_candidate'):
+        require(contract.get('candidate_root') and not Path(contract['candidate_root']).resolve().is_relative_to(checkout),'PRIVATE_CANDIDATE_CAPTURE_REQUIRED','Explicit private captured root required',stage)
+        definition=importlib.util.spec_from_file_location('private_candidate',checkout/'scripts/production/validate-domain-runtime-connection.py')
+        private_module=importlib.util.module_from_spec(definition);definition.loader.exec_module(private_module)
+        refs=private_module.capture_private_candidate(profile,contract['candidate_root'])
+        require(all(contract['inputs'].get(k)==v for k,v in refs.items()),'PRIVATE_CANDIDATE_INPUT_CHANGED','Every private file must retain its immutable spec binding',stage)
+        base=Path(contract['candidate_root'])
+    else:base=checkout/profile['candidate_root']
+    index=read_json(base/'index.json'); entry=index['products'][0]
     document=read_json(base/entry['path']); projection=read_json(base/'projection.json')
     require(len(index['products'])==1 and sha((base/entry['path']).read_bytes())==entry['sha256']
             and entry['id']==profile['runtime_product_id'] and document['baseline']==projection['source'],
@@ -103,11 +111,16 @@ def execute(shared, contract_path, stage, work, output):
         require(identity['status']=='NATIVE_CANDIDATE_BYTES_READBACK_PASS' and identity['index_sha256']==sha((base/'index.json').read_bytes())
                 and identity['module_sha256']==entry['sha256'], 'SAVED_CANDIDATE_REQUIRED','Actual native index/module readback required',stage)
         port=str(profile['local_port']); qa_contract=read_json(base/profile['qa_contract'])
+        qa_path=base/profile['qa_contract']
+        if profile.get('candidate_identity_source')=='CAPTURED_NATIVE_READBACK':
+            require(qa_contract['manifest_file_id']=='PENDING_NATIVE_CANDIDATE_SAVE','SAVED_CANDIDATE_REQUIRED','Only the admitted template may derive its saved identity',stage)
+            qa_contract['manifest_file_id']=identity['index_file_id']
+            qa_path=work/'captured-browser-qa.json';write_json(qa_path,qa_contract)
         require(identity['index_file_id']==qa_contract['manifest_file_id'], 'SAVED_CANDIDATE_REQUIRED','Snapshot identity differs',stage)
         env.update(SASH_CANDIDATE_MODE='INSPECT_LOCAL',SASH_CANDIDATE_RUNTIME_INDEX=str(base/'index.json'),
                    SASH_CANDIDATE_INDEX_SHA=identity['index_sha256'],SASH_CANDIDATE_MANIFEST_FILE_ID=identity['index_file_id'],
                    HOST='127.0.0.1',PORT=port,QA_BASE_URL='http://127.0.0.1:'+port,
-                   QA_OUTPUT_DIR=str(work/'browser'),QA_RUNTIME_QA_CONTRACT=str(base/profile['qa_contract']))
+                   QA_OUTPUT_DIR=str(work/'browser'),QA_RUNTIME_QA_CONTRACT=str(qa_path))
         env['QA_EXPECTED_COMMIT']=contract['native_head']
         if contract.get('playwright_module'):env['QA_PLAYWRIGHT_MODULE']=contract['playwright_module']
         require(not env.get('VERCEL') and env.get('NODE_ENV')!='production','LOCAL_CANDIDATE_ONLY','No production candidate fallback',stage)

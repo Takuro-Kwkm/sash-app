@@ -1,0 +1,24 @@
+{
+  "schema": "SASH_PRODUCT_RUNTIME_ADOPTION_V1",
+  "bases": {
+    "Takuro-Kwkm/product-ui-contracts": "9d1d40d2bb24f938fcacea2d5a64497873518003",
+    "Takuro-Kwkm/sash-app": "67f1a9400ba8f716c3b947b9950f2a5184371172"
+  },
+  "shared_implementation_sha": "57811e05b1d243633de7cd5754c7d23bdceec3a0",
+  "native_source_commit": "b8044d830c140cccdd89ba3eb609578a33965e8b",
+  "native_inventory_sha256": "33e90cb6ea6b69b13ffdbc3ce46893414e2e6a3d7f6d118ed6d506248a0a9fd5",
+  "predecessor_result": {
+    "state": "FAIL_CLOSED",
+    "blocking_reason": {
+      "code": "NATIVE_UI_PROFILE_REQUIRED",
+      "reason": "NATIVE_REGISTRY:YKK AP::APW330: acquire an admitted Stage09 native profile",
+      "target_gate": "ROUTER",
+      "resolution_condition": "Correct the named input; resume the same work."
+    },
+    "legacy_selection": 0,
+    "reference_fallback": false
+  },
+  "new_bindings_only": true,
+  "actions_dispatch_authority": false,
+  "release_profile_admission": false
+}
