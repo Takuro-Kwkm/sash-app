@@ -1,0 +1,59 @@
+{
+  "schema": "TW_SIZE_DISPLAY_CORRECTION_ADOPTION_V1",
+  "operation": "APPLY_EXISTING_EXPLICIT_HUMAN_CONFIRMATION",
+  "human_decision_issued": false,
+  "human_confirmation": {
+    "status": "APPROVED",
+    "actor": "HUMAN_USER",
+    "verbatim_answer": "この表示でOK",
+    "question": "修正後のTW画面（http://127.0.0.1:4262/runtime-lab）で、前段の「建具・枚数」は残し、規格サイズを「25118」「24318A／24318B」のように枚数を重複させない表示にしました。この変更箇所の表示を確認してください。",
+    "candidate_commit": "36813468fd16b29b7684990b1ab23dc31a9af2c5",
+    "origin": "http://127.0.0.1:4262",
+    "scope": "TW standard-size display only; all four affected window types,2/4 panels; raw metadata,IDs,dimensions and original product decisions retained",
+    "proofs": {
+      "768-2panels.png": "f052ac5a27f69324c0a707895d77632764463071a06cff8d44e67effbd7ad43d",
+      "390-4panels.png": "e6f8fbbd776d42ca35a6e02a06ef0ec276ab9f27bf32572f1de5fc2be6afed6a",
+      "1280-4panels.png": "ae1c6860aad5d4f93b2f5c9a3e059783aa95757cc81468c9832dce97b32decb2",
+      "768-4panels.png": "900768ca4881091b395135e2db73a5485c999c3d4f90a1d3e8ac34bf264897be",
+      "1280-2panels.png": "91c535691669e0f703db85e9f082ae84abb3b147a9d107f58ef8e7d439de0c1e",
+      "390-2panels.png": "193bb09c12ef8d83f37710fac061b04905dcff28368db0d79a2fadba41db0849"
+    },
+    "recorded_at": "2026-10-31T01:57:06.903215+00:00"
+  },
+  "release_instruction": {
+    "actor_kind": "HUMAN",
+    "decision": "APPROVED",
+    "decision_ref": "CURRENT_CHAT_USER_TW_PRODUCTION_REQUEST_20261031",
+    "request": "では、APW330側の公開工程と競合しないよう調整して、今回のTWの表示修正も本番反映と公開後確認まで進めてください。今回の人間確認と既存の成果・承認・QAは引き継ぎ、再調査や再承認は挟まないでください。",
+    "scope": "TW_REVIEWED_SIZE_LABEL_CORRECTION_ONLY",
+    "new_product_fact_authority": false,
+    "actions_dispatch_authority": false,
+    "reviewed_commit": "36813468fd16b29b7684990b1ab23dc31a9af2c5"
+  },
+  "retained_local_qa": {
+    "result": {
+      "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/qa/local-qa-result.json",
+      "sha256": "d1cd22b5ef903563a6d566c437d1413765bba64a23033deb1f347f4b4bf0180c",
+      "location": "RETAINED_ACTUAL_EVIDENCE:local-qa-result.json",
+      "observed_at": "2026-10-31T02:07:18.993791+00:00"
+    },
+    "review": {
+      "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/qa/local-qa-review.json",
+      "sha256": "7c747e05a5014935b20c56d3ba307470a6b5fb477863961beadb38226f428c8f",
+      "location": "RETAINED_ACTUAL_EVIDENCE:local-qa-review.json",
+      "observed_at": "2026-10-31T02:07:18.993791+00:00"
+    }
+  },
+  "presentation_files": {
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "744edfe6c95173968b9a8d0cd290c7abd7882eba80efeba0f84e9b77091d8804"
+  },
+  "retained_common_labels": {
+    "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/production/sash/contracts/ui-common/field-label-adoption.v1.json",
+    "sha256": "f1a14380630153f8334d199fdc1e3b8f2172107d0d13d4501b0658c035686ac2",
+    "location": "RETAINED_ACTUAL_EVIDENCE:field-label-adoption.v1.json",
+    "observed_at": "2026-10-31T02:07:18.993791+00:00"
+  },
+  "product_master_mutations": 0,
+  "original_product_work_operation": "INSPECT_ONLY",
+  "publication_order": "AFTER_APW330_CANONICAL_QA; REFRESH_PREVIOUS_DEPLOYMENT_AND_COMPARE_EXACT_PROVIDER_ID"
+}
