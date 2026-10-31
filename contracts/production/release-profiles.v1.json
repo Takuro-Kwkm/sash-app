@@ -45,6 +45,11 @@
       "product_id": "NATIVE_REGISTRY:YKK AP::APW330",
       "scope": "APW330_R13_UI1_ADOPTED_RUNTIME_PUBLICATION_20261031",
       "path": "contracts/production/release-profiles/apw330-r13-ui1.v1.json"
+    },
+    {
+      "product_id": "APPLICATION_FIELD_LABELS",
+      "scope": "APPLICATION_FIELD_LABEL_RELEASE_V1",
+      "path": "contracts/production/release-profiles/common-field-labels.v1.json"
     }
   ],
   "publication": "NEW_EXACT_PRODUCT_SCOPE_HUMAN_DECISION_REQUIRED",
