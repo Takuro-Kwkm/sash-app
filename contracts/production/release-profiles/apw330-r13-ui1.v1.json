@@ -32,7 +32,7 @@
   "boundary_policy": "Actual native evidence only; Print requires inspected PDF/Print Preview; localStorage is not live DB E2E",
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "3d15ab3b4a89fe48b039a0ae644ed8ddb139b449",
+    "ref": "2ea3580e008c43501219e2fc40922d56f35b0d1c",
     "entry": "scripts/release-contract.py",
     "files": {
       "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
@@ -53,7 +53,7 @@
       "harness/release_publication.py": "c2f0d02d05d604c3070bc664edf04d499150592a2d81f3a4467191dddd3393ee",
       "harness/release_restore.py": "9a2903eea8887efa66b55ec92f9909e1353ff7ea631b90459d0ba548bb4b6a7a",
       "harness/resolvers.py": "b39ac4b4a047d46d4f1c7962745692564438b7b22343bb52b0d11233324ea0ed",
-      "harness/sash_release_admission.py": "ad09ef57bec3725d6e848603ff563a26522ab47c3fd5294c9ed0bfa3abe03d29",
+      "harness/sash_release_admission.py": "cd22f500f6015402841adc93697fc3b2ad7d86ccb2c8bfc7389e1fbd60e17fdb",
       "harness/verification_scope.py": "476facab877abaee12207cd451b601b54ab771d8b14387766d900226e8927a60",
       "harness/workflow.py": "85a161c5ce1380d21fa3cb234fcc07b402e0cd6ddc52dd0a6ed0d3729c6c66bf",
       "registries/current-architecture.v2.json": "98370fde4fa59a17df6fb4802065a182867105526b5b387dbb92e389b36f7b86",
@@ -88,6 +88,7 @@
     "Exact Main Readback"
   ],
   "native_paths": [
+    ".vercelignore",
     "api/index.mjs",
     "contracts/production/app-release.v1.json",
     "contracts/production/apw330-publication-lifecycle.v1.json",
@@ -808,10 +809,11 @@
   "residual_gaps": [],
   "repository": "Takuro-Kwkm/sash-app",
   "native_files": {
+    ".vercelignore": "dccdca865b68f0b857cae820424b98362d938b691160a5bb91fc1f0bcd4d9314",
     "api/index.mjs": "09fa1aea3e8d5bd02b8fffbf84d22e41331637db35a972103265627363c95ba3",
     "contracts/production/app-release.v1.json": "ac6cd995b53c3669587c2a05b8ecec0b9bffd46906d623a340771d2598e45914",
     "contracts/production/apw330-publication-lifecycle.v1.json": "658ce62bbf234698a19a3144423501129f486ea5326865eb6d712b827faeb4b7",
-    "contracts/production/released-runtime-packages.v1.json": "fc4e1ee2152c39b9740ced5e1fb19837e8559e1dce5a751ebb6262b44a0490b4",
+    "contracts/production/released-runtime-packages.v1.json": "9350020c87dbd17dba890ede740143686b124ea23631c319024f97968cb893cc",
     "contracts/production/runtime-ui-qa/apw330-r13-ui1.json": "2c074dd1da11f4598de22ab2369ffe4d7463cea18cee4e4d8baa1745bdd6d97b",
     "scripts/build-composed-candidate-review-preview.mjs": "c3158c929c72c24efb065cfadd5e43612192efcd2bb50d4201aa25c53e039d41",
     "scripts/build-eight-series-review.mjs": "b09cf5b225db8d62b032f68e0e09a38e3b114f146d7f6f5e6fdf7e82bd7d368c",
@@ -1101,7 +1103,7 @@
     "scripts/tw-202610-runtime-proof.mjs": "6ee7540e116f0648b2979836dcb47c96a9dab1ada9fa7ccd08019c3d0844aa57",
     "scripts/tw-runtime-smoke.mjs": "b0f314245655fcfc46a31799c3f96850a6a6bba20dbc4b2849f57404336574b9",
     "scripts/uchirimo-full-selector-proof.mjs": "df3c058b8171872b262e5e8006dbc742fee428dc1862c54865bbb5f61085dfb2",
-    "scripts/vercel-rest-deploy.mjs": "fbffd56b42772135fc98972bd025c15da624ab71c9a7930cc519beda18406a8f",
+    "scripts/vercel-rest-deploy.mjs": "6db9d2b95186ce3fb76cc701c32b6fcaf52edd0f78dbe54c9255ffa5dfb90783",
     "scripts/verify-rechent-r8-adoption.mjs": "9043f84c8587b606bff4f9c1ee84d1d5f51f9a564a50618fbad7a3010cbfcc86",
     "scripts/verify-tw-202610-adoption.mjs": "42cd6d8728692f1c744857cfc04f95f3c1684fc63e9f120c5efed548c2e5896e",
     "src/catalog/catalog-adapter.mjs": "3a89f08835ece9b522e18a79259b8aa395aa975166d3647cd0da0aad3a2481ec",
@@ -1458,7 +1460,7 @@
     "src/catalog/runtime-master/declared-window-flow.mjs": "68166e3844e00a0655bac9959b0feab33ee5466b2412a2110110cb7782fe1816",
     "src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs": "0c4545dc0065f55682ede1e514383f16ad98169b5574c5430bee0102e16ecce5",
     "src/catalog/runtime-master/formal-composed-runtime-registry.json": "4434252336990b5dc3abbaf4a77a7524cca4fbf9b8ff2e5d4aa7250cb642c56a",
-    "src/catalog/runtime-master/formal-composed-runtime-registry.mjs": "caa41b10c8aa5b33c443007d8ce6f66fb5af8c72a03f5a2399023fa94448ae3d",
+    "src/catalog/runtime-master/formal-composed-runtime-registry.mjs": "3fa03677ada4faa6b3fb5944942fe5b7799b1068466ca1f6b8fad04f1282c642",
     "src/catalog/runtime-master/formal-custom-dimension-safety.mjs": "ac8d8bbe7e4d3133dc70c30a5377c7893c75db6321473139a7af2a7a5b1cd35a",
     "src/catalog/runtime-master/formal-product-runtime-loader.mjs": "3f0972606431cfba75a00bf33256ed0429ac310e8fbdfc821300a69776ec9b02",
     "src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs": "712be9e1bbd0a6c00df945961da085a132db8c1b704a468ef9ca750a0032034c",
@@ -1477,7 +1479,7 @@
     "src/catalog/runtime-master/product-module-glazing-normalizer.mjs": "9147610f1c483da226180648f29a9442a79d2ff40411e94bbfdb860ede3544b5",
     "src/catalog/runtime-master/product-module-runtime-adapter.mjs": "0e383a6c6a06edc5aa639052f7cf4f77ae9c3fe8fff1f97491e91e6b205fd2e3",
     "src/catalog/runtime-master/rechent-door3-nonfire-v1-adapter.mjs": "7b64e9ba66841753e10a52e1407139829c501c2059c7b1020eb99eb0165047e1",
-    "src/catalog/runtime-master/released-formal-runtime-binding.mjs": "9f44727a07c7d5fd89a2c3b7672bf9bcf2b1e9c586c95b0b81d69081fe24dc25",
+    "src/catalog/runtime-master/released-formal-runtime-binding.mjs": "43104b226661f6bec467b8b32ec2f264282a46f453cae3f594b6d3310b500228",
     "src/catalog/runtime-master/runtime-app-bridge.mjs": "f760806e204e7c554829e966f2656678371a507c7564b8f308b0d655de11e1ae",
     "src/catalog/runtime-master/runtime-condition.mjs": "ae5e442f90b5f7007ff8ea6fed46a0d7ce2937afbf5570f9fefefa2b113cdb8e",
     "src/catalog/runtime-master/runtime-effects.mjs": "261c361345e605f48a943ca02bdf66255ac4823883877836ba4e3befd39d24bc",
@@ -1881,7 +1883,7 @@
       "src/catalog/runtime-master/declared-window-flow.mjs": "68166e3844e00a0655bac9959b0feab33ee5466b2412a2110110cb7782fe1816",
       "src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs": "0c4545dc0065f55682ede1e514383f16ad98169b5574c5430bee0102e16ecce5",
       "src/catalog/runtime-master/formal-composed-runtime-registry.json": "4434252336990b5dc3abbaf4a77a7524cca4fbf9b8ff2e5d4aa7250cb642c56a",
-      "src/catalog/runtime-master/formal-composed-runtime-registry.mjs": "caa41b10c8aa5b33c443007d8ce6f66fb5af8c72a03f5a2399023fa94448ae3d",
+      "src/catalog/runtime-master/formal-composed-runtime-registry.mjs": "3fa03677ada4faa6b3fb5944942fe5b7799b1068466ca1f6b8fad04f1282c642",
       "src/catalog/runtime-master/formal-custom-dimension-safety.mjs": "ac8d8bbe7e4d3133dc70c30a5377c7893c75db6321473139a7af2a7a5b1cd35a",
       "src/catalog/runtime-master/formal-product-runtime-loader.mjs": "3f0972606431cfba75a00bf33256ed0429ac310e8fbdfc821300a69776ec9b02",
       "src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs": "712be9e1bbd0a6c00df945961da085a132db8c1b704a468ef9ca750a0032034c",
@@ -1900,7 +1902,7 @@
       "src/catalog/runtime-master/product-module-glazing-normalizer.mjs": "9147610f1c483da226180648f29a9442a79d2ff40411e94bbfdb860ede3544b5",
       "src/catalog/runtime-master/product-module-runtime-adapter.mjs": "0e383a6c6a06edc5aa639052f7cf4f77ae9c3fe8fff1f97491e91e6b205fd2e3",
       "src/catalog/runtime-master/rechent-door3-nonfire-v1-adapter.mjs": "7b64e9ba66841753e10a52e1407139829c501c2059c7b1020eb99eb0165047e1",
-      "src/catalog/runtime-master/released-formal-runtime-binding.mjs": "9f44727a07c7d5fd89a2c3b7672bf9bcf2b1e9c586c95b0b81d69081fe24dc25",
+      "src/catalog/runtime-master/released-formal-runtime-binding.mjs": "43104b226661f6bec467b8b32ec2f264282a46f453cae3f594b6d3310b500228",
       "src/catalog/runtime-master/runtime-app-bridge.mjs": "f760806e204e7c554829e966f2656678371a507c7564b8f308b0d655de11e1ae",
       "src/catalog/runtime-master/runtime-condition.mjs": "ae5e442f90b5f7007ff8ea6fed46a0d7ce2937afbf5570f9fefefa2b113cdb8e",
       "src/catalog/runtime-master/runtime-effects.mjs": "261c361345e605f48a943ca02bdf66255ac4823883877836ba4e3befd39d24bc",
@@ -2021,13 +2023,13 @@
             "pointer": [
               "product_id"
             ],
-            "value": "NATIVE_REGISTRY:YKK AP::APW511"
+            "value": "NATIVE_REGISTRY:YKK AP::APW330"
           },
           {
             "pointer": [
               "scope"
             ],
-            "value": "APW511_R3_ADOPTED_SALES_UI_PUBLICATION_20261016_R1"
+            "value": "APW330_R13_UI1_ADOPTED_RUNTIME_PUBLICATION_20261031"
           },
           {
             "pointer": [
@@ -2057,7 +2059,7 @@
             "pointer": [
               "case_count"
             ],
-            "value": 21
+            "value": 36
           }
         ],
         "results_pointer": [
@@ -2098,12 +2100,14 @@
       "spec": "906cf78fdffe2aec223818d6585a76af69b7cdef3fcc7dd2c72333d35c6e2da4",
       "result": "f1ceb531226c6330c55253374d764a6218c470b160b45cb2a27fcc69d6b1c770",
       "authorization": "8d324d41f657c9a68b5f0f5473fcf5d202275403300d0d54eafa663a88a2c6b5",
-      "review": "a3ac4b6495115826c0ce8790d9f29aa8b6550474caface639533cd2e4c5e15c1"
+      "review": "a3ac4b6495115826c0ce8790d9f29aa8b6550474caface639533cd2e4c5e15c1",
+      "master_source": "fef4b67b6f0622d7f6a343c45940196db80e97bb814d9222c371ac0a1a5422cc"
     },
     "presentation_files": {
       "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "4aaa70768c13129f412478926bbc800f8b72c8eec90a0febf59fc72c86833a21",
       "src/catalog/runtime-master/window-field-labels.mjs": "606f62f417fcd516dd93831b01ee3c1e8fe899b3f808ebe19b9e175035fb21d7"
     },
     "work_id": "APW330-RUNTIME-UI-ADOPTION-20261030-01"
-  }
+  },
+  "controlled_product_unresolved_count": 7
 }

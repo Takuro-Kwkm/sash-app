@@ -30,10 +30,6 @@
           "sha256": "55ad1ad1c959950d56b4cee2cbb5afbc39540156c5809be9c1009e32b0732e6a",
           "bytes": 28713
         },
-        "sources/PRODUCT_MASTER.json": {
-          "sha256": "fef4b67b6f0622d7f6a343c45940196db80e97bb814d9222c371ac0a1a5422cc",
-          "bytes": 392253
-        },
         "sources/SALES_QA_REVIEW.json": {
           "sha256": "8a4e9589c75ba3a0506484d8d67512b721c4bd804383517031602b5a79a59d21",
           "bytes": 21547
@@ -41,6 +37,17 @@
         "sources/UI_STANDARD_v2.1.txt": {
           "sha256": "f6694b98a7ee2a7dd97e15e9ee462546f6e058b2cede7abb9ab99768e1677264",
           "bytes": 61599
+        }
+      },
+      "sourceReferences": {
+        "sources/PRODUCT_MASTER.json": {
+          "schema": "ADOPTED_FORMAL_SOURCE_REFERENCE_V1",
+          "role": "FORMAL_PRODUCT_MASTER",
+          "sha256": "fef4b67b6f0622d7f6a343c45940196db80e97bb814d9222c371ac0a1a5422cc",
+          "bytes": 392253,
+          "file_id": "1ReK0vUqJoer_vFbMNxP42m19OnLeXtjv",
+          "verification": "INSPECT_COMPLETED_NATIVE_ADOPTION_SOURCE_BYTES",
+          "adoption_work_id": "APW330-RUNTIME-UI-ADOPTION-20261030-01"
         }
       },
       "index": {

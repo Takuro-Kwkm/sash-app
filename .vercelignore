@@ -1,9 +1,9 @@
-node_modules/
-artifacts/
-outputs/
-private/
-*.log
-*.zip
-*.tar.gz
-
-*.bundle
+# Private runtime files are included only by the reviewed release registry.
+.git
+.vercel
+.env*
+node_modules
+outputs
+artifacts
+.local
+.DS_Store
