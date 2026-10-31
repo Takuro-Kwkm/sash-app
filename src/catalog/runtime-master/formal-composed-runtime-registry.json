@@ -15,6 +15,11 @@
       "path": "runtime-master-packages/giesta2-ui-r14/runtime_index.json",
       "sha256": "457ab1c700c51aec112e1e8e0f28801667e8be7acfa456a76f6d6c9f4854cd8f",
       "manifestFileId": "1609frxC4E8wOHffKYCN3yAbGhBQelp-h"
+    },
+    {
+      "path": "runtime-master-packages/select-pg-ui-r7/runtime_index.json",
+      "sha256": "057f9b4f7155f53a61fae7735b70ee3d627c9d7ac736ef8d8d8bbeb1b5a0d057",
+      "manifestFileId": "1lokWFlCvkfidTD_hhWcRIDmtq8W8q0hF"
     }
   ]
 }

@@ -1,0 +1,14 @@
+[
+  {
+    "key": "master",
+    "id": "1siovbJ42BxXgH2qj2cWyEUOJHK3GsPnk",
+    "sha256": "aee97818ea4c97a38ad9e04445d82eea57f91a1001b81cfa6b6aa38606ab2145",
+    "match": true
+  },
+  {
+    "key": "index",
+    "id": "1lokWFlCvkfidTD_hhWcRIDmtq8W8q0hF",
+    "sha256": "057f9b4f7155f53a61fae7735b70ee3d627c9d7ac736ef8d8d8bbeb1b5a0d057",
+    "match": true
+  }
+]

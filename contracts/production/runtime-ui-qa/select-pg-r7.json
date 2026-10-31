@@ -1,0 +1,495 @@
+{
+  "schema": "DECLARED_SALES_RUNTIME_BROWSER_QA",
+  "product_id": "SER-LIX-SELECT-PG",
+  "manifest_file_id": "1lokWFlCvkfidTD_hhWcRIDmtq8W8q0hF",
+  "viewports": [
+    1280,
+    768,
+    390
+  ],
+  "hidden_fields": [
+    "frame_w",
+    "frame_h"
+  ],
+  "number_fields": [
+    "quantity"
+  ],
+  "internal_tokens": [
+    "GENERAL_DOUBLE",
+    "LOWE_DOUBLE",
+    "SAFE_LAMINATED",
+    "HIGH_SOLAR_CONTROL"
+  ],
+  "ordered_fields": [
+    "window_type",
+    "window_spec",
+    "handle_type",
+    "shutter_operation",
+    "shutter_type",
+    "amado_type",
+    "grille_type",
+    "handing",
+    "frame_angle",
+    "size_mode",
+    "panel_count",
+    "size",
+    "custom_width",
+    "custom_height",
+    "exterior_color",
+    "interior_color",
+    "screen_presence",
+    "screen_form",
+    "screen_midrail",
+    "screen_net",
+    "glass_base",
+    "glass_type",
+    "glass_detail",
+    "glass_function",
+    "glass_spacer",
+    "glass_air_layer",
+    "installation_environment",
+    "option",
+    "quantity"
+  ],
+  "output_size_label": "",
+  "rows": [
+    {
+      "id": "SLIDING",
+      "seed": {
+        "window_type": "SLIDING",
+        "size_mode": "STANDARD",
+        "size": "PGSIZE:b41d0afa3746967232",
+        "exterior_color": "K",
+        "interior_color": "K",
+        "screen_presence": "NONE",
+        "glass_base": "GENERAL_DOUBLE",
+        "glass_type": "CLEAR",
+        "installation_environment": "NON_BATHROOM",
+        "window_spec": "STANDARD_SASH",
+        "panel_count": 2,
+        "frame_angle": "WITH_ANGLE",
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "CONF-manufacturing_approval",
+        "CONF-formal_price",
+        "CONF-bom",
+        "CONF-glass_configuration",
+        "CONF-STANDARD-CONTEXT"
+      ],
+      "hidden_fields": [
+        "glass_detail"
+      ],
+      "control_expectations": {
+        "glass_base": {
+          "tag": "SELECT",
+          "labels": [
+            "一般複層ガラス",
+            "Low-E複層ガラス"
+          ]
+        }
+      },
+      "actions": [
+        {
+          "field": "glass_base",
+          "value": "LOWE_DOUBLE",
+          "missing": [
+            "glass_detail"
+          ]
+        },
+        {
+          "field": "glass_detail",
+          "value": "INSULATING",
+          "expected": {
+            "glass_detail": "INSULATING"
+          }
+        },
+        {
+          "field": "glass_function",
+          "value": "SAFE_LAMINATED",
+          "expected": {
+            "glass_function": "SAFE_LAMINATED"
+          }
+        },
+        {
+          "field": "glass_spacer",
+          "value": "RESIN",
+          "expected": {
+            "glass_spacer": "RESIN"
+          }
+        },
+        {
+          "field": "glass_air_layer",
+          "value": "ARGON",
+          "expected": {
+            "glass_air_layer": "ARGON"
+          }
+        },
+        {
+          "field": "glass_base",
+          "value": "GENERAL_DOUBLE",
+          "cleared": [
+            "glass_detail"
+          ],
+          "expected": {
+            "glass_function": "SAFE_LAMINATED",
+            "glass_spacer": "RESIN",
+            "glass_air_layer": "ARGON"
+          }
+        }
+      ]
+    },
+    {
+      "id": "SHUTTER",
+      "seed": {
+        "window_type": "SHUTTER",
+        "size_mode": "STANDARD",
+        "size": "PGSIZE:51731cea5a527b281a",
+        "exterior_color": "K",
+        "interior_color": "K",
+        "screen_presence": "NONE",
+        "glass_base": "GENERAL_DOUBLE",
+        "glass_type": "CLEAR",
+        "installation_environment": "NON_BATHROOM",
+        "window_spec": "STANDARD_SASH",
+        "panel_count": 2,
+        "frame_angle": "WITH_ANGLE",
+        "shutter_operation": "ELECTRIC",
+        "shutter_type": "STANDARD",
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "CONF-manufacturing_approval",
+        "CONF-formal_price",
+        "CONF-bom",
+        "CONF-glass_configuration",
+        "CONF-STANDARD-CONTEXT"
+      ],
+      "hidden_fields": [
+        "glass_detail"
+      ],
+      "control_expectations": {
+        "glass_base": {
+          "tag": "SELECT",
+          "labels": [
+            "一般複層ガラス",
+            "Low-E複層ガラス"
+          ]
+        }
+      }
+    },
+    {
+      "id": "AMADO",
+      "seed": {
+        "window_type": "AMADO",
+        "size_mode": "STANDARD",
+        "size": "PGSIZE:04024785fbb8513b70",
+        "exterior_color": "K",
+        "interior_color": "K",
+        "screen_presence": "NONE",
+        "glass_base": "GENERAL_DOUBLE",
+        "glass_type": "CLEAR",
+        "installation_environment": "NON_BATHROOM",
+        "window_spec": "STANDARD_SASH",
+        "panel_count": 2,
+        "frame_angle": "WITH_ANGLE",
+        "amado_type": "LOUVER",
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "CONF-manufacturing_approval",
+        "CONF-formal_price",
+        "CONF-bom",
+        "CONF-glass_configuration",
+        "CONF-STANDARD-CONTEXT"
+      ],
+      "hidden_fields": [
+        "glass_detail"
+      ],
+      "control_expectations": {
+        "glass_base": {
+          "tag": "SELECT",
+          "labels": [
+            "一般複層ガラス",
+            "Low-E複層ガラス"
+          ]
+        }
+      }
+    },
+    {
+      "id": "GRILLE",
+      "seed": {
+        "window_type": "GRILLE",
+        "size_mode": "STANDARD",
+        "size": "PGSIZE:f57c6f965d5ada003f",
+        "exterior_color": "K",
+        "interior_color": "K",
+        "screen_presence": "NONE",
+        "glass_base": "GENERAL_DOUBLE",
+        "glass_type": "CLEAR",
+        "installation_environment": "NON_BATHROOM",
+        "window_spec": "STANDARD_SASH",
+        "panel_count": 2,
+        "frame_angle": "WITH_ANGLE",
+        "grille_type": "VERTICAL",
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "CONF-manufacturing_approval",
+        "CONF-formal_price",
+        "CONF-bom",
+        "CONF-glass_configuration",
+        "CONF-STANDARD-CONTEXT",
+        "CONF-GRILLE-PERFORMANCE"
+      ],
+      "hidden_fields": [
+        "glass_detail"
+      ],
+      "control_expectations": {
+        "glass_base": {
+          "tag": "SELECT",
+          "labels": [
+            "一般複層ガラス",
+            "Low-E複層ガラス"
+          ]
+        }
+      }
+    },
+    {
+      "id": "TATE",
+      "seed": {
+        "window_type": "TATE",
+        "size_mode": "STANDARD",
+        "size": "PGSIZE:8fe99eb725b32bf01f",
+        "exterior_color": "K",
+        "interior_color": "K",
+        "screen_presence": "NONE",
+        "glass_base": "GENERAL_DOUBLE",
+        "glass_type": "CLEAR",
+        "installation_environment": "NON_BATHROOM",
+        "window_spec": "CAM_LATCH",
+        "handing": "L",
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "CONF-manufacturing_approval",
+        "CONF-formal_price",
+        "CONF-bom",
+        "CONF-glass_configuration",
+        "CONF-STANDARD-CONTEXT"
+      ],
+      "hidden_fields": [
+        "glass_detail"
+      ],
+      "control_expectations": {
+        "glass_base": {
+          "tag": "SELECT",
+          "labels": [
+            "一般複層ガラス",
+            "Low-E複層ガラス"
+          ]
+        }
+      }
+    },
+    {
+      "id": "YOKO",
+      "seed": {
+        "window_type": "YOKO",
+        "size_mode": "STANDARD",
+        "size": "PGSIZE:3624d58b6667332763",
+        "exterior_color": "K",
+        "interior_color": "K",
+        "screen_presence": "NONE",
+        "glass_base": "GENERAL_DOUBLE",
+        "glass_type": "CLEAR",
+        "installation_environment": "NON_BATHROOM",
+        "window_spec": "CAM_LATCH",
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "CONF-manufacturing_approval",
+        "CONF-formal_price",
+        "CONF-bom",
+        "CONF-glass_configuration",
+        "CONF-STANDARD-CONTEXT"
+      ],
+      "hidden_fields": [
+        "glass_detail"
+      ],
+      "control_expectations": {
+        "glass_base": {
+          "tag": "SELECT",
+          "labels": [
+            "一般複層ガラス",
+            "Low-E複層ガラス"
+          ]
+        }
+      }
+    },
+    {
+      "id": "OUTWARD",
+      "seed": {
+        "window_type": "OUTWARD",
+        "size_mode": "STANDARD",
+        "size": "PGSIZE:a0c3892a9dec7c20ba",
+        "exterior_color": "K",
+        "interior_color": "K",
+        "screen_presence": "NONE",
+        "glass_base": "GENERAL_DOUBLE",
+        "glass_type": "CLEAR",
+        "installation_environment": "NON_BATHROOM",
+        "window_spec": "E",
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "CONF-manufacturing_approval",
+        "CONF-formal_price",
+        "CONF-bom",
+        "CONF-glass_configuration",
+        "CONF-STANDARD-CONTEXT"
+      ],
+      "hidden_fields": [
+        "glass_detail"
+      ],
+      "control_expectations": {
+        "glass_base": {
+          "tag": "SELECT",
+          "labels": [
+            "一般複層ガラス",
+            "Low-E複層ガラス"
+          ]
+        }
+      }
+    },
+    {
+      "id": "FIX",
+      "seed": {
+        "window_type": "FIX",
+        "size_mode": "STANDARD",
+        "size": "PGSIZE:c11ea1d2745e06afc3",
+        "exterior_color": "K",
+        "interior_color": "K",
+        "screen_presence": "NONE",
+        "glass_base": "GENERAL_DOUBLE",
+        "glass_type": "CLEAR",
+        "installation_environment": "NON_BATHROOM",
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "CONF-manufacturing_approval",
+        "CONF-formal_price",
+        "CONF-bom",
+        "CONF-glass_configuration",
+        "CONF-STANDARD-CONTEXT"
+      ],
+      "hidden_fields": [
+        "glass_detail"
+      ],
+      "control_expectations": {
+        "glass_base": {
+          "tag": "SELECT",
+          "labels": [
+            "一般複層ガラス",
+            "Low-E複層ガラス"
+          ]
+        }
+      }
+    },
+    {
+      "id": "DEC_HIKI",
+      "seed": {
+        "window_type": "DEC_HIKI",
+        "size_mode": "STANDARD",
+        "size": "PGSIZE:82cee570fbb484717c",
+        "exterior_color": "K",
+        "interior_color": "K",
+        "screen_presence": "NONE",
+        "glass_base": "GENERAL_DOUBLE",
+        "glass_type": "CLEAR",
+        "installation_environment": "NON_BATHROOM",
+        "window_spec": "STANDARD_SASH",
+        "panel_count": 2,
+        "frame_angle": "WITH_ANGLE",
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "CONF-manufacturing_approval",
+        "CONF-formal_price",
+        "CONF-bom",
+        "CONF-glass_configuration",
+        "CONF-STANDARD-CONTEXT"
+      ],
+      "hidden_fields": [
+        "glass_detail"
+      ],
+      "control_expectations": {
+        "glass_base": {
+          "tag": "SELECT",
+          "labels": [
+            "一般複層ガラス",
+            "Low-E複層ガラス"
+          ]
+        }
+      }
+    },
+    {
+      "id": "INVALID_QUANTITY",
+      "seed": {
+        "window_type": "SHUTTER",
+        "size_mode": "STANDARD",
+        "size": "PGSIZE:51731cea5a527b281a",
+        "exterior_color": "K",
+        "interior_color": "K",
+        "screen_presence": "NONE",
+        "glass_base": "GENERAL_DOUBLE",
+        "glass_type": "CLEAR",
+        "installation_environment": "NON_BATHROOM",
+        "window_spec": "STANDARD_SASH",
+        "panel_count": 2,
+        "frame_angle": "WITH_ANGLE",
+        "shutter_operation": "ELECTRIC",
+        "shutter_type": "STANDARD",
+        "quantity": 0
+      },
+      "expected_valid": false,
+      "expected_quantity": 0,
+      "expected_confirmation_ids": [
+        "CONF-manufacturing_approval",
+        "CONF-formal_price",
+        "CONF-bom",
+        "CONF-glass_configuration",
+        "CONF-STANDARD-CONTEXT"
+      ],
+      "hidden_fields": [
+        "glass_detail"
+      ],
+      "control_expectations": {
+        "glass_base": {
+          "tag": "SELECT",
+          "labels": [
+            "一般複層ガラス",
+            "Low-E複層ガラス"
+          ]
+        }
+      }
+    }
+  ]
+}

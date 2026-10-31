@@ -1,0 +1,20 @@
+{
+  "work_id": "SELECT-PG-FORMAL-20261031",
+  "product_id": "SER-LIX-SELECT-PG",
+  "binding_sha256": "bf5d446582823d569f04ecc37b14a4658771ebaffb89bc0ec4873536c9ba3ed6",
+  "completed": [
+    "QA_PASS",
+    "PACKAGE_SAVED",
+    "REGISTRY_UPDATED",
+    "POST_SAVE_VERIFIED"
+  ],
+  "next_stage": null,
+  "status": "POST_SAVE_VERIFIED",
+  "adapter": "drive_bridge",
+  "required_action": null,
+  "review_payload_sha256": "97a3f4ab7776b4a396af231515b0ddfd2267fd9f8a31eca872707aa1b76a623e",
+  "qa_reuse": "CONTENT_BOUND; NO PRODUCT QA RERUN",
+  "target_gate": "POST_SAVE_VERIFIED",
+  "verification_mode": "HOST_ADMITTED_CONNECTOR_RECEIPTS",
+  "last_verified_at": "2026-10-31T12:16:35.492074+00:00"
+}

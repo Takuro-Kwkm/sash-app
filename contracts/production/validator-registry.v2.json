@@ -318,6 +318,15 @@
         "path": "contracts/production/runtime-candidates/apw511-r3-full-coverage.profile.json",
         "sha256": "b61d9a91dae1c794f0ca22f4e2b56d948d7bea5eb747e71c1d45b05ad689ed10"
       }
+    },
+    "SER-LIX-SELECT-PG": {
+      "state": "READY",
+      "scope": "FORMAL_ADOPTED_UI_PUBLICATION_ONLY",
+      "validators": [
+        "scripts/production/inspect-adopted-composed.py"
+      ],
+      "no_fallback": true,
+      "mutation_policy": "PUBLICATION_ONLY_OF_EXACT_ADOPTED_MASTER_AND_UI"
     }
   },
   "build_profiles": {

@@ -1,0 +1,16 @@
+{
+  "decision": "APPROVED",
+  "reviewer": "USER",
+  "decision_ref": "CURRENT_CHAT_USER_SELECT_PG_FORMAL_PUBLICATION_20261031",
+  "authorization_kind": "EXPLICIT_USER_SCOPE",
+  "work_id": "SELECT-PG-FORMAL-20261031",
+  "product_id": "SER-LIX-SELECT-PG",
+  "review_payload_sha256": "97a3f4ab7776b4a396af231515b0ddfd2267fd9f8a31eca872707aa1b76a623e",
+  "imported_user_statement": "では、セレクトサッシPGの正式採用と本番反映、公開後の確認まで進めてください。今回の人間確認と既存の成果・承認・QAは引き継ぎ、不要な再調査や再承認は挟まないでください。作業後は現時点と次作業も明記してください。",
+  "human_ui_approval": {
+    "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/sash-select-pg-flow-test-20261031/human-ui-glazing-review-r7.json",
+    "sha256": "00fb44ac8baecb6fa05b53d46ad6b22da3f3b7e628e8226a7ce9020cd51a2359"
+  },
+  "same_candidate_master_sha256": "aee97818ea4c97a38ad9e04445d82eea57f91a1001b81cfa6b6aa38606ab2145",
+  "ai_decision": false
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "NATIVE_LOCAL_RELEASE_REFERENCE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "d5298eb81b26932bcc7f3fea756c9af71d23873b"
+  },
+  "local_qa_release_policy": {
+    "schema": "COMMON_NATIVE_LOCAL_RELEASE_V1",
+    "actions_dispatch_authority": false,
+    "retained_profile": {
+      "path": "contracts/production/release-profiles/select-pg-r7.v1.json",
+      "sha256": "988addd20640359d6c2c1560e2cf8e2c6cc48cf0a78498de6046615e0598538f"
+    },
+    "product_id": "SER-LIX-SELECT-PG",
+    "scope": "SELECT_PG_R7_HUMAN_ADOPTED_SALES_UI_PUBLICATION_20261031"
+  }
+}

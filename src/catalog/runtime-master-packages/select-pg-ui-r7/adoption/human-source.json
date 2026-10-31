@@ -1,0 +1,43 @@
+{
+  "reference": "CURRENT_CHAT_USER_SELECT_PG_FORMAL_PUBLICATION_20261031",
+  "statement": "では、セレクトサッシPGの正式採用と本番反映、公開後の確認まで進めてください。今回の人間確認と既存の成果・承認・QAは引き継ぎ、不要な再調査や再承認は挟まないでください。作業後は現時点と次作業も明記してください。",
+  "ai_decision": false,
+  "ui_review": {
+    "schema": "HUMAN_UI_REVIEW_OBSERVATION_V1",
+    "observed_at": "2026-10-31T12:04:48.539244+00:00",
+    "reviewer": "USER",
+    "source": "current_chat_explicit_reply",
+    "quote": "OK。これってカタログから正式な情報を読み取れないからグローバルセレクションフローを構築できなかったのかな？",
+    "candidate_revision": "SELECT_PG_UI_R7_20261031",
+    "module_sha256": "6c69d22125fb4247357abdbd4994818c334549d77a8ce489a4342d321522917f",
+    "index_sha256": "1ccacc78c3c3cef3976a9a53da2a63a82c8036df74e4cb0c235fe24ef5638542",
+    "master_sha256": "aee97818ea4c97a38ad9e04445d82eea57f91a1001b81cfa6b6aa38606ab2145",
+    "decision": "ACCEPTED_COMPLETE_GLAZING_UI_SCOPE",
+    "accepted_scope": [
+      "glass category before Low-E detail",
+      "conditional Low-E detail",
+      "independent safety/tempered function",
+      "spacer and cavity controls and terminology",
+      "retained non-glass flow approval"
+    ],
+    "manufacturer_eligibility_approval": false,
+    "formal_master_adoption": false,
+    "release_authorization": false
+  },
+  "non_glass_review": {
+    "at": "2026-10-31T11:05:39.084599+00:00",
+    "reviewer": "USER",
+    "source": "current_chat_direct_reply",
+    "quote": "グローバルセレクションフロー通りの記載になっている。オッケー。ただ、ガラス詳細が自由記載になってしまっている。",
+    "candidate_revision": "SELECT_PG_UI_R4_20261031",
+    "decision": "FLOW_ORDER_ACCEPTED_GLASS_DETAIL_CORRECTION_REQUIRED",
+    "carry_forward": [
+      "flow_order_and_labels_other_than_glass_detail",
+      "existing_qa_and_protected_work"
+    ],
+    "requires_delta_review": [
+      "glass_detail_control_and_choices"
+    ],
+    "formal_adoption": false
+  }
+}
