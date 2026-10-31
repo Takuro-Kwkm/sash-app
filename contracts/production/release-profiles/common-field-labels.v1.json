@@ -104,12 +104,72 @@
       "contracts/ui-common/field-labels.v1.mjs": "5092fe31c89752e60d81fad410b518870b2848f76e5388363c1d8273eaa3a1d7",
       "src/catalog/runtime-master/runtime-app-bridge.mjs": "4bc2cba36174d68bbdfca0a084d5cfdb3d5af1b03729854912a2666662e830cf"
     },
-    "http_artifacts": [
-      {
-        "path": "/contracts/ui-common/field-labels.v1.mjs",
-        "sha256": "5092fe31c89752e60d81fad410b518870b2848f76e5388363c1d8273eaa3a1d7"
+    "http_artifacts": {
+      "/app.js": "8767f968393bd0dd3df15da9906525939002ca58ff5dca0560b744e1a85b39eb"
+    },
+    "build_identity": {
+      "path": "/api/health",
+      "sha_pointer": [
+        "releaseCommitSha"
+      ],
+      "claims": [],
+      "repository_identity_source": "PROVIDER_PROJECT_BOUND_NATIVE_GIT"
+    },
+    "native_qa_bindings": {
+      "labels": {
+        "url_pointer": [
+          "origin"
+        ],
+        "sha_pointer": [
+          "git_sha"
+        ],
+        "claims": [
+          {
+            "pointer": [
+              "status"
+            ],
+            "value": "PASS"
+          },
+          {
+            "pointer": [
+              "schema"
+            ],
+            "value": "EXECUTED_FIELD_LABEL_RELEASE_QA_V1"
+          },
+          {
+            "pointer": [
+              "runtime_errors"
+            ],
+            "value": 0
+          },
+          {
+            "pointer": [
+              "viewports"
+            ],
+            "value": [
+              1280,
+              768,
+              390
+            ]
+          }
+        ],
+        "minimums": [
+          {
+            "pointer": [
+              "case_count"
+            ],
+            "value": 3
+          }
+        ],
+        "results_pointer": [
+          "results"
+        ],
+        "result_state_key": "status",
+        "count_pointer": [
+          "case_count"
+        ]
       }
-    ]
+    }
   },
   "native_paths": [
     "contracts/ui-common/field-label-adoption.v1.json",
