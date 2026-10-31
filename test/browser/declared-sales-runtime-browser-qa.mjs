@@ -90,6 +90,11 @@ try{
         assert.equal(await control.evaluate(node=>node.tagName),expected.tag,key);
         if(expected.labels)assert.deepEqual(await control.locator('option').allTextContents(),['選択してください',...expected.labels],key);
       }
+      const fieldLabels=await page.locator('#dynamicForm [data-spec-key]').evaluateAll(nodes=>Object.fromEntries(nodes.map(node=>[node.dataset.specKey,node.dataset.label])));
+      if(contract.expected_field_labels)for(const [key,label]of Object.entries(fieldLabels)){
+        assert.ok(Object.hasOwn(contract.expected_field_labels,key),'Missing independent label expectation: '+key);
+        assert.equal(label,contract.expected_field_labels[key],'Native field meaning: '+key);
+      }
       const visible=await page.locator('#dynamicForm').innerText();
       for(const token of contract.internal_tokens)assert.ok(!visible.includes(token),'INTERNAL_TOKEN:'+token);
       const visibleKeys=await page.locator('#dynamicForm [data-spec-key]').evaluateAll(nodes=>nodes.map(node=>node.dataset.specKey));
@@ -136,7 +141,7 @@ try{
       assert.equal(actual.runtime_manifest_identity,contract.manifest_file_id);
       persistedSnapshots.push(actual);
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
-      cases.push({id:row.id,saveReopen:'PASS',identity:'PASS',confirmations:'PASS',overflow:'PASS',transitions});
+      cases.push({id:row.id,saveReopen:'PASS',identity:'PASS',confirmations:'PASS',overflow:'PASS',fieldLabels,transitions});
     }
     const output=await page.evaluate(async({snapshots,persistedSnapshots})=>{
       const {createEstimateOutputModel}=await import('/estimate-output/model.mjs');const {createEstimatePdfBytes}=await import('/estimate-output/pdf-renderer.mjs');const {createEstimateXlsxBytes}=await import('/estimate-output/xlsx-renderer.mjs');

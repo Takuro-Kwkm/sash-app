@@ -1,3 +1,4 @@
+import {standardWindowFieldLabel} from './window-field-labels.mjs';
 import {fieldLabel} from '../../../contracts/ui-common/field-labels.v1.mjs';
 import { normalizeFrameInput } from './inner-window-frame-engine.mjs';
 import { isBathroomEstimateContext, splitWorkflowSelection, projectEstimateResult } from '../../work-management/field-workflow-scope.mjs';
@@ -129,5 +130,8 @@ async function resolveNativeRuntimeAppProduct(productId,selection={}, {workflowS
 
 export async function resolveRuntimeAppProduct(...args){
   const result=await resolveNativeRuntimeAppProduct(...args);
-  return {...result,fields:(result.fields??[]).map(field=>({...field,displayLabel:fieldLabel(field.key,field.displayLabel,field.semanticSlot)}))};
+  const integration=getRuntimeAppIntegration(result.productId);
+  // Stage slots group several concepts. Resolve common names by field identity,
+  // then preserve the existing window contract's more precise native meanings.
+  return {...result,fields:(result.fields??[]).map(field=>({...field,displayLabel:standardWindowFieldLabel({uiCategory:integration?.uiCategory,semanticSlot:field.semanticSlot,key:field.key,fallback:fieldLabel(field.key,field.displayLabel)})}))};
 }

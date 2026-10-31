@@ -34,3 +34,13 @@ test('carries exact native master source reference without transferring full mas
   const p=f.registry.packages[0],index=JSON.parse(readFileSync(join(f.data,'index.json'))),source={path:'sources/PRODUCT_MASTER.json',sha256:hash('actual original master')};index.products[0].uiFlowContract={sourceFlow:source};const value=JSON.stringify(index);writeFileSync(join(f.data,'index.json'),value);p.files['index.json']={bytes:Buffer.byteLength(value),sha256:hash(value)};p.index.sha256=hash(value);p.sourceReferences={[source.path]:{schema:'ADOPTED_FORMAL_SOURCE_REFERENCE_V1',role:'FORMAL_PRODUCT_MASTER',sha256:source.sha256,bytes:22,file_id:'actual-native-master-id',verification:'INSPECT_COMPLETED_NATIVE_ADOPTION_SOURCE_BYTES',adoption_work_id:p.adoption_work_id}};f.save();assert.equal(releasedFormalRuntimeIndexes(f.root,{VERCEL:'1'}).length,1);assert.equal(existsSync(join(f.data,source.path)),false);p.sourceReferences[source.path].sha256=hash('wrong master');f.save();assert.throws(()=>releasedFormalRuntimeIndexes(f.root,{VERCEL:'1'}),/RELEASE_RUNTIME_SOURCE_REFERENCE/);
  }finally{f.done();}
 });
+
+test('common label connection preserves native window meaning for the public APW511 resolver',async()=>{
+ const{resolveRuntimeAppProduct}=await import('../src/catalog/runtime-master/runtime-app-bridge.mjs');
+ const qa=JSON.parse((await import('node:fs')).readFileSync('src/catalog/runtime-master-packages/apw511-ui-r3/adoption/browser-qa.json'));
+ let checked=0;
+ for(const row of qa.rows){const result=await resolveRuntimeAppProduct('SER-YKK-APW511',row.seed);const labels=Object.fromEntries(result.fields.map(f=>[f.key,f.displayLabel]));
+  for(const[key,label]of Object.entries({handing:'左右勝手',width:'特注W（mm）',height:'特注H（mm）',request_quantity:'数量'}))if(Object.hasOwn(labels,key)){assert.equal(labels[key],label,key);checked++;}
+ }
+ assert.ok(checked>0,'Actual native resolver fields required');
+});
