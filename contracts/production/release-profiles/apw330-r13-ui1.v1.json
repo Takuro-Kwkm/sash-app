@@ -1101,7 +1101,7 @@
     "scripts/tw-202610-runtime-proof.mjs": "6ee7540e116f0648b2979836dcb47c96a9dab1ada9fa7ccd08019c3d0844aa57",
     "scripts/tw-runtime-smoke.mjs": "b0f314245655fcfc46a31799c3f96850a6a6bba20dbc4b2849f57404336574b9",
     "scripts/uchirimo-full-selector-proof.mjs": "df3c058b8171872b262e5e8006dbc742fee428dc1862c54865bbb5f61085dfb2",
-    "scripts/vercel-rest-deploy.mjs": "6cdc9d2d4f49a2e1a1a4d8e209c4254cd9b45aa5ec6b932c37e139c2e0c9365e",
+    "scripts/vercel-rest-deploy.mjs": "fbffd56b42772135fc98972bd025c15da624ab71c9a7930cc519beda18406a8f",
     "scripts/verify-rechent-r8-adoption.mjs": "9043f84c8587b606bff4f9c1ee84d1d5f51f9a564a50618fbad7a3010cbfcc86",
     "scripts/verify-tw-202610-adoption.mjs": "42cd6d8728692f1c744857cfc04f95f3c1684fc63e9f120c5efed548c2e5896e",
     "src/catalog/catalog-adapter.mjs": "3a89f08835ece9b522e18a79259b8aa395aa975166d3647cd0da0aad3a2481ec",

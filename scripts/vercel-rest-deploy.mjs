@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
-import { execFileSync } from 'node:child_process';
+import { execFileSync,spawn } from 'node:child_process';
 import path from 'node:path';
 
 const mode = process.argv[2] ?? 'preview';
@@ -9,7 +9,9 @@ if (!['preview', 'production'].includes(mode)) {
   throw new Error(`Unsupported deployment mode: ${mode}`);
 }
 
-const token = process.env.VERCEL_TOKEN_EFFECTIVE;
+const token = process.env.VERCEL_TOKEN_EFFECTIVE??process.env.VERCEL_TOKEN;
+const authenticatedCli=process.env.VERCEL_API_CLI;
+if(!token&&(!authenticatedCli||!path.isAbsolute(authenticatedCli)))throw new Error('EXISTING_VERCEL_AUTHENTICATION_REQUIRED');
 const teamId = process.env.VERCEL_ORG_ID;
 const projectId = process.env.VERCEL_PROJECT_ID;
 const projectName = process.env.VERCEL_PROJECT_NAME ?? 'sash-app-wave3-preview';
@@ -18,7 +20,7 @@ const githubRefName = process.env.GITHUB_REF_NAME ?? execFileSync('git', ['branc
 const repository = process.env.GITHUB_REPOSITORY ?? 'Takuro-Kwkm/sash-app';
 const repositoryId = process.env.GITHUB_REPOSITORY_ID ?? '1351370514';
 
-for (const [name, value] of Object.entries({ token, teamId, projectId, projectName, githubSha })) {
+for (const [name, value] of Object.entries({ teamId, projectId, projectName, githubSha })) {
   if (!value) throw new Error(`Missing required value: ${name}`);
 }
 
@@ -44,13 +46,19 @@ if(previous && (previous.schema!=='VERCEL_STAGED_BUILD_OPERATION_V1' ||
   throw new Error('EXISTING_BUILD_OPERATION_IDENTITY_MISMATCH');
 }
 if(previous && !previous.providerResponse?.id) throw new Error('EXISTING_BUILD_OPERATION_UNRESOLVED: inspect provider before retry');
-const api = async (url, init = {}) => fetch(url, {
-  ...init,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    ...(init.headers ?? {}),
-  },
-});
+const api = async (url, init = {}) => {
+ if(token)return fetch(url,{...init,headers:{Authorization:`Bearer ${token}`,...(init.headers??{})}});
+ const endpoint=new URL(url);if(endpoint.origin!=='https://api.vercel.com')throw new Error('VERCEL_API_ORIGIN_REQUIRED');
+ const argv=['api',endpoint.pathname+endpoint.search,'--scope',teamId,'--method',init.method??'GET','--include','--raw'];
+ for(const[name,value]of Object.entries(init.headers??{}))argv.push('--header',name+':'+value);
+ if(init.body!==undefined)argv.push('--input','-');
+ return new Promise((accept,reject)=>{
+  const child=spawn(authenticatedCli,argv,{stdio:['pipe','pipe','pipe']}),stdout=[],stderr=[];let count=0;
+  child.stdout.on('data',b=>{count+=b.length;if(count>16*1024*1024){child.kill();reject(new Error('VERCEL_API_RESPONSE_LIMIT'));}else stdout.push(b);});child.stderr.on('data',b=>stderr.push(b));child.on('error',reject);
+  child.on('close',code=>{const raw=Buffer.concat(stdout).toString('utf8').replaceAll('\r\n','\n'),match=raw.match(/^HTTP(?:\/\S+)?\s+(\d{3})\b/),split=raw.indexOf('\n\n');if(!match||split<0)return reject(new Error('VERCEL_CLI_API_RESPONSE_REQUIRED:exit='+code));const status=Number(match[1]),body=raw.slice(split+2);accept({ok:status>=200&&status<300,status,text:async()=>body});});
+  child.stdin.on('error',reject);child.stdin.end(init.body??undefined);
+ });
+};
 
 const aliasHost=new URL(releaseTarget.deployment.production_url).hostname;
 const acquireAlias=async()=>{
@@ -83,9 +91,12 @@ const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'buffer' })
 if (!files.length) throw new Error('No tracked files found for deployment');
 
 const fileBuffers = previous?[]:await Promise.all(files.map(async (file) => ({ file, data: await readFile(file) })));
+let privateReleasePackages=0;
 if(!previous){
- const registry=JSON.parse(await readFile('contracts/production/released-runtime-packages.v1.json','utf8'));
+ let registry={packages:[]};try{registry=JSON.parse(await readFile('contracts/production/released-runtime-packages.v1.json','utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
+ privateReleasePackages=registry.packages.length;
  if(registry.packages.length){
+  if(deploySource!=='files')throw new Error('RELEASE_RUNTIME_FILES_SOURCE_REQUIRED');
   const root=process.env.SASH_RELEASE_RUNTIME_SOURCE_ROOT;if(!root||!path.isAbsolute(root))throw new Error('RELEASE_RUNTIME_SOURCE_REQUIRED');
   for(const pkg of registry.packages){
    if(!pkg.root.startsWith('src/catalog/runtime-release-data/')||pkg.root.split('/').includes('..'))throw new Error('RELEASE_RUNTIME_PATH');
@@ -143,7 +154,7 @@ if (!previous && deploySource === 'inline') {
     await Promise.all(workers);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    if (mode === 'production' && message.includes('Vercel file upload failed (429)')) {
+    if (mode === 'production' && privateReleasePackages===0 && message.includes('Vercel file upload failed (429)')) {
       effectiveDeploySource = 'gitSource';
       deploymentFiles = [];
       console.log('VERCEL_FILE_UPLOAD_RATE_LIMIT_FALLBACK=gitSource');
@@ -189,8 +200,8 @@ if (effectiveDeploySource === 'gitSource') {
     commitRef: githubRefName,
     commitSha: githubSha,
     dirty: false,
-    ci: true,
-    ciType: 'github-actions',
+    ci: process.env.GITHUB_ACTIONS==='true',
+    ciType: process.env.GITHUB_ACTIONS==='true'?'github-actions':'local-qa',
     ciGitProviderUsername: owner,
     ciGitRepoVisibility: 'public',
     rootDirectory: '',
@@ -216,7 +227,7 @@ if (!previous && payloadBytes > 10_000_000) throw new Error('DEPLOYMENT_CREATE_B
 
 await mkdir(path.dirname(operationPath), { recursive: true });
 const intent=previous??{schema:'VERCEL_STAGED_BUILD_OPERATION_V1',mode,githubSha,projectId,teamId,
-  aliasBefore,totalBytes,fileCount:files.length,deploySource:effectiveDeploySource,autoAssignCustomDomains:mode==='production'?false:null,
+  aliasBefore,totalBytes,fileCount:previous?.fileCount??fileBuffers.length,deploySource:effectiveDeploySource,autoAssignCustomDomains:mode==='production'?false:null,
   payloadBytes,state:'CREATE_INTENT_SAVED',external_create_operations:0};
 if(!previous)await writeFile(operationPath,JSON.stringify(intent,null,2)+'\n');
 let created=previous?.providerResponse;
@@ -289,7 +300,7 @@ const result = {
   deploySource: effectiveDeploySource,
   projectId,
   teamId,
-  fileCount: files.length,
+  fileCount: previous?.fileCount??fileBuffers.length,
   totalBytes,
   createdAt: deployment.createdAt ?? created.createdAt ?? null,
   readyAt: deployment.ready ?? deployment.readyAt ?? null,
