@@ -45,7 +45,8 @@
     }
   },
   "presentation_files": {
-    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "744edfe6c95173968b9a8d0cd290c7abd7882eba80efeba0f84e9b77091d8804"
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "744edfe6c95173968b9a8d0cd290c7abd7882eba80efeba0f84e9b77091d8804",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "3710f94dc60e29f9f2e8c45c5637d3321ce75a41b29378ad1cdbf57111826b61"
   },
   "retained_common_labels": {
     "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/production/sash/contracts/ui-common/field-label-adoption.v1.json",
@@ -55,5 +56,11 @@
   },
   "product_master_mutations": 0,
   "original_product_work_operation": "INSPECT_ONLY",
-  "publication_order": "AFTER_APW330_CANONICAL_QA; REFRESH_PREVIOUS_DEPLOYMENT_AND_COMPARE_EXACT_PROVIDER_ID"
+  "publication_order": "AFTER_APW330_CANONICAL_QA; REFRESH_PREVIOUS_DEPLOYMENT_AND_COMPARE_EXACT_PROVIDER_ID",
+  "human_confirmation_ref": {
+    "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/human-approval.json",
+    "sha256": "53d35e15913f6265419219d86b6dc3164c5130edab1e04a280fff4f46983e32e",
+    "location": "ACTUAL_CURRENT_CHAT_HUMAN_CONFIRMATION",
+    "observed_at": "2026-10-31T02:00:00Z"
+  }
 }
