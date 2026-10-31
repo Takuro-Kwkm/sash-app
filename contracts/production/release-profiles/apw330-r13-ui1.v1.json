@@ -812,7 +812,7 @@
     "contracts/production/app-release.v1.json": "ac6cd995b53c3669587c2a05b8ecec0b9bffd46906d623a340771d2598e45914",
     "contracts/production/apw330-publication-lifecycle.v1.json": "658ce62bbf234698a19a3144423501129f486ea5326865eb6d712b827faeb4b7",
     "contracts/production/released-runtime-packages.v1.json": "fc4e1ee2152c39b9740ced5e1fb19837e8559e1dce5a751ebb6262b44a0490b4",
-    "contracts/production/runtime-ui-qa/apw330-r13-ui1.json": "90cce2f3e432a69b494c4d79dbb0adb3aa101daec7bf9fe88b76ed4308e54b49",
+    "contracts/production/runtime-ui-qa/apw330-r13-ui1.json": "2c074dd1da11f4598de22ab2369ffe4d7463cea18cee4e4d8baa1745bdd6d97b",
     "scripts/build-composed-candidate-review-preview.mjs": "c3158c929c72c24efb065cfadd5e43612192efcd2bb50d4201aa25c53e039d41",
     "scripts/build-eight-series-review.mjs": "b09cf5b225db8d62b032f68e0e09a38e3b114f146d7f6f5e6fdf7e82bd7d368c",
     "scripts/build-ew-runtime-review-preview.mjs": "7c151c22469d7a506dbdc55c6c08d110d04ec75686105edc0e7b26f1adadcc1b",
