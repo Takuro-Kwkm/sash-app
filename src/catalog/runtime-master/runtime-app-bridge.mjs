@@ -1,3 +1,4 @@
+import {fieldLabel} from '../../../contracts/ui-common/field-labels.v1.mjs';
 import { normalizeFrameInput } from './inner-window-frame-engine.mjs';
 import { isBathroomEstimateContext, splitWorkflowSelection, projectEstimateResult } from '../../work-management/field-workflow-scope.mjs';
 import { INNER_WINDOW_INTERNAL_SELECTION_FIELDS } from './inner-window-runtime-ui-contract.mjs';
@@ -86,7 +87,7 @@ function resolveProductVariantAdapter(integration,variant,selection){
 
 async function resolveProductFacts(productId,selection={},context={changedFields:[]}){const integration=getRuntimeAppIntegration(productId);if(!integration){const error=new Error(`Unknown Runtime app product: ${productId}`);error.code='RUNTIME_APP_PRODUCT_NOT_FOUND';throw error;}if(!integration.selectable){const error=new Error(integration.blockReason??`Runtime app product is blocked: ${productId}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';error.integration=integration;throw error;}const variant=selectedProductVariant(integration,selection);const variantRaw=variant?resolveProductVariantAdapter(integration,variant,selection):null;if(variantRaw)return withProductVariant(toDirectUiResolverResult(variantRaw,integration),integration,variant);const entry=getRuntimeMasterEntry(integration.manufacturer,integration.series);if(!entry){const error=new Error(`Runtime Master Registry entry disappeared: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';throw error;}const runtime=await loadRegisteredRuntime(integration.manufacturer,integration.series);if(!runtime){const error=new Error(`Runtime Master could not be loaded: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_LOAD_FAILED';throw error;}let result;if(runtime.uiResolver)result=toDirectUiResolverResult(runtime.uiResolver(selection??{},context),integration,runtime.sourcePackageIntegrity);else{const normalized=normalizeRuntimeSelection(runtime.master,selection);const evaluate=(value)=>runtime.resolver?runtime.resolver(value):evaluateConfiguration(runtime.master,value);const state=integration.uiCategory==='INNER_WINDOW'?evaluateInnerWindowPresentation(runtime.master,{...normalized,...Object.fromEntries(Object.entries(selection).filter(([key])=>integration.salesRequestExtension?.fields.some(field=>field.key===key)))},evaluate,integration.salesRequestExtension):evaluate(normalized);result=toRuntimeUiResult(runtime.master,state,integration,runtime.sourcePackageIntegrity);}return variant?withProductVariant(result,integration,variant):result;}
 
-export async function resolveRuntimeAppProduct(productId,selection={}, {workflowScope='estimate',changedFields=[]}={}){
+async function resolveNativeRuntimeAppProduct(productId,selection={}, {workflowScope='estimate',changedFields=[]}={}){
   if(workflowScope!=='estimate'&&workflowScope!=='site_survey')throw new TypeError('Unknown workflow scope');
   if(workflowScope==='site_survey')return resolveProductFacts(productId,selection,{changedFields});
   const input=selection;
@@ -124,4 +125,9 @@ export async function resolveRuntimeAppProduct(productId,selection={}, {workflow
     }
   }
   return projectSales(projectEstimateResult(result,selection));
+}
+
+export async function resolveRuntimeAppProduct(...args){
+  const result=await resolveNativeRuntimeAppProduct(...args);
+  return {...result,fields:(result.fields??[]).map(field=>({...field,displayLabel:fieldLabel(field.key,field.displayLabel,field.semanticSlot)}))};
 }
