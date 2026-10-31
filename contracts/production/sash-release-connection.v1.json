@@ -1,7 +1,0 @@
-{
-  "schema": "SASH_RELEASE_CONNECTION_ADOPTION_V1",
-  "source_commit": "7c77b9943c3f5a1f1337c829a16906678553e1d2",
-  "inventory_sha256": "bd796b4d0b4c688bb79c3a1d44f531c84d88584509e4d45a5109303a9294eda3",
-  "shared_implementation_sha": "2ea3580e008c43501219e2fc40922d56f35b0d1c",
-  "scope": "APW330_R13_UI1_ADOPTED_RUNTIME_PUBLICATION_20261031"
-}

@@ -140,7 +140,7 @@ try{
     }
     const output=await page.evaluate(async({snapshots,persistedSnapshots})=>{
       const {createEstimateOutputModel}=await import('/estimate-output/model.mjs');const {createEstimatePdfBytes}=await import('/estimate-output/pdf-renderer.mjs');const {createEstimateXlsxBytes}=await import('/estimate-output/xlsx-renderer.mjs');
-      const context={project:{project_id:'qa',project_name:'玄関ドア 営業見積依頼',request_company:'QA会社',sales_person:'QA'},estimate:{estimate_id:'qa',project_id:'qa',estimate_title:'営業依頼',estimate_no:1,revision_no:0}};
+      const context={project:{project_id:'qa',project_name:'商品仕様 営業見積依頼',request_company:'QA会社',sales_person:'QA'},estimate:{estimate_id:'qa',project_id:'qa',estimate_title:'営業依頼',estimate_no:1,revision_no:0}};
       const modelFor=values=>createEstimateOutputModel({...context,openings:values.map((snapshot,i)=>({opening_id:String(i),opening_no:i+1,status:'COMPLETE',room_name:'QA',product_configuration_snapshot:snapshot}))});
       const model=modelFor(persistedSnapshots),baselineModel=modelFor(snapshots);
       return {model,baselineModel,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
