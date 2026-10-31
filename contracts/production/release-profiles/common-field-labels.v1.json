@@ -85,17 +85,27 @@
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "d3deace30a30a555270285ef1065c570865cbfd2",
+    "ref": "93debc075b8080871fb2418c3fe87162fb7367c7",
     "entry": "scripts/release-contract.py",
     "files": {
-      "scripts/release-contract.py": "dde13b9ada8a0c3784077d80d533ff783a2564902d3b1f9699960a2af16d82f3",
-      "harness/release.py": "618a9161c43f8afd5e75a702d919d0212ed617df1266b40fb110ffaa0d3dd535",
       "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
+      "harness/common_adoption.py": "49a8e33a70b5f719ce46214336c3e898b2d327b1e44f93c412024cfc19de4adc",
+      "harness/common_development.py": "31c8cceb02ae8e7e6f8056d65783a6fb93a3b91870dd8d0d4b270c6994dbb85b",
+      "harness/current_authority.py": "a342e565123b63f05b3ab26f90668acacca19cdaaf5118322465d225ba9c0cb4",
+      "harness/field_label_archive.py": "2a434c91b2a63afb58e33a26fdcf45b43c5645a05d5657315ebda40c3fc18d07",
+      "harness/field_label_current.py": "8ad54b921408d7a25617c9f1f01bb205c0add7edf184515296df44bea28bcd92",
+      "harness/field_label_release.py": "7c92199de164812306170c35d96f87f8785a34f302d7d94519737af276e03b31",
+      "harness/local_qa_adoption.py": "55c83b850f73c25a474c8ccfd5516311c9f880838feb1b16b81f177bb67c10e4",
+      "harness/release.py": "7ba93fb3bd538672163b9a2c17c98e2b08d90539fe64e002e0e2c397b1a96012",
       "harness/release_admission.py": "b1201d7feb07592b78822d769399951dcdc70bec03a1c58e1951650259ca95cd",
-      "harness/release_publication.py": "992a713cd5598a45e7ec0109a149e55a38cad6f9898b69e2e60c7718c544d3e1",
-      "harness/field_label_release.py": "eebc51647036a395d131c7148520e2005fef79391dbf70719e1a819e653ea84e",
-      "harness/common_development.py": "8f823a8d7d0bacbcde810baafe63fd40bb992aec50d922a10166bd4c214b070a",
-      "harness/local_qa_adoption.py": "3049eb2cbaf0b296dae09b9efcb5fe8acd9fa3e45b266820f47a8f1bd07fb250"
+      "harness/release_publication.py": "27177e1ade0be51b4a85303e7e02800f77a81b7cc4cbba144c092c77d4df18a8",
+      "harness/verification_scope.py": "476facab877abaee12207cd451b601b54ab771d8b14387766d900226e8927a60",
+      "scripts/release-connected-host.mjs": "16a405814a116001b827b51cabaae98c8818a57bd076026f22c35f4a2f22009e",
+      "scripts/release-connected-io.mjs": "3fad6da3905284a1efbdde83989b3c232b098aafc6f915942b4daf2a657c6c2d",
+      "scripts/release-contract.py": "f3d3ca2344ea497b1f7ec31e9ed39c456a959377454a3fc54aa12d841ba3757c",
+      "scripts/release-lifecycle-cli.mjs": "6f42a55a709612736598b967fe0a599ee09c8400df05518359c547fe8cf21ffe",
+      "scripts/release-provider-host.mjs": "bd3bd712679de2777a27f92558c161d0d2eedab97d59a8ba6ab463fb5f54c712",
+      "scripts/release-retained-labels.mjs": "0898779dbaec8241657ec338a1709af74a2d647b7231e2f00e7043a8d828c6a8"
     }
   },
   "publication_policy": {
@@ -226,6 +236,42 @@
     "presentation_files": {
       "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "744edfe6c95173968b9a8d0cd290c7abd7882eba80efeba0f84e9b77091d8804",
       "src/catalog/runtime-master/runtime-app-bridge.mjs": "3710f94dc60e29f9f2e8c45c5637d3321ce75a41b29378ad1cdbf57111826b61"
+    }
+  },
+  "lifecycle": {
+    "mode": "RETAINED_LABEL_RECEIPTS_V1",
+    "entry": "scripts/release-retained-labels.mjs",
+    "storage_destination": {
+      "provider": "GOOGLE_DRIVE",
+      "parent_id": "1TEc6hccZvEBNlvVWDNyYSI_Rp5aAwEGy"
+    },
+    "retained_publication": {
+      "native_baseline": "ec873b112ba2e9253ca91e91caa3f8e13d7e1dc2",
+      "binding": {
+        "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/production/release-gates/sash-app/binding.json",
+        "sha256": "58f34a7e8b41d47daecfd108c25d2590a9a0a90fd517d51e490d19d017bdc5d0",
+        "location": "RETAINED_ACTUAL_PUBLICATION_EVIDENCE",
+        "observed_at": "2026-10-31T04:29:44.547299+00:00"
+      },
+      "profile": {
+        "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/production/main-readback/sash-app/contracts/production/release-profiles/common-field-labels.v1.json",
+        "sha256": "ce132300d52d6b3558a581e07ceae89a6adcc054aa7caefee0d201d1d4087806",
+        "location": "RETAINED_ACTUAL_PUBLICATION_EVIDENCE",
+        "observed_at": "2026-10-31T04:29:44.547348+00:00"
+      },
+      "production_result": {
+        "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/production/release-gates/sash-app/observe-production-result.json",
+        "sha256": "3e7c36691013846688e3e0b1471ad575fe49137f71d3e27dfcd71a9f61477d73",
+        "location": "RETAINED_ACTUAL_PUBLICATION_EVIDENCE",
+        "observed_at": "2026-10-31T04:29:44.547349+00:00"
+      },
+      "local_verification": {
+        "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/production/release-gates/sash-app/local-verification.json",
+        "sha256": "07f2575e4dce8a0b8314bec717c02d2e30f7b66b500ea6bdd82a707a946f8148",
+        "location": "RETAINED_ACTUAL_PUBLICATION_EVIDENCE",
+        "observed_at": "2026-10-31T04:29:44.547350+00:00"
+      },
+      "historical_runtime_inputs": {}
     }
   }
 }
