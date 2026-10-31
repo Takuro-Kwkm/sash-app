@@ -63,7 +63,16 @@ test('pre-existing runtime behavior and original hashes stay intact except appro
     for(const c of baseline.cases){
       const before=await prior(c.id,c.selection),actual=await resolveRuntimeAppProduct(c.id,c.selection);
       assert.equal(createHash('sha256').update(JSON.stringify(before)).digest('hex'),c.responseSha256,c.id+': original baseline');
-      assert.deepEqual(withoutLabels(actual),withoutLabels(before),c.id+': approved common labels only');
+      const expected=withoutLabels(before);
+      // The retained Main changes only the display separator for exact 3+2 call codes.
+      // Preserve the original response hash above and compare actual values/metadata in full.
+      expected.fields=expected.fields.map(field=>field.key!=='size'?field:{...field,values:field.values.map(choice=>{
+        const metadata=choice.sizeMetadata,code=String(metadata?.callCode??'');
+        const oldLabel=`${code} ｜ W ${metadata?.actualW} × H ${metadata?.actualH}`;
+        return /^\d{3}-\d{2}$/.test(code)&&choice.displayLabel===oldLabel
+          ?{...choice,displayLabel:`${code.replace('-','')} ｜ W ${metadata.actualW} × H ${metadata.actualH}`}:choice;
+      })});
+      assert.deepEqual(withoutLabels(actual),expected,c.id+': approved common labels and exact nominal display separator only');
     }
   }finally{rmSync(root,{recursive:true,force:true});}
 });
