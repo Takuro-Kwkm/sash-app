@@ -1,0 +1,582 @@
+{
+  "schema": "DECLARED_SALES_RUNTIME_BROWSER_QA",
+  "product_id": "SER-YKK-APW330",
+  "manifest_file_id": "1KxdRVxfS0e5l7qSlWEGD3Q3P9Y9Z4Dc5",
+  "viewports": [
+    1280,
+    768,
+    390
+  ],
+  "hidden_fields": [
+    "dimension_basis",
+    "installation_environment"
+  ],
+  "number_fields": [
+    "request_quantity"
+  ],
+  "internal_tokens": [
+    "CONVENTIONAL",
+    "REQUESTED_DIMENSIONS",
+    "STANDARD_CALLOUT",
+    "SASH_W_H",
+    "ALUMINIUM"
+  ],
+  "ordered_fields": [
+    "window",
+    "construction",
+    "configuration",
+    "fix_type",
+    "frame",
+    "handing",
+    "size_mode",
+    "dimension_basis",
+    "size_callout",
+    "standard_size",
+    "width",
+    "height",
+    "floor_27",
+    "exterior",
+    "interior",
+    "screen",
+    "screen_midrail",
+    "screen_net",
+    "ventilation_rail",
+    "glass",
+    "glass_surface",
+    "glass_extra",
+    "glass_lattice_design",
+    "glass_spacer",
+    "glass_gas",
+    "high_operation",
+    "manual_length",
+    "lock",
+    "grille",
+    "shutter",
+    "jem_a",
+    "shutter_width_class",
+    "shutter_box",
+    "shutter_w",
+    "shutter_h",
+    "external_base_handle",
+    "windpole",
+    "options",
+    "manufacturer_final_clearance",
+    "price",
+    "bom",
+    "set_code",
+    "future_grey",
+    "screen_manufacturing_dimensions",
+    "shutter_manufacturing_clearance",
+    "installation_environment",
+    "wall_thickness",
+    "layout_details",
+    "special_request",
+    "request_quantity"
+  ],
+  "output_size_label": "",
+  "rows": [
+    {
+      "id": "COMPLETE_STANDARD",
+      "seed": {
+        "window": "W330-001",
+        "configuration": "SINGLE",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "size_mode": "STANDARD_CALLOUT",
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": "GL-001",
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "request_quantity": 2,
+        "standard_size": "SZ-0007",
+        "glass_gas": "ARGON",
+        "glass_spacer": "ALUMINIUM"
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION"
+      ],
+      "actions": [
+        {
+          "field": "glass_gas",
+          "value": "AIR",
+          "expected": {
+            "glass_gas": "AIR",
+            "glass_spacer": "ALUMINIUM"
+          }
+        },
+        {
+          "field": "glass_spacer",
+          "value": "RESIN",
+          "expected": {
+            "glass_gas": "AIR",
+            "glass_spacer": "RESIN"
+          }
+        },
+        {
+          "field": "glass_gas",
+          "value": "ARGON",
+          "expected": {
+            "glass_gas": "ARGON",
+            "glass_spacer": "RESIN"
+          }
+        },
+        {
+          "field": "glass_spacer",
+          "value": "ALUMINIUM",
+          "expected": {
+            "glass_gas": "ARGON",
+            "glass_spacer": "ALUMINIUM"
+          }
+        }
+      ],
+      "expected_output_dimensions": [
+        640,
+        970
+      ]
+    },
+    {
+      "id": "COMPLETE_CUSTOM",
+      "seed": {
+        "window": "W330-003",
+        "configuration": "SINGLE",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 640,
+        "height": 970,
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": "GL-004",
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "handing": "LEFT",
+        "request_quantity": 2
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION"
+      ],
+      "number_fields": [
+        "width",
+        "height"
+      ],
+      "expected_output_dimensions": [
+        640,
+        970
+      ]
+    },
+    {
+      "id": "CHECKBOX_RETAIN_VALID_WISHES",
+      "seed": {
+        "window": "W330-003",
+        "configuration": "SINGLE",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "dimension_basis": "SASH_W_H",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 640,
+        "height": 970,
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": "GL-004",
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "handing": "LEFT",
+        "installation_environment": "NORMAL",
+        "request_quantity": 2,
+        "options": [
+          "WALL_DRIP",
+          "LOWER_COVER"
+        ],
+        "special_request": "現地納まりを確認希望"
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION",
+        "CONFIRM_OPTIONS"
+      ],
+      "checkbox_groups": [
+        "options"
+      ],
+      "actions": [
+        {
+          "field": "options",
+          "value": [
+            "WALL_DRIP",
+            "FRAME_DRIP",
+            "LOWER_COVER"
+          ],
+          "expected": {
+            "options": [
+              "WALL_DRIP",
+              "FRAME_DRIP",
+              "LOWER_COVER"
+            ]
+          }
+        },
+        {
+          "field": "exterior",
+          "value": "EX-YW",
+          "expected": {
+            "options": [
+              "WALL_DRIP",
+              "FRAME_DRIP"
+            ]
+          }
+        }
+      ],
+      "output_contains": [
+        "壁付水切",
+        "下枠カバー",
+        "現地納まりを確認希望"
+      ],
+      "handoff_inputs": {
+        "special_request": "現地納まりを確認希望"
+      }
+    },
+    {
+      "id": "REQUEST_REQ_VALID_BASIC",
+      "seed": {
+        "window": "W330-003",
+        "configuration": "SINGLE",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "dimension_basis": "SASH_W_H",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 640,
+        "height": 970,
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": "GL-004",
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "handing": "LEFT",
+        "installation_environment": "NORMAL",
+        "request_quantity": 2
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION"
+      ]
+    },
+    {
+      "id": "REQUEST_SLIDING_XMH_MIDRAIL_NONE",
+      "seed": {
+        "window": "W330-012",
+        "configuration": "TWO_PANELS",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "dimension_basis": "SASH_W_H",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 1690,
+        "height": 1170,
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": "GL-004",
+        "glass_surface": "CLEAR",
+        "screen": "XMH",
+        "installation_environment": "NORMAL",
+        "lock": "CRESCENT",
+        "screen_net": "BLACK",
+        "screen_midrail": "N",
+        "request_quantity": 2
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION",
+        "CONFIRM_SCREEN"
+      ]
+    },
+    {
+      "id": "REQUEST_WINDOW_15_REQUEST",
+      "seed": {
+        "window": "W330-015",
+        "configuration": "TWIN",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "dimension_basis": "SASH_W_H",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 640,
+        "height": 970,
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": "GL-004",
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "installation_environment": "NORMAL",
+        "handing": "LEFT",
+        "layout_details": "左たてすべり+右FIX、各W640/816、サッシH970、現地連窓方立。希望レイアウトを積算確認。",
+        "request_quantity": 2
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION",
+        "CONFIRM_JOINT"
+      ]
+    },
+    {
+      "id": "REQUEST_WINDOW_14_REQUEST",
+      "seed": {
+        "window": "W330-014",
+        "configuration": "TWO_PANELS",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "dimension_basis": "SASH_W_H",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 1690,
+        "height": 1170,
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": "GL-004",
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "installation_environment": "NORMAL",
+        "lock": "CRESCENT",
+        "shutter": "REMOTE_GR",
+        "jem_a": false,
+        "shutter_box": "AL_ROUND",
+        "shutter_width_class": "UP_TO_9",
+        "request_quantity": 2
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION",
+        "CONFIRM_SHUTTER"
+      ]
+    },
+    {
+      "id": "REQUEST_VENT_VERTICAL_VALID_REQUEST",
+      "seed": {
+        "window": "W330-003",
+        "configuration": "SINGLE",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "dimension_basis": "SASH_W_H",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 640,
+        "height": 970,
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": "GL-004",
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "handing": "LEFT",
+        "installation_environment": "NORMAL",
+        "ventilation_rail": true,
+        "request_quantity": 2
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION",
+        "CONFIRM_VENT"
+      ]
+    },
+    {
+      "id": "REQUEST_BATH_WATERPROOF",
+      "seed": {
+        "window": "W330-003",
+        "configuration": "SINGLE",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "dimension_basis": "SASH_W_H",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 640,
+        "height": 970,
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": "GL-004",
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "handing": "LEFT",
+        "installation_environment": "BATHROOM",
+        "request_quantity": 1
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION",
+        "CONFIRM_BATH_ANGLE"
+      ]
+    },
+    {
+      "id": "REQUEST_REJECT_DISCONTINUED_GL005",
+      "seed": {
+        "window": "W330-003",
+        "configuration": "SINGLE",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "dimension_basis": "SASH_W_H",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 640,
+        "height": 970,
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": null,
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "handing": "LEFT",
+        "installation_environment": "NORMAL",
+        "request_quantity": 2
+      },
+      "expected_valid": false,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION"
+      ]
+    },
+    {
+      "id": "REQUEST_REJECT_FUTURE_GREY",
+      "seed": {
+        "window": "W330-003",
+        "configuration": "SINGLE",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "dimension_basis": "SASH_W_H",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 640,
+        "height": 970,
+        "exterior": "EX-PS",
+        "interior": null,
+        "glass": "GL-004",
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "handing": "LEFT",
+        "installation_environment": "NORMAL",
+        "request_quantity": 2
+      },
+      "expected_valid": false,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION"
+      ]
+    },
+    {
+      "id": "OLD_SAVED_DISCONTINUED_GLASS",
+      "seed": {
+        "window": "W330-003",
+        "configuration": "SINGLE",
+        "construction": "CONVENTIONAL",
+        "frame": "WITH_ANGLE",
+        "dimension_basis": "SASH_W_H",
+        "size_mode": "REQUESTED_DIMENSIONS",
+        "width": 640,
+        "height": 970,
+        "exterior": "EX-PS",
+        "interior": "IN-WH",
+        "glass": "GL-005",
+        "glass_surface": "CLEAR",
+        "screen": "NONE",
+        "handing": "LEFT",
+        "installation_environment": "NORMAL",
+        "request_quantity": 2
+      },
+      "expected_valid": false,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "CONFIRM_MANUFACTURING",
+        "CONFIRM_PRICE_BOM_CODE",
+        "CONFIRM_INSTALLATION"
+      ],
+      "restored_cleared": [
+        "glass"
+      ],
+      "legacy_saved_values": true
+    }
+  ],
+  "order_source": {
+    "source": "review/flow.json",
+    "sha256": "658fc5bb8d623a03a3693d069b4f76300656fb1c8f9c941e8d6079fa3120e41f",
+    "revision": "APW330_PREVIEW_R13_20261030",
+    "policy": "Reviewed canonical source groups/ranks; not derived from rendered UI"
+  },
+  "expected_field_labels": {
+    "window": "窓種類",
+    "construction": "工法",
+    "configuration": "構成",
+    "fix_type": "FIX形式",
+    "frame": "枠アングル",
+    "handing": "左右勝手",
+    "size_mode": "サイズ区分",
+    "dimension_basis": "依頼寸法基準",
+    "size_callout": "希望規格サイズ呼称",
+    "width": "特注W（mm）",
+    "height": "特注H（mm）",
+    "floor_27": "床厚27mm対応希望",
+    "exterior": "外観色",
+    "interior": "内観色",
+    "screen": "網戸形式",
+    "screen_net": "網戸ネット",
+    "screen_midrail": "網戸中桟",
+    "ventilation_rail": "換気框希望",
+    "glass": "ガラス",
+    "glass_surface": "ガラス種",
+    "glass_gas": "中空層",
+    "glass_spacer": "スペーサー",
+    "glass_extra": "ガラス追加機能",
+    "glass_lattice_design": "格子入デザイン希望",
+    "high_operation": "高所操作",
+    "manual_length": "高窓用オペレーター長さ",
+    "lock": "施錠方式",
+    "grille": "面格子形状",
+    "shutter": "シャッター種類",
+    "jem_a": "JEM-A端子付希望",
+    "shutter_width_class": "シャッター幅系統希望",
+    "shutter_box": "シャッターボックス",
+    "shutter_w": "希望シャッターw",
+    "shutter_h": "希望シャッターh",
+    "external_base_handle": "外部ハンドル付座板希望",
+    "windpole": "横桟・耐風ポール希望",
+    "options": "その他オプション",
+    "installation_environment": "設置環境",
+    "wall_thickness": "シャッター外壁厚さ",
+    "layout_details": "連窓・段窓構成図と各部寸法",
+    "special_request": "特別仕様の希望",
+    "request_quantity": "数量",
+    "manufacturer_final_clearance": "Final polygon/weight/area/wind/glass/device/installation system decision not a sales input admission",
+    "price": "Current formal quotation price not adopted",
+    "bom": "Parts takeoff not generated",
+    "set_code": "Manufacturer order/set code not generated",
+    "future_grey": "Grey/H24 black November2026 not current",
+    "screen_manufacturing_dimensions": "Window sash W/H do not establish screenMW/MH",
+    "shutter_manufacturing_clearance": "Shutter w/h/installation and device final check distinct from sashW/H",
+    "standard_size": "規格サイズ"
+  },
+  "label_expectation_source": {
+    "method": "Retained native R13 field declarations and immutable approved window-label contract, independently enumerated before correction",
+    "approved_profile": "contracts/production/runtime-adoptions/apw330-r13-ui1.profile.json",
+    "approved_window_labels_sha256": "606f62f417fcd516dd93831b01ee3c1e8fe899b3f808ebe19b9e175035fb21d7",
+    "independent_static_table_sha256": "306d01dab65d0702f1e8a5a990f361e0ea36dee0d920b9e38805246065cd276e"
+  }
+}

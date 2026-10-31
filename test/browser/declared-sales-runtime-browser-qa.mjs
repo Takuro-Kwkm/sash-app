@@ -1,3 +1,4 @@
+import {configureProtectedQaBrowser,protectedQaGet,safeQaError} from '../../scripts/production/protected-qa-access.mjs';
 const {chromium}=await import(process.env.QA_PLAYWRIGHT_MODULE??'playwright');
 import assert from 'node:assert/strict';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
@@ -14,8 +15,9 @@ try{
     page.on('pageerror',error=>report.errors.push(error.message));
     page.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
     page.on('response',response=>{if(response.status()>=400)report.failedResponses.push({url:response.url(),status:response.status()});});
+    await configureProtectedQaBrowser(context,new URL(BASE).origin);
     await page.goto(BASE,{waitUntil:'networkidle'});
-    const health=await(await context.request.get(BASE+'/api/health')).json();report.observedCommit=health.releaseCommitSha;
+    const health=await(await protectedQaGet(context.request,BASE+'/api/health',new URL(BASE).origin)).json();report.observedCommit=health.releaseCommitSha;
     if(process.env.QA_EXPECTED_COMMIT)assert.equal(report.observedCommit,process.env.QA_EXPECTED_COMMIT);
     const snapshots=[],persistedSnapshots=[],cases=[];
     for(const row of contract.rows){
@@ -88,6 +90,11 @@ try{
         assert.equal(await control.evaluate(node=>node.tagName),expected.tag,key);
         if(expected.labels)assert.deepEqual(await control.locator('option').allTextContents(),['選択してください',...expected.labels],key);
       }
+      const fieldLabels=await page.locator('#dynamicForm [data-spec-key]').evaluateAll(nodes=>Object.fromEntries(nodes.map(node=>[node.dataset.specKey,node.dataset.label])));
+      if(contract.expected_field_labels)for(const [key,label]of Object.entries(fieldLabels)){
+        assert.ok(Object.hasOwn(contract.expected_field_labels,key),'Missing independent label expectation: '+key);
+        assert.equal(label,contract.expected_field_labels[key],'Native field meaning: '+key);
+      }
       const visible=await page.locator('#dynamicForm').innerText();
       for(const token of contract.internal_tokens)assert.ok(!visible.includes(token),'INTERNAL_TOKEN:'+token);
       const visibleKeys=await page.locator('#dynamicForm [data-spec-key]').evaluateAll(nodes=>nodes.map(node=>node.dataset.specKey));
@@ -134,16 +141,17 @@ try{
       assert.equal(actual.runtime_manifest_identity,contract.manifest_file_id);
       persistedSnapshots.push(actual);
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
-      cases.push({id:row.id,saveReopen:'PASS',identity:'PASS',confirmations:'PASS',overflow:'PASS',transitions});
+      cases.push({id:row.id,saveReopen:'PASS',identity:'PASS',confirmations:'PASS',overflow:'PASS',fieldLabels,transitions});
     }
     const output=await page.evaluate(async({snapshots,persistedSnapshots})=>{
       const {createEstimateOutputModel}=await import('/estimate-output/model.mjs');const {createEstimatePdfBytes}=await import('/estimate-output/pdf-renderer.mjs');const {createEstimateXlsxBytes}=await import('/estimate-output/xlsx-renderer.mjs');
-      const context={project:{project_id:'qa',project_name:'玄関ドア 営業見積依頼',request_company:'QA会社',sales_person:'QA'},estimate:{estimate_id:'qa',project_id:'qa',estimate_title:'営業依頼',estimate_no:1,revision_no:0}};
+      const context={project:{project_id:'qa',project_name:'商品仕様 営業見積依頼',request_company:'QA会社',sales_person:'QA'},estimate:{estimate_id:'qa',project_id:'qa',estimate_title:'営業依頼',estimate_no:1,revision_no:0}};
       const modelFor=values=>createEstimateOutputModel({...context,openings:values.map((snapshot,i)=>({opening_id:String(i),opening_no:i+1,status:'COMPLETE',room_name:'QA',product_configuration_snapshot:snapshot}))});
       const model=modelFor(persistedSnapshots),baselineModel=modelFor(snapshots);
       return {model,baselineModel,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
     },{snapshots,persistedSnapshots});
     assert.equal(output.model.rows.length,contract.rows.length);
+    for(const[i,row]of contract.rows.entries())for(const dimension of row.expected_output_dimensions??[])assert.match(output.baselineModel.rows[i].size,new RegExp('\\b'+dimension+'\\b'),'Requested dimension must reach output');
     assert.ok(output.model.rows.every(row=>row.price===null&&row.size.includes(contract.output_size_label??'新設枠発注寸法')));
     assert.deepEqual(output.model.rows.map(row=>row.request_quantity),contract.rows.map(row=>row.expected_quantity));
     for(const [i,snapshot] of persistedSnapshots.entries()){
@@ -159,5 +167,5 @@ try{
     await context.close();console.log(JSON.stringify({width,status:'PASS',cases:cases.length}));
   }
   assert.deepEqual(report.errors,[]);assert.deepEqual(report.consoleErrors,[]);assert.deepEqual(report.failedResponses,[]);report.status='PASS';
-}catch(error){report.status='FAIL';report.failure=error.stack;throw error;}
+}catch(error){report.status='FAIL';report.failure=safeQaError(error);throw error;}
 finally{await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n');await browser.close();}

@@ -4,7 +4,7 @@
   "outputDirectory": "artifacts/deployment-static",
   "functions": {
     "api/index.mjs": {
-      "includeFiles": "src/**",
+      "includeFiles": "{src/**,contracts/production/released-runtime-packages.v1.json}",
       "maxDuration": 30
     }
   },
