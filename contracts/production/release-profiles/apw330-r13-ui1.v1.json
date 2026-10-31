@@ -32,7 +32,7 @@
   "boundary_policy": "Actual native evidence only; Print requires inspected PDF/Print Preview; localStorage is not live DB E2E",
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "c0595595031f4331753d1893478cb3e856be9a8a",
+    "ref": "c6ca8a872318c9c5ffa827ae798253a1a7c6fa15",
     "entry": "scripts/release-contract.py",
     "files": {
       "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
@@ -53,7 +53,7 @@
       "harness/release_publication.py": "c2f0d02d05d604c3070bc664edf04d499150592a2d81f3a4467191dddd3393ee",
       "harness/release_restore.py": "9a2903eea8887efa66b55ec92f9909e1353ff7ea631b90459d0ba548bb4b6a7a",
       "harness/resolvers.py": "b39ac4b4a047d46d4f1c7962745692564438b7b22343bb52b0d11233324ea0ed",
-      "harness/sash_release_admission.py": "6a961e9c48ea3f2f5164e0fb1a361400d4051c2bbd3dd104988a885718a2a62f",
+      "harness/sash_release_admission.py": "453806ca56038c534a4c148e94d41c10d051c076afc234a6d9eac9d4587e9e8d",
       "harness/verification_scope.py": "476facab877abaee12207cd451b601b54ab771d8b14387766d900226e8927a60",
       "harness/workflow.py": "85a161c5ce1380d21fa3cb234fcc07b402e0cd6ddc52dd0a6ed0d3729c6c66bf",
       "registries/current-architecture.v2.json": "98370fde4fa59a17df6fb4802065a182867105526b5b387dbb92e389b36f7b86",
@@ -802,7 +802,8 @@
     "src/work-management/service.mjs",
     "src/work-management/storage.mjs",
     "test/browser/declared-sales-runtime-browser-qa.mjs",
-    "test/browser/runtime-control-assertions.mjs"
+    "test/browser/runtime-control-assertions.mjs",
+    "vercel.json"
   ],
   "deployment_executor": "Existing Vercel REST/files executor; explicit autoAssignCustomDomains=false; Shared gate -> existing fixed-ID provider promotion",
   "identity_command": "npm run verify:app-release -- --url URL --expect-commit SHA --require-release-commit --output EVIDENCE_JSON",
@@ -1525,7 +1526,8 @@
     "src/work-management/service.mjs": "79e1451ea52a3bf66dfca4184b70e3ed21526ac21cf20c8c9008a2cfff3d7cf9",
     "src/work-management/storage.mjs": "823d8e2aa316602024751f844096ff9078d2da58f58869e5e0b9af7c04d4dfb8",
     "test/browser/declared-sales-runtime-browser-qa.mjs": "1089e39c7dff55bbc9121ad9886a1e7e58fcd6e38c0212e6cebce073be636467",
-    "test/browser/runtime-control-assertions.mjs": "097b92683507fa850ea462bc44cc715d686dffe55702df36fa84a41f0d2578e3"
+    "test/browser/runtime-control-assertions.mjs": "097b92683507fa850ea462bc44cc715d686dffe55702df36fa84a41f0d2578e3",
+    "vercel.json": "ea5690d685934d1866062e2419fc8fdf9ff300f7171ef625ca4f2fc9e2ecfd02"
   },
   "publication_policy": {
     "mode": "VERCEL_STAGED_PROMOTE_V1",
@@ -1947,6 +1949,7 @@
       "src/work-management/repositories.mjs": "bf565ff5144157b58fc8b82e3c5f5436426ed16fd7cfa49635f1d43d7d0cbc17",
       "src/work-management/service.mjs": "79e1451ea52a3bf66dfca4184b70e3ed21526ac21cf20c8c9008a2cfff3d7cf9",
       "src/work-management/storage.mjs": "823d8e2aa316602024751f844096ff9078d2da58f58869e5e0b9af7c04d4dfb8",
+      "vercel.json": "ea5690d685934d1866062e2419fc8fdf9ff300f7171ef625ca4f2fc9e2ecfd02",
       "contracts/ui-common/field-labels.v1.mjs": "5092fe31c89752e60d81fad410b518870b2848f76e5388363c1d8273eaa3a1d7"
     },
     "http_artifacts": {
