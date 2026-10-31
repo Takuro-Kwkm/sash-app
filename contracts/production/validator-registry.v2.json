@@ -323,7 +323,7 @@
       "state": "READY",
       "scope": "FORMAL_ADOPTED_UI_PUBLICATION_ONLY",
       "validators": [
-        "scripts/production/validate-runtime-ui-adoption.mjs"
+        "scripts/production/inspect-adopted-composed.py"
       ],
       "no_fallback": true,
       "mutation_policy": "PUBLICATION_ONLY_OF_EXACT_ADOPTED_MASTER_AND_UI"

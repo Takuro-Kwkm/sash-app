@@ -919,18 +919,22 @@
       "formal_registry_selector": "LIXIL::セレクトサッシPG",
       "connection_scope": "FORMAL_ADOPTED_UI_PUBLICATION_ONLY",
       "default_gate": "RELEASE_COMPLETED",
-      "native_adapter": "scripts/production/product-publication-lifecycle.mjs",
+      "native_adapter": "scripts/production/inspect-adopted-composed.py",
       "baseline_selector": "LIVE_NATIVE_REGISTRY:LIXIL::セレクトサッシPG:PG-F1-R7-20261031",
       "source_selector": "ADOPTED_MASTER_SHA256:aee97818ea4c97a38ad9e04445d82eea57f91a1001b81cfa6b6aa38606ab2145",
       "resume_selector": "contracts/production/current-work.json",
       "validators": [
-        "scripts/production/validate-runtime-ui-adoption.mjs"
+        "scripts/production/inspect-adopted-composed.py"
       ],
       "unsupported_gates": {
         "PRODUCT_MASTER_CHANGE": "NATIVE_CHANGE_PROFILE_REQUIRED; no rebuild or other-product fallback",
         "RUNTIME_UI_CHANGE": "HUMAN_REVIEWED_SUCCESSOR_REQUIRED"
       },
-      "release_profile": "contracts/production/release-profiles/local/select-pg-r7.v1.json"
+      "release_profile": "contracts/production/release-profiles/local/select-pg-r7.v1.json",
+      "adapters": {
+        "ProductMaster": "scripts/production/inspect-adopted-composed.py",
+        "Validator": "scripts/production/inspect-adopted-composed.py"
+      }
     }
   ],
   "shared_authority": {
