@@ -2,7 +2,7 @@
   "schema": "FIELD_LABEL_CURRENT_CONNECTION_V1",
   "repository": "Takuro-Kwkm/sash-app",
   "baseline": "ec873b112ba2e9253ca91e91caa3f8e13d7e1dc2",
-  "profile_sha256": "eac93c646d6a4f149ca7463b6fcbd9483f8bae0f2dc3daab6a3fb5f1d88a43f5",
+  "profile_sha256": "e494c2819ea65d64fc5147ee38fa1e88e6c4a0a47e8e70b34e00c318ad580f21",
   "existing_work": "KEEP_FIXED_BINDING",
   "human_ui_review_required": true
 }

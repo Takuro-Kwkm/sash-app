@@ -85,14 +85,14 @@
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "cdb3de2314a8b382bc6ccfdfa5fdad1c9462d53c",
+    "ref": "59c3a801eba60a685d04b0848cbd05555b82217c",
     "entry": "scripts/release-contract.py",
     "files": {
       "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
       "harness/common_adoption.py": "49a8e33a70b5f719ce46214336c3e898b2d327b1e44f93c412024cfc19de4adc",
       "harness/common_development.py": "31c8cceb02ae8e7e6f8056d65783a6fb93a3b91870dd8d0d4b270c6994dbb85b",
       "harness/current_authority.py": "a342e565123b63f05b3ab26f90668acacca19cdaaf5118322465d225ba9c0cb4",
-      "harness/field_label_archive.py": "eee997b26b424de09d4f0094b99c27b4a49f80d7d5cd5cb9ab51306d887c2f7f",
+      "harness/field_label_archive.py": "dc1f20446f212558636344e067446acfdb65df43946f0501270cb9bc78e138f6",
       "harness/field_label_current.py": "8ad54b921408d7a25617c9f1f01bb205c0add7edf184515296df44bea28bcd92",
       "harness/field_label_release.py": "7c92199de164812306170c35d96f87f8785a34f302d7d94519737af276e03b31",
       "harness/local_qa_adoption.py": "55c83b850f73c25a474c8ccfd5516311c9f880838feb1b16b81f177bb67c10e4",
@@ -251,25 +251,25 @@
         "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/production/release-gates/sash-app/binding.json",
         "sha256": "58f34a7e8b41d47daecfd108c25d2590a9a0a90fd517d51e490d19d017bdc5d0",
         "location": "RETAINED_ACTUAL_PUBLICATION_EVIDENCE",
-        "observed_at": "2026-10-31T00:00:00Z"
+        "observed_at": "2026-10-31T04:22:47.097611+00:00"
       },
       "profile": {
         "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/production/main-readback/sash-app/contracts/production/release-profiles/common-field-labels.v1.json",
         "sha256": "ce132300d52d6b3558a581e07ceae89a6adcc054aa7caefee0d201d1d4087806",
         "location": "RETAINED_ACTUAL_PUBLICATION_EVIDENCE",
-        "observed_at": "2026-10-31T00:00:00Z"
+        "observed_at": "2026-10-31T04:22:47.097727+00:00"
       },
       "production_result": {
         "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/production/release-gates/sash-app/observe-production-result.json",
         "sha256": "3e7c36691013846688e3e0b1471ad575fe49137f71d3e27dfcd71a9f61477d73",
         "location": "RETAINED_ACTUAL_PUBLICATION_EVIDENCE",
-        "observed_at": "2026-10-31T00:00:00Z"
+        "observed_at": "2026-10-31T04:22:47.097729+00:00"
       },
       "local_verification": {
         "path": "/Users/takuro/Documents/Codex/2026-10-30/ui/work/tw-size-display-20261031/production/release-gates/sash-app/local-verification.json",
         "sha256": "07f2575e4dce8a0b8314bec717c02d2e30f7b66b500ea6bdd82a707a946f8148",
         "location": "RETAINED_ACTUAL_PUBLICATION_EVIDENCE",
-        "observed_at": "2026-10-31T00:00:00Z"
+        "observed_at": "2026-10-31T04:22:47.097729+00:00"
       }
     }
   }
