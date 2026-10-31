@@ -14,7 +14,7 @@ function expectedFormalCallCode(row){const id=String(row?.id??'');const five=id.
 
 test('v1.6 semantic aliases fix field order, common labels and internal-field exposure',()=>{const result=applyNewConstructionSashUiOrder([{key:'glass_base',displayLabel:'glass',displayOrder:1},{key:'construction',displayLabel:'工法',displayOrder:2},{key:'shutter_type',displayLabel:'シャッター種類',displayOrder:3},{key:'window_type',displayLabel:'窓種',displayOrder:99},{key:'screen_type',displayLabel:'screen type',displayOrder:4},{key:'handing',displayLabel:'handing',displayOrder:5},{key:'panel_count',displayLabel:'panel',displayOrder:6},{key:'window_configuration',displayLabel:'構成',displayOrder:6.5},{key:'option',displayLabel:'option',displayOrder:7}]);assert.deepEqual(result.map((row)=>row.key),['window_type','shutter_type','window_configuration','handing','panel_count','screen_type','glass_base','option']);assert.equal(result.find((row)=>row.key==='window_type').displayLabel,'窓種類');assert.equal(result.find((row)=>row.key==='window_configuration').displayLabel,'連窓構成');assert.equal(result.find((row)=>row.key==='handing').displayLabel,'左右勝手');assert.equal(result.find((row)=>row.key==='panel_count').displayLabel,'建具・枚数');assert.equal(result.find((row)=>row.key==='screen_type').displayLabel,'網戸形式');assert.equal(result.find((row)=>row.key==='option').displayLabel,'その他オプション');});
 
-test('v1.6 size formatter preserves exact Runtime call codes and rejects lossy numeric reconstruction',()=>{const result=formatAndSortStandardSizeChoices([{value:'c',runtimeValueRow:{metadata:{callCode:'06907',actualW:730,actualH:770}}},{value:'a',runtimeValueRow:{source:{nominal_w:'060',nominal_h:'09',actual_w:640,actual_h:970}}},{value:'b',runtimeValueRow:{metadata:{callCode:'06005',actualW:640,actualH:570}}},{value:'SZ-LIX-TW-UNIT-HIKI-Z-06003',runtimeValueRow:{source:{id:'SZ-LIX-TW-UNIT-HIKI-Z-06003',nominal_w:60,nominal_h:3,actual_w:640,actual_h:370}}},{value:'SZ-LIX-TW-FLAT-Z-251-2-18',runtimeValueRow:{source:{id:'SZ-LIX-TW-FLAT-Z-251-2-18',nominal_w:'251-2',nominal_h:'18',actual_w:2550,actual_h:1830}}},{value:'SZ-LIX-TW-UNIT-HIKI-Z-25118P2',runtimeValueRow:{source:{id:'SZ-LIX-TW-UNIT-HIKI-Z-25118P2',nominal_w:'251-2',nominal_h:18,actual_w:2550,actual_h:1830}}}]);assert.deepEqual(result.map((row)=>row.displayLabel),['06003 ｜ W 640 × H 370','06005 ｜ W 640 × H 570','06009 ｜ W 640 × H 970','06907 ｜ W 730 × H 770','251-2-18 ｜ W 2550 × H 1830','251-2-18 ｜ W 2550 × H 1830']);assert.throws(()=>formatAndSortStandardSizeChoices([{value:'lossy',runtimeValueRow:{source:{nominal_w:60,nominal_h:3,actual_w:640,actual_h:370}}}]),(error)=>error.code==='RUNTIME_SIZE_DISPLAY_DATA_MISSING');assert.throws(()=>formatAndSortStandardSizeChoices([{value:'bad',runtimeValueRow:{metadata:{callCode:'06005',actualW:640}}}]),(error)=>error.code==='RUNTIME_SIZE_DISPLAY_DATA_MISSING');});
+test('v1.6 size formatter preserves exact Runtime call codes and rejects lossy numeric reconstruction',()=>{const result=formatAndSortStandardSizeChoices([{value:'c',runtimeValueRow:{metadata:{callCode:'06907',actualW:730,actualH:770}}},{value:'a',runtimeValueRow:{source:{nominal_w:'060',nominal_h:'09',actual_w:640,actual_h:970}}},{value:'b',runtimeValueRow:{metadata:{callCode:'06005',actualW:640,actualH:570}}},{value:'SZ-LIX-TW-UNIT-HIKI-Z-06003',runtimeValueRow:{source:{id:'SZ-LIX-TW-UNIT-HIKI-Z-06003',nominal_w:60,nominal_h:3,actual_w:640,actual_h:370}}},{value:'SZ-LIX-TW-FLAT-Z-251-2-18',runtimeValueRow:{source:{id:'SZ-LIX-TW-FLAT-Z-251-2-18',nominal_w:'251-2',nominal_h:'18',actual_w:2550,actual_h:1830}}},{value:'SZ-LIX-TW-UNIT-HIKI-Z-25118P2',runtimeValueRow:{source:{id:'SZ-LIX-TW-UNIT-HIKI-Z-25118P2',nominal_w:'251-2',nominal_h:18,actual_w:2550,actual_h:1830}}}]);assert.deepEqual(result.map((row)=>row.displayLabel),['06003 ｜ W 640 × H 370','06005 ｜ W 640 × H 570','06009 ｜ W 640 × H 970','06907 ｜ W 730 × H 770','25118 ｜ W 2550 × H 1830','25118 ｜ W 2550 × H 1830']);assert.throws(()=>formatAndSortStandardSizeChoices([{value:'lossy',runtimeValueRow:{source:{nominal_w:60,nominal_h:3,actual_w:640,actual_h:370}}}]),(error)=>error.code==='RUNTIME_SIZE_DISPLAY_DATA_MISSING');assert.throws(()=>formatAndSortStandardSizeChoices([{value:'bad',runtimeValueRow:{metadata:{callCode:'06005',actualW:640}}}]),(error)=>error.code==='RUNTIME_SIZE_DISPLAY_DATA_MISSING');});
 
 test('all currently registered EW/TW window types obey the global semantic stage order',async()=>{for(const[manufacturer,series,productId]of[['LIXIL','EW','SER-LIX-EW'],['LIXIL','TW','SER-LIXIL-TW']]){const runtime=await loadRegisteredRuntime(manufacturer,series);const windows=runtime.master.values.filter((row)=>row.field_name==='window_type'&&row.status==='CURRENT'&&row.runtime_selectable!==false);assert.equal(windows.length,series==='EW'?15:26);for(const window of windows){const result=await resolveRuntimeAppProduct(productId,{window_type:window.canonical_value});assertSemanticOrder(result);assert.equal(result.fields[0]?.key,'window_type');}}});
 
@@ -38,4 +38,45 @@ test('TW nominal width-height separator is display-only; values, metadata and di
   assert.deepEqual(rows.map(r=>r.value),original.map(r=>r.value));
   assert.deepEqual(rows.map(r=>r.displayLabel),['11918 ｜ W 1235 × H 1830','16018 ｜ W 1640 × H 1830','16018 ｜ W 1640 × H 1845','16018 ｜ W 1640 × H 1860']);
   assert.deepEqual(rows.map(r=>r.sizeMetadata.callCode),['119-18','160-18','16018','16018']);
+});
+
+
+test('size display omits the already selected panel count and retains height variants and formal identity',()=>{
+  const codes=['251-2-18','251-4-18','256-2-18','256-4-18','243-2-18A','243-4-18B','060-2-03','251-3-18','custom-code'];
+  for(const [i,code] of codes.entries()) {
+    const input={value:`formal-${code}`,runtimeValueRow:{metadata:{callCode:code,actualW:2550,actualH:1830}}};
+    const before=structuredClone(input);
+    const [row]=formatAndSortStandardSizeChoices([input]);
+    assert.deepEqual(input,before);
+    assert.equal(row.value,input.value);
+    assert.deepEqual(row.sizeMetadata,{callCode:code,actualW:2550,actualH:1830});
+    assert.equal(row.displayLabel,`${['25118','25118','25618','25618','24318A','24318B','06003','251-3-18','custom-code'][i]} ｜ W 2550 × H 1830`);
+  }
+});
+
+test('all four affected TW window types retain separate panel branches and unique size labels',async()=>{
+  const runtime=await loadRegisteredRuntime('LIXIL','TW');
+  const sources=runtime.master.provider.sizes;
+  const affected=sources.filter(row=>/^\d{3}-[24]$/.test(String(row.nominal_w)));
+  assert.equal(affected.length,120);
+  const windows=[...new Set(affected.map(row=>row.window_id))];
+  assert.equal(windows.length,4);
+  const byId=new Map(sources.map(row=>[row.id,row]));
+  for(const window_type of windows) for(const panel_count of ['2枚建','4枚建']) {
+    const result=await resolveRuntimeAppProduct('SER-LIXIL-TW',{window_type,size_mode:'STANDARD',panel_count});
+    const rows=result.fields.find(f=>f.key==='size').values;
+    assertSizeUi(rows);
+    assert.equal(new Set(rows.map(r=>r.displayLabel)).size,rows.length);
+    for(const row of rows) {
+      const source=byId.get(row.value);
+      assert.ok(source);
+      assert.equal(row.sizeMetadata.actualW,Number(source.actual_w));
+      assert.equal(row.sizeMetadata.actualH,Number(source.actual_h));
+      assert.equal(row.sizeMetadata.callCode,expectedFormalCallCode(source));
+      if(/^\d{3}-[24]$/.test(String(source.nominal_w))) {
+        assert.equal(source.nominal_w.slice(-1),panel_count[0]);
+        assert.equal(row.displayLabel.split(' ｜ ')[0],source.nominal_w.slice(0,3)+source.nominal_h);
+      }
+    }
+  }
 });
