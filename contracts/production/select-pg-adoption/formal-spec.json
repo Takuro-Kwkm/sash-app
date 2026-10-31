@@ -1,0 +1,52 @@
+{
+  "work_id": "SELECT-PG-FORMAL-20261031",
+  "product_id": "SER-LIX-SELECT-PG",
+  "adapter": "drive_bridge",
+  "target_gate": "POST_SAVE_VERIFIED",
+  "expected": {
+    "package_sha256": "7411f8db02efb6aba8ccc1ee0b45073d69a0ee08c746e262663a4cf350c73c4a",
+    "package_identity": "LIXIL-SELECT-PG-PG-F1-R7-20261031",
+    "revision": "PG-F1-R7-20261031",
+    "manufacturer": "LIXIL",
+    "series": "セレクトサッシPG",
+    "evidence_identity": "843ad0127db0516eb1626e0a080226a88f559ab5388bf54aa0bf252f38d58363",
+    "scope_sha256": "4bd9d5937d8706f1f7e3b27f011f5a018f3ccec5b6892e5ebd8dc5495988a959",
+    "qa_sha256": "621557bb3502c6546c24bc84b3485a2d38e6ccddc7111568c2184a911417e5ab"
+  },
+  "baseline": {
+    "source": "843ad0127db0516eb1626e0a080226a88f559ab5388bf54aa0bf252f38d58363",
+    "scope": "4bd9d5937d8706f1f7e3b27f011f5a018f3ccec5b6892e5ebd8dc5495988a959",
+    "rules": "af1b3343e87415c29293605eca138ec28af0163f69770bb36925b48a94a144a7",
+    "model": "aee97818ea4c97a38ad9e04445d82eea57f91a1001b81cfa6b6aa38606ab2145"
+  },
+  "qa_baseline": {
+    "source": "843ad0127db0516eb1626e0a080226a88f559ab5388bf54aa0bf252f38d58363",
+    "scope": "4bd9d5937d8706f1f7e3b27f011f5a018f3ccec5b6892e5ebd8dc5495988a959",
+    "rules": "af1b3343e87415c29293605eca138ec28af0163f69770bb36925b48a94a144a7",
+    "model": "aee97818ea4c97a38ad9e04445d82eea57f91a1001b81cfa6b6aa38606ab2145"
+  },
+  "baseline_refs": {
+    "source": {
+      "path": "SOURCE_IDENTITY.json"
+    },
+    "scope": {
+      "path": "FORMAL_SELECTION_SCOPE.json"
+    },
+    "rules": {
+      "path": "PRODUCT_MASTER.json",
+      "pointer": "/constraints"
+    },
+    "model": {
+      "path": "PRODUCT_MASTER.json"
+    }
+  },
+  "destination": {
+    "parent_id": "197nLUYMFOeU5o6D18QDllMqlRaDc119u",
+    "name": "LIXIL-SELECT-PG-PG-F1-R7-20261031.zip"
+  },
+  "registry": {
+    "file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+    "range": "'正本Registry'!A1:Z1000",
+    "before_sha256": "3d7378cd6f7d09ede2c7a13a943947092930948410cb36d908bf657541e52c23"
+  }
+}

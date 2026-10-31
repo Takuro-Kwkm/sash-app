@@ -1,0 +1,11 @@
+{
+  "decision": "APPROVED",
+  "authorization_kind": "EXPLICIT_USER_SCOPE",
+  "decision_ref": "CURRENT_CHAT_USER_SELECT_PG_FORMAL_PUBLICATION_20261031",
+  "imported_user_statement": "では、セレクトサッシPGの正式採用と本番反映、公開後の確認まで進めてください。今回の人間確認と既存の成果・承認・QAは引き継ぎ、不要な再調査や再承認は挟まないでください。作業後は現時点と次作業も明記してください。",
+  "candidate_master_sha256": "aee97818ea4c97a38ad9e04445d82eea57f91a1001b81cfa6b6aa38606ab2145",
+  "candidate_module_sha256": "6c69d22125fb4247357abdbd4994818c334549d77a8ce489a4342d321522917f",
+  "candidate_index_sha256": "1ccacc78c3c3cef3976a9a53da2a63a82c8036df74e4cb0c235fe24ef5638542",
+  "scope": "Requested formal adoption and publication of exactly R7 human-reviewed UI. Lifecycle/product ID changes only.",
+  "ai_decision": false
+}

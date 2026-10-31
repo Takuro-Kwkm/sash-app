@@ -52,6 +52,11 @@
       "path": "contracts/production/release-profiles/common-field-labels.v1.json"
     },
     {
+      "product_id": "SER-LIX-SELECT-PG",
+      "scope": "SELECT_PG_R7_HUMAN_ADOPTED_SALES_UI_PUBLICATION_20261031",
+      "path": "contracts/production/release-profiles/select-pg-r7.v1.json"
+    },
+    {
       "product_id": "SER-LIX-SAMOSL",
       "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
       "path": "contracts/production/release-profiles/local/default.v1.json"
@@ -99,6 +104,11 @@
       "product_id": "NATIVE_REGISTRY:YKK AP::APW330",
       "scope": "APW330_R13_UI1_ADOPTED_RUNTIME_PUBLICATION_20261031",
       "path": "contracts/production/release-profiles/local/apw330-r13-ui1.v1.json"
+    },
+    {
+      "product_id": "SER-LIX-SELECT-PG",
+      "scope": "SELECT_PG_R7_HUMAN_ADOPTED_SALES_UI_PUBLICATION_20261031",
+      "path": "contracts/production/release-profiles/local/select-pg-r7.v1.json"
     }
   ],
   "publication": "NEW_EXACT_PRODUCT_SCOPE_HUMAN_DECISION_REQUIRED",
@@ -131,6 +141,7 @@
     "contracts/production/release-profiles/replus-runtime-ui-v1.2-r1.json": "contracts/production/release-profiles/local/replus-runtime-ui-v1.2-r1.json",
     "contracts/production/release-profiles/apw511-r3.v1.json": "contracts/production/release-profiles/local/apw511-r3.v1.json",
     "contracts/production/release-profiles/giesta2-r14.v1.json": "contracts/production/release-profiles/local/giesta2-r14.v1.json",
-    "contracts/production/release-profiles/apw330-r13-ui1.v1.json": "contracts/production/release-profiles/local/apw330-r13-ui1.v1.json"
+    "contracts/production/release-profiles/apw330-r13-ui1.v1.json": "contracts/production/release-profiles/local/apw330-r13-ui1.v1.json",
+    "contracts/production/release-profiles/select-pg-r7.v1.json": "contracts/production/release-profiles/local/select-pg-r7.v1.json"
   }
 }

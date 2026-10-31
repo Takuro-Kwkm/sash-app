@@ -1,0 +1,568 @@
+{
+  "schema": "CANDIDATE_RUNTIME_INDEX_V1",
+  "revision": "SELECT_PG_UI_R7_20261031",
+  "adoption": "CANDIDATE_ONLY",
+  "products": [
+    {
+      "id": "CANDIDATE:SELECT_SASH_PG",
+      "manufacturer": "LIXIL",
+      "series": "セレクトサッシPG",
+      "displayName": "セレクトサッシPG",
+      "productCategory": "window",
+      "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
+      "packageVersion": "SELECT_PG_UI_R7_20261031",
+      "masterVersion": "PG-CANDIDATE-R5-20261031",
+      "schemaVersion": "1.0",
+      "path": "module.json",
+      "sha256": "6c69d22125fb4247357abdbd4994818c334549d77a8ce489a4342d321522917f",
+      "sourceHash": "6c69d22125fb4247357abdbd4994818c334549d77a8ce489a4342d321522917f",
+      "candidate": true,
+      "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
+      "uiFlowContract": {
+        "schema": "REVIEWED_WINDOW_FLOW_V3",
+        "revision": "SELECT_PG_UI_R7_20261031",
+        "status": "REVIEWED_DESIGN_CANDIDATE",
+        "formalAdoption": false,
+        "sourceFlow": {
+          "path": "sources/PRODUCT_MASTER.json",
+          "sha256": "aee97818ea4c97a38ad9e04445d82eea57f91a1001b81cfa6b6aa38606ab2145"
+        },
+        "reviewSources": [
+          {
+            "path": "sources/UI_STANDARD_v2.1.txt",
+            "sha256": "8db37f8a6b41bc6be5afd565b1958bbec7c2e725e09bc225e05d1b77510b096c"
+          },
+          {
+            "path": "sources/canonical-window-semantic-schema.mjs",
+            "sha256": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7"
+          }
+        ],
+        "groups": [
+          {
+            "id": "PRODUCT",
+            "label": "商品",
+            "order": 0
+          },
+          {
+            "id": "OPENING",
+            "label": "窓種類",
+            "order": 1
+          },
+          {
+            "id": "CONFIGURATION",
+            "label": "窓の構成",
+            "order": 2
+          },
+          {
+            "id": "SIZE",
+            "label": "サイズ",
+            "order": 3
+          },
+          {
+            "id": "FINISH",
+            "label": "色",
+            "order": 4
+          },
+          {
+            "id": "SCREEN",
+            "label": "網戸",
+            "order": 5
+          },
+          {
+            "id": "GLAZING",
+            "label": "ガラス",
+            "order": 6
+          },
+          {
+            "id": "INSTALLATION_SURVEY",
+            "label": "設置場所",
+            "order": 7
+          },
+          {
+            "id": "OPTION",
+            "label": "その他オプション・数量",
+            "order": 8
+          }
+        ],
+        "fields": {
+          "window_type": {
+            "meaning": "窓種類",
+            "label": "窓種類",
+            "sourceRefs": [
+              "EV-IDENTITY"
+            ],
+            "group": "OPENING",
+            "rank": 0,
+            "parents": [],
+            "slot": "window_type",
+            "stage": "OPENING"
+          },
+          "window_spec": {
+            "meaning": "窓種固有仕様",
+            "label": "窓種固有仕様",
+            "sourceRefs": [
+              "EV-SPEC"
+            ],
+            "group": "CONFIGURATION",
+            "rank": 1,
+            "parents": [
+              "window_type"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "handle_type": {
+            "meaning": "把手",
+            "label": "把手",
+            "sourceRefs": [
+              "EV-OPTION"
+            ],
+            "group": "CONFIGURATION",
+            "rank": 2,
+            "parents": [
+              "window_type",
+              "window_spec",
+              "size_mode",
+              "size"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "deferredEvaluationParents": [
+              "size",
+              "size_mode"
+            ]
+          },
+          "shutter_operation": {
+            "meaning": "シャッター操作",
+            "label": "シャッター操作",
+            "sourceRefs": [
+              "EV-SPEC"
+            ],
+            "group": "CONFIGURATION",
+            "rank": 3,
+            "parents": [
+              "window_type"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "shutter_type": {
+            "meaning": "シャッター種類",
+            "label": "シャッター種類",
+            "sourceRefs": [
+              "EV-SPEC"
+            ],
+            "group": "CONFIGURATION",
+            "rank": 4,
+            "parents": [
+              "window_type",
+              "shutter_operation"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "amado_type": {
+            "meaning": "雨戸種類",
+            "label": "雨戸種類",
+            "sourceRefs": [
+              "EV-SPEC"
+            ],
+            "group": "CONFIGURATION",
+            "rank": 5,
+            "parents": [
+              "window_type"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "grille_type": {
+            "meaning": "面格子種類",
+            "label": "面格子種類",
+            "sourceRefs": [
+              "EV-SPEC"
+            ],
+            "group": "CONFIGURATION",
+            "rank": 6,
+            "parents": [
+              "window_type",
+              "size_mode",
+              "size"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "deferredEvaluationParents": [
+              "size",
+              "size_mode"
+            ]
+          },
+          "handing": {
+            "meaning": "開き勝手（吊元）",
+            "label": "開き勝手（吊元）",
+            "sourceRefs": [
+              "EV-SPEC"
+            ],
+            "group": "CONFIGURATION",
+            "rank": 7,
+            "parents": [
+              "window_type"
+            ],
+            "slot": "handing",
+            "stage": "CONFIGURATION"
+          },
+          "frame_angle": {
+            "meaning": "アングル",
+            "label": "アングル",
+            "sourceRefs": [
+              "EV-ANGLE"
+            ],
+            "group": "CONFIGURATION",
+            "rank": 8,
+            "parents": [
+              "window_type"
+            ],
+            "slot": "frame_angle",
+            "stage": "CONFIGURATION"
+          },
+          "size_mode": {
+            "meaning": "サイズ方式",
+            "label": "サイズ方式",
+            "sourceRefs": [
+              "EV-SIZE"
+            ],
+            "group": "SIZE",
+            "rank": 9,
+            "parents": [
+              "window_type",
+              "window_spec"
+            ],
+            "slot": "size_mode",
+            "stage": "SIZE",
+            "evaluationContext": true
+          },
+          "panel_count": {
+            "meaning": "建具・枚数",
+            "label": "建具・枚数",
+            "sourceRefs": [
+              "EV-SIZE"
+            ],
+            "group": "SIZE",
+            "rank": 10,
+            "parents": [
+              "window_type"
+            ],
+            "slot": "panel_count",
+            "stage": "SIZE"
+          },
+          "size": {
+            "meaning": "規格サイズ",
+            "label": "規格サイズ",
+            "sourceRefs": [
+              "EV-SIZE"
+            ],
+            "group": "SIZE",
+            "rank": 11,
+            "parents": [
+              "window_type",
+              "window_spec",
+              "panel_count",
+              "size_mode"
+            ],
+            "slot": "size",
+            "stage": "SIZE",
+            "evaluationContext": true
+          },
+          "custom_width": {
+            "meaning": "特注W",
+            "label": "特注W",
+            "sourceRefs": [
+              "EV-SIZE"
+            ],
+            "group": "SIZE",
+            "rank": 12,
+            "parents": [
+              "window_type",
+              "window_spec",
+              "panel_count",
+              "size_mode"
+            ],
+            "slot": "size",
+            "stage": "SIZE"
+          },
+          "custom_height": {
+            "meaning": "特注H",
+            "label": "特注H",
+            "sourceRefs": [
+              "EV-SIZE"
+            ],
+            "group": "SIZE",
+            "rank": 13,
+            "parents": [
+              "window_type",
+              "window_spec",
+              "panel_count",
+              "size_mode"
+            ],
+            "slot": "size",
+            "stage": "SIZE"
+          },
+          "exterior_color": {
+            "meaning": "外観色",
+            "label": "外観色",
+            "sourceRefs": [
+              "EV-IDENTITY"
+            ],
+            "group": "FINISH",
+            "rank": 14,
+            "parents": [
+              "window_type"
+            ],
+            "slot": "exterior_color",
+            "stage": "FINISH"
+          },
+          "interior_color": {
+            "meaning": "内観色",
+            "label": "内観色",
+            "sourceRefs": [
+              "EV-IDENTITY"
+            ],
+            "group": "FINISH",
+            "rank": 15,
+            "parents": [
+              "exterior_color"
+            ],
+            "slot": "interior_color",
+            "stage": "FINISH",
+            "readOnly": true
+          },
+          "screen_presence": {
+            "meaning": "網戸",
+            "label": "網戸",
+            "sourceRefs": [
+              "EV-SCREEN"
+            ],
+            "group": "SCREEN",
+            "rank": 16,
+            "parents": [
+              "window_type"
+            ],
+            "slot": "screen_presence",
+            "stage": "SCREEN"
+          },
+          "screen_form": {
+            "meaning": "網戸形式",
+            "label": "網戸形式",
+            "sourceRefs": [
+              "EV-SCREEN"
+            ],
+            "group": "SCREEN",
+            "rank": 17,
+            "parents": [
+              "window_type",
+              "size",
+              "size_mode",
+              "screen_presence"
+            ],
+            "slot": "screen_form",
+            "stage": "SCREEN"
+          },
+          "screen_midrail": {
+            "meaning": "網戸中桟",
+            "label": "網戸中桟",
+            "sourceRefs": [
+              "EV-SCREEN"
+            ],
+            "group": "SCREEN",
+            "rank": 18,
+            "parents": [
+              "window_type",
+              "size",
+              "size_mode",
+              "screen_presence",
+              "screen_form"
+            ],
+            "slot": "screen_midrail",
+            "stage": "SCREEN",
+            "readOnly": true
+          },
+          "screen_net": {
+            "meaning": "網戸ネット",
+            "label": "網戸ネット",
+            "sourceRefs": [
+              "EV-SCREEN"
+            ],
+            "group": "SCREEN",
+            "rank": 19,
+            "parents": [
+              "window_type",
+              "screen_presence",
+              "screen_form"
+            ],
+            "slot": "screen_net",
+            "stage": "SCREEN"
+          },
+          "glass_base": {
+            "meaning": "ガラス種類",
+            "label": "ガラス種類",
+            "sourceRefs": [
+              "EV-GLASS"
+            ],
+            "group": "GLAZING",
+            "rank": 20,
+            "parents": [],
+            "slot": "glass_base",
+            "stage": "GLAZING"
+          },
+          "glass_type": {
+            "meaning": "ガラス種",
+            "label": "ガラス種",
+            "sourceRefs": [
+              "EV-GLASS"
+            ],
+            "group": "GLAZING",
+            "rank": 21,
+            "parents": [
+              "glass_base"
+            ],
+            "slot": "glass_type",
+            "stage": "GLAZING"
+          },
+          "glass_detail": {
+            "meaning": "ガラス詳細",
+            "label": "ガラス詳細",
+            "sourceRefs": [
+              "EV-GLASS"
+            ],
+            "group": "GLAZING",
+            "rank": 22,
+            "parents": [
+              "window_type",
+              "glass_base",
+              "glass_type"
+            ],
+            "slot": "glass_detail",
+            "stage": "GLAZING"
+          },
+          "glass_function": {
+            "meaning": "ガラス追加機能",
+            "label": "ガラス追加機能",
+            "sourceRefs": [
+              "EV-GLASS"
+            ],
+            "group": "GLAZING",
+            "rank": 23,
+            "parents": [
+              "window_type",
+              "glass_base",
+              "glass_type",
+              "glass_detail"
+            ],
+            "slot": "glass_function",
+            "stage": "GLAZING"
+          },
+          "glass_spacer": {
+            "meaning": "スペーサー",
+            "label": "スペーサー",
+            "sourceRefs": [
+              "EV-GLAZING-VOCAB"
+            ],
+            "group": "GLAZING",
+            "rank": 24,
+            "parents": [
+              "window_type",
+              "glass_base",
+              "glass_detail"
+            ],
+            "slot": "glass_spacer",
+            "stage": "GLAZING"
+          },
+          "glass_air_layer": {
+            "meaning": "中空層",
+            "label": "中空層",
+            "sourceRefs": [
+              "EV-GLAZING-VOCAB"
+            ],
+            "group": "GLAZING",
+            "rank": 25,
+            "parents": [
+              "window_type",
+              "glass_base",
+              "glass_detail"
+            ],
+            "slot": "glass_air_layer",
+            "stage": "GLAZING"
+          },
+          "installation_environment": {
+            "meaning": "設置場所",
+            "label": "設置場所",
+            "sourceRefs": [
+              "EV-SITE",
+              "EV-OPTION"
+            ],
+            "group": "INSTALLATION_SURVEY",
+            "rank": 26,
+            "parents": [],
+            "slot": "installation_environment",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "option": {
+            "meaning": "その他オプション",
+            "label": "その他オプション",
+            "sourceRefs": [
+              "EV-OPTION"
+            ],
+            "group": "OPTION",
+            "rank": 27,
+            "parents": [
+              "window_type",
+              "window_spec",
+              "exterior_color",
+              "size_mode",
+              "size",
+              "installation_environment"
+            ],
+            "slot": "option",
+            "stage": "OPTION"
+          },
+          "quantity": {
+            "meaning": "依頼数量",
+            "label": "依頼数量",
+            "sourceRefs": [
+              "BUSINESS-REQUEST-COUNT"
+            ],
+            "group": "OPTION",
+            "rank": 28,
+            "parents": [],
+            "slot": "option",
+            "stage": "OPTION"
+          }
+        },
+        "contextFields": [],
+        "slotOrder": [
+          "manufacturer",
+          "product",
+          "window_type",
+          "window_spec",
+          "handing",
+          "frame_angle",
+          "size_mode",
+          "panel_count",
+          "size",
+          "exterior_color",
+          "interior_color",
+          "screen_presence",
+          "screen_form",
+          "screen_midrail",
+          "screen_net",
+          "glass_base",
+          "glass_type",
+          "glass_detail",
+          "glass_function",
+          "glass_spacer",
+          "glass_air_layer",
+          "installation_environment",
+          "option"
+        ]
+      }
+    }
+  ]
+}

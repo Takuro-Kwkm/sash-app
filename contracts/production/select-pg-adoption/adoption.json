@@ -1,0 +1,20 @@
+{
+  "schema": "HUMAN_ADOPTED_SALES_MASTER_AND_UI_V1",
+  "product_id": "SER-LIX-SELECT-PG",
+  "formal_revision": "PG-F1-R7-20261031",
+  "master_sha256": "aee97818ea4c97a38ad9e04445d82eea57f91a1001b81cfa6b6aa38606ab2145",
+  "candidate_module_sha256": "6c69d22125fb4247357abdbd4994818c334549d77a8ce489a4342d321522917f",
+  "formal_module_sha256": "c08c947ca105c89799fdc67a44405626fd75c6352c82cc967ec06324a730af1c",
+  "runtime_index": {
+    "path": "runtime-master-packages/select-pg-ui-r7/runtime_index.json",
+    "sha256": "057f9b4f7155f53a61fae7735b70ee3d627c9d7ac736ef8d8d8bbeb1b5a0d057",
+    "manifestFileId": "1lokWFlCvkfidTD_hhWcRIDmtq8W8q0hF"
+  },
+  "human_ui_confirmation": "R7_COMPLETE_ACCEPTED_NON_GLASS_CARRIED",
+  "qa_repeated": false,
+  "controlled_unresolved": 4,
+  "automatic_orderability": false,
+  "formal_file_id": "1ARedUnJGmv40HGaDkYw23NHX2LWmWnsy",
+  "master_file_id": "1siovbJ42BxXgH2qj2cWyEUOJHK3GsPnk",
+  "publication": "SEPARATE_RELEASE_GATES_REQUIRED"
+}
