@@ -32,7 +32,7 @@
   "boundary_policy": "Actual native evidence only; Print requires inspected PDF/Print Preview; localStorage is not live DB E2E",
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "c6ca8a872318c9c5ffa827ae798253a1a7c6fa15",
+    "ref": "31bcb78a5b26beb8d43b5a419fdecff232bafe05",
     "entry": "scripts/release-contract.py",
     "files": {
       "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
@@ -53,7 +53,7 @@
       "harness/release_publication.py": "c2f0d02d05d604c3070bc664edf04d499150592a2d81f3a4467191dddd3393ee",
       "harness/release_restore.py": "9a2903eea8887efa66b55ec92f9909e1353ff7ea631b90459d0ba548bb4b6a7a",
       "harness/resolvers.py": "b39ac4b4a047d46d4f1c7962745692564438b7b22343bb52b0d11233324ea0ed",
-      "harness/sash_release_admission.py": "453806ca56038c534a4c148e94d41c10d051c076afc234a6d9eac9d4587e9e8d",
+      "harness/sash_release_admission.py": "5fa1eda5798ba5a8cf9d1641bd7f7084ae13ee75e33f5e07881a25951ff1ded4",
       "harness/verification_scope.py": "476facab877abaee12207cd451b601b54ab771d8b14387766d900226e8927a60",
       "harness/workflow.py": "85a161c5ce1380d21fa3cb234fcc07b402e0cd6ddc52dd0a6ed0d3729c6c66bf",
       "registries/current-architecture.v2.json": "98370fde4fa59a17df6fb4802065a182867105526b5b387dbb92e389b36f7b86",
