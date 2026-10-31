@@ -56,7 +56,7 @@
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "fadef783548980623835fa63ef513d3cab242094",
+    "ref": "d5298eb81b26932bcc7f3fea756c9af71d23873b",
     "entry": "scripts/release-contract.py",
     "files": {
       "scripts/release-contract.py": "6d1eb36fdcaca383c34f471014409e8242a85de962f67336fb0c7155b6fdce8a",
@@ -71,7 +71,7 @@
       "harness/release.py": "d9ccbb4935f7e65dc3a3d821b867f351888477b1569e064bc9d0577d8a69933d",
       "harness/release_admission.py": "fe1460c17cc22d46289c25ea5319acd7e7e9e37e32552ecd910ceae402647848",
       "harness/release_publication.py": "4f9da12e83cdb55e9c46323f8bf6143a7efe8dacd6ad5b5d452bdc4701a78007",
-      "harness/common_local_release.py": "ea3b92d00cc1d99071a53c74b9a5d68ca2f68a155803cfcfc2d55fa8a5200e2a",
+      "harness/common_local_release.py": "d12efa5385c95cf665207b8ff37dec8164fd52595bc6fb1b93cb122323ae47a9",
       "harness/common_local_adoption.py": "3066fc631f2f3afd12473bdbed6cdb3b3bf3b79393dc11589c5ecd3aba551f99",
       "harness/common_adoption.py": "0d254439aefa965848bc0d412f1926d8bb97244e10c57c1e15f9826f44ef2acc",
       "harness/common_development.py": "12383993ea749859a5059530b167db2a1d14b2ea9636d3c1b26898daf14b5968",
