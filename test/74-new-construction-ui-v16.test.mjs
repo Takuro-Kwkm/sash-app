@@ -24,3 +24,18 @@ test('the original 25 TW standard-size window types preserve formal size codes a
 
 test('formal Product Master re-sync exposes S2H, ThermosL, APW430 and APW431 as READY read-only integrations',async()=>{const inventory=runtimeAppIntegrationInventory();for(const[id,version]of[['SER-LIX-SAMOS2H','v0.9-R4'],['SER-LIX-SAMOSL','v0.7-R3'],['SER-YKK-APW430','20260918-R3'],['SER-YKK-APW431','v1.2']]){const row=inventory.find((item)=>item.id===id);assert.ok(row,`missing integration identity: ${id}`);assert.equal(row.status,'READY');assert.equal(row.selectable,true);assert.equal(row.packageVersion,version);const result=await resolveRuntimeAppProduct(id,{});assert.equal(result.runtimeMaster.sourcePackageIntegrity.match,true);assert.ok(!result.fields.some((field)=>field.key==='construction'));}});
 
+
+
+test('TW nominal width-height separator is display-only; values, metadata and distinct heights survive',()=>{
+  const choices=[
+    {value:'TW-119-18',runtimeValueRow:{metadata:{callCode:'119-18',actualW:1235,actualH:1830}}},
+    {value:'TW-160-18',runtimeValueRow:{metadata:{callCode:'160-18',actualW:1640,actualH:1830}}},
+    {value:'TW-16018-H1845',runtimeValueRow:{metadata:{callCode:'16018',actualW:1640,actualH:1845}}},
+    {value:'TW-16018-H1860',runtimeValueRow:{metadata:{callCode:'16018',actualW:1640,actualH:1860}}},
+  ];
+  const original=structuredClone(choices),rows=formatAndSortStandardSizeChoices(choices);
+  assert.deepEqual(choices,original);
+  assert.deepEqual(rows.map(r=>r.value),original.map(r=>r.value));
+  assert.deepEqual(rows.map(r=>r.displayLabel),['11918 ｜ W 1235 × H 1830','16018 ｜ W 1640 × H 1830','16018 ｜ W 1640 × H 1845','16018 ｜ W 1640 × H 1860']);
+  assert.deepEqual(rows.map(r=>r.sizeMetadata.callCode),['119-18','160-18','16018','16018']);
+});
