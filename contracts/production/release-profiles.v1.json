@@ -40,6 +40,11 @@
       "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
       "scope": "GIESTA2_R14_RUNTIME_UI_PUBLICATION_20261017_R1",
       "path": "contracts/production/release-profiles/giesta2-r14.v1.json"
+    },
+    {
+      "product_id": "APPLICATION_FIELD_LABELS",
+      "scope": "APPLICATION_FIELD_LABEL_RELEASE_V1",
+      "path": "contracts/production/release-profiles/common-field-labels.v1.json"
     }
   ],
   "publication": "NEW_EXACT_PRODUCT_SCOPE_HUMAN_DECISION_REQUIRED",

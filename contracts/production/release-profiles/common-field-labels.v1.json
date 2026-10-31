@@ -1,0 +1,122 @@
+{
+  "schema": "NATIVE_RELEASE_PROFILE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "subject": {
+    "kind": "APPLICATION_UI_LABELS",
+    "repository": "Takuro-Kwkm/sash-app"
+  },
+  "destination": {
+    "provider": "VERCEL",
+    "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+    "project_id": "prj_4z0zqW6yKyPuFINODfGX8LPBuJRP",
+    "alias": "https://sash-app-wave3-preview.vercel.app",
+    "production_branch": "main"
+  },
+  "approval_roles": [
+    "Formal",
+    "UI",
+    "Output",
+    "Release"
+  ],
+  "mandatory_approvals": [
+    "UI",
+    "Output",
+    "Release"
+  ],
+  "gate_approval_roles": {
+    "FORMAL_ADOPTED": [
+      "Formal"
+    ],
+    "APP_INTEGRATION_READY": [
+      "UI",
+      "Output",
+      "Release"
+    ]
+  },
+  "minimum_qa": [
+    "field-label-browser",
+    "http-source-identity"
+  ],
+  "required_ci": [
+    "Native Local QA",
+    "Independent Review",
+    "Exact Main Readback"
+  ],
+  "local_qa_release_policy": {
+    "schema": "FIELD_LABEL_RELEASE_LOCAL_QA_V1",
+    "actions_dispatch_authority": false
+  },
+  "field_label_release": {
+    "schema": "APPLICATION_FIELD_LABEL_RELEASE_V1",
+    "retained_main": "463e59856fdc49df3d37c79855d7b0a5ee361b70",
+    "connection_files": {},
+    "ui_confirmation_sha256": "39453f353b3c1fec3a62d8ba0cd99bdeb8d5be1014e5b12b9c1c5e53ed499f4f",
+    "release_instruction_sha256": "4e6d825597f4bd23513f7f5070246ca8dd1e26fc5540dfa6fe169a7fcb9b7855",
+    "retained_qa_sha256": {
+      "result": "8a1084fa26dd6a754971ddfb0ab23d334bf17ea2e7766a796224547482e430cd",
+      "review": "22ea52dec8b34a029cdfb4dc2535ea5f7ee979eac65505e83e37407da1e2fdb0"
+    },
+    "asset_identities": {
+      "Source": {
+        "state": "NOT_APPLICABLE",
+        "sha256": null
+      },
+      "Formal": {
+        "state": "NOT_APPLICABLE",
+        "sha256": null
+      },
+      "Runtime": {
+        "state": "NOT_APPLICABLE",
+        "sha256": null
+      },
+      "Contract": {
+        "state": "KNOWN",
+        "sha256": "5092fe31c89752e60d81fad410b518870b2848f76e5388363c1d8273eaa3a1d7"
+      },
+      "UI": {
+        "state": "KNOWN",
+        "sha256": "f1a14380630153f8334d199fdc1e3b8f2172107d0d13d4501b0658c035686ac2"
+      }
+    },
+    "product_fact_mutation_allowed": false,
+    "qa_history_reset": false
+  },
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "9a44155f1ce7e032e0c57decd4e3f4752d26fa5c",
+    "entry": "scripts/release-contract.py",
+    "files": {
+      "scripts/release-contract.py": "dde13b9ada8a0c3784077d80d533ff783a2564902d3b1f9699960a2af16d82f3",
+      "harness/release.py": "618a9161c43f8afd5e75a702d919d0212ed617df1266b40fb110ffaa0d3dd535",
+      "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
+      "harness/release_admission.py": "b1201d7feb07592b78822d769399951dcdc70bec03a1c58e1951650259ca95cd",
+      "harness/release_publication.py": "992a713cd5598a45e7ec0109a149e55a38cad6f9898b69e2e60c7718c544d3e1",
+      "harness/field_label_release.py": "41e3869b147f5090946b471ab123e1ce4a4c1e71afd2f0e5cb3cc20a8ac68829",
+      "harness/common_development.py": "8f823a8d7d0bacbcde810baafe63fd40bb992aec50d922a10166bd4c214b070a",
+      "harness/local_qa_adoption.py": "3049eb2cbaf0b296dae09b9efcb5fe8acd9fa3e45b266820f47a8f1bd07fb250"
+    }
+  },
+  "publication_policy": {
+    "mode": "VERCEL_STAGED_PROMOTE_V1",
+    "auto_assign_custom_domains": false,
+    "allowed_merge_differences": [],
+    "protected_files": {
+      "contracts/ui-common/field-labels.v1.mjs": "5092fe31c89752e60d81fad410b518870b2848f76e5388363c1d8273eaa3a1d7",
+      "src/catalog/runtime-master/runtime-app-bridge.mjs": "4bc2cba36174d68bbdfca0a084d5cfdb3d5af1b03729854912a2666662e830cf"
+    },
+    "http_artifacts": [
+      {
+        "path": "/contracts/ui-common/field-labels.v1.mjs",
+        "sha256": "5092fe31c89752e60d81fad410b518870b2848f76e5388363c1d8273eaa3a1d7"
+      }
+    ]
+  },
+  "native_paths": [
+    "contracts/ui-common/field-label-adoption.v1.json",
+    "contracts/ui-common/field-labels.v1.mjs"
+  ],
+  "native_files": {
+    "contracts/ui-common/field-label-adoption.v1.json": "f1a14380630153f8334d199fdc1e3b8f2172107d0d13d4501b0658c035686ac2",
+    "contracts/ui-common/field-labels.v1.mjs": "5092fe31c89752e60d81fad410b518870b2848f76e5388363c1d8273eaa3a1d7"
+  }
+}
