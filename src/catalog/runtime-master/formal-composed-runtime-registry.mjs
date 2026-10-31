@@ -1,3 +1,4 @@
+import {releasedFormalRuntimeIndexes} from './released-formal-runtime-binding.mjs';
 import {privateFormalRuntimeIndexes} from './private-formal-runtime-binding.mjs';
 import {readFileSync,lstatSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -16,8 +17,8 @@ function checked(root,ref){
 }
 const registry=JSON.parse(readFileSync(resolve(HERE,'formal-composed-runtime-registry.json')));
 const seen=new Set();
-export const formalComposedRuntimeEntries=Object.freeze([...registry.indexes,...privateFormalRuntimeIndexes()].flatMap(ref=>{
-  const {path,bytes}=checked(ref.privateRoot??resolve(HERE,'..'),ref),root=dirname(path),index=JSON.parse(bytes);
+export const formalComposedRuntimeEntries=Object.freeze([...registry.indexes,...privateFormalRuntimeIndexes(),...releasedFormalRuntimeIndexes()].flatMap(ref=>{
+  const {path,bytes}=checked(ref.releasedRoot??ref.privateRoot??resolve(HERE,'..'),ref),root=dirname(path),index=JSON.parse(bytes);
   if(index.schema!=='FORMAL_COMPOSED_RUNTIME_INDEX_V1'||(!index.runtimeOnlyAdoption&&index.authoring.packageVersion!==index.packageVersion)||!index.authoring.manifestFileId)fail('FORMAL_COMPOSITION_INDEX_INVALID');
   if(index.runtimeOnlyAdoption){
     const adoption=index.runtimeOnlyAdoption;
@@ -31,13 +32,14 @@ export const formalComposedRuntimeEntries=Object.freeze([...registry.indexes,...
     seen.add(row.id);checked(root,row);
     for(const source of [row.uiFlowContract?.sourceFlow,...(row.uiFlowContract?.reviewSources??[])].filter(Boolean))checked(root,source);
     return Object.freeze({...row,productId:row.id,masterVersion:index.packageVersion,packageVersion:index.packageVersion,packageRoot:root,
-      privateBinding:Boolean(ref.privateRoot),runtimeManifestPath:path,packageType:'FORMAL_COMPOSED_PRODUCT_RUNTIME',runtimeManifestSha256:ref.sha256,runtimeManifestDriveFileId:ref.manifestFileId,
+      privateBinding:Boolean(ref.privateRoot),releasedBinding:Boolean(ref.releasedRoot),runtimeManifestPath:path,packageType:'FORMAL_COMPOSED_PRODUCT_RUNTIME',runtimeManifestSha256:ref.sha256,runtimeManifestDriveFileId:ref.manifestFileId,
       canonicalRuntimeReference:{runtimeManifestDriveFileId:ref.manifestFileId,packageVersion:index.packageVersion,runtimeIndexSha256:ref.sha256},
       productMasterFormalReference:index.authoring,sourceHash:row.sha256});
   });
 }));
 export function readFormalComposedModule(entry){
   if(entry.privateBinding&&!privateFormalRuntimeIndexes().some(ref=>resolve(ref.privateRoot,ref.path)===entry.runtimeManifestPath&&ref.sha256===entry.runtimeManifestSha256))fail('PRIVATE_FORMAL_BINDING_CHANGED');
+  if(entry.releasedBinding&&!releasedFormalRuntimeIndexes().some(ref=>resolve(ref.releasedRoot,ref.path)===entry.runtimeManifestPath&&ref.sha256===entry.runtimeManifestSha256))fail('RELEASE_RUNTIME_BINDING_CHANGED');
   const {bytes}=checked(entry.packageRoot,entry);
   for(const source of [entry.uiFlowContract?.sourceFlow,...(entry.uiFlowContract?.reviewSources??[])].filter(Boolean))checked(entry.packageRoot,source);
   const document=JSON.parse(bytes);

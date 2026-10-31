@@ -1,0 +1,57 @@
+{
+  "schema": "RELEASE_FORMAL_RUNTIME_PACKAGE_REGISTRY_V1",
+  "packages": [
+    {
+      "id": "APW330-R13-UI1-20261030",
+      "product_id": "SER-YKK-APW330",
+      "root": "src/catalog/runtime-release-data/apw330-r13-ui1",
+      "files": {
+        "adoption/authorization.json": {
+          "sha256": "8d324d41f657c9a68b5f0f5473fcf5d202275403300d0d54eafa663a88a2c6b5",
+          "bytes": 926
+        },
+        "adoption/human-source.json": {
+          "sha256": "179b86544be15d534c628bc64b9795ce078cbc84cebd17fcec270575c486c602",
+          "bytes": 637
+        },
+        "adoption/review.json": {
+          "sha256": "f72c4260665a53cd6a488892b452f75698a23e70924e2cfc990d01f46a6b8bab",
+          "bytes": 4152
+        },
+        "adoption/reviewed-index.json": {
+          "sha256": "e4e8115b01d90d5da45ba0244bae6da1de6e8355676e68aa0cc19fef868816a9",
+          "bytes": 27484
+        },
+        "module.json": {
+          "sha256": "5190fe4ef10300e2d4f30f345eab56b85083cbdd8f209f42be81038c9cc4eb2a",
+          "bytes": 3687400
+        },
+        "runtime_index.json": {
+          "sha256": "55ad1ad1c959950d56b4cee2cbb5afbc39540156c5809be9c1009e32b0732e6a",
+          "bytes": 28713
+        },
+        "sources/PRODUCT_MASTER.json": {
+          "sha256": "fef4b67b6f0622d7f6a343c45940196db80e97bb814d9222c371ac0a1a5422cc",
+          "bytes": 392253
+        },
+        "sources/SALES_QA_REVIEW.json": {
+          "sha256": "8a4e9589c75ba3a0506484d8d67512b721c4bd804383517031602b5a79a59d21",
+          "bytes": 21547
+        },
+        "sources/UI_STANDARD_v2.1.txt": {
+          "sha256": "f6694b98a7ee2a7dd97e15e9ee462546f6e058b2cede7abb9ab99768e1677264",
+          "bytes": 61599
+        }
+      },
+      "index": {
+        "path": "runtime_index.json",
+        "sha256": "55ad1ad1c959950d56b4cee2cbb5afbc39540156c5809be9c1009e32b0732e6a",
+        "manifestFileId": "1KxdRVxfS0e5l7qSlWEGD3Q3P9Y9Z4Dc5"
+      },
+      "adoption_work_id": "APW330-RUNTIME-UI-ADOPTION-20261030-01",
+      "adoption_result_sha256": "f1ceb531226c6330c55253374d764a6218c470b160b45cb2a27fcc69d6b1c770",
+      "product_master_mutations": 0,
+      "publication_requires_native_release_gate": true
+    }
+  ]
+}

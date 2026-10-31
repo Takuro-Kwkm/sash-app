@@ -40,6 +40,11 @@
       "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
       "scope": "GIESTA2_R14_RUNTIME_UI_PUBLICATION_20261017_R1",
       "path": "contracts/production/release-profiles/giesta2-r14.v1.json"
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::APW330",
+      "scope": "APW330_R13_UI1_ADOPTED_RUNTIME_PUBLICATION_20261031",
+      "path": "contracts/production/release-profiles/apw330-r13-ui1.v1.json"
     }
   ],
   "publication": "NEW_EXACT_PRODUCT_SCOPE_HUMAN_DECISION_REQUIRED",

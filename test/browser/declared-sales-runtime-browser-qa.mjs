@@ -1,3 +1,4 @@
+import {configureProtectedQaBrowser,protectedQaGet,safeQaError} from '../../scripts/production/protected-qa-access.mjs';
 const {chromium}=await import(process.env.QA_PLAYWRIGHT_MODULE??'playwright');
 import assert from 'node:assert/strict';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
@@ -14,8 +15,9 @@ try{
     page.on('pageerror',error=>report.errors.push(error.message));
     page.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
     page.on('response',response=>{if(response.status()>=400)report.failedResponses.push({url:response.url(),status:response.status()});});
+    await configureProtectedQaBrowser(context,new URL(BASE).origin);
     await page.goto(BASE,{waitUntil:'networkidle'});
-    const health=await(await context.request.get(BASE+'/api/health')).json();report.observedCommit=health.releaseCommitSha;
+    const health=await(await protectedQaGet(context.request,BASE+'/api/health',new URL(BASE).origin)).json();report.observedCommit=health.releaseCommitSha;
     if(process.env.QA_EXPECTED_COMMIT)assert.equal(report.observedCommit,process.env.QA_EXPECTED_COMMIT);
     const snapshots=[],persistedSnapshots=[],cases=[];
     for(const row of contract.rows){
@@ -144,6 +146,7 @@ try{
       return {model,baselineModel,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
     },{snapshots,persistedSnapshots});
     assert.equal(output.model.rows.length,contract.rows.length);
+    for(const[i,row]of contract.rows.entries())for(const dimension of row.expected_output_dimensions??[])assert.match(output.baselineModel.rows[i].size,new RegExp('\\b'+dimension+'\\b'),'Requested dimension must reach output');
     assert.ok(output.model.rows.every(row=>row.price===null&&row.size.includes(contract.output_size_label??'新設枠発注寸法')));
     assert.deepEqual(output.model.rows.map(row=>row.request_quantity),contract.rows.map(row=>row.expected_quantity));
     for(const [i,snapshot] of persistedSnapshots.entries()){
@@ -159,5 +162,5 @@ try{
     await context.close();console.log(JSON.stringify({width,status:'PASS',cases:cases.length}));
   }
   assert.deepEqual(report.errors,[]);assert.deepEqual(report.consoleErrors,[]);assert.deepEqual(report.failedResponses,[]);report.status='PASS';
-}catch(error){report.status='FAIL';report.failure=error.stack;throw error;}
+}catch(error){report.status='FAIL';report.failure=safeQaError(error);throw error;}
 finally{await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n');await browser.close();}

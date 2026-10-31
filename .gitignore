@@ -1,2 +1,5 @@
 node_modules/
 artifacts/
+
+# Provider-private adopted runtime payloads; hashes are committed, bytes stay outside Git.
+src/catalog/runtime-release-data/

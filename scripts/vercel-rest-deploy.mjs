@@ -83,6 +83,21 @@ const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'buffer' })
 if (!files.length) throw new Error('No tracked files found for deployment');
 
 const fileBuffers = previous?[]:await Promise.all(files.map(async (file) => ({ file, data: await readFile(file) })));
+if(!previous){
+ const registry=JSON.parse(await readFile('contracts/production/released-runtime-packages.v1.json','utf8'));
+ if(registry.packages.length){
+  const root=process.env.SASH_RELEASE_RUNTIME_SOURCE_ROOT;if(!root||!path.isAbsolute(root))throw new Error('RELEASE_RUNTIME_SOURCE_REQUIRED');
+  for(const pkg of registry.packages){
+   if(!pkg.root.startsWith('src/catalog/runtime-release-data/')||pkg.root.split('/').includes('..'))throw new Error('RELEASE_RUNTIME_PATH');
+   for(const[name,expected]of Object.entries(pkg.files)){
+    if(path.isAbsolute(name)||name.split('/').includes('..')||name.includes('\\'))throw new Error('RELEASE_RUNTIME_PATH');
+    const source=path.resolve(root,name);const{lstat}=await import('node:fs/promises');for(let p=source;p!==path.resolve(root);p=path.dirname(p))if((await lstat(p)).isSymbolicLink())throw new Error('RELEASE_RUNTIME_PATH');
+    const data=await readFile(source);if(data.length!==expected.bytes||createHash('sha256').update(data).digest('hex')!==expected.sha256)throw new Error('RELEASE_RUNTIME_BYTES_CHANGED');
+    const file=pkg.root+'/'+name;if(fileBuffers.some(x=>x.file===file))throw new Error('RELEASE_RUNTIME_DUPLICATE');fileBuffers.push({file,data});
+   }
+  }
+ }
+}
 const totalBytes = previous?.totalBytes??fileBuffers.reduce((sum, row) => sum + row.data.byteLength, 0);
 let deploymentFiles = [];
 
