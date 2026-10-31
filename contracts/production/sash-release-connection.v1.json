@@ -1,0 +1,7 @@
+{
+  "schema": "SASH_RELEASE_CONNECTION_ADOPTION_V1",
+  "source_commit": "524d00073a140bbabaeb810d352d4b47621d508f",
+  "inventory_sha256": "bccde3c245bc5350fa920ca5a6360ba1ad3b2e311f230d904e6056a80c5f9967",
+  "shared_implementation_sha": "ef5ead6e8ab8bdc40e77015625e61e0cba2b3e6f",
+  "scope": "APW330_R13_UI1_ADOPTED_RUNTIME_PUBLICATION_20261031"
+}
