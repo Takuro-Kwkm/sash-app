@@ -69,5 +69,10 @@
   "checkpoint_policy": "Shared release-contract checkpoint and native Work storage readback",
   "deployment_policy": "Reuse verified existing deployment; fixed-ID promotion only after Shared authorization",
   "persistence_boundary": "BROWSER_LOCAL_STORAGE",
-  "print_boundary": "Existing PDF visual acceptance is separate from automated print handler and CSS checks"
+  "print_boundary": "Existing PDF visual acceptance is separate from automated print handler and CSS checks",
+  "upstream_targets": {
+    "SER-LIX-SELECT-PG": [
+      "NEW-CANDIDATE-c9f91d558efb41e5368ead4e"
+    ]
+  }
 }

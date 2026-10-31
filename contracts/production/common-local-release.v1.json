@@ -91,8 +91,8 @@
   "native_file_overrides": {
     "contracts/production/release-profiles.v1.json": "15826b95c5a58928c007e03f1cf5c6c0d4ac1db6cdcf9507c70099dbb7815034",
     "contracts/production/current-architecture.json": "3aed09d66610e1476a79ef6f65252c0787376b26ecc02209d4aec8ef81179af4",
-    "contracts/production/validator-registry.v2.json": "5980b5487aeacf097fc628c3a10db272122accc0b3540be40be2450b671965ba",
-    "contracts/production/work-connections.v2.json": "ce212d3f9fd17e97ee00a1d8f77e65501b3212525bc8dcc67957b97cef199b8a",
+    "contracts/production/validator-registry.v2.json": "a6c1bad7b8db16ad2eea51b9361f48f089672d14d76ae55ca88349c37ec5e6e2",
+    "contracts/production/work-connections.v2.json": "8bbe4f5aa4610320e526920d8cd96ea98562fd3cc311018b72afc63eaf34184d",
     "scripts/production/compile-domain-projection.py": "47ecfc17e57fb1ec88a7eabc4ad338c352d520e3279b4d2eeddd6695ce3b357e",
     "scripts/production/domain-runtime-candidate.py": "05fe616d432bd2838cd211e2725b62b52ceed6d4c52c7cf3807068d97fc93b18",
     "scripts/production/instruction-scope.py": "0f9dba3d5ee8f5b4e3c6fd276b79639745e33a5225b9243a7f26b05e53f579c8",
