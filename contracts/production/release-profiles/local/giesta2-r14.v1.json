@@ -1,0 +1,18 @@
+{
+  "schema": "NATIVE_LOCAL_RELEASE_REFERENCE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "4181147c346fc6ce254275f8de5e677326f083e0"
+  },
+  "local_qa_release_policy": {
+    "schema": "COMMON_NATIVE_LOCAL_RELEASE_V1",
+    "actions_dispatch_authority": false,
+    "retained_profile": {
+      "path": "contracts/production/release-profiles/giesta2-r14.v1.json",
+      "sha256": "bd02e4dd8bcc9f99b257be70b82949df07a4d7644906eefc464f4f0efc2acf48"
+    },
+    "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+    "scope": "GIESTA2_R14_RUNTIME_UI_PUBLICATION_20261017_R1"
+  }
+}

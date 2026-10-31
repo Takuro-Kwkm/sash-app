@@ -1,0 +1,89 @@
+{
+  "schema": "COMMON_NATIVE_LOCAL_RELEASE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "existing_work": "KEEP_FIXED_BINDING",
+  "human_ui_review_required": true,
+  "actions_dispatch_authority": false,
+  "profiles": {
+    "contracts/production/release-profile.v1.json": "contracts/production/release-profiles/local/default.v1.json",
+    "contracts/production/release-profiles/order5-batch3-thermosl.v1.json": "contracts/production/release-profiles/local/order5-batch3-thermosl.v1.json",
+    "contracts/production/release-profiles/order5-batch3-tw.v1.json": "contracts/production/release-profiles/local/order5-batch3-tw.v1.json",
+    "contracts/production/release-profiles/order5-batch3-apw430.v1.json": "contracts/production/release-profiles/local/order5-batch3-apw430.v1.json",
+    "contracts/production/release-profiles/order5-batch3-apw431.v1.json": "contracts/production/release-profiles/local/order5-batch3-apw431.v1.json",
+    "contracts/production/release-profiles/replus-runtime-ui-v1.2-r1.json": "contracts/production/release-profiles/local/replus-runtime-ui-v1.2-r1.json",
+    "contracts/production/release-profiles/apw511-r3.v1.json": "contracts/production/release-profiles/local/apw511-r3.v1.json",
+    "contracts/production/release-profiles/giesta2-r14.v1.json": "contracts/production/release-profiles/local/giesta2-r14.v1.json",
+    "contracts/production/release-profiles/apw330-r13-ui1.v1.json": "contracts/production/release-profiles/local/apw330-r13-ui1.v1.json"
+  },
+  "new_work_aliases": {},
+  "profile_identities": {
+    "contracts/production/release-profile.v1.json": {
+      "product_id": "SER-LIX-SAMOSL",
+      "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1"
+    },
+    "contracts/production/release-profiles/order5-batch3-thermosl.v1.json": {
+      "product_id": "SER-LIX-SAMOSL",
+      "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1"
+    },
+    "contracts/production/release-profiles/order5-batch3-tw.v1.json": {
+      "product_id": "SER-LIXIL-TW",
+      "scope": "TW_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1"
+    },
+    "contracts/production/release-profiles/order5-batch3-apw430.v1.json": {
+      "product_id": "SER-YKK-APW430",
+      "scope": "APW430_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1"
+    },
+    "contracts/production/release-profiles/order5-batch3-apw431.v1.json": {
+      "product_id": "SER-YKK-APW431",
+      "scope": "APW431_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1"
+    },
+    "contracts/production/release-profiles/replus-runtime-ui-v1.2-r1.json": {
+      "product_id": "NATIVE_REGISTRY:LIXIL::リプラス",
+      "scope": "REPLUS_V12R1_FORMAL_RUNTIME_UI_RELEASE_20261015_R1"
+    },
+    "contracts/production/release-profiles/apw511-r3.v1.json": {
+      "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
+      "scope": "APW511_R3_ADOPTED_SALES_UI_PUBLICATION_20261016_R1"
+    },
+    "contracts/production/release-profiles/giesta2-r14.v1.json": {
+      "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+      "scope": "GIESTA2_R14_RUNTIME_UI_PUBLICATION_20261017_R1"
+    },
+    "contracts/production/release-profiles/apw330-r13-ui1.v1.json": {
+      "product_id": "NATIVE_REGISTRY:YKK AP::APW330",
+      "scope": "APW330_R13_UI1_ADOPTED_RUNTIME_PUBLICATION_20261031"
+    }
+  },
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "4181147c346fc6ce254275f8de5e677326f083e0",
+    "entry": "scripts/release-contract.py",
+    "files": {
+      "scripts/release-contract.py": "6d1eb36fdcaca383c34f471014409e8242a85de962f67336fb0c7155b6fdce8a",
+      "scripts/architecture-work.py": "0ad40e1b25dca2cdeeae45346bf75ad274cd643d5ed82a6daeecd33d360f7718",
+      "scripts/release-registered-host.mjs": "9d87cd5bd36a9656341c12bdc7bc56cd60971077ca1cfa896aecc16f648d2023",
+      "scripts/release-native-profile.mjs": "285b58041e3353a343fd262a2936f79b6418644ae1e8161e97826c1ae57403e6",
+      "scripts/release-local-publication.mjs": "2321d962bf38e9bb901587fb5c810dafd89af605fa0ab4adb6b6efb0630bd77c",
+      "scripts/release-provider-host.mjs": "bd3bd712679de2777a27f92558c161d0d2eedab97d59a8ba6ab463fb5f54c712",
+      "scripts/release-lifecycle-cli.mjs": "75d3dfab8b2cd479b5a01a1df843f2a40774a2f13b93b8e8d149d9161aab5ced",
+      "scripts/release-connected-host.mjs": "16a405814a116001b827b51cabaae98c8818a57bd076026f22c35f4a2f22009e",
+      "scripts/release-connected-io.mjs": "ba8078c26d1f14548fa6135b7887a4685759ecdd199d19b171562413111d0f2e",
+      "harness/release.py": "d9ccbb4935f7e65dc3a3d821b867f351888477b1569e064bc9d0577d8a69933d",
+      "harness/release_admission.py": "f5bcfdf78c8fa575ecc317a1f6837a86cda91944ecac29d41168186a285f0a7e",
+      "harness/release_publication.py": "4f9da12e83cdb55e9c46323f8bf6143a7efe8dacd6ad5b5d452bdc4701a78007",
+      "harness/common_local_release.py": "c6cf6b20c679fcd7e470d0d8502917a33f32eeac457866780123006e5eccdbb9",
+      "harness/common_local_adoption.py": "e64f3261c6ee5d0b9a73cc858d1329f91404a34b711be1061ace91474eddc412",
+      "harness/common_adoption.py": "0d254439aefa965848bc0d412f1926d8bb97244e10c57c1e15f9826f44ef2acc",
+      "harness/common_development.py": "12383993ea749859a5059530b167db2a1d14b2ea9636d3c1b26898daf14b5968",
+      "harness/current_authority.py": "a342e565123b63f05b3ab26f90668acacca19cdaaf5118322465d225ba9c0cb4",
+      "harness/local_qa.py": "682d81d822624bb307daeab2f7a0792c2698b693f7b01c5d4ae73b7dcc472caa",
+      "harness/local_qa_adoption.py": "0fbdd7cf311ca33f8ade5721367cabf5d4df40a0efc779839760c3052722646d",
+      "harness/github_bridge.py": "723ebf50d947bb1aee6a00cf1e59274a545689c751df25990e300c714d344e17",
+      "harness/workflow.py": "85a161c5ce1380d21fa3cb234fcc07b402e0cd6ddc52dd0a6ed0d3729c6c66bf",
+      "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4"
+    }
+  },
+  "native_file_overrides": {
+    "contracts/production/release-profiles.v1.json": "19d7480ae61384f98f5332c78b17bb191ba6bf2be3185a4393bedab0bd2502ab"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "NATIVE_LOCAL_RELEASE_REFERENCE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "4181147c346fc6ce254275f8de5e677326f083e0"
+  },
+  "local_qa_release_policy": {
+    "schema": "COMMON_NATIVE_LOCAL_RELEASE_V1",
+    "actions_dispatch_authority": false,
+    "retained_profile": {
+      "path": "contracts/production/release-profiles/order5-batch3-apw430.v1.json",
+      "sha256": "6b3391148031d062c5c34e269e0bfbec77bea2a306aad240c78cc5e520e0b0a8"
+    },
+    "product_id": "SER-YKK-APW430",
+    "scope": "APW430_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1"
+  }
+}
