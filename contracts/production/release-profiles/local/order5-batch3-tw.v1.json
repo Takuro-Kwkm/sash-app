@@ -1,0 +1,18 @@
+{
+  "schema": "NATIVE_LOCAL_RELEASE_REFERENCE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "d5298eb81b26932bcc7f3fea756c9af71d23873b"
+  },
+  "local_qa_release_policy": {
+    "schema": "COMMON_NATIVE_LOCAL_RELEASE_V1",
+    "actions_dispatch_authority": false,
+    "retained_profile": {
+      "path": "contracts/production/release-profiles/order5-batch3-tw.v1.json",
+      "sha256": "e70e5d5217f6331e650d4001f68e55935744be35dd757fe5f75e86d1a5ea316a"
+    },
+    "product_id": "SER-LIXIL-TW",
+    "scope": "TW_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1"
+  }
+}

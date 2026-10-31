@@ -1,0 +1,18 @@
+{
+  "schema": "NATIVE_LOCAL_RELEASE_REFERENCE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "d5298eb81b26932bcc7f3fea756c9af71d23873b"
+  },
+  "local_qa_release_policy": {
+    "schema": "COMMON_NATIVE_LOCAL_RELEASE_V1",
+    "actions_dispatch_authority": false,
+    "retained_profile": {
+      "path": "contracts/production/release-profiles/order5-batch3-thermosl.v1.json",
+      "sha256": "b47450c705f6fcf14fee8475266ac9483750af8174955deff5f3555b67386644"
+    },
+    "product_id": "SER-LIX-SAMOSL",
+    "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1"
+  }
+}

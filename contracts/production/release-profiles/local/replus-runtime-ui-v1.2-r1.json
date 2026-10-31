@@ -1,0 +1,18 @@
+{
+  "schema": "NATIVE_LOCAL_RELEASE_REFERENCE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "d5298eb81b26932bcc7f3fea756c9af71d23873b"
+  },
+  "local_qa_release_policy": {
+    "schema": "COMMON_NATIVE_LOCAL_RELEASE_V1",
+    "actions_dispatch_authority": false,
+    "retained_profile": {
+      "path": "contracts/production/release-profiles/replus-runtime-ui-v1.2-r1.json",
+      "sha256": "6e84f1e07a987fab5aef93e153d279a42c712e9144b715ca570ac52c1badb65c"
+    },
+    "product_id": "NATIVE_REGISTRY:LIXIL::リプラス",
+    "scope": "REPLUS_V12R1_FORMAL_RUNTIME_UI_RELEASE_20261015_R1"
+  }
+}
