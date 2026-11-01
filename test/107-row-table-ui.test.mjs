@@ -5,6 +5,8 @@ import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {createRowTableUi} from '../src/catalog/runtime-master/row-table-runtime-ui.mjs';
 import {GLOBAL_WINDOW_STAGE_ORDER} from '../src/catalog/runtime-master/canonical-window-semantic-schema.mjs';
+import {createProductConfigurationSnapshot} from '../src/work-management/domain.mjs';
+import {createEstimateOutputModel} from '../src/estimate-output/model.mjs';
 const path=new URL('../changes/samosa-ui-v0.7-candidate/',import.meta.url);
 const doc=JSON.parse(fs.readFileSync(new URL('candidate.json',path))),entry=JSON.parse(fs.readFileSync(new URL('candidate-index.json',path))).products[0];
 const ui=createRowTableUi(doc,entry);
@@ -71,4 +73,15 @@ test('typed local candidate admission preserves the production guard',()=>{
  const env={...process.env,SASH_CANDIDATE_RUNTIME_INDEX:index.pathname,SASH_CANDIDATE_INDEX_SHA:hash,SASH_CANDIDATE_MODE:'INSPECT_LOCAL'};delete env.SASH_CANDIDATE_MANIFEST_FILE_ID;
  const local=spawnSync(process.execPath,['--input-type=module','-e',script],{env,encoding:'utf8'});assert.equal(local.status,0,local.stderr);assert.equal(local.stdout.trim(),'1');
  const production=spawnSync(process.execPath,['--input-type=module','-e',script],{env:{...env,NODE_ENV:'production'},encoding:'utf8'});assert.notEqual(production.status,0);assert.match(production.stderr,/CANDIDATE_RUNTIME_NOT_ADMITTED/);
+});
+test('independent requirements survive re-resolution and enter the estimate handoff',()=>{
+ const result=ui.uiResolver(seed),requirements={special_specification_requested:true,text:'西日への対策を相談'};
+ const snapshot=createProductConfigurationSnapshot({product:entry,result,previousSnapshot:{user_requirements:requirements}});
+ assert.deepEqual(snapshot.user_requirements,requirements);assert.equal(snapshot.configuration.user_requirements,undefined);assert.equal(snapshot.confirmation_requests.filter(r=>r.kind==='USER_REQUIREMENT').length,2);
+ const again=createProductConfigurationSnapshot({product:entry,result,previousSnapshot:snapshot});assert.deepEqual(again.user_requirements,requirements);assert.equal(again.confirmation_requests.filter(r=>r.kind==='USER_REQUIREMENT').length,2);
+ const model=createEstimateOutputModel({project:{project_id:'p'},estimate:{estimate_id:'e',project_id:'p'},openings:[{opening_id:'o',status:'COMPLETE',product_configuration_snapshot:again}]});
+ assert.ok(JSON.stringify(model).includes('西日への対策を相談'));
+});
+test('unmodified snapshots gain no independent user requirement data',()=>{
+ const snapshot=createProductConfigurationSnapshot({product:entry,result:ui.uiResolver(seed)});assert.equal(snapshot.user_requirements,undefined);assert.equal(snapshot.confirmation_requests.some(r=>r.kind==='USER_REQUIREMENT'),false);
 });

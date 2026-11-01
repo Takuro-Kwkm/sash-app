@@ -18,19 +18,20 @@ try{
   const context=await browser.newContext({viewport:{width,height:1000}}),page=await context.newPage();
   page.on('pageerror',e=>report.page_errors.push(e.message));page.on('console',e=>{if(e.type()==='error')report.console_errors.push(e.text());});page.on('response',r=>{if(r.status()>=400)report.http_errors.push({url:r.url(),status:r.status()});});
   await page.goto(preview.url,{waitUntil:'networkidle'});await page.waitForSelector('[data-spec-key="window_type"]');
-  async function restore(input){
-   return page.evaluate(async({input,id})=>{
+  async function restore(input,userRequirements){
+   return page.evaluate(async({input,id,userRequirements})=>{
     const {ProductConfigurationEditor}=await import('/product-configuration-editor.mjs');
     window.__rowTableTestEditor?.destroy();
     const integrations=await (await fetch('/api/runtime-master/integrations')).json(),product=integrations.find(p=>p.id===id);
-    const snapshot={product_id:id,configuration:input,package_version:product.packageVersion,runtime_manifest_identity:product.canonicalRuntimeReference.runtimeManifestDriveFileId};
-    const editor=new ProductConfigurationEditor(document.querySelector('#runtimeLab'),{initialSnapshot:snapshot});window.__rowTableTestEditor=editor;await editor.mount();
+    const snapshot={...(userRequirements?{user_requirements:userRequirements}:{}),product_id:id,configuration:input,package_version:product.packageVersion,runtime_manifest_identity:product.canonicalRuntimeReference.runtimeManifestDriveFileId};
+    const replacement=document.createElement('div');replacement.id='runtimeLab';document.querySelector('#runtimeLab').replaceWith(replacement);
+    const editor=new ProductConfigurationEditor(replacement,{initialSnapshot:snapshot});window.__rowTableTestEditor=editor;await editor.mount();
     return {result:editor.state.resolved,snapshot:editor.getSnapshot()};
-   },{input,id:scope.product_id});
+   },{input,id:scope.product_id,userRequirements});
   }
   for(const state of plan.cases){
    const loaded=await restore(state.input),result=loaded.result;assert.ok(result.candidateOnly);assert.equal(result.formalAdoption,false);assert.equal(result.automaticOrderability,false);count('MASTER_PROJECTION');
-   const fields=await page.locator('#dynamicForm [data-spec-key]').evaluateAll(elements=>elements.map(e=>({field_id:e.dataset.specKey,stage:e.dataset.semanticStage,role:e.dataset.readOnly==='true'?'DERIVED':'SELECTOR',label:e.dataset.label,visible:e.getClientRects().length>0,required:e.hasAttribute('required'),control:e.tagName==='OUTPUT'?'output':e.type==='number'?'number':e.multiple?'checkbox-group':'select',candidate_values:e.tagName==='SELECT'?[...e.options].filter(o=>o.value).map(o=>o.value):[]})));
+   const fields=await page.locator('#dynamicForm [data-spec-key],[data-user-requirements-section] [data-workflow-control]').evaluateAll(elements=>elements.map(e=>({field_id:e.dataset.specKey??'__workflow.'+e.dataset.workflowControl,stage:e.dataset.semanticStage,role:e.dataset.readOnly==='true'?'DERIVED':'SELECTOR',label:e.dataset.label,visible:e.getClientRects().length>0,required:e.hasAttribute('required'),control:e.dataset.workflowControl==='special_specification_requested'?'checkbox-group':e.tagName==='TEXTAREA'?'textarea':e.tagName==='OUTPUT'?'output':e.type==='number'?'number':e.multiple?'checkbox-group':'select',candidate_values:e.dataset.workflowControl==='special_specification_requested'?[true]:e.tagName==='SELECT'?[...e.options].filter(o=>o.value).map(o=>o.value):[]})));
    for(const f of fields){if(f.control==='output'){const value=result.selection[f.field_id];f.candidate_values=value===undefined?[]:[value];const native=result.fields.find(r=>r.key===f.field_id);const label=native.dataType==='NUMBER'?String(value??'寸法の入力後に表示'):native.values.find(v=>v.value===value)?.displayLabel??'本体色の選択後に表示';assert.equal(await page.locator(`output[data-spec-key="${f.field_id}"]`).innerText(),label);}}
    const stages=['PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZING','INSTALLATION_SURVEY','OPTION'];let last=-1;for(const field of fields){const i=stages.indexOf(field.stage);assert.ok(i>=last&&i>=0);last=i;}count('FLOW_ORDER',fields.length);
    assert.equal(new Set(fields.map(f=>f.field_id)).size,fields.length);count('CONTROL_AND_VALUES',fields.length);
@@ -50,16 +51,27 @@ try{
    report.states.push({id:state.id,viewport:width,status:'PASS',field_ids:fields.map(f=>f.field_id),validation_status:result.validation.status});
   }
   const before=await restore(plan.cases.find(c=>c.id==='PRIMARY').input);
+  const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
   await page.selectOption('[data-spec-key="window_type"]','WT-SA-FIX-IN');
-  await page.waitForFunction(()=>window.__rowTableTestEditor.state.resolved?.selection.window_type==='WT-SA-FIX-IN');
+  await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision)&&window.__rowTableTestEditor.state.resolved?.selection.window_type==='WT-SA-FIX-IN',revision);
   const after=await page.evaluate(()=>({result:window.__rowTableTestEditor.state.resolved,snapshot:window.__rowTableTestEditor.getSnapshot()}));
   assert.equal(after.result.selection.screen_type,undefined);assert.equal(await page.locator('[data-spec-key="screen_type"]').count(),0);count('CLEAR_INVALID');
   assert.equal(after.result.selection.color_combination,before.result.selection.color_combination);count('KEEP_VALID');
   assert.equal(after.snapshot.confirmation_requests.length,13);count('HANDOFF');report.transitions.cases++;
   // Exercise the actual image-button selection event, then the scalar control.
+  const colorRevision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
   await page.locator('[data-image-choice-field="color_combination"][data-image-choice-value="SA-COLOR-WHITE"]').click();
-  await page.waitForFunction(()=>window.__rowTableTestEditor.state.resolved?.selection.color_combination==='SA-COLOR-WHITE');
+  await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision)&&window.__rowTableTestEditor.state.resolved?.selection.color_combination==='SA-COLOR-WHITE',colorRevision);
   assert.equal(await page.locator('[data-spec-key="color_combination"]').inputValue(),'SA-COLOR-WHITE');count('CONTROL_AND_VALUES');report.transitions.cases++;
+  await page.locator('[data-special-specification-request]').check();
+  await page.locator('textarea[data-workflow-control="user_requirements"]').fill('西日の対策について相談したい');
+  await page.locator('textarea[data-workflow-control="user_requirements"]').dispatchEvent('change');
+  const requested=await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot());
+  assert.equal(requested.user_requirements.special_specification_requested,true);assert.equal(requested.user_requirements.text,'西日の対策について相談したい');
+  assert.equal(requested.configuration.user_requirements,undefined);assert.equal(requested.confirmation_requests.filter(r=>r.kind==='USER_REQUIREMENT').length,2);
+  const restored=await restore(requested.configuration,requested.user_requirements);
+  assert.ok(await page.locator('[data-special-specification-request]').isChecked());assert.equal(await page.locator('textarea[data-workflow-control="user_requirements"]').inputValue(),requested.user_requirements.text);
+  assert.deepEqual(restored.snapshot.user_requirements,requested.user_requirements);count('RESTORE');count('HANDOFF');count('CONTROL_AND_VALUES');report.transitions.cases++;
   await context.close();
  }
  report.fields.sort((a,b)=>expected.fields.findIndex(f=>f.field_id===a.field_id)-expected.fields.findIndex(f=>f.field_id===b.field_id));

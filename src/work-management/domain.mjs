@@ -142,6 +142,12 @@ export function createProductConfigurationSnapshot({product,result,clock,previou
     ??product.canonicalRuntimeReference?.runtimeManifestDriveFileId
     ??null;
   const canonical=result.source==='RUNTIME_MASTER';
+  const userRequirements=previousSnapshot?.user_requirements;
+  const userRequirementMessages=userRequirements?[
+    ...(userRequirements.special_specification_requested?[{kind:'USER_REQUIREMENT',field:'special_specification_requested',message:'特別仕様について相談する希望があります。積算へ確認してください。'}]:[]),
+    ...(text(userRequirements.text)?[{kind:'USER_REQUIREMENT',field:'user_requirements',message:'ユーザーの要望：'+text(userRequirements.text)}]:[]),
+  ]:[];
+  const confirmationRequests=[...(result.confirmationRequests??[]),...userRequirementMessages];
   const runtimeIdentity=manifestId??(!canonical?product.source?.id??null:null);
   let workflowData=mergeWorkflowData(previousSnapshot?.workflow_data,result.workflow_data);
   if(previousSnapshot&&isSeparatedEstimateContext(previousSnapshot.product_id,previousSnapshot.configuration)){
@@ -157,7 +163,8 @@ export function createProductConfigurationSnapshot({product,result,clock,previou
     runtime_integrity_hash:sourceHash,
     configuration:cloneValue(result.selection??{}),
     ...(Object.keys(workflowData).length?{workflow_data:cloneValue(workflowData)}:{}),
-    ...(result.confirmationRequests?.length?{confirmation_requests:cloneValue(result.confirmationRequests)}:{}),
+    ...(confirmationRequests.length?{confirmation_requests:cloneValue(confirmationRequests)}:{}),
+    ...(userRequirements?{user_requirements:cloneValue(userRequirements)}:{}),
     ...(result.sales_request_handoff?{sales_request_handoff:cloneValue(result.sales_request_handoff),sales_request_state:result.sales_request_state}:{}),
     display_summary:displaySummary(result),
     validation_state:validationState(result)===ValidationState.INVALID?ValidationState.INVALID:result.sales_request_handoff?ValidationState.NEEDS_REVALIDATION:validationState(result),

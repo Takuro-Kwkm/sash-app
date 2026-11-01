@@ -1,0 +1,162 @@
+{
+  "cases": [
+    {
+      "id": "PRIMARY",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear"
+      }
+    },
+    {
+      "id": "TERRACE",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "terrace",
+        "width": 1650,
+        "height": 1800,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "screen_middle_bar": "with_middle_bar"
+      }
+    },
+    {
+      "id": "SHUTTER",
+      "input": {
+        "window_type": "WT-SA-SHUTTER-HIKI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "shutter_operation": "electric",
+        "shutter_type": "standard"
+      }
+    },
+    {
+      "id": "AMADO",
+      "input": {
+        "window_type": "WT-SA-AMADO-HIKI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "storm_shutter_type": "general",
+        "storm_shutter_storage_type": "single",
+        "storm_shutter_mirror_panel": "with_mirror_panel"
+      }
+    },
+    {
+      "id": "GRILLE",
+      "input": {
+        "window_type": "WT-SA-MENKOSHI-HIKI",
+        "construction_module": "zairai",
+        "grille_type": "vertical_grille",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK"
+      }
+    },
+    {
+      "id": "HIGH",
+      "input": {
+        "window_type": "WT-SA-KOSHO-YOKO",
+        "construction_module": "zairai",
+        "operation_method": "chain_operator",
+        "chain_type": "single_loop",
+        "width": 1000,
+        "height": 500,
+        "color_combination": "SA-COLOR-BLACK"
+      }
+    },
+    {
+      "id": "TATE",
+      "input": {
+        "window_type": "WT-SA-TATE-SUBERI",
+        "construction_module": "zairai",
+        "width": 600,
+        "height": 1100,
+        "color_combination": "SA-COLOR-BLACK",
+        "paid_option": [
+          "small_opening_arm"
+        ]
+      }
+    },
+    {
+      "id": "YOKO",
+      "input": {
+        "window_type": "WT-SA-YOKO-SUBERI",
+        "construction_module": "zairai",
+        "width": 600,
+        "height": 500,
+        "color_combination": "SA-COLOR-BLACK"
+      }
+    },
+    {
+      "id": "INNER",
+      "input": {
+        "window_type": "WT-SA-UCHIDAOSHI",
+        "construction_module": "zairai",
+        "width": 600,
+        "height": 500,
+        "color_combination": "SA-COLOR-BLACK"
+      }
+    },
+    {
+      "id": "OUTER",
+      "input": {
+        "window_type": "WT-SA-SOTODAOSHI",
+        "construction_module": "zairai",
+        "opening_angle": "60_degree",
+        "width": 600,
+        "height": 500,
+        "color_combination": "SA-COLOR-BLACK"
+      }
+    },
+    {
+      "id": "FIX",
+      "input": {
+        "window_type": "WT-SA-FIX-IN",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear"
+      }
+    }
+  ],
+  "field_baselines": {
+    "opening_angle": "OUTER",
+    "operation_method": "HIGH",
+    "chain_type": "HIGH",
+    "shutter_operation": "SHUTTER",
+    "shutter_type": "SHUTTER",
+    "storm_shutter_type": "AMADO",
+    "storm_shutter_panel": "AMADO",
+    "storm_shutter_storage_type": "AMADO",
+    "storm_shutter_mirror_panel": "AMADO",
+    "mirror_panel_type": "AMADO",
+    "grille_type": "GRILLE",
+    "screen_middle_bar": "TERRACE",
+    "screen_mesh_type": "INNER",
+    "paid_option": "TATE"
+  }
+}

@@ -78,7 +78,7 @@ function packageVersionFor(product,configuration={}){
 export class ProductConfigurationEditor {
   constructor(root,{initialSnapshot=null,initialProductId=null,onSnapshot=()=>{},showInventory=false}={}){
     this.root=root;this.initialSnapshot=initialSnapshot;this.initialProductId=initialProductId;this.onSnapshot=onSnapshot;this.showInventory=showInventory;
-    this.state={products:[],productChoiceId:null,productId:null,productSource:'CATALOG',selection:{},resolved:null,resolveRevision:0,snapshot:initialSnapshot,stale:false};
+    this.state={products:[],productChoiceId:null,productId:null,productSource:'CATALOG',selection:{},resolved:null,resolveRevision:0,snapshot:initialSnapshot,userRequirements:initialSnapshot?.user_requirements??null,stale:false};
     this.boundChange=(event)=>this.handleChange(event);
     this.boundClick=(event)=>this.handleClick(event);
   }
@@ -92,6 +92,12 @@ export class ProductConfigurationEditor {
         <div class="field"><label for="product">商品</label><select id="product" disabled><option value="">選択してください</option></select></div>
         <div id="productSpecificationField" class="field" hidden><label for="productSpecification">仕様<span class="required">必須</span></label><select id="productSpecification" required disabled><option value="">選択してください</option></select></div>
         <div id="dynamicForm"></div><div id="warnings"></div>
+        <section data-user-requirements-section hidden>
+          <div class="field" data-workflow-control="special_specification_requested" data-label="特別仕様の相談" data-semantic-stage="OPTION">
+            <label>特別仕様の相談</label><div class="multi-enum-group" role="group" aria-label="特別仕様の相談"><label class="multi-enum-option"><input type="checkbox" data-special-specification-request><span>特別仕様について相談する（積算確認）</span></label></div>
+          </div>
+          <div class="field"><label>ユーザーの要望</label><textarea rows="3" data-workflow-control="user_requirements" data-label="ユーザーの要望" data-semantic-stage="OPTION" placeholder="ご希望や積算への相談内容を入力"></textarea></div>
+        </section>
       </section>
       <section class="card compact"><h2>選択内容</h2><div id="selectionSummary" class="summary muted">商品を選択してください。</div></section>
       <section id="productCodeCard" class="card compact" hidden><h2>品番結果</h2><div id="productCodeResults" class="summary"></div></section>
@@ -214,6 +220,15 @@ export class ProductConfigurationEditor {
 
   async handleChange(event){
     const target=event.target;
+    if(target.matches?.('[data-special-specification-request],textarea[data-workflow-control="user_requirements"]')){
+      if(!this.state.snapshot||!this.state.resolved)return;
+      const section=this.root.querySelector('[data-user-requirements-section]');
+      const requirements={special_specification_requested:section.querySelector('[data-special-specification-request]').checked,text:section.querySelector('textarea').value};
+      this.state.userRequirements=requirements;
+      const product=this.state.products.find(row=>row.id===this.state.productId);
+      this.state.snapshot=createProductConfigurationSnapshot({product,result:this.state.resolved,previousSnapshot:{...this.state.snapshot,user_requirements:requirements}});
+      this.onSnapshot(this.state.snapshot,this.state.resolved);return;
+    }
     if(target.id==='manufacturer'){
       this.resetProductConfiguration();this.state.productChoiceId=null;
       this.selectManufacturer(target.value);
@@ -290,7 +305,12 @@ export class ProductConfigurationEditor {
     dynamicForm.dataset.resolveRevision=String(revision);
     this.renderWarnings(result);this.renderSummary(result);this.renderProductCodes(result);
     const product=this.state.products.find((row)=>row.id===productId);
-    this.state.snapshot=withConfigurationMigrationAudit(createProductConfigurationSnapshot({product,result,previousSnapshot:this.state.snapshot}),this.state.snapshot,result.configurationMigration);
+    const previousSnapshot=this.state.userRequirements?{...this.state.snapshot,user_requirements:this.state.userRequirements}:this.state.snapshot;
+    this.state.snapshot=withConfigurationMigrationAudit(createProductConfigurationSnapshot({product,result,previousSnapshot}),this.state.snapshot,result.configurationMigration);
+    const requirements=this.root.querySelector('[data-user-requirements-section]');
+    requirements.hidden=result.presentation?.independentUserRequirements!==true;
+    requirements.querySelector('[data-special-specification-request]').checked=this.state.snapshot.user_requirements?.special_specification_requested===true;
+    requirements.querySelector('textarea').value=this.state.snapshot.user_requirements?.text??'';
     const badge=this.root.querySelector('#runtimeVersionBadge');badge.hidden=false;badge.textContent=`${this.state.snapshot.source_mode==='CANONICAL_RUNTIME'?'Runtime':'Legacy'} ${this.state.snapshot.package_version}`;
     if(notify)this.onSnapshot(this.state.snapshot,result);
   }

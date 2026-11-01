@@ -123,7 +123,7 @@ export function createRowTableUi(document,integration){
       validation:{status:errors.length||evaluated.constraint_status==='INVALID'?'INVALID':evaluated.request_complete?'VALID':'INCOMPLETE',errors,missingRequiredFields:state.missing_required_fields},
       dimensionResult:evaluated.dimension,manualWarnings:[...reasonMessages,...(evaluated.constraint_status==='MANUAL_CONFIRMATION_REQUIRED'?['この寸法・仕様はメーカーへの確認が必要です。']:[])],
       confirmationRequests:confirmations,estimateConfirmations:confirmations,runtimeMaster:{packageVersion:integration.packageVersion,sourceMasterSha256:document.source_master.sha256,candidateOnly:true},
-      candidateOnly:true,formalAdoption:false,runtimeUiAdopted:false,automaticOrderability:false,source:'RUNTIME_MASTER',constraintStatus:evaluated.constraint_status};
+      presentation:{independentUserRequirements:true},candidateOnly:true,formalAdoption:false,runtimeUiAdopted:false,automaticOrderability:false,source:'RUNTIME_MASTER',constraintStatus:evaluated.constraint_status};
     return result;
   }
   return {projection,uiResolver:resolve};

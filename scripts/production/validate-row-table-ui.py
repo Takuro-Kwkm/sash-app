@@ -26,7 +26,7 @@ def validate(contract):
  if any(any(doc.get(k)!=v for k,v in scope.items()) for doc in [expected,mapping,browser,projection]):raise ValueError('NATIVE_UI_CROSS_PRODUCT_OR_SOURCE')
  if browser['status']!='PASS' or browser['execution_surface']!='BROWSER' or browser['transitions']['status']!='PASS' or browser['transitions']['cases']<=0:raise ValueError('ACTUAL_BROWSER_REQUIRED')
  source_fields={f['field_name'] for f in master['field_master']}
- if source_fields!={f['field_id'] for f in projection['fields']} or source_fields!={f['master_field_id'] for f in mapping['fields']}:raise ValueError('NATIVE_MASTER_FIELDS')
+ if source_fields!={f['field_id'] for f in projection['fields']} or source_fields!={f['master_field_id'] for f in mapping['fields'] if f.get('master_field_id')}:raise ValueError('NATIVE_MASTER_FIELDS')
  selectors=[f for f in expected['fields'] if f['role'] in ['SELECTOR','DERIVED']]
  if [f['field_id'] for f in selectors]!=[f['field_id'] for f in browser['fields']]:raise ValueError('NATIVE_UI_INVENTORY_ORDER')
  for wanted,actual in zip(selectors,browser['fields']):
