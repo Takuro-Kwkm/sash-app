@@ -88,6 +88,12 @@ try{
   const assigned=await page.evaluate(()=>({result:window.__rowTableTestEditor.state.resolved,snapshot:window.__rowTableTestEditor.getSnapshot()}));
   assert.equal(assigned.result.selection.configuration_type,'T');assert.equal(assigned.result.selection.handle_type,'cam_latch');assert.ok(!assigned.result.clearedFields.includes('handle_type'));assert.deepEqual(assigned.snapshot.user_requirements,requested.user_requirements);
   count('BRANCH_VISIBILITY');count('KEEP_VALID');count('HANDOFF');report.transitions.cases++;
+  const categoryRevision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+  await page.selectOption('[data-spec-key="glass_category"]','option');
+  await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision),categoryRevision);
+  const categorized=await page.evaluate(()=>window.__rowTableTestEditor.state.resolved);
+  assert.equal(categorized.selection.glass_type,undefined);assert.deepEqual(categorized.fields.find(f=>f.key==='glass_type').values.map(r=>r.value),sourceDocument.master.glass_master.filter(r=>r.glass_category==='option').map(r=>r.glass_type));
+  assert.notEqual(categorized.validation.status,'INVALID');count('CLEAR_INVALID');count('CONTROL_AND_VALUES');report.transitions.cases++;
   await context.close();
  }
  report.fields.sort((a,b)=>expected.fields.findIndex(f=>f.field_id===a.field_id)-expected.fields.findIndex(f=>f.field_id===b.field_id));

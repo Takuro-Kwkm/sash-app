@@ -22,6 +22,10 @@ export function createRowTableUi(document,integration){
   const label=(field,value)=>document.choice_visuals?.[field]?.[value]?.alt??policy.value_labels?.[field]?.[value]
     ??projection.master.values.find(r=>r.field_name===field&&same(r.canonical_value,value))?.display_label;
   const sourceSelector=row=>Object.fromEntries(Object.entries(document.projection_policy.dimension_selector_map).filter(([,column])=>present(row[column])).map(([field,column])=>[field,row[column]]));
+  const lookupDomain=(relation,selection)=>{
+    if(Object.keys(relation.selectors).some(key=>!present(selection[key])))return null;
+    return new Set(document.master[relation.table].filter(row=>Object.entries(relation.selectors).every(([key,column])=>same(selection[key],row[column]))).map(row=>row[relation.column]));
+  };
   function eligibleFields(evaluated){
     const values=evaluated.values,state=evaluated.state;
     const bundle=document.master.rule_bundle_master.find(b=>b.window_type_id===values.window_type);
@@ -44,6 +48,13 @@ export function createRowTableUi(document,integration){
   function resolve(input={},context={changedFields:[]}){
     if((context.changedFields??[]).some(k=>!definitions.has(k)))throw new Error('UNKNOWN_CHANGED_FIELD');
     let selection={...input};const cleared=new Set(),assignmentErrors=[],assigned=new Set();
+    const lookupErrors=[];
+    for(const relation of policy.lookup_constraints??[]){
+      const domain=lookupDomain(relation,selection),value=selection[relation.target];
+      if(!domain||!present(value)||domain.has(value))continue;
+      if(!Object.keys(relation.selectors).some(key=>context.changedFields?.includes(key)))lookupErrors.push({field:relation.target,code:'SOURCE_LOOKUP_SCOPE_MISMATCH',message:'選択した分類と仕様が元の対応表に一致しません。'});
+      delete selection[relation.target];cleared.add(relation.target);
+    }
     // An explicit size-code edit replaces the previous dimensions. Restoring an
     // inconsistent saved tuple remains a strict import error.
     if((context.changedFields??[]).includes(policy.standard_size_field)&&present(selection[policy.standard_size_field])){
@@ -109,6 +120,7 @@ export function createRowTableUi(document,integration){
         .filter(r=>!Array.isArray(fs.allowed_values)||fs.allowed_values.some(v=>same(v,r.canonical_value)))
         .map(r=>({value:r.canonical_value,displayLabel:label(key,r.canonical_value),disabled:false,
           ...(document.choice_visuals?.[key]?.[r.canonical_value]?{image:document.choice_visuals[key][r.canonical_value]}:{})}));
+      for(const relation of policy.lookup_constraints??[])if(relation.target===key){const domain=lookupDomain(relation,selection);if(domain)choices=choices.filter(choice=>domain.has(choice.value));}
       if(key===policy.standard_size_field){
         const rows=document.master.size_master.filter(r=>selectorMatches(sourceSelector(r),evaluated.values));
         const codes=new Map();for(const row of rows){const previous=codes.get(row.size_code);if(previous&&!same([previous.width,previous.height],[row.width,row.height])){codes.set(row.size_code,null);continue;}if(!codes.has(row.size_code))codes.set(row.size_code,row);}
@@ -136,7 +148,7 @@ export function createRowTableUi(document,integration){
     const manufacturerRequests=projection.manual.filter(r=>evaluated.source_manual_rule_ids.includes(r.row.dependency_rule_id??r.row.size_availability_id)).map(r=>({field:r.row.target_field,code:r.row.reason_code,message:reasonMessage(r.row.reason_code),status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー'}));
     if(evaluated.dimension.status==='REVIEW_REQUIRED')manufacturerRequests.push({field:'width',message:'この寸法は原本グラフ・製作条件をメーカーへ確認してください。',status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー'});
     const confirmations=[...unresolved,...manufacturerRequests];
-    const errors=[...assignmentErrors,...outside,...evaluated.input_issues.map(i=>({field:i.field,code:i.code,message:'入力値が元の商品仕様と一致しません。'})),...state.errors,
+    const errors=[...lookupErrors,...assignmentErrors,...outside,...evaluated.input_issues.map(i=>({field:i.field,code:i.code,message:'入力値が元の商品仕様と一致しません。'})),...state.errors,
       ...evaluated.source_invalid_rule_ids.map(id=>({code:id,message:'この組合せは選択できません。条件を変更してください。'}))];
     const result={productId:integration.id,manufacturer:integration.manufacturer,series:integration.series,selection,fields:applyDeclaredWindowFlow(fields,integration).map(f=>({...f,displayLabel:fieldLabel(f.key,f.displayLabel)})),clearedFields:[...cleared].filter(key=>!present(selection[key])),
       validation:{status:errors.length||evaluated.constraint_status==='INVALID'?'INVALID':evaluated.request_complete?'VALID':'INCOMPLETE',errors,missingRequiredFields:state.missing_required_fields},

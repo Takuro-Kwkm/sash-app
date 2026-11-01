@@ -49,6 +49,18 @@ test('a real color edit recomputes source-derived colors; inconsistent imports r
  const changed=ui.uiResolver(changedInput,{changedFields:['color_combination']});assert.equal(changed.selection.exterior_color,'white');assert.equal(changed.selection.interior_color,'white');assert.notEqual(changed.validation.status,'INVALID');
  assert.ok(!changed.clearedFields.includes('exterior_color'));
 });
+test('native category/type table filters four standard and seven optional glass choices',()=>{
+ for(const category of ['standard','option']){
+  const expected=doc.master.glass_master.filter(r=>r.glass_category===category).map(r=>r.glass_type);
+  const result=ui.uiResolver({...seed,glass_category:category});assert.deepEqual(result.fields.find(f=>f.key==='glass_type').values.map(r=>r.value),expected);
+ }
+});
+test('category edits clear incompatible glass while inconsistent imports stay invalid',()=>{
+ const first=ui.uiResolver({...seed,glass_category:'standard',glass_type:'low_e_clear'});
+ const input={...first.selection,glass_category:'option'};
+ assert.equal(ui.uiResolver(input).validation.status,'INVALID');
+ const edited=ui.uiResolver(input,{changedFields:['glass_category']});assert.equal(edited.selection.glass_type,undefined);assert.ok(edited.clearedFields.includes('glass_type'));assert.notEqual(edited.validation.status,'INVALID');
+});
 test('parent edit clears inapplicable screen and preserves valid color',()=>{
  const first=ui.uiResolver({...seed,screen_type:'sliding_screen'});
  const r=ui.uiResolver({...first.selection,window_type:'WT-SA-FIX-IN'},{changedFields:['window_type']});

@@ -14,7 +14,7 @@ const base=path.resolve(candidateDir),doc=JSON.parse(fs.readFileSync(path.join(b
 const projection=projectRowTableMaster(source,doc.projection_policy),roles=doc.ui_policy.fields;
 const seeds=JSON.parse(fs.readFileSync(path.join(base,'case-seeds.json'))),cases=structuredClone(seeds.cases),baseline=seeds.field_baselines,primary=cases.find(c=>c.id==='PRIMARY').input;
 for(const row of source.color_master)cases.push({id:'COLOR_'+row.color_combination_id,input:{...primary,color_combination:row.color_combination_id}});
-for(const row of source.glass_master)cases.push({id:'GLASS_'+row.glass_option_id,input:{...primary,glass_type:row.glass_type}});
+for(const row of source.glass_master)cases.push({id:'GLASS_'+row.glass_option_id,input:{...primary,glass_category:row.glass_category,glass_type:row.glass_type}});
 const scope={repository:'Takuro-Kwkm/sash-app',product_id:entry.id,master_sha256:doc.source_master.sha256,flow_sha256:ref(path.join(base,'flow.json')).sha256};
 const fields=source.field_master.map(f=>{
  const key=f.field_name,role=roles[key],stateId=baseline[key]??'PRIMARY',input=cases.find(c=>c.id===stateId).input;
@@ -22,6 +22,9 @@ const fields=source.field_master.map(f=>{
  for(const a of JSON.parse(bundle?.auto_assigned_fields_json??'[]')){const [k,v]=a.split('=');if(v!=='NOT_APPLICABLE')configured[k]=v;}
  const evaluated=evaluateRowTableProjection(projection,configured),fs=evaluated.state.fields[key];
  let candidates=projection.master.values.filter(r=>r.field_name===key).filter(r=>!Array.isArray(fs.allowed_values)||fs.allowed_values.includes(r.canonical_value)).map(r=>r.canonical_value);
+ for(const relation of doc.ui_policy.lookup_constraints??[])if(relation.target===key&&Object.keys(relation.selectors).every(k=>input[k]!==undefined)){
+  const domain=new Set(source[relation.table].filter(row=>Object.entries(relation.selectors).every(([k,col])=>input[k]===row[col])).map(row=>row[relation.column]));candidates=candidates.filter(value=>domain.has(value));
+ }
  if(key==='size_code')candidates=[...new Set(source.size_master.filter(row=>selectorMatches(Object.fromEntries(Object.entries(doc.projection_policy.dimension_selector_map).filter(([,col])=>row[col]).map(([k,col])=>[k,row[col]])),evaluated.values)).map(r=>r.size_code))];
  if(key==='screen_mesh_type'){const row=source.screen_master.find(r=>r.canonical_value===evaluated.values.screen_type);if(row?.screen_mesh_supported)candidates=candidates.filter(v=>row.screen_mesh_supported.split('|').includes(v));}
  if(role.role==='DERIVED')candidates=fs.value===null||fs.value===undefined?[]:[fs.value];
@@ -32,6 +35,9 @@ const fields=source.field_master.map(f=>{
  if(key==='window_type'||key==='glass_type')field.image_required=true;
  if(['color_combination','exterior_color','interior_color'].includes(key))field.image_cases=source.color_master.map(row=>({state_id:'COLOR_'+row.color_combination_id,candidate_values:key==='color_combination'?source.color_master.map(r=>r.color_combination_id):[row[key]]}));
  if(key==='window_type'||key==='glass_type')field.image_cases=[{state_id:'PRIMARY',candidate_values:candidates}];
+ if(key==='glass_type')for(const category of [...new Set(source.glass_master.map(r=>r.glass_category))].filter(v=>v!==primary.glass_category)){
+  const row=source.glass_master.find(r=>r.glass_category===category);field.image_cases.push({state_id:'GLASS_'+row.glass_option_id,candidate_values:source.glass_master.filter(r=>r.glass_category===category).map(r=>r.glass_type)});
+ }
  return field;
 }).sort((a,b)=>GLOBAL_WINDOW_STAGE_ORDER.indexOf(a.stage)-GLOBAL_WINDOW_STAGE_ORDER.indexOf(b.stage)||(entry.uiFlowContract.slotOrder.indexOf(roles[a.field_id].slot)-entry.uiFlowContract.slotOrder.indexOf(roles[b.field_id].slot))||(source.field_master.find(f=>f.field_name===a.field_id).sort_order-source.field_master.find(f=>f.field_name===b.field_id).sort_order));
 const presentationPolicy=ref(path.join(sharedRoot,'docs/architecture-v2/screen-presentation-policy.v1.json'));
@@ -45,6 +51,6 @@ write('master-projection.json',{...scope,fields:source.field_master.map(f=>({fie
 write('case-plan.json',{...scope,cases,field_baselines:baseline,scope:'SOURCE_BUNDLE_AND_ORIGINAL_NATIVE_RULES; REPRESENTATIVE_STATES_NOT_EXHAUSTIVE_SPACE'});
 const implNames=['src/catalog/runtime-master/row-table-runtime-ui.mjs','src/catalog/runtime-master/row-table-runtime-projection.mjs','src/catalog/runtime-master/generic-rule-engine.mjs','src/catalog/runtime-master/runtime-state.mjs','src/catalog/runtime-master/runtime-condition.mjs','src/catalog/runtime-master/runtime-effects.mjs','src/catalog/runtime-master/declared-window-flow.mjs','src/catalog/runtime-master/canonical-window-semantic-schema.mjs','src/catalog/runtime-master/global-window-selection-flow-engine.mjs','src/catalog/runtime-master/window-field-labels.mjs','src/catalog/runtime-master/candidate-runtime-registry.mjs','src/catalog/dimension-resolver.mjs','src/catalog/selector.mjs','src/server/candidate-runtime-preview.mjs','src/server/recovery-app.mjs','src/ui/web/product-configuration-editor.mjs','src/ui/web/app.js','src/ui/web/index.html','src/ui/web/styles.css','src/ui/web/styles-wave3.css','src/ui/web/theme.css','src/ui/web/theme.js','src/ui/web/estimate-output.css','src/ui/web/estimate-output-integration.mjs','src/ui/web/product-choice-model.mjs','src/ui/web/work-management.css','src/work-management/domain.mjs','src/work-management/field-workflow-scope.mjs','src/work-management/configuration-migration.mjs','contracts/ui-common/field-labels.v1.mjs',...['candidate.json','candidate-index.json','flow.json','ui-policy.json','case-seeds.json'].map(n=>path.relative(root,path.join(base,n)))];
 const ui_files=implNames.map(native_path=>({...ref(path.join(root,native_path)),native_path}));write('ui-files.json',ui_files);
-write('preview.json',{...scope,url:'http://127.0.0.1:4268/runtime-lab?product='+encodeURIComponent(entry.id),candidate_index:ref(path.join(base,'candidate-index.json')),ui_files,formalAdoption:false,release:false});
+write('preview.json',{...scope,url:'http://127.0.0.1:'+(process.argv[5]??'4268')+'/runtime-lab?product='+encodeURIComponent(entry.id),candidate_index:ref(path.join(base,'candidate-index.json')),ui_files,formalAdoption:false,release:false});
 write('image-inventory.json',{schema:'UI_IMAGE_INVENTORY_V1',repository:scope.repository,product_id:entry.id,master_sha256:scope.master_sha256,flow_sha256:scope.flow_sha256,mapping_sha256:ref(path.join(out,'mapping.json')).sha256,preview_sha256:ref(path.join(out,'preview.json')).sha256,ui_files_sha256:hash(JSON.stringify(ui_files.map(r=>r.sha256).sort())),images:Object.entries(doc.choice_visuals).flatMap(([field_id,values])=>Object.entries(values).map(([value,image])=>({...image,field_id,value})))});
 console.log(JSON.stringify({fields:fields.length,ui_fields:fields.filter(f=>['SELECTOR','DERIVED'].includes(f.role)).length,cases:cases.length,out}));

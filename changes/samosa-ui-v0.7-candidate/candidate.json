@@ -26936,7 +26936,18 @@
         "sha256": "1ce7738050569621cf0070cfa0f73532fe0cbc92a5e8fa87f53a8a4c767a41fd"
       }
     ],
-    "facts_changed": false
+    "facts_changed": false,
+    "lookup_constraints": [
+      {
+        "table": "glass_master",
+        "selectors": {
+          "glass_category": "glass_category"
+        },
+        "target": "glass_type",
+        "column": "glass_type",
+        "basis": "Original glass_master exact category/type relation"
+      }
+    ]
   },
   "source_master": {
     "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
