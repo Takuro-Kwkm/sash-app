@@ -30,5 +30,15 @@
     "SER-LIX-EW": {
       "format": "SASH_EW_V1"
     }
+  },
+  "native_request": {
+    "schema": "COMMON_DEVELOPMENT_REQUEST_V1",
+    "entry": "scripts/architecture-work.py",
+    "command": "develop",
+    "input": "COMPLETED_NATIVE_WORK_INPUT_AND_JOURNAL_OUTPUTS"
+  },
+  "runtime_packages": {
+    "registry": "contracts/production/released-runtime-packages.v1.json",
+    "source_environment": "SASH_RELEASE_RUNTIME_SOURCE_ROOT"
   }
 }
