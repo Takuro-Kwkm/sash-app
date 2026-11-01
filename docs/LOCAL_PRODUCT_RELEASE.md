@@ -18,10 +18,9 @@ app-releaseの旧workflow記録は新規Workの実行指示にしない。
 
 ## ローカル起動とQA
 
-Node.js 24とルートlockfileを使う。アプリ起動に追加の環境変数は不要。
+Node.js 24を使う。ルートpackage.jsonには起動時の追加依存がなく、lockfileもないため、次の既存コマンドで起動する。アプリ起動に追加の環境変数は不要。
 
 ```sh
-npm ci
 npm start
 # http://127.0.0.1:4173
 npm run lint
