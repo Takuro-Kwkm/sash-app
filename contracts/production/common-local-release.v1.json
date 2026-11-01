@@ -61,7 +61,7 @@
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "1ac5c919896bb94affd43fc036c11e60ea12a2c8",
+    "ref": "c6bc7e7b6ac5ba93427c658a25797c130a6f2bc6",
     "entry": "scripts/release-contract.py",
     "files": {
       "scripts/release-contract.py": "6d1eb36fdcaca383c34f471014409e8242a85de962f67336fb0c7155b6fdce8a",
@@ -80,7 +80,7 @@
       "harness/common_local_adoption.py": "3066fc631f2f3afd12473bdbed6cdb3b3bf3b79393dc11589c5ecd3aba551f99",
       "harness/common_adoption.py": "0d254439aefa965848bc0d412f1926d8bb97244e10c57c1e15f9826f44ef2acc",
       "harness/common_development.py": "a1ea6f6a906bb07b893cb890c63c35b11e17a3cb4134e27e8fcf264753d8c645",
-      "harness/common_preparation.py": "fb459d2c1eb4def522664b326f9b17b064d9d6379c4c2764a5fed9e711ebb5f9",
+      "harness/common_preparation.py": "6d7a54fcddaf96d4f6bf8a9a5b23bdf81e76e233ab17ae1ec84eece839c76b2c",
       "scripts/release-development.mjs": "0ee83cc61334a02846d31a444198d6b65422fa11a30015829bec4ad00f2386a2",
       "scripts/materialize-release-runtime.py": "9e4306015b8446ac0cacc90d787f1555ab22d6ffea0c2c814e9f2ccc68442e58",
       "harness/current_authority.py": "a342e565123b63f05b3ab26f90668acacca19cdaaf5118322465d225ba9c0cb4",
