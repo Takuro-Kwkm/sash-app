@@ -43,6 +43,12 @@ test('hidden assignments retained after a window edit are not reported cleared',
  const r=ui.uiResolver({window_type:'WT-SA-TATE-SUBERI'},{changedFields:['window_type']});assert.equal(r.selection.handle_type,'cam_latch');assert.equal(r.selection.configuration_type,'T');
  assert.ok(!r.clearedFields.includes('handle_type'));assert.ok(!r.clearedFields.includes('configuration_type'));
 });
+test('a real color edit recomputes source-derived colors; inconsistent imports remain invalid',()=>{
+ const old=ui.uiResolver(seed);const changedInput={...old.selection,color_combination:'SA-COLOR-WHITE'};
+ assert.equal(ui.uiResolver(changedInput).validation.status,'INVALID');
+ const changed=ui.uiResolver(changedInput,{changedFields:['color_combination']});assert.equal(changed.selection.exterior_color,'white');assert.equal(changed.selection.interior_color,'white');assert.notEqual(changed.validation.status,'INVALID');
+ assert.ok(!changed.clearedFields.includes('exterior_color'));
+});
 test('parent edit clears inapplicable screen and preserves valid color',()=>{
  const first=ui.uiResolver({...seed,screen_type:'sliding_screen'});
  const r=ui.uiResolver({...first.selection,window_type:'WT-SA-FIX-IN'},{changedFields:['window_type']});

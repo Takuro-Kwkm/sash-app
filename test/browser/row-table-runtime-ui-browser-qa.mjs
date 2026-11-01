@@ -64,6 +64,8 @@ try{
   await page.locator('[data-image-choice-field="color_combination"][data-image-choice-value="SA-COLOR-WHITE"]').click();
   await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision)&&window.__rowTableTestEditor.state.resolved?.selection.color_combination==='SA-COLOR-WHITE',colorRevision);
   assert.equal(await page.locator('[data-spec-key="color_combination"]').inputValue(),'SA-COLOR-WHITE');count('CONTROL_AND_VALUES');report.transitions.cases++;
+  const colored=await page.evaluate(()=>window.__rowTableTestEditor.state.resolved);
+  assert.equal(colored.selection.exterior_color,'white');assert.equal(colored.selection.interior_color,'white');assert.notEqual(colored.validation.status,'INVALID');count('MASTER_PROJECTION');
   const sourceSize=sourceDocument.master.size_master.find(row=>row.window_type_id==='WT-SA-FIX-IN'&&row.construction_module==='zairai'&&row.opening_class==='window'&&(row.width!==1200||row.height!==1000));
   const sizeRevision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
   await page.selectOption('[data-spec-key="size_code"]',sourceSize.size_code);

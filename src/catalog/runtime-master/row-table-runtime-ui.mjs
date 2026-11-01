@@ -55,6 +55,20 @@ export function createRowTableUi(document,integration){
       if(present(selection[key])&&selection[key]!==value&&!(context.changedFields??[]).includes('window_type'))assignmentErrors.push({field:key,code:'SOURCE_ASSIGNMENT_CONFLICT',message:'元の商品仕様の自動設定値と一致しません。'});
       selection[key]=value;assigned.add(key);
     }
+    // A previous UI response includes derived values. Recompute source SET_VALUE
+    // targets after their actual condition inputs change; an inconsistent saved
+    // import without that edit context continues to fail validation.
+    if(context.changedFields?.length){
+      const seedState=evaluateRowTableProjection(projection,selection).state;
+      const references=condition=>[...(condition.field?[condition.field]:[]),...(condition.all??condition.any??[]).flatMap(references)];
+      for(const rule of document.master.dependency_rule_master){
+        const action=JSON.parse(rule.result_json),condition=JSON.parse(rule.condition_json);
+        if(!rule.is_active||action.action!=='set_value'||!references(condition).some(key=>context.changedFields.includes(key)))continue;
+        if(evaluateCondition(normalizeRowCondition(condition),seedState)&&present(selection[action.target_field])&&!assigned.has(action.target_field)){
+          delete selection[action.target_field];cleared.add(action.target_field);
+        }
+      }
+    }
     // Clear only invalid descendants following a real parent edit. Initial
     // invalid imports remain errors; valid downstream values are retained.
     for(let pass=0;pass<definitions.size;pass++){
