@@ -26581,7 +26581,8 @@
           "window_type"
         ],
         "label": "ハンドルオプション",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "operation_method": {
         "role": "SELECTOR",
@@ -26627,7 +26628,8 @@
           "window_type"
         ],
         "label": "シャッター操作部",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "storm_shutter_type": {
         "role": "SELECTOR",
@@ -26757,7 +26759,8 @@
           "window_type"
         ],
         "label": "網戸サイズ区分",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "screen_middle_bar": {
         "role": "SELECTOR",
@@ -26785,7 +26788,8 @@
           "window_type"
         ],
         "label": "ガラスシステム",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "glass_category": {
         "role": "NON_UI",
@@ -26815,7 +26819,8 @@
           "window_type"
         ],
         "label": "ガラス詳細",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "glass_appearance": {
         "role": "HANDOFF_ONLY",
@@ -26825,7 +26830,8 @@
           "window_type"
         ],
         "label": "ガラス見え方",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "glass_gas": {
         "role": "HANDOFF_ONLY",
@@ -26835,7 +26841,8 @@
           "window_type"
         ],
         "label": "ガス",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "glass_spacer": {
         "role": "DERIVED",
@@ -26854,7 +26861,8 @@
           "window_type"
         ],
         "label": "格子入りガラス格子種",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "glass_grid_color": {
         "role": "HANDOFF_ONLY",
@@ -26864,7 +26872,8 @@
           "window_type"
         ],
         "label": "格子入りガラス格子色",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "remote_control_option": {
         "role": "HANDOFF_ONLY",
@@ -26874,7 +26883,8 @@
           "window_type"
         ],
         "label": "リモコンオプション",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "home_device_option": {
         "role": "HANDOFF_ONLY",
@@ -26884,7 +26894,8 @@
           "window_type"
         ],
         "label": "ホームデバイス",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "smart_control_option": {
         "role": "HANDOFF_ONLY",
@@ -26894,7 +26905,8 @@
           "window_type"
         ],
         "label": "スマート操作",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       },
       "paid_option": {
         "role": "SELECTOR",
@@ -26913,7 +26925,8 @@
           "window_type"
         ],
         "label": "特注オプション",
-        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+        "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。",
+        "customer_visible": false
       }
     },
     "standard_size_field": "size_code",

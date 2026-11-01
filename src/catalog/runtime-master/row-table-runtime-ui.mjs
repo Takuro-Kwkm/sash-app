@@ -122,7 +122,7 @@ export function createRowTableUi(document,integration){
     for(const def of projection.master.fields){
       const key=def.field_name,role=policy.fields[key],fs=state.fields[key];
       if(sales?.hiddenFields.has(key))continue;
-      if(['NON_UI','HANDOFF_ONLY'].includes(role.role)){if(role.role==='HANDOFF_ONLY')unresolved.push({field:key,label:def.display_label,message:def.display_label+'：'+role.reason});continue;}
+      if(['NON_UI','HANDOFF_ONLY'].includes(role.role)){if(role.role==='HANDOFF_ONLY')unresolved.push({field:key,label:def.display_label,customer_visible:role.customer_visible!==false,message:def.display_label+'：'+role.reason});continue;}
       if(fs.visibility==='HIDE'||fs.state==='NOT_APPLICABLE')continue;
       if(!eligible.has(key))continue;
       if((role.show_after??[]).some(k=>!present(selection[k])))continue;

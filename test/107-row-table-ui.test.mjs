@@ -87,3 +87,14 @@ test('explicitly clearing either standard or custom size never rehydrates the pr
 test('special-order mesh remains selectable on sourced screen forms and is carried as confirmation',()=>{
  for(const window_type of ['WT-SA-TATE-SUBERI','WT-SA-YOKO-SUBERI']){const r=ui.uiResolver({window_type,construction_module:'zairai',standard_size:'CUSTOM',width:600,height:1000,screen_type:'horizontal_roll_screen',screen_mesh_type:'mushiya_net'});assert.ok(values(r,'screen_mesh_type').includes('mushiya_net'));assert.match(field(r,'screen_mesh_type').values.find(o=>o.value==='mushiya_net').displayLabel,/特注対応/);assert.ok(r.confirmationRequests.some(r=>r.code==='SPECIAL_ORDER_SCREEN_NET'));assert.notEqual(r.validation.status,'INVALID');}
 });
+
+test('CUSTOM/native code and category-only contradictory imports cannot be silently normalized',()=>{
+ for(const size_code of ['16511','INTERNAL_UNKNOWN_ENUM'])assert.equal(ui.uiResolver({...seed,size_code}).validation.status,'INVALID');
+ for(const glass_category of ['option','INTERNAL_UNKNOWN_ENUM'])assert.equal(ui.uiResolver({...seed,glass_category}).validation.status,'INVALID');
+ assert.equal(ui.uiResolver({...seed,glass_category:'standard'}).validation.status,'VALID');
+ assert.equal(ui.uiResolver({...seed,height:1550,opening_class:'terrace_simple_step'}).validation.status,'INVALID');
+});
+test('internal source gaps are retained for handoff, while actual customer confirmations stay visible',()=>{
+ const result=ui.uiResolver(seed),gaps=result.confirmationRequests.filter(r=>r.message.includes('元マスター'));assert.equal(gaps.length,13);assert.ok(gaps.every(r=>r.customer_visible===false));assert.ok(result.confirmationRequests.some(r=>r.code==='SOURCE_GLAZING_COMBINATION_CONFIRMATION'&&r.customer_visible!==false));
+ const snapshot=createProductConfigurationSnapshot({product:entry,result});assert.equal(snapshot.confirmation_requests.filter(r=>r.customer_visible===false).length,13);
+});

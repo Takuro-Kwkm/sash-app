@@ -43,6 +43,7 @@ export function createRowTableSalesViews(document,projection){
   if(present(selection[size.panel_key])&&(!counts.includes(selection[size.panel_key]))){if(!edited([size.key,'window_type','construction_module']))errors.push({field:size.panel_key,code:'SOURCE_PANEL_SCOPE',message:'この規格サイズに対応する建数ではありません。'});delete selection[size.panel_key];cleared.push(size.panel_key);}
   const sizeEdited=edited([size.key,size.panel_key]);
   if(custom){
+   if(present(native.size_code)&&!changed.includes(size.key))errors.push({field:size.key,code:'CUSTOM_NATIVE_CODE_CONFLICT',message:'特注サイズと規格サイズのコードが同時に保存されています。'});
    delete native.size_code;delete native.opening_class;
    if(sizeEdited&&changed.includes(size.key)){delete native.width;delete native.height;}
   }else if(group){
@@ -52,7 +53,7 @@ export function createRowTableSalesViews(document,projection){
     if(!sizeEdited&&present(native.opening_class)&&native.opening_class!==row.opening_class)errors.push({field:size.key,code:'SOURCE_OPENING_CONTEXT_CONFLICT',message:'保存された枠仕様と規格サイズが一致しません。'});
     if(!sizeEdited&&present(native.size_code)&&native.size_code!==row.size_code)errors.push({field:size.key,code:'SOURCE_SIZE_TUPLE_CONFLICT',message:'保存された規格サイズと建数が一致しません。'});
     Object.assign(native,{size_code:row.size_code,opening_class:row.opening_class,width:row.width,height:row.height});
-   }else for(const key of ['size_code','opening_class','width','height'])delete native[key];
+   }else{if(!sizeEdited&&['size_code','width','height'].some(key=>present(native[key])))errors.push({field:size.key,code:'UNRESOLVED_SIZE_TUPLE',message:'建数が未選択のサイズに寸法が保存されています。'});for(const key of ['size_code','opening_class','width','height'])delete native[key];}
   }
   let contextualProjection=projection,customDimension=null,openingAmbiguous=false;
   if(custom&&size.panel_windows.includes(native.window_type)&&!present(selection[size.panel_key])){customDimension={status:'PENDING',matchedRuleIds:[],message:'建数を選択してください。'};openingAmbiguous=true;}
@@ -61,6 +62,7 @@ export function createRowTableSalesViews(document,projection){
    if(Number.isSafeInteger(native.width)&&Number.isSafeInteger(native.height)){
     const contexts=[...new Set(document.master.custom_size_region_master.filter(r=>matching(r,native,['opening_class'])&&(!size.region_panel_counts[r.custom_size_region_id]||size.region_panel_counts[r.custom_size_region_id]===selection[size.panel_key])).map(r=>r.opening_class))];
     const probes=contexts.map(opening_class=>({opening_class,result:evaluateRowTableProjection(contextualProjection,{...native,opening_class})})).filter(p=>['PASS','REVIEW_REQUIRED'].includes(p.result.dimension.status));
+    if(present(input.opening_class)&&probes.length&&!probes.some(p=>p.opening_class===input.opening_class)&&!edited([size.key,size.panel_key,'width','height','window_type','construction_module']))errors.push({field:size.key,code:'CUSTOM_CONTEXT_NOT_IN_SOURCE_FITS',message:'保存された枠仕様と寸法条件が一致しません。'});
     if(probes.length===1){
      if(present(input.opening_class)&&input.opening_class!==probes[0].opening_class&&!edited([size.key,size.panel_key,'width','height','window_type','construction_module']))errors.push({field:size.key,code:'CUSTOM_OPENING_CONTEXT_CONFLICT',message:'保存された枠仕様と寸法条件が一致しません。'});
      native.opening_class=probes[0].opening_class;
@@ -71,6 +73,7 @@ export function createRowTableSalesViews(document,projection){
   // Legacy mixed glass choices are carried into their own request axis. Missing
   // appearance/base is intentionally left unanswered rather than invented.
   const suppliedGlass={type:native.glass_type,category:native.glass_category};
+  if(present(native.glass_category)&&!document.master.glass_master.some(r=>r.glass_category===native.glass_category)&&!edited(['glazing_base','glazing_performance']))errors.push({field:'glazing_base',code:'UNKNOWN_NATIVE_GLASS_CATEGORY',message:'保存されたガラス分類を確認してください。'});
   const legacy=document.master.glass_master.find(r=>r.glass_type===native.glass_type);
   if(legacy&&present(native.glass_category)&&native.glass_category!==legacy.glass_category&&!edited(['glazing_base','glazing_performance']))errors.push({field:'glazing_base',code:'NATIVE_GLASS_CATEGORY_CONFLICT',message:'保存されたガラス分類と仕様が一致しません。'});
   if(present(native.glass_type)&&!legacy)errors.push({field:'glazing_base',code:'UNKNOWN_NATIVE_GLASS',message:'保存されたガラス仕様を確認してください。'});
@@ -99,6 +102,7 @@ export function createRowTableSalesViews(document,projection){
    const value=policy.glazing.find(v=>v.key==='glazing_performance').values.find(o=>o.value===selection.glazing_performance)?.native_value;
    if(value){native.glass_type=value;native.glass_category='standard';}else{delete native.glass_type;delete native.glass_category;}
   }else{delete native.glass_type;delete native.glass_category;}
+  if(!edited(['glazing_base','glazing_performance'])&&present(suppliedGlass.category)&&present(native.glass_category)&&suppliedGlass.category!==native.glass_category)errors.push({field:'glazing_base',code:'NATIVE_GLAZING_CATEGORY_VIEW_CONFLICT',message:'保存されたガラス分類と選択項目が一致しません。'});
   if(!edited(['glazing_base','glazing_performance'])&&present(suppliedGlass.type)&&present(native.glass_type)&&suppliedGlass.type!==native.glass_type)errors.push({field:'glazing_base',code:'NATIVE_GLAZING_VIEW_CONFLICT',message:'保存されたガラス仕様と選択項目が一致しません。'});
   function fields(){
    if(!present(native.window_type))return [];
