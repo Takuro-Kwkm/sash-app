@@ -61,7 +61,7 @@
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "a9c1cbf0c663c3609f93ea235844deb1b6e63784",
+    "ref": "706bcd0bbb7dc36f71f9e6a2a036cd413a6b43db",
     "entry": "scripts/release-contract.py",
     "files": {
       "scripts/release-contract.py": "847989b310fbfde6e6ff92bf22ebf46b35154ba1649e98d195b0a65556e63df1",
@@ -84,8 +84,8 @@
       "scripts/release-development.mjs": "bab8cf17929f0fde229c309b828fea1592f6a0f9c2247662649a4509ca491943",
       "scripts/materialize-release-runtime.py": "9e4306015b8446ac0cacc90d787f1555ab22d6ffea0c2c814e9f2ccc68442e58",
       "harness/current_authority.py": "a342e565123b63f05b3ab26f90668acacca19cdaaf5118322465d225ba9c0cb4",
-      "harness/local_qa.py": "bec5e88317ad42e4fac7a872a646ce5ebc865414a6b55f0a6cbc6ee619d56afc",
-      "harness/local_qa_preparation.py": "61b9065721e376d00ba404c92f4e468f31921a7929b6122db01ab502331d2763",
+      "harness/local_qa.py": "e00f2eb9031f9dd2ab8873579ad050373ff921671e03636c41ebf6937d20c5b6",
+      "harness/local_qa_preparation.py": "2d78140d45ea2b8c699be585b91d1dd6986f2c5d271fae34f907e657b083c3e2",
       "harness/local_qa_adoption.py": "0fbdd7cf311ca33f8ade5721367cabf5d4df40a0efc779839760c3052722646d",
       "harness/github_bridge.py": "723ebf50d947bb1aee6a00cf1e59274a545689c751df25990e300c714d344e17",
       "harness/workflow.py": "85a161c5ce1380d21fa3cb234fcc07b402e0cd6ddc52dd0a6ed0d3729c6c66bf",
