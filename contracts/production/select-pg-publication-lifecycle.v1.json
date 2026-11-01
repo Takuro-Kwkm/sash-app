@@ -74,5 +74,8 @@
     "SER-LIX-SELECT-PG": [
       "NEW-CANDIDATE-c9f91d558efb41e5368ead4e"
     ]
-  }
+  },
+  "qa_dependencies": [
+    "playwright"
+  ]
 }
