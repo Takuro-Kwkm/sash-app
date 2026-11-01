@@ -144,10 +144,14 @@
     "NATIVE_REGISTRY:LIXIL::サーモスA": {
       "state": "READY",
       "validators": [
-        "scripts/production/produce-row-table-runtime-candidate.py"
+        "scripts/production/validate-row-table-ui.py"
       ],
       "no_fallback": true,
-      "scope": "EXISTING_FORMAL_NATIVE_RUNTIME_CANDIDATE_ONLY"
+      "scope": "LOCAL_UI_CANDIDATE_ONLY",
+      "runtime_ui_profile": {
+        "path": "contracts/production/native-row-table-connection/samosa.v0.7.ui-candidate.json",
+        "sha256": "1a75435ac49d43b78a48f176703aa152ed50e0014d2b96464a1dd271a34f64a5"
+      }
     },
     "NATIVE_REGISTRY:LIXIL::玄関ドアXE": {
       "state": "FAIL_CLOSED",

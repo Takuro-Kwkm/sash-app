@@ -1,0 +1,452 @@
+{
+  "fields": {
+    "product_class": {
+      "role": "NON_UI",
+      "stage": "PRODUCT",
+      "slot": "product",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "商品区分",
+      "reason": "固定の商品識別。上段の商品選択とSnapshotの識別情報で保持。"
+    },
+    "manufacturer": {
+      "role": "NON_UI",
+      "stage": "PRODUCT",
+      "slot": "manufacturer",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "メーカー",
+      "reason": "固定の商品識別。上段の商品選択とSnapshotの識別情報で保持。"
+    },
+    "product_series": {
+      "role": "NON_UI",
+      "stage": "PRODUCT",
+      "slot": "product",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "シリーズ",
+      "reason": "固定の商品識別。上段の商品選択とSnapshotの識別情報で保持。"
+    },
+    "window_type": {
+      "role": "SELECTOR",
+      "stage": "OPENING",
+      "slot": "window_type",
+      "show_after": [],
+      "label": "窓種"
+    },
+    "construction_module": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "工法モジュール"
+    },
+    "opening_class": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "開口区分"
+    },
+    "configuration_type": {
+      "role": "NON_UI",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "構成タイプ",
+      "reason": "原本bundleとpresentation規則により自動設定・非表示。"
+    },
+    "opening_angle": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "開放角度"
+    },
+    "handle_type": {
+      "role": "NON_UI",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "ハンドル種",
+      "reason": "原本bundleとpresentation規則により自動設定・非表示。"
+    },
+    "handle_option": {
+      "role": "HANDOFF_ONLY",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "ハンドルオプション",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "operation_method": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "操作方式"
+    },
+    "chain_type": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "チェーン種"
+    },
+    "shutter_operation": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "シャッター操作"
+    },
+    "shutter_type": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "シャッター種類"
+    },
+    "shutter_control": {
+      "role": "HANDOFF_ONLY",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "シャッター操作部",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "storm_shutter_type": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "雨戸種類"
+    },
+    "storm_shutter_panel": {
+      "role": "DERIVED",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "雨戸パネル"
+    },
+    "storm_shutter_storage_type": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "戸袋種類"
+    },
+    "storm_shutter_mirror_panel": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "鏡板有無"
+    },
+    "mirror_panel_type": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "鏡板種類"
+    },
+    "grille_type": {
+      "role": "SELECTOR",
+      "stage": "CONFIGURATION",
+      "slot": "window_spec",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "面格子種類"
+    },
+    "size_code": {
+      "role": "SELECTOR",
+      "stage": "SIZE",
+      "slot": "size",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "規格サイズ呼称"
+    },
+    "width": {
+      "role": "SELECTOR",
+      "stage": "SIZE",
+      "slot": "size",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "W",
+      "helpText": "規格サイズを選択すると元のW・Hを表示。特注入力時はmm単位。"
+    },
+    "height": {
+      "role": "SELECTOR",
+      "stage": "SIZE",
+      "slot": "size",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "H",
+      "helpText": "規格サイズを選択すると元のW・Hを表示。特注入力時はmm単位。"
+    },
+    "color_combination": {
+      "role": "SELECTOR",
+      "stage": "FINISH",
+      "slot": "finish_color",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "カラー組合せ"
+    },
+    "exterior_color": {
+      "role": "DERIVED",
+      "stage": "FINISH",
+      "slot": "exterior_color",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "外観色"
+    },
+    "interior_color": {
+      "role": "DERIVED",
+      "stage": "FINISH",
+      "slot": "interior_color",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "内観色"
+    },
+    "screen_type": {
+      "role": "SELECTOR",
+      "stage": "SCREEN",
+      "slot": "screen_form",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "網戸種類"
+    },
+    "screen_size_class": {
+      "role": "HANDOFF_ONLY",
+      "stage": "SCREEN",
+      "slot": "screen_form",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "網戸サイズ区分",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "screen_middle_bar": {
+      "role": "SELECTOR",
+      "stage": "SCREEN",
+      "slot": "screen_midrail",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "網戸中桟"
+    },
+    "screen_mesh_type": {
+      "role": "SELECTOR",
+      "stage": "SCREEN",
+      "slot": "screen_net",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "網種"
+    },
+    "glass_system": {
+      "role": "HANDOFF_ONLY",
+      "stage": "GLAZING",
+      "slot": "glass_base",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "ガラスシステム",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "glass_category": {
+      "role": "SELECTOR",
+      "stage": "GLAZING",
+      "slot": "glass_base",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "ガラス大分類"
+    },
+    "glass_type": {
+      "role": "SELECTOR",
+      "stage": "GLAZING",
+      "slot": "glass_detail",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "ガラス種類"
+    },
+    "glass_detail": {
+      "role": "HANDOFF_ONLY",
+      "stage": "GLAZING",
+      "slot": "glass_function",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "ガラス詳細",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "glass_appearance": {
+      "role": "HANDOFF_ONLY",
+      "stage": "GLAZING",
+      "slot": "glass_function",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "ガラス見え方",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "glass_gas": {
+      "role": "HANDOFF_ONLY",
+      "stage": "GLAZING",
+      "slot": "glass_air_layer",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "ガス",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "glass_spacer": {
+      "role": "DERIVED",
+      "stage": "GLAZING",
+      "slot": "glass_spacer",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "スペーサー"
+    },
+    "glass_grid_type": {
+      "role": "HANDOFF_ONLY",
+      "stage": "GLAZING",
+      "slot": "glass_function",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "格子入りガラス格子種",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "glass_grid_color": {
+      "role": "HANDOFF_ONLY",
+      "stage": "GLAZING",
+      "slot": "glass_function",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "格子入りガラス格子色",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "remote_control_option": {
+      "role": "HANDOFF_ONLY",
+      "stage": "OPTION",
+      "slot": "option",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "リモコンオプション",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "home_device_option": {
+      "role": "HANDOFF_ONLY",
+      "stage": "OPTION",
+      "slot": "option",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "ホームデバイス",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "smart_control_option": {
+      "role": "HANDOFF_ONLY",
+      "stage": "OPTION",
+      "slot": "option",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "スマート操作",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    "paid_option": {
+      "role": "SELECTOR",
+      "stage": "OPTION",
+      "slot": "option",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "有償品"
+    },
+    "custom_option": {
+      "role": "HANDOFF_ONLY",
+      "stage": "OPTION",
+      "slot": "option",
+      "show_after": [
+        "window_type"
+      ],
+      "label": "特注オプション",
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    }
+  },
+  "standard_size_field": "size_code",
+  "width_field": "width",
+  "height_field": "height",
+  "size_parents": [
+    "window_type",
+    "construction_module",
+    "opening_class",
+    "configuration_type"
+  ],
+  "value_labels": {
+    "glass_system": {
+      "dedicated_double_glazing_with_glazing_channel": "専用グレチャン付複層ガラス"
+    }
+  },
+  "source_refs": [
+    {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+      "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+    },
+    {
+      "path": "/private/tmp/samosa-ui-20261102-0559-consumer/changes/samosa-ui-v0.7-candidate/flow.json",
+      "sha256": "1ce7738050569621cf0070cfa0f73532fe0cbc92a5e8fa87f53a8a4c767a41fd"
+    }
+  ],
+  "facts_changed": false
+}

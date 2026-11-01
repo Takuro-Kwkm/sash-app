@@ -201,6 +201,12 @@ export class ProductConfigurationEditor {
   }
 
   async handleClick(event){
+    const choice=event.target.closest('[data-image-choice-field]');
+    if(choice&&!choice.disabled){
+      const control=[...this.root.querySelectorAll('select[data-spec-key]')].find(one=>one.dataset.specKey===choice.dataset.imageChoiceField);
+      if(control&&!control.disabled){control.value=choice.dataset.imageChoiceValue;await this.handleChange({target:control});}
+      return;
+    }
     if(!event.target.closest('[data-runtime-action="revalidate"]'))return;
     this.state.stale=false;this.root.querySelector('#runtimeStaleNotice').innerHTML='';
     await this.resolve({notify:true});
@@ -311,7 +317,7 @@ export class ProductConfigurationEditor {
     if(field.readOnly&&field.selectionMode==='DERIVED'){
       const choice=field.values.find(value=>String(value.value)===String(this.state.selection[field.key]));
       const display=field.dataType==='NUMBER'?(this.state.selection[field.key]??field.emptyLabel??'寸法の入力後に表示'):(choice?.displayLabel??'本体色の選択後に表示');
-      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}</label><output class="runtime-derived-value" data-spec-key="${esc(field.key)}" ${dataAttributes}>${esc(display)}</output>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
+      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}</label><output class="runtime-derived-value" data-spec-key="${esc(field.key)}" ${dataAttributes}>${esc(display)}</output>${this.renderChoiceImages(field, true)}${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
     }
     if(field.dataType==='NUMBER')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="decimal" step="${esc(field.step??'any')}" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="数値を入力">${field.unit?`<span>${esc(field.unit)}</span>`:''}</div>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
     if(field.dataType==='TEXT')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="入力してください">${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
@@ -323,7 +329,17 @@ export class ProductConfigurationEditor {
       return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select class="multi-enum-native-control" data-spec-key="${esc(field.key)}" ${attributes} multiple aria-hidden="true" tabindex="-1">${nativeOptions}</select><div class="multi-enum-group" role="group" aria-label="${esc(field.displayLabel)}" data-multi-enum="true" data-multi-key="${esc(field.key)}">${choices}</div><small class="field-help">${esc(field.helpText??'複数選択できます')}</small></div>`;
     }
     const options=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${reviewChoiceLabel(value)}</option>`).join('');
-    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}" ${attributes}><option value="">選択してください</option>${options}</select>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
+    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}" ${attributes}><option value="">選択してください</option>${options}</select>${this.renderChoiceImages(field)}${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
+  }
+
+  renderChoiceImages(field,readOnly=false){
+    const selected=this.state.selection[field.key];
+    const values=field.values.filter(row=>row.image&&(!readOnly||String(row.value)===String(selected)));
+    if(!values.length)return '';
+    return `<div class="runtime-choice-images" role="group" aria-label="${esc(field.displayLabel)}の画像">${values.map(row=>{
+      const visual=row.image,contents=`<img src="${esc(visual.src)}" alt="${esc(visual.alt)}" data-field="${esc(field.key)}" data-value="${esc(row.value)}"><span>${esc(row.displayLabel)}</span><small>${esc(visual.source_label)}</small>`;
+      return readOnly?`<div class="runtime-choice-image">${contents}</div>`:`<button type="button" class="runtime-choice-image" data-image-choice-field="${esc(field.key)}" data-image-choice-value="${esc(row.value)}" aria-pressed="${String(row.value)===String(selected)}"${row.disabled||field.disabled?' disabled':''}>${contents}</button>`;
+    }).join('')}</div>`;
   }
 
   renderWarnings(result){

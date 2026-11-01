@@ -1,0 +1,251 @@
+{
+  "schema": "CANDIDATE_RUNTIME_INDEX_V1",
+  "adoption": "CANDIDATE_ONLY",
+  "revision": "SAMOSA_UI_20261102_01",
+  "products": [
+    {
+      "id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+      "manufacturer": "LIXIL",
+      "series": "サーモスA",
+      "displayName": "サーモスA",
+      "candidate": true,
+      "adapterType": "ROW_TABLE_UI_CANDIDATE_V1",
+      "path": "candidate.json",
+      "sha256": "ec879d82a6848fd097737a261922183be3f7889500a48d2e32b9dee95b884041",
+      "packageVersion": "v0.7-ui-candidate-1",
+      "schemaVersion": "ROW_TABLE_UI_V1",
+      "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
+      "uiFlowContract": {
+        "schema": "DECLARED_WINDOW_FLOW_V1",
+        "revision": "ROW_TABLE_UI_V1_CANDIDATE",
+        "slotOrder": [
+          "manufacturer",
+          "product",
+          "window_type",
+          "window_spec",
+          "size",
+          "finish_color",
+          "exterior_color",
+          "interior_color",
+          "screen_form",
+          "screen_midrail",
+          "screen_net",
+          "glass_base",
+          "glass_detail",
+          "glass_function",
+          "glass_spacer",
+          "glass_air_layer",
+          "option"
+        ],
+        "fields": {
+          "product_class": {
+            "slot": "product",
+            "stage": "PRODUCT"
+          },
+          "manufacturer": {
+            "slot": "manufacturer",
+            "stage": "PRODUCT"
+          },
+          "product_series": {
+            "slot": "product",
+            "stage": "PRODUCT"
+          },
+          "window_type": {
+            "slot": "window_type",
+            "stage": "OPENING"
+          },
+          "construction_module": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "opening_class": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "configuration_type": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "opening_angle": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "handle_type": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "handle_option": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "operation_method": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "chain_type": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "shutter_operation": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "shutter_type": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "shutter_control": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "storm_shutter_type": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "storm_shutter_panel": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "storm_shutter_storage_type": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "storm_shutter_mirror_panel": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "mirror_panel_type": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "grille_type": {
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "size_code": {
+            "slot": "size",
+            "stage": "SIZE"
+          },
+          "width": {
+            "slot": "size",
+            "stage": "SIZE"
+          },
+          "height": {
+            "slot": "size",
+            "stage": "SIZE"
+          },
+          "color_combination": {
+            "slot": "finish_color",
+            "stage": "FINISH"
+          },
+          "exterior_color": {
+            "slot": "exterior_color",
+            "stage": "FINISH"
+          },
+          "interior_color": {
+            "slot": "interior_color",
+            "stage": "FINISH"
+          },
+          "screen_type": {
+            "slot": "screen_form",
+            "stage": "SCREEN"
+          },
+          "screen_size_class": {
+            "slot": "screen_form",
+            "stage": "SCREEN"
+          },
+          "screen_middle_bar": {
+            "slot": "screen_midrail",
+            "stage": "SCREEN"
+          },
+          "screen_mesh_type": {
+            "slot": "screen_net",
+            "stage": "SCREEN"
+          },
+          "glass_system": {
+            "slot": "glass_base",
+            "stage": "GLAZING"
+          },
+          "glass_category": {
+            "slot": "glass_base",
+            "stage": "GLAZING"
+          },
+          "glass_type": {
+            "slot": "glass_detail",
+            "stage": "GLAZING"
+          },
+          "glass_detail": {
+            "slot": "glass_function",
+            "stage": "GLAZING"
+          },
+          "glass_appearance": {
+            "slot": "glass_function",
+            "stage": "GLAZING"
+          },
+          "glass_gas": {
+            "slot": "glass_air_layer",
+            "stage": "GLAZING"
+          },
+          "glass_spacer": {
+            "slot": "glass_spacer",
+            "stage": "GLAZING"
+          },
+          "glass_grid_type": {
+            "slot": "glass_function",
+            "stage": "GLAZING"
+          },
+          "glass_grid_color": {
+            "slot": "glass_function",
+            "stage": "GLAZING"
+          },
+          "remote_control_option": {
+            "slot": "option",
+            "stage": "OPTION"
+          },
+          "home_device_option": {
+            "slot": "option",
+            "stage": "OPTION"
+          },
+          "smart_control_option": {
+            "slot": "option",
+            "stage": "OPTION"
+          },
+          "paid_option": {
+            "slot": "option",
+            "stage": "OPTION"
+          },
+          "custom_option": {
+            "slot": "option",
+            "stage": "OPTION"
+          }
+        },
+        "formalAdoption": false,
+        "ordered_semantic_stages": [
+          "PRODUCT",
+          "OPENING",
+          "CONFIGURATION",
+          "SIZE",
+          "FINISH",
+          "SCREEN",
+          "GLAZING",
+          "INSTALLATION_SURVEY",
+          "OPTION"
+        ],
+        "source_refs": [
+          {
+            "path": "/private/tmp/samosa-ui-20261102-0559-consumer/src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
+            "sha256": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7"
+          },
+          {
+            "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+            "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+          }
+        ]
+      },
+      "sourceReference": {
+        "runtimeManifestDriveFileId": "1GEu9jyvy09YK3guh-0s-xVK0iR0koMO6",
+        "sourceMasterSha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+      }
+    }
+  ]
+}

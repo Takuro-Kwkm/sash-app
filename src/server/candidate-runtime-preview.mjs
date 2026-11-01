@@ -8,6 +8,7 @@ import {runtimeMasterInventory,loadRegisteredRuntime} from '../catalog/runtime-m
 import {runtimeAppIntegrationInventory,getRuntimeAppIntegration} from '../catalog/runtime-master/runtime-app-bridge.mjs';
 import {applyDeclaredWindowFlow} from '../catalog/runtime-master/declared-window-flow.mjs';
 import {parseSelectionContext} from '../catalog/runtime-master/declared-selection-views.mjs';
+import {createRowTableUi} from '../catalog/runtime-master/row-table-runtime-ui.mjs';
 
 export function createCandidateRuntimePreview(){
   if(!candidateRuntimeEntries.length)throw new Error('CANDIDATE_INDEX_REQUIRED');
@@ -32,7 +33,7 @@ export function createCandidateRuntimePreview(){
         try{
           // Recheck complete candidate bytes on every request, including cached readers.
           const doc=readCandidateModule(entry);
-          if(!adapters.has(entry.id))adapters.set(entry.id,await adaptComposedProductRuntime(doc,entry,loadReference));
+          if(!adapters.has(entry.id))adapters.set(entry.id,entry.adapterType==='ROW_TABLE_UI_CANDIDATE_V1'?createRowTableUi(doc,entry):await adaptComposedProductRuntime(doc,entry,loadReference));
           const input=JSON.parse(url.searchParams.get('selection')??'{}'),version=url.searchParams.get('configurationVersion');
           const legacy=Boolean(version&&version!==entry.packageVersion);
           const reader=adapters.get(entry.id);
@@ -42,7 +43,7 @@ export function createCandidateRuntimePreview(){
             result.configurationMigration={from:version,to:entry.packageVersion,originalSelection:input};
             result.manualWarnings.push('保存済みの選択を現在の項目に整理しました。本体色・カバー仕様・ガラスを確認してください。');
           }
-          return json(res,200,{...result,productId:entry.id,manufacturer:entry.manufacturer,series:entry.series,source:'RUNTIME_MASTER',status:'CANDIDATE_LOCAL_READY',fields:applyDeclaredWindowFlow(result.fields,entry)});
+          return json(res,200,{...result,productId:entry.id,manufacturer:entry.manufacturer,series:entry.series,source:'RUNTIME_MASTER',status:'CANDIDATE_LOCAL_READY',fields:entry.adapterType==='ROW_TABLE_UI_CANDIDATE_V1'?result.fields:applyDeclaredWindowFlow(result.fields,entry)});
         }catch(error){return json(res,400,{code:error.code??'CANDIDATE_RESOLVE_FAILED',error:error.message});}
       }
     }
