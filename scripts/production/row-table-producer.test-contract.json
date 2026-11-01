@@ -1,0 +1,74 @@
+{
+  "schema": "NATIVE_ROW_TABLE_PRODUCER_CANDIDATE_V1",
+  "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+  "identity": {
+    "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+    "manufacturer": "LIXIL",
+    "series": "サーモスA",
+    "revision": "v0.7",
+    "authoring_file_id": "1cDEFzi0g1DzM5YoeGvZtHuXionD7tmFD",
+    "runtime_manifest_id": "1GEu9jyvy09YK3guh-0s-xVK0iR0koMO6",
+    "canonical_folder_id": "10eHobQhx343aUkUeOHmV8KwD7K5OktuW"
+  },
+  "inputs": {
+    "master": {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-development-20261101T2314/acquisition/master.v0.7.json",
+      "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+    },
+    "policy": {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/projection-policy.candidate.json",
+      "sha256": "ff1006728d2110b5054c0f1f32d160a77c1f59b68589c2f21ce7b72f9fbcfbfe"
+    },
+    "registry": {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/registry-live.json",
+      "sha256": "f1c9d99b0690377957be4afa7f7690c20473c1c61826df8dd7852e9fabc05585"
+    },
+    "input_refs": {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/input-refs.json",
+      "sha256": "1d53b86ad5d5046cd81d33b6e7a675909f098f6f232c8b6cc029f1086cdeb054"
+    }
+  },
+  "node": {
+    "path": "/usr/local/bin/node",
+    "sha256": "1f08f0e5b8d9a0136c6219f4cea4d3b4fb8ffa4d96e0ff64869ce0dda6dd6a35"
+  },
+  "exporter": {
+    "path": "/private/tmp/samosa-20261102-0402-consumer/scripts/production/export-row-table-runtime.mjs",
+    "sha256": "957a01aeeb3370b8f5b2e280192fa0ce76d1eca5d67073756fe0c46e4619a2d3"
+  },
+  "projection": {
+    "path": "/private/tmp/samosa-20261102-0402-consumer/src/catalog/runtime-master/row-table-runtime-projection.mjs",
+    "sha256": "75b5b63a3404f0ce4b365903a32732143807dea4bfccddf0a4c5668f6a4b8ecd"
+  },
+  "runtime_refs": [
+    {
+      "path": "/private/tmp/samosa-20261102-0402-consumer/src/catalog/runtime-master/generic-rule-engine.mjs",
+      "sha256": "b48e53ca77fcbf5d1866e5d8e8c8f6c3a7f20bf0558510d767c0a27d506e7618"
+    },
+    {
+      "path": "/private/tmp/samosa-20261102-0402-consumer/src/catalog/runtime-master/runtime-condition.mjs",
+      "sha256": "ae5e442f90b5f7007ff8ea6fed46a0d7ce2937afbf5570f9fefefa2b113cdb8e"
+    },
+    {
+      "path": "/private/tmp/samosa-20261102-0402-consumer/src/catalog/runtime-master/runtime-state.mjs",
+      "sha256": "0b8ce17322d2e51fe914af1f0bfa7c8a9787e51695762d67ecd622bd0244a2b9"
+    },
+    {
+      "path": "/private/tmp/samosa-20261102-0402-consumer/src/catalog/runtime-master/runtime-effects.mjs",
+      "sha256": "261c361345e605f48a943ca02bdf66255ac4823883877836ba4e3befd39d24bc"
+    },
+    {
+      "path": "/private/tmp/samosa-20261102-0402-consumer/src/catalog/dimension-resolver.mjs",
+      "sha256": "cab3841254d161a5f2c9992735ca619f52ffb524be26eb5c30720b086dfdb3ac"
+    },
+    {
+      "path": "/private/tmp/samosa-20261102-0402-consumer/src/catalog/selector.mjs",
+      "sha256": "28974cd66ae488e22bb9ee04aac9a604b0a671361fe24a26399e7982768f42d5"
+    },
+    {
+      "path": "/private/tmp/samosa-20261102-0402-consumer/src/catalog/selector-ops.mjs",
+      "sha256": "58090dcc6f9a26b1abfc5f3778705e2cae46ed7ed561d2350ea7c192e8c21de4"
+    }
+  ],
+  "work_id": "SAMOSA_NATIVE_RUNTIME_CANDIDATE_20261102"
+}

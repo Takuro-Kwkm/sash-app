@@ -142,9 +142,12 @@
       "no_fallback": true
     },
     "NATIVE_REGISTRY:LIXIL::サーモスA": {
-      "state": "FAIL_CLOSED",
-      "validators": [],
-      "no_fallback": true
+      "state": "READY",
+      "validators": [
+        "scripts/production/produce-row-table-runtime-candidate.py"
+      ],
+      "no_fallback": true,
+      "scope": "EXISTING_FORMAL_NATIVE_RUNTIME_CANDIDATE_ONLY"
     },
     "NATIVE_REGISTRY:LIXIL::玄関ドアXE": {
       "state": "FAIL_CLOSED",

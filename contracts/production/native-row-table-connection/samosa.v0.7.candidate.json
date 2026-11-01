@@ -1,0 +1,21 @@
+{
+  "schema": "SASH_NATIVE_ROW_TABLE_RECONNECTION_PROFILE_V1",
+  "status": "LOCAL_CONNECTION_CANDIDATE",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "target_gate": "NATIVE_RUNTIME_CANDIDATE",
+  "work_type": "EXISTING_FORMAL_RECONNECT_CANDIDATE",
+  "business_scope": "EXISTING_FORMAL_BYTES_AND_CONSTRAINTS; UI_NOT_ADOPTED",
+  "native_adapter": "scripts/production/produce-row-table-runtime-candidate.py",
+  "native_prepare": "scripts/production/prepare-row-table-connection.py",
+  "master_producer": "ACTUAL_ROW_TABLE_PROJECTION_WITH_EXECUTED_SOURCE_CASES",
+  "existing_formal": "PRESERVE_EXACT_V0_7",
+  "permissions": {
+    "formal_mutation": false,
+    "human_decision_creation": false,
+    "ui_adoption": false,
+    "release": false
+  },
+  "shared_workflow": "harness/workflow.py",
+  "qa_policy": "EXISTING_LOCAL_QA_WITH_SEPARATE_EXECUTOR_AND_REVIEWER"
+}

@@ -436,7 +436,7 @@
         "サーモスA"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
+      "connection_state": "CONNECTED",
       "current_formal_version": "v0.7",
       "formal_registry_selector": "LIXIL::サーモスA",
       "safe_failure": {
@@ -445,7 +445,20 @@
         "writes": 0,
         "fallback": false,
         "next_action": "Registry-only product: bind a native adapter successor before mutation"
-      }
+      },
+      "default_gate": "NATIVE_RUNTIME_CANDIDATE",
+      "native_adapter": "scripts/production/produce-row-table-runtime-candidate.py",
+      "validators": [
+        "scripts/production/produce-row-table-runtime-candidate.py"
+      ],
+      "baseline_selector": "LIXIL::サーモスA",
+      "source_selector": "CURRENT_ADOPTED_FORMAL_BYTES_ONLY",
+      "resume_selector": "EXPLICIT_SAVED_IMMUTABLE_BINDING",
+      "native_reconnect_profile": {
+        "path": "contracts/production/native-row-table-connection/samosa.v0.7.candidate.json",
+        "sha256": "df70c85f5c63a67184a9d44d2c50e862178f9194a93ff5544b10148dc3146885"
+      },
+      "native_scope": "EXISTING_FORMAL_NATIVE_RUNTIME_CANDIDATE_ONLY"
     },
     {
       "product_id": "NATIVE_REGISTRY:LIXIL::玄関ドアXE",
