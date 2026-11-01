@@ -33,6 +33,16 @@ test('standard tuple is derived read-only, custom inputs retain shared labels',(
  assert.equal(ui.uiResolver({...seed,size_code:row.size_code,width:row.width+1}).validation.status,'INVALID');
  assert.ok(!ui.uiResolver(seed).fields.find(f=>f.key==='width').readOnly);
 });
+test('real size-code edit replaces custom dimensions; strict restoration still rejects mismatch',()=>{
+ const row=doc.master.size_master.find(r=>r.window_type_id===seed.window_type&&r.construction_module===seed.construction_module&&r.opening_class===seed.opening_class&&(r.width!==seed.width||r.height!==seed.height));
+ const imported={...seed,size_code:row.size_code};assert.equal(ui.uiResolver(imported).validation.status,'INVALID');
+ const changed=ui.uiResolver(imported,{changedFields:['size_code']});assert.equal(changed.selection.width,row.width);assert.equal(changed.selection.height,row.height);assert.notEqual(changed.validation.status,'INVALID');
+ assert.ok(changed.fields.find(f=>f.key==='width').readOnly);assert.ok(!changed.clearedFields.some(key=>['width','height'].includes(key)));
+});
+test('hidden assignments retained after a window edit are not reported cleared',()=>{
+ const r=ui.uiResolver({window_type:'WT-SA-TATE-SUBERI'},{changedFields:['window_type']});assert.equal(r.selection.handle_type,'cam_latch');assert.equal(r.selection.configuration_type,'T');
+ assert.ok(!r.clearedFields.includes('handle_type'));assert.ok(!r.clearedFields.includes('configuration_type'));
+});
 test('parent edit clears inapplicable screen and preserves valid color',()=>{
  const first=ui.uiResolver({...seed,screen_type:'sliding_screen'});
  const r=ui.uiResolver({...first.selection,window_type:'WT-SA-FIX-IN'},{changedFields:['window_type']});

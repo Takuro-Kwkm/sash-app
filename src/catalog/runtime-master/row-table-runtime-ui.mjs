@@ -44,6 +44,11 @@ export function createRowTableUi(document,integration){
   function resolve(input={},context={changedFields:[]}){
     if((context.changedFields??[]).some(k=>!definitions.has(k)))throw new Error('UNKNOWN_CHANGED_FIELD');
     let selection={...input};const cleared=new Set(),assignmentErrors=[],assigned=new Set();
+    // An explicit size-code edit replaces the previous dimensions. Restoring an
+    // inconsistent saved tuple remains a strict import error.
+    if((context.changedFields??[]).includes(policy.standard_size_field)&&present(selection[policy.standard_size_field])){
+      for(const key of [policy.width_field,policy.height_field])if(present(selection[key])){delete selection[key];cleared.add(key);}
+    }
     const bundle=document.master.rule_bundle_master.find(b=>b.window_type_id===selection.window_type);
     for(const assignment of JSON.parse(bundle?.auto_assigned_fields_json??'[]')){
       const [key,value]=assignment.split('=');if(value==='NOT_APPLICABLE')continue;
@@ -119,7 +124,7 @@ export function createRowTableUi(document,integration){
     const confirmations=[...unresolved,...manufacturerRequests];
     const errors=[...assignmentErrors,...outside,...evaluated.input_issues.map(i=>({field:i.field,code:i.code,message:'入力値が元の商品仕様と一致しません。'})),...state.errors,
       ...evaluated.source_invalid_rule_ids.map(id=>({code:id,message:'この組合せは選択できません。条件を変更してください。'}))];
-    const result={productId:integration.id,manufacturer:integration.manufacturer,series:integration.series,selection,fields:applyDeclaredWindowFlow(fields,integration).map(f=>({...f,displayLabel:fieldLabel(f.key,f.displayLabel)})),clearedFields:[...cleared],
+    const result={productId:integration.id,manufacturer:integration.manufacturer,series:integration.series,selection,fields:applyDeclaredWindowFlow(fields,integration).map(f=>({...f,displayLabel:fieldLabel(f.key,f.displayLabel)})),clearedFields:[...cleared].filter(key=>!present(selection[key])),
       validation:{status:errors.length||evaluated.constraint_status==='INVALID'?'INVALID':evaluated.request_complete?'VALID':'INCOMPLETE',errors,missingRequiredFields:state.missing_required_fields},
       dimensionResult:evaluated.dimension,manualWarnings:[...reasonMessages,...(evaluated.constraint_status==='MANUAL_CONFIRMATION_REQUIRED'?['この寸法・仕様はメーカーへの確認が必要です。']:[])],
       confirmationRequests:confirmations,estimateConfirmations:confirmations,runtimeMaster:{packageVersion:integration.packageVersion,sourceMasterSha256:document.source_master.sha256,candidateOnly:true},

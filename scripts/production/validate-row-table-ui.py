@@ -15,6 +15,17 @@ def validate(contract):
  from harness.local_qa import revalidate
  from harness.common_development import inspected_work,work_repository
  evidence=checked(contract['local_qa']);revalidate(evidence)
+ for artifact in evidence['artifacts']:
+  if digest(Path(artifact['path']).read_bytes())!=artifact['sha256']:raise ValueError('LOCAL_QA_ARTIFACT_CHANGED')
+ qa_result=json.loads(Path(evidence['artifacts'][0]['path']).read_bytes())
+ browser_proof=False
+ for command in qa_result['commands']:
+  if contract['browser_qa_command'] not in command['argv'] or command['exit_code']!=0:continue
+  for line in Path(command['log']).read_text().splitlines():
+   try:result=json.loads(line)
+   except (ValueError,TypeError):continue
+   if result.get('browser_report_sha256')==contract['browser_report']['sha256'] and result.get('status')=='PASS':browser_proof=True
+ if not browser_proof:raise ValueError('BROWSER_REPORT_EXECUTION_BINDING')
  master=checked(contract['master']);master_spec,master_state,_,_=inspected_work(contract['master_work'],contract['product_id'])
  if work_repository(master_spec)!=contract['repository'] or master_state['state']!='COMPLETED':raise ValueError('EXISTING_MASTER_WORK_REQUIRED')
  receipt=checked(contract['master_receipt'])

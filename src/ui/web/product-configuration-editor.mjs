@@ -121,7 +121,7 @@ export class ProductConfigurationEditor {
     const status=document.querySelector('#status');
     if(this.showInventory&&status){status.textContent='CATALOG CONNECTED';status.classList.add('ok');}
     const build=document.querySelector('#build');
-    if(build)build.textContent=`${health.buildId} · ${health.catalogVersion}`;
+    if(build)build.textContent=health.candidateIdentity?'UI候補 · 仕様・寸法・画像をご確認ください':`${health.buildId} · ${health.catalogVersion}`;
     await this.restoreSnapshot();
     if(!this.initialSnapshot&&this.initialProductId){
       const product=this.state.products.find(row=>row.id===this.initialProductId);

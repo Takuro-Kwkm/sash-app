@@ -10,6 +10,7 @@ def prepare(shared,checkout,input_path,destination):
  from harness.architecture import route_instruction
  from harness.local_qa import revalidate
  require(not destination.exists(),'WORK_EXISTS','Use a successor; preserve saved binding')
+ require(not destination.is_relative_to(checkout) and not destination.is_relative_to(shared),'CHECKPOINT_SCOPE','Keep the native checkpoint outside source repositories')
  source=read_json(input_path);revalidate(read_json(source['local_qa']['path']))
  base,_,_,_=inspected_work(source['master_work'],source['product_id'])
  route=route_instruction(shared,{source['repository']:str(checkout)},source['product_name']+'のUI接続候補を更新して',source['product_id'])

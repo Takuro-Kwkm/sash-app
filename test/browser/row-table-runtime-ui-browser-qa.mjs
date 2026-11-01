@@ -10,6 +10,7 @@ const inputRoot=path.resolve(options.input_root),out=path.resolve(options.output
 if(fs.existsSync(out))throw new Error('BROWSER_OUTPUT_EXISTS');fs.mkdirSync(out,{recursive:true});
 const read=n=>JSON.parse(fs.readFileSync(path.join(inputRoot,n))),expected=read('expected-inventory.json'),plan=read('case-plan.json'),preview=read('preview.json'),uiFiles=read('ui-files.json'),mapping=read('mapping.json'),images=read('image-inventory.json');
 const hash=b=>crypto.createHash('sha256').update(b).digest('hex'),scope={repository:expected.repository,product_id:expected.product_id,master_sha256:expected.master_sha256,flow_sha256:expected.flow_sha256};
+const sourceDocument=JSON.parse(fs.readFileSync(path.join(path.dirname(preview.candidate_index.path),'candidate.json')));
 const report={...scope,status:'RUNNING',execution_surface:'BROWSER',mapping_sha256:hash(fs.readFileSync(path.join(inputRoot,'mapping.json'))),preview_sha256:hash(fs.readFileSync(path.join(inputRoot,'preview.json'))),ui_files_sha256:hash(JSON.stringify(uiFiles.map(r=>r.sha256).sort())),environment:{playwright:options.playwright_module,node:process.version,base_url:preview.url},viewports:[1360,390],fields:[],states:[],image_observations:[],transitions:{status:'RUNNING',cases:0},checks:Object.fromEntries(['MASTER_PROJECTION','FLOW_ORDER','CONTROL_AND_VALUES','BRANCH_VISIBILITY','KEEP_VALID','CLEAR_INVALID','RESTORE','HANDOFF'].map(k=>[k,{status:'RUNNING',executed_cases:0}])),console_errors:[],page_errors:[],http_errors:[]};
 const count=(name,n=1)=>{report.checks[name].executed_cases+=n;};
 const browser=await chromium.launch({headless:true});
@@ -63,6 +64,13 @@ try{
   await page.locator('[data-image-choice-field="color_combination"][data-image-choice-value="SA-COLOR-WHITE"]').click();
   await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision)&&window.__rowTableTestEditor.state.resolved?.selection.color_combination==='SA-COLOR-WHITE',colorRevision);
   assert.equal(await page.locator('[data-spec-key="color_combination"]').inputValue(),'SA-COLOR-WHITE');count('CONTROL_AND_VALUES');report.transitions.cases++;
+  const sourceSize=sourceDocument.master.size_master.find(row=>row.window_type_id==='WT-SA-FIX-IN'&&row.construction_module==='zairai'&&row.opening_class==='window'&&(row.width!==1200||row.height!==1000));
+  const sizeRevision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+  await page.selectOption('[data-spec-key="size_code"]',sourceSize.size_code);
+  await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision),sizeRevision);
+  const sized=await page.evaluate(()=>window.__rowTableTestEditor.state.resolved);
+  assert.equal(sized.selection.width,sourceSize.width);assert.equal(sized.selection.height,sourceSize.height);assert.notEqual(sized.validation.status,'INVALID');assert.ok(sized.fields.find(f=>f.key==='width').readOnly);
+  assert.equal(await page.locator('output[data-spec-key="width"]').innerText(),String(sourceSize.width));count('MASTER_PROJECTION');count('CONTROL_AND_VALUES');report.transitions.cases++;
   await page.locator('[data-special-specification-request]').check();
   await page.locator('textarea[data-workflow-control="user_requirements"]').fill('西日の対策について相談したい');
   await page.locator('textarea[data-workflow-control="user_requirements"]').dispatchEvent('change');
@@ -72,6 +80,12 @@ try{
   const restored=await restore(requested.configuration,requested.user_requirements);
   assert.ok(await page.locator('[data-special-specification-request]').isChecked());assert.equal(await page.locator('textarea[data-workflow-control="user_requirements"]').inputValue(),requested.user_requirements.text);
   assert.deepEqual(restored.snapshot.user_requirements,requested.user_requirements);count('RESTORE');count('HANDOFF');count('CONTROL_AND_VALUES');report.transitions.cases++;
+  const windowRevision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+  await page.selectOption('[data-spec-key="window_type"]','WT-SA-TATE-SUBERI');
+  await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision),windowRevision);
+  const assigned=await page.evaluate(()=>({result:window.__rowTableTestEditor.state.resolved,snapshot:window.__rowTableTestEditor.getSnapshot()}));
+  assert.equal(assigned.result.selection.configuration_type,'T');assert.equal(assigned.result.selection.handle_type,'cam_latch');assert.ok(!assigned.result.clearedFields.includes('handle_type'));assert.deepEqual(assigned.snapshot.user_requirements,requested.user_requirements);
+  count('BRANCH_VISIBILITY');count('KEEP_VALID');count('HANDOFF');report.transitions.cases++;
   await context.close();
  }
  report.fields.sort((a,b)=>expected.fields.findIndex(f=>f.field_id===a.field_id)-expected.fields.findIndex(f=>f.field_id===b.field_id));
@@ -79,4 +93,4 @@ try{
  assert.deepEqual(report.console_errors,[]);assert.deepEqual(report.page_errors,[]);assert.deepEqual(report.http_errors,[]);
  for(const row of Object.values(report.checks)){assert.ok(row.executed_cases>0);row.status='PASS';}report.transitions.status='PASS';report.status='PASS';
  console.log(JSON.stringify({status:report.status,states:report.states.length,fields:report.fields.length,image_observations:report.image_observations.length,transitions:report.transitions.cases}));
-}catch(e){report.status='FAIL';report.failure={message:e.message,stack:e.stack};console.error(e.stack);process.exitCode=1;}finally{await browser.close();fs.writeFileSync(path.join(out,'browser-report.json'),JSON.stringify(report,null,2)+'\n');}
+}catch(e){report.status='FAIL';report.failure={message:e.message,stack:e.stack};console.error(e.stack);process.exitCode=1;}finally{await browser.close();const payload=JSON.stringify(report,null,2)+'\n';fs.writeFileSync(path.join(out,'browser-report.json'),payload);console.log(JSON.stringify({status:report.status,browser_report_sha256:hash(payload)}));}
