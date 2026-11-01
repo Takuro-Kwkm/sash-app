@@ -3,7 +3,7 @@
 .runtime-derived-value { display:block; padding:14px 16px; border:1px solid var(--line, #cbd5df); border-radius:10px; background:var(--surface, #fff); color:var(--ink, #263340); min-height:48px; }
 /* Source-backed option imagery, shared by candidate and adopted controls. */
 .runtime-choice-images{display:grid;grid-template-columns:repeat(auto-fit,minmax(136px,1fr));gap:10px;margin:10px 0;max-width:100%}
-.runtime-choice-image{min-width:0;border:1px solid #c9d4dc;border-radius:8px;padding:10px;background:#fff;color:inherit;text-align:left;font:inherit;display:flex;flex-direction:column;gap:6px}
+.runtime-choice-image{min-width:0;border:1px solid #c9d4dc;border-radius:8px;padding:10px;background:#fff;color:#1f2933;text-align:left;font:inherit;display:flex;flex-direction:column;gap:6px}
 button.runtime-choice-image{cursor:pointer}
 .runtime-choice-image[aria-pressed="true"]{outline:2px solid #247d78;background:#edf8f5}
 .runtime-choice-image img{width:100%;height:110px;object-fit:contain;display:block}
