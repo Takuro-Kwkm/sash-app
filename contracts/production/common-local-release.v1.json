@@ -61,7 +61,7 @@
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "3535e2e7fe007e12cf8e2cdb661740eab82356ee",
+    "ref": "2098ec3b090560aaa4619a1645abb02d4f1f261e",
     "entry": "scripts/release-contract.py",
     "files": {
       "scripts/release-contract.py": "847989b310fbfde6e6ff92bf22ebf46b35154ba1649e98d195b0a65556e63df1",
@@ -131,6 +131,8 @@
     ".gitignore": "9b816242310e827009a431f1c7059d18ef7e8aeb0c422bbb179fc5c803d73d2b",
     ".vercelignore": "dccdca865b68f0b857cae820424b98362d938b691160a5bb91fc1f0bcd4d9314",
     "AGENTS.md": "efdcaaa776ef634f38518d8e9122e9c830a1ab0b582928bc1fe441c530d227a1",
+    "README.md": "ce43ee0524db07ca0f050193e948e9296b127b810ebaa4c1c52999f08f67f747",
+    "docs/LOCAL_PRODUCT_RELEASE.md": "c56d60b165e81f7bce570ce73774f4089971cc361c6b5a16f6aefd4e4f043711",
     "scripts/production/validate-architecture-connection.py": "9a1aa88e37b464b0f61c044a3d8d6d1a38cbbfc4006f18f05dac4ec934c79b63",
     "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "4aaa70768c13129f412478926bbc800f8b72c8eec90a0febf59fc72c86833a21",
     "src/catalog/runtime-master/runtime-condition.mjs": "ae5e442f90b5f7007ff8ea6fed46a0d7ce2937afbf5570f9fefefa2b113cdb8e",

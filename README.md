@@ -1,10 +1,10 @@
 # サッシ情報管理アプリ V2
 
-ローカルでの商品変更、Current Authority取得、UI接続、起動、Browser QA、PR・CI・本番配信と読み戻しは [ローカル商品変更から本番確認まで](docs/LOCAL_PRODUCT_RELEASE.md) を参照。配信先設定は `contracts/production/app-release.v1.json`、接続検証は既存native Validator、リリース後照合は `npm run verify:app-release` を使う。
+開発工程は中央の[共通開発工程](https://github.com/Takuro-Kwkm/product-ui-contracts/blob/main/docs/architecture-v2/COMMON_HARNESS_INSTRUCTIONS.md)、アプリ固有のコマンドと参照先は[起動・検証](docs/LOCAL_PRODUCT_RELEASE.md)を参照する。
 
 このRepositoryは、2026-08-26時点で検証済みだった「サッシ情報管理アプリ V2」を、保存済みGate Report・Runtime監査・商品マスターから復元し、今後の正本として継続管理するためのRepositoryです。
 
-## Status
+## 復元開始時の記録
 
 - Specification baseline: 統合仕様書 Version 4.3
 - Recovery status: `RECOVERING_FROM_VERIFIED_ARTIFACTS`
@@ -35,7 +35,7 @@
 6. Required Fieldを商品名分岐で決定しない。
 7. CommonRuleEngine / Output Engineの共通性を維持する。
 
-## Current recovery target
+## 復元開始時の接続目標
 
 最初のReference Productは **LIXIL サーモスⅡ-H** とする。
 
