@@ -1,7 +1,7 @@
 {
   "schema": "CANDIDATE_RUNTIME_INDEX_V1",
   "adoption": "CANDIDATE_ONLY",
-  "revision": "SAMOSA_UI_HUMAN_R2_20261102",
+  "revision": "SAMOSA_UI_HUMAN_R2_CORRECTION1_20261102",
   "products": [
     {
       "id": "NATIVE_REGISTRY:LIXIL::サーモスA",
@@ -11,7 +11,7 @@
       "candidate": true,
       "adapterType": "ROW_TABLE_UI_CANDIDATE_V1",
       "path": "candidate.json",
-      "sha256": "304b3b22c1016837688a35c29f6255580162dabbb7c0f21a4b1c26ebafa91af5",
+      "sha256": "f14026b11e1e9f7b5a2e0712a18c02ae055cfdcbcdd0a72589c04fbd5ce3d3cc",
       "packageVersion": "v0.7-ui-candidate-3",
       "schemaVersion": "ROW_TABLE_UI_V1",
       "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",

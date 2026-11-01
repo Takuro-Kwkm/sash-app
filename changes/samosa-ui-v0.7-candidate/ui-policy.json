@@ -440,6 +440,10 @@
   "value_labels": {
     "glass_system": {
       "dedicated_double_glazing_with_glazing_channel": "専用グレチャン付複層ガラス"
+    },
+    "screen_mesh_type": {
+      "mushiya_net": "虫イヤネット（特注対応）",
+      "pet_net": "ペットネット（特注対応）"
     }
   },
   "source_refs": [
@@ -1497,7 +1501,31 @@
       }
     ],
     "glazing_combination_message": "ガラス構成・見え方・追加機能・中空層の組合せ可否と製作条件を見積システムで確認してください。",
-    "glazing_basis": "SN2500 printed pp.24-29. Original v0.7 mixed glass_type flattened these axes; sales request projection does not mutate Formal or assert factory compatibility."
+    "glazing_basis": "SN2500 printed pp.24-29. Original v0.7 mixed glass_type flattened these axes; sales request projection does not mutate Formal or assert factory compatibility.",
+    "confirmations": [
+      {
+        "when": {
+          "screen_mesh_type": [
+            "mushiya_net",
+            "pet_net"
+          ]
+        },
+        "field": "screen_mesh_type",
+        "code": "SPECIAL_ORDER_SCREEN_NET",
+        "message": "虫イヤネット・ペットネットは特注対応です。網戸形式・寸法・納まりと手配条件を積算・メーカーへ確認してください。",
+        "source_refs": [
+          {
+            "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+            "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+          },
+          {
+            "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+            "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+          }
+        ]
+      }
+    ],
+    "screen_mesh_basis": "SN2500 printed pp.160-161: circles standard offering, triangles special order. Retain special-order net options; do not confuse triangle with unavailable."
   },
   "runtime_ui_rules": [
     {
@@ -1775,35 +1803,6 @@
           "values": [
             "horizontal_roll_screen",
             "casement_screen"
-          ]
-        }
-      ],
-      "source": {
-        "source_ref": {
-          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
-          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
-        },
-        "printed_page": 160
-      }
-    },
-    {
-      "rule_id": "UI-SOURCE-ROLL-MESH",
-      "priority": 5001,
-      "conditions": {
-        "field": "screen_type",
-        "operator": "IN",
-        "values": [
-          "horizontal_roll_screen",
-          "vertical_roll_screen"
-        ]
-      },
-      "effects": [
-        {
-          "action": "ALLOW_VALUES",
-          "field": "screen_mesh_type",
-          "values": [
-            "standard_mesh",
-            "kirei_net"
           ]
         }
       ],

@@ -38,7 +38,7 @@ test('screen per-window invalid import is rejected and real window edit clears i
 test('Tate screen H1600 boundary and roll mesh match official matrix footnotes',()=>{
  const r=ui.uiResolver({window_type:'WT-SA-TATE-SUBERI',construction_module:'zairai',standard_size:'CUSTOM',width:600,height:1600});assert.deepEqual(values(r,'screen_type'),['horizontal_roll_screen','vertical_roll_screen','casement_screen']);
  const taller=ui.uiResolver({...r.selection,height:1601},{changedFields:['height']});assert.deepEqual(values(taller,'screen_type'),['vertical_roll_screen']);
- const roll=ui.uiResolver({...r.selection,screen_type:'horizontal_roll_screen'});assert.deepEqual(values(roll,'screen_mesh_type'),['standard_mesh','kirei_net']);
+ const roll=ui.uiResolver({...r.selection,screen_type:'horizontal_roll_screen'});assert.deepEqual(values(roll,'screen_mesh_type'),['standard_mesh','kirei_net','mushiya_net']);
  const casement=ui.uiResolver({...r.selection,screen_type:'casement_screen'});assert.deepEqual(values(casement,'screen_middle_bar'),['with_middle_bar']);
 });
 test('glazing axes distinguish coating, appearance, functions and gas; mixed legacy selector is hidden',()=>{
@@ -67,4 +67,23 @@ test('candidate cannot replace bound Formal identity and cannot enter production
  const index=new URL('candidate-index.json',base),hash=createHash('sha256').update(fs.readFileSync(index)).digest('hex');const script="import {candidateRuntimeEntries} from './src/catalog/runtime-master/candidate-runtime-registry.mjs';console.log(candidateRuntimeEntries.length);";
  const env={...process.env,SASH_CANDIDATE_RUNTIME_INDEX:index.pathname,SASH_CANDIDATE_INDEX_SHA:hash,SASH_CANDIDATE_MODE:'INSPECT_LOCAL'};delete env.SASH_CANDIDATE_MANIFEST_FILE_ID;
  const local=spawnSync(process.execPath,['--input-type=module','-e',script],{env,encoding:'utf8'});assert.equal(local.status,0,local.stderr);const prod=spawnSync(process.execPath,['--input-type=module','-e',script],{env:{...env,NODE_ENV:'production'},encoding:'utf8'});assert.notEqual(prod.status,0);assert.match(prod.stderr,/CANDIDATE_RUNTIME_NOT_ADMITTED/);
+});
+
+test('fixed-count strict restoration checks supplied values before deriving the only valid count',()=>{
+ const fixed={window_type:'WT-SA-HIKICHIGAI',construction_module:'two_by_four',standard_size:'11918:1235:1830:terrace'};
+ for(const panel_count of ['4','8'])assert.equal(ui.uiResolver({...fixed,panel_count}).validation.status,'INVALID');
+ const row=doc.master.size_master.find(r=>r.size_code==='16511'&&r.window_type_id===seed.window_type&&r.construction_module==='zairai');assert.equal(ui.uiResolver({window_type:row.window_type_id,construction_module:row.construction_module,size_code:row.size_code,panel_count:'4'}).validation.status,'INVALID');
+});
+test('strict restore rejects a native opening context or glass tuple that contradicts explicit sales axes',()=>{
+ assert.equal(ui.uiResolver({...standard,opening_class:'window'}).validation.status,'INVALID');
+ assert.equal(ui.uiResolver({...seed,opening_class:'terrace'}).validation.status,'INVALID');
+ assert.equal(ui.uiResolver({...seed,glass_type:'standard_double_glazing',glass_category:'standard'}).validation.status,'INVALID');
+ assert.equal(ui.uiResolver({...seed,glass_type:'low_e_clear',glass_category:'option'}).validation.status,'INVALID');
+ const old=ui.uiResolver(seed);assert.notEqual(ui.uiResolver({...old.selection,glazing_performance:'GREEN'},{changedFields:['glazing_performance']}).validation.status,'INVALID');
+});
+test('explicitly clearing either standard or custom size never rehydrates the previous dimensions',()=>{
+ for(const input of [seed,standard]){const old=ui.uiResolver(input),r=ui.uiResolver({...old.selection,standard_size:undefined},{changedFields:['standard_size']});for(const key of ['standard_size','size_code','width','height','opening_class','panel_count'])assert.equal(r.selection[key],undefined);assert.ok(!field(r,'width'));assert.ok(r.validation.missingRequiredFields.includes('standard_size'));}
+});
+test('special-order mesh remains selectable on sourced screen forms and is carried as confirmation',()=>{
+ for(const window_type of ['WT-SA-TATE-SUBERI','WT-SA-YOKO-SUBERI']){const r=ui.uiResolver({window_type,construction_module:'zairai',standard_size:'CUSTOM',width:600,height:1000,screen_type:'horizontal_roll_screen',screen_mesh_type:'mushiya_net'});assert.ok(values(r,'screen_mesh_type').includes('mushiya_net'));assert.match(field(r,'screen_mesh_type').values.find(o=>o.value==='mushiya_net').displayLabel,/特注対応/);assert.ok(r.confirmationRequests.some(r=>r.code==='SPECIAL_ORDER_SCREEN_NET'));assert.notEqual(r.validation.status,'INVALID');}
 });

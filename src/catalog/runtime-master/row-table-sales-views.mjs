@@ -20,20 +20,26 @@ export function createRowTableSalesViews(document,projection){
   const native={...input},selection=Object.fromEntries(viewKeys.filter(k=>present(input[k])).map(k=>[k,input[k]])),errors=[],cleared=[];
   for(const key of viewKeys)delete native[key];
   const edited=keys=>keys.some(k=>changed.includes(k));
+  const explicitSizeClear=changed.includes(size.key)&&!present(selection[size.key]);
+  if(explicitSizeClear){delete selection[size.panel_key];for(const key of ['opening_class','size_code','width','height'])delete native[key];}
+  if(!changed.length&&Object.hasOwn(input,size.key)&&!present(input[size.key])&&['size_code','width','height'].some(k=>present(native[k])))errors.push({field:size.key,code:'EMPTY_SIZE_VIEW_CONFLICT',message:'未選択のサイズに寸法が保存されています。規格サイズを選び直してください。'});
   if(edited(['window_type','construction_module','opening_angle'])&&selection[size.key]!==size.custom_value){
    delete selection[size.key];delete selection[size.panel_key];for(const key of ['opening_class','size_code','width','height'])delete native[key];
   }
   const available=groups(native);
-  if(!present(selection[size.key])&&present(native.size_code)){
+  if(!explicitSizeClear&&!Object.hasOwn(input,size.key)&&!present(selection[size.key])&&present(native.size_code)){
    const group=available.find(g=>g.rows.some(r=>r.size_code===native.size_code&&matching(r,native)));
-   if(group){selection[size.key]=group.key;const row=group.rows.find(r=>r.size_code===native.size_code);if(size.row_panel_counts[row.size_master_id])selection[size.panel_key]=size.row_panel_counts[row.size_master_id];}
+   if(group){selection[size.key]=group.key;const row=group.rows.find(r=>r.size_code===native.size_code);if(size.row_panel_counts[row.size_master_id]&&!present(selection[size.panel_key]))selection[size.panel_key]=size.row_panel_counts[row.size_master_id];}
   }
-  if(!present(selection[size.key])&&!present(native.size_code)&&(present(native.width)||present(native.height)))selection[size.key]=size.custom_value;
+  if(!explicitSizeClear&&!Object.hasOwn(input,size.key)&&!present(selection[size.key])&&!present(native.size_code)&&(present(native.width)||present(native.height)))selection[size.key]=size.custom_value;
   let group=available.find(g=>g.key===selection[size.key]);
   if(present(selection[size.key])&&selection[size.key]!==size.custom_value&&!group){errors.push({field:size.key,code:'SOURCE_SIZE_VIEW_SCOPE',message:'規格サイズを選び直してください。'});delete selection[size.key];}
   const custom=selection[size.key]===size.custom_value;
   const counts=custom&&size.panel_windows.includes(native.window_type)?['2','4']:group?[...new Set(group.rows.map(r=>size.row_panel_counts[r.size_master_id]).filter(present))]:[];
-  if(counts.length===1)selection[size.panel_key]=counts[0];
+  if(counts.length===1){
+   if(present(selection[size.panel_key])&&selection[size.panel_key]!==counts[0]&&!edited([size.key,'window_type','construction_module']))errors.push({field:size.panel_key,code:'FIXED_PANEL_CONFLICT',message:'保存された建数と規格サイズが一致しません。'});
+   selection[size.panel_key]=counts[0];
+  }
   if(present(selection[size.panel_key])&&(!counts.includes(selection[size.panel_key]))){if(!edited([size.key,'window_type','construction_module']))errors.push({field:size.panel_key,code:'SOURCE_PANEL_SCOPE',message:'この規格サイズに対応する建数ではありません。'});delete selection[size.panel_key];cleared.push(size.panel_key);}
   const sizeEdited=edited([size.key,size.panel_key]);
   if(custom){
@@ -43,6 +49,7 @@ export function createRowTableSalesViews(document,projection){
    const rows=group.rows.filter(r=>!size.row_panel_counts[r.size_master_id]||size.row_panel_counts[r.size_master_id]===selection[size.panel_key]);
    if(rows.length===1){const row=rows[0];
     if(!sizeEdited&&['width','height'].some(k=>present(native[k])&&native[k]!==row[k]))errors.push({field:size.key,code:'STANDARD_DIMENSION_MISMATCH',message:'保存された規格サイズと寸法が一致しません。'});
+    if(!sizeEdited&&present(native.opening_class)&&native.opening_class!==row.opening_class)errors.push({field:size.key,code:'SOURCE_OPENING_CONTEXT_CONFLICT',message:'保存された枠仕様と規格サイズが一致しません。'});
     if(!sizeEdited&&present(native.size_code)&&native.size_code!==row.size_code)errors.push({field:size.key,code:'SOURCE_SIZE_TUPLE_CONFLICT',message:'保存された規格サイズと建数が一致しません。'});
     Object.assign(native,{size_code:row.size_code,opening_class:row.opening_class,width:row.width,height:row.height});
    }else for(const key of ['size_code','opening_class','width','height'])delete native[key];
@@ -54,13 +61,18 @@ export function createRowTableSalesViews(document,projection){
    if(Number.isSafeInteger(native.width)&&Number.isSafeInteger(native.height)){
     const contexts=[...new Set(document.master.custom_size_region_master.filter(r=>matching(r,native,['opening_class'])&&(!size.region_panel_counts[r.custom_size_region_id]||size.region_panel_counts[r.custom_size_region_id]===selection[size.panel_key])).map(r=>r.opening_class))];
     const probes=contexts.map(opening_class=>({opening_class,result:evaluateRowTableProjection(contextualProjection,{...native,opening_class})})).filter(p=>['PASS','REVIEW_REQUIRED'].includes(p.result.dimension.status));
-    if(probes.length===1)native.opening_class=probes[0].opening_class;
+    if(probes.length===1){
+     if(present(input.opening_class)&&input.opening_class!==probes[0].opening_class&&!edited([size.key,size.panel_key,'width','height','window_type','construction_module']))errors.push({field:size.key,code:'CUSTOM_OPENING_CONTEXT_CONFLICT',message:'保存された枠仕様と寸法条件が一致しません。'});
+     native.opening_class=probes[0].opening_class;
+    }
     else if(probes.length>1){openingAmbiguous=true;customDimension={status:'REVIEW_REQUIRED',matchedRuleIds:[...new Set(probes.flatMap(p=>p.result.dimension.matchedRuleIds))],message:'寸法に適合する枠仕様が複数あります。納まり条件を積算・メーカーへ確認してください。'};}
    }
   }
   // Legacy mixed glass choices are carried into their own request axis. Missing
   // appearance/base is intentionally left unanswered rather than invented.
+  const suppliedGlass={type:native.glass_type,category:native.glass_category};
   const legacy=document.master.glass_master.find(r=>r.glass_type===native.glass_type);
+  if(legacy&&present(native.glass_category)&&native.glass_category!==legacy.glass_category&&!edited(['glazing_base','glazing_performance']))errors.push({field:'glazing_base',code:'NATIVE_GLASS_CATEGORY_CONFLICT',message:'保存されたガラス分類と仕様が一致しません。'});
   if(present(native.glass_type)&&!legacy)errors.push({field:'glazing_base',code:'UNKNOWN_NATIVE_GLASS',message:'保存されたガラス仕様を確認してください。'});
   if(legacy&&!policy.glazing.some(v=>present(selection[v.key]))){
    for(const v of policy.glazing){const option=v.values.find(o=>o.native_value===legacy.glass_type||o.native_probe===legacy.glass_type);if(option)selection[v.key]=v.multi?[option.value]:option.value;}
@@ -87,6 +99,7 @@ export function createRowTableSalesViews(document,projection){
    const value=policy.glazing.find(v=>v.key==='glazing_performance').values.find(o=>o.value===selection.glazing_performance)?.native_value;
    if(value){native.glass_type=value;native.glass_category='standard';}else{delete native.glass_type;delete native.glass_category;}
   }else{delete native.glass_type;delete native.glass_category;}
+  if(!edited(['glazing_base','glazing_performance'])&&present(suppliedGlass.type)&&present(native.glass_type)&&suppliedGlass.type!==native.glass_type)errors.push({field:'glazing_base',code:'NATIVE_GLAZING_VIEW_CONFLICT',message:'保存されたガラス仕様と選択項目が一致しません。'});
   function fields(){
    if(!present(native.window_type))return [];
    const result=[];const add=(key,label,values,other={})=>result.push({key,fieldId:key,displayLabel:label,dataType:'ENUM',values:values.map(o=>({value:o.value,displayLabel:o.label,disabled:false,...(o.image?{image:o.image}:{})})),required:false,readOnly:false,disabled:false,selectionMode:'USER_SELECTABLE',parentFields:[],...other});
@@ -98,7 +111,7 @@ export function createRowTableSalesViews(document,projection){
    return result;
   }
   return {native,selection,errors,cleared,projection:contextualProjection,custom,customDimension,openingAmbiguous,fields,
-   confirmations:policy.glazing.some(v=>present(selection[v.key]))?[{field:'glazing_base',code:'SOURCE_GLAZING_COMBINATION_CONFIRMATION',message:policy.glazing_combination_message,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー',selection:structuredClone(selection),source_refs:policy.source_refs}]:[],
+   confirmations:[...(policy.confirmations??[]).filter(r=>Object.entries(r.when).every(([key,value])=>Array.isArray(value)?value.includes(native[key]):native[key]===value)).map(({when,...row})=>({...row,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー'})),...(policy.glazing.some(v=>present(selection[v.key]))?[{field:'glazing_base',code:'SOURCE_GLAZING_COMBINATION_CONFIRMATION',message:policy.glazing_combination_message,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー',selection:structuredClone(selection),source_refs:policy.source_refs}]:[])],
    hiddenFields:new Set(['opening_class','size_code','glass_category','glass_type',...(!custom?['width','height']:[])])};
  }
  return {prepare,keys:viewKeys,groups};
