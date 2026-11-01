@@ -217,9 +217,17 @@
       "no_fallback": true
     },
     "NATIVE_REGISTRY:YKK AP::エピソードⅡ": {
-      "state": "FAIL_CLOSED",
-      "validators": [],
-      "no_fallback": true
+      "state": "READY",
+      "validators": [
+        "scripts/production/validate-working-master-delta-profile.py"
+      ],
+      "no_fallback": true,
+      "native_profile": {
+        "profile_id": "sash-existing-xlsx-sheets-delta-recovery-v1",
+        "path": "contracts/production/working-master-recovery/episode2-sr3.delta.v1.json",
+        "sha256": "d422b542231bd0dbeb2cb5d5ba37c8be8fa46cc94d9a9737e54af3ef32d13673"
+      },
+      "scope": "STRUCTURAL_DRAFT_RECOVERY_ONLY"
     },
     "NATIVE_REGISTRY:LIXIL::リフォームシャッター": {
       "state": "FAIL_CLOSED",

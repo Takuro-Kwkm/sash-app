@@ -1,0 +1,183 @@
+{
+  "profile_id": "sash-existing-xlsx-sheets-delta-recovery-v1",
+  "status": "ADOPTED",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:YKK AP::エピソードⅡ",
+  "manufacturer": "YKK AP",
+  "registry_series": "エピソードⅡ",
+  "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+  "working_states": [
+    "WORKING_ATOMIC_RECOVERY"
+  ],
+  "source_revision": "v0.4-R1-SR3-WORKING",
+  "authoring_file_id": "1i4OxZQ-RgFj9-WIj3o64k-Z_un-l16_s26BKD1Qi3PA",
+  "authoring_mime_type": "application/vnd.google-apps.spreadsheet",
+  "working_folder_id": "1ONs4x88AthD0rZJ0F_7SKsKr6q7OSLQN",
+  "native_adapter": "scripts/production/working-master-delta-recovery.py",
+  "native_prepare": "scripts/production/prepare-working-master-recovery.py",
+  "scope": "STRUCTURAL_DRAFT_RECOVERY_ONLY",
+  "target_gate": "WORKING_STRUCTURE_VERIFIED",
+  "mutation_policy": "CANDIDATE_ONLY; no Registry/Formal/Runtime/UI/Release writes",
+  "predecessor": {
+    "authoring_file_id": "1M-PK-Cy0CRss1blNxD5tiolGXV_WpE-x",
+    "mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "header_row": 1,
+    "required_tables": [
+      "Governance",
+      "ProductNodes",
+      "StandardSizeSummary",
+      "StandardSizes",
+      "DimensionRuleIndex",
+      "Colors",
+      "ColorCombinations",
+      "GlassCore",
+      "Screens",
+      "Shutters",
+      "StormShutters",
+      "Grilles",
+      "Hardware",
+      "Options",
+      "DependencyRules",
+      "Evidence",
+      "SerializationGaps",
+      "QA",
+      "Savepoint",
+      "StandardSizeAtomic_SR2",
+      "StandardSizeUnmapped_SR2",
+      "DimensionEvidence_SR2",
+      "AtomicCoverage_SR2",
+      "SR2_Gate"
+    ],
+    "governance_table": "Governance",
+    "identity_fields": {
+      "manufacturer": "YKK AP",
+      "series": "エピソードⅡ"
+    },
+    "node_table": {
+      "name": "ProductNodes",
+      "id_column": "product_node_id"
+    }
+  },
+  "governance_table": "Governance",
+  "predecessor_link_field": "sr2_authoring_file_id",
+  "lineage_fields": {
+    "manufacturer": "YKK AP",
+    "series": "エピソードⅡ",
+    "package_version": "v0.4-R1-SR3-WORKING"
+  },
+  "evidence_table": {
+    "name": "Evidence",
+    "id_column": "evidence_id"
+  },
+  "delta_sheets": {
+    "Governance": {
+      "sheet_id": 542096118,
+      "columns": [
+        "field",
+        "value",
+        "status"
+      ],
+      "response_range": "Governance!A1:Z1000",
+      "id_column": "field"
+    },
+    "T2_StandardAtomic": {
+      "sheet_id": 1001,
+      "columns": [
+        "atomic_id",
+        "product_node_id",
+        "size_code",
+        "configuration",
+        "construction_scope",
+        "width_code",
+        "height_code",
+        "printed_page",
+        "source_table",
+        "status",
+        "evidence_id",
+        "note"
+      ],
+      "response_range": "T2_StandardAtomic!A1:L200",
+      "id_column": "atomic_id",
+      "node_column": "product_node_id",
+      "evidence_column": "evidence_id"
+    },
+    "T2_DimensionRules": {
+      "sheet_id": 1002,
+      "columns": [
+        "rule_id",
+        "product_node_id",
+        "scope",
+        "configuration",
+        "rule_type",
+        "boundary_formula",
+        "glass_width_formula",
+        "glass_height_formula",
+        "max_glass_weight_kg",
+        "performance_note",
+        "status",
+        "printed_page",
+        "evidence_id",
+        "note"
+      ],
+      "response_range": "T2_DimensionRules!A1:N100",
+      "id_column": "rule_id",
+      "node_column": "product_node_id",
+      "evidence_column": "evidence_id"
+    },
+    "RemainingAudit": {
+      "sheet_id": 1003,
+      "columns": [
+        "audit_id",
+        "scope",
+        "legacy_reference",
+        "sr3_status",
+        "blocking",
+        "evidence_status",
+        "next_action",
+        "note"
+      ],
+      "response_range": "RemainingAudit!A1:J100",
+      "id_column": "audit_id"
+    },
+    "GateStatus": {
+      "sheet_id": 1004,
+      "columns": [
+        "field",
+        "value",
+        "status",
+        "note"
+      ],
+      "response_range": "GateStatus!A1:F100",
+      "id_column": "field"
+    },
+    "Evidence": {
+      "sheet_id": 1005,
+      "columns": [
+        "evidence_id",
+        "role",
+        "document",
+        "file_id",
+        "edition_or_status",
+        "scope",
+        "locator",
+        "note"
+      ],
+      "response_range": "Evidence!A1:H100",
+      "id_column": "evidence_id"
+    }
+  },
+  "implementation_hashes": {
+    "scripts/production/working-master-delta-recovery.py": "e6055ead4a1424d4810293fa66aab4e9e345dd874cbe89bbcada14d936ef088e",
+    "scripts/production/working-master-xlsx-recovery.py": "4694c3a2f3b89c0c2cbebf441370ce72fe3f3a977dbab605664881e5ec3008b9",
+    "scripts/production/working-master-recovery.py": "570cd255426d8c274c4ac284ba0d162f3f4773492c0d2a7e7acd08d470708da3",
+    "scripts/production/prepare-working-master-recovery.py": "9f58931530ad2c882a79c6459906c6f32776c60f91f3d4c16d65e8a9aacf4782",
+    "scripts/production/validate-working-master-delta-profile.py": "e3941004fec377fb246432dfbd1579e831f6f01e504e0fab4f6e08cdfd1ccea6"
+  },
+  "connection_admission_scope": "NATIVE_IMPLEMENTATION_ONLY; NOT_PRODUCT_FORMAL",
+  "predecessor_candidate": {
+    "profile_sha256": "f6635a8b44a69954184a62559c3d32d6f6d3ccf71a54eea65bd67704863d86e1",
+    "local_qa_result_sha256": "49d6157cd753942310e1306e98b287b07a6b1dcfad13317cfa9a1bdaa0fb9b00",
+    "local_qa_review_sha256": "46d999dc93f37a194cc0667351bf8d834c766eb19f488b9ecf380d226a65b262"
+  },
+  "native_change_scope": "contracts/production/episode2-working-connection-scope.v1.json"
+}

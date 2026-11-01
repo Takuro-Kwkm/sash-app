@@ -613,15 +613,39 @@
         "エピソードⅡ"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
-      "current_formal_version": "v0.4-R1-SR3-WORKING",
+      "connection_state": "CONNECTED",
+      "connection_scope": "STRUCTURAL_DRAFT_RECOVERY_ONLY",
+      "current_working_version": "v0.4-R1-SR3-WORKING",
       "formal_registry_selector": "YKK AP::エピソードⅡ",
-      "safe_failure": {
-        "state": "FAIL_CLOSED",
-        "code": "NATIVE_ADAPTER_UNAVAILABLE",
-        "writes": 0,
-        "fallback": false,
-        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      "default_gate": "WORKING_STRUCTURE_VERIFIED",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "YKK AP",
+        "series": "エピソードⅡ",
+        "state": "WORKING_ATOMIC_RECOVERY",
+        "package_version": "v0.4-R1-SR3-WORKING"
+      },
+      "source_selector": {
+        "from": "LIVE_NATIVE_WORKING_SHEET_DELTA_AND_REFERENCED_XLSX_PREDECESSOR",
+        "role": "CAPTURED_NOT_READOPTED",
+        "scope": "Lossless structural DRAFT only; preserve original Source/Evidence/statuses"
+      },
+      "native_adapter": "scripts/production/working-master-delta-recovery.py",
+      "prepare_adapter": "scripts/production/prepare-working-master-recovery.py",
+      "validators": [
+        "scripts/production/validate-working-master-delta-profile.py"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed Work INSPECT_ONLY",
+      "build_profile": {
+        "profile_id": "sash-existing-xlsx-sheets-delta-recovery-v1",
+        "path": "contracts/production/working-master-recovery/episode2-sr3.delta.v1.json",
+        "sha256": "d422b542231bd0dbeb2cb5d5ba37c8be8fa46cc94d9a9737e54af3ef32d13673"
+      },
+      "unsupported_gates": {
+        "QA_READY": "NATIVE_BUSINESS_QA_PROFILE_AND_OFFICIAL_SOURCE_REVIEW_REQUIRED",
+        "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
+        "INTEGRATION": "NATIVE_RUNTIME_ADAPTER_UNAVAILABLE",
+        "RELEASE": "NATIVE_RELEASE_PROFILE_AND_HUMAN_UI_REVIEW_REQUIRED"
       }
     },
     {
