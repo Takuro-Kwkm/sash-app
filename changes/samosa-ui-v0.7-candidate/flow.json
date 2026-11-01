@@ -1,6 +1,6 @@
 {
   "schema": "DECLARED_WINDOW_FLOW_V1",
-  "revision": "ROW_TABLE_UI_V1_CANDIDATE",
+  "revision": "ROW_TABLE_UI_HUMAN_R2",
   "slotOrder": [
     "manufacturer",
     "product",
@@ -14,6 +14,7 @@
     "screen_midrail",
     "screen_net",
     "glass_base",
+    "glass_type",
     "glass_detail",
     "glass_function",
     "glass_spacer",
@@ -200,6 +201,34 @@
     "custom_option": {
       "slot": "option",
       "stage": "OPTION"
+    },
+    "standard_size": {
+      "slot": "size",
+      "stage": "SIZE"
+    },
+    "panel_count": {
+      "slot": "size",
+      "stage": "SIZE"
+    },
+    "glazing_base": {
+      "slot": "glass_base",
+      "stage": "GLAZING"
+    },
+    "glazing_appearance": {
+      "slot": "glass_type",
+      "stage": "GLAZING"
+    },
+    "glazing_performance": {
+      "slot": "glass_detail",
+      "stage": "GLAZING"
+    },
+    "glazing_functions": {
+      "slot": "glass_function",
+      "stage": "GLAZING"
+    },
+    "glazing_gas": {
+      "slot": "glass_air_layer",
+      "stage": "GLAZING"
     }
   },
   "formalAdoption": false,
@@ -222,6 +251,14 @@
     {
       "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
       "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+    },
+    {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+      "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+    },
+    {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+      "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
     }
   ]
 }

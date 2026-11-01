@@ -3,6 +3,7 @@ import {projectRowTableMaster,evaluateRowTableProjection,normalizeRowCondition} 
 import {evaluateCondition} from './runtime-condition.mjs';
 import {selectorMatches} from '../selector.mjs';
 import {applyDeclaredWindowFlow} from './declared-window-flow.mjs';
+import {createRowTableSalesViews} from './row-table-sales-views.mjs';
 import {fieldLabel} from '../../../contracts/ui-common/field-labels.v1.mjs';
 import {readFileSync,lstatSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -17,6 +18,11 @@ export function createRowTableUi(document,integration){
     ||document.source_master.sha256!==integration.sourceReference?.sourceMasterSha256||document.projection_policy.native_product_id!==integration.id
     ||!same(JSON.parse(source),document.master))throw new Error('ROW_TABLE_SOURCE_MASTER_IDENTITY');
   const projection=projectRowTableMaster(document.master,document.projection_policy);
+  for(const ref of document.ui_policy.sales_views?.source_refs??[]){if(createHash('sha256').update(readFileSync(ref.path)).digest('hex')!==ref.sha256)throw new Error('ROW_TABLE_UI_SOURCE_CHANGED');}
+  projection.master.dependency_rules.push(...(document.ui_policy.runtime_ui_rules??[]));
+  const conditionFields=c=>[...(c.field?[c.field]:[]),...(c.all??c.any??[]).flatMap(conditionFields)];
+  for(const rule of document.ui_policy.runtime_ui_rules??[])for(const effect of rule.effects){const def=projection.master.fields.find(f=>f.field_name===effect.field);if(def)def.parent_fields=[...new Set([...def.parent_fields,...conditionFields(rule.conditions).filter(k=>k!==effect.field)])];}
+  const salesViews=createRowTableSalesViews(document,projection);
   const policy=document.ui_policy,definitions=new Map(projection.master.fields.map(f=>[f.field_name,f]));
   if(Object.keys(policy.fields).length!==definitions.size||[...definitions.keys()].some(k=>!policy.fields[k]))throw new Error('ROW_TABLE_UI_MAPPING_INCOMPLETE');
   const label=(field,value)=>document.choice_visuals?.[field]?.[value]?.alt??policy.value_labels?.[field]?.[value]
@@ -41,14 +47,17 @@ export function createRowTableUi(document,integration){
     for(const [field,column] of Object.entries(document.projection_policy.dimension_selector_map)){
       if(document.master.custom_size_region_master.some(row=>present(row[column])&&row[column]!=='NOT_APPLICABLE'&&selectorMatches(Object.fromEntries(Object.entries(sourceSelector(row)).filter(([k])=>k!==field)),values)))allowed.add(field);
     }
+    for(const rule of policy.runtime_ui_rules??[])if(evaluateCondition(rule.conditions,state))for(const effect of rule.effects)if(effect.values?.length)allowed.add(effect.field);
     const screen=document.master.screen_master.find(row=>row.canonical_value===values.screen_type);
     if(screen?.screen_mesh_supported)allowed.add('screen_mesh_type');
     return allowed;
   }
   function resolve(input={},context={changedFields:[]}){
-    if((context.changedFields??[]).some(k=>!definitions.has(k)))throw new Error('UNKNOWN_CHANGED_FIELD');
-    let selection={...input};const cleared=new Set(),assignmentErrors=[],assigned=new Set();
-    const lookupErrors=[];
+    if((context.changedFields??[]).some(k=>!definitions.has(k)&&!salesViews?.keys.includes(k)))throw new Error('UNKNOWN_CHANGED_FIELD');
+    const sales=salesViews?.prepare(input,context.changedFields??[]);
+    const activeProjection=sales?.projection??projection;
+    let selection={...(sales?.native??input)};const cleared=new Set(),assignmentErrors=[],assigned=new Set();
+    const lookupErrors=[...(sales?.errors??[])];
     for(const relation of policy.lookup_constraints??[]){
       const domain=lookupDomain(relation,selection),value=selection[relation.target];
       if(!domain||!present(value)||domain.has(value))continue;
@@ -70,7 +79,7 @@ export function createRowTableUi(document,integration){
     // targets after their actual condition inputs change; an inconsistent saved
     // import without that edit context continues to fail validation.
     if(context.changedFields?.length){
-      const seedState=evaluateRowTableProjection(projection,selection).state;
+      const seedState=evaluateRowTableProjection(activeProjection,selection).state;
       const references=condition=>[...(condition.field?[condition.field]:[]),...(condition.all??condition.any??[]).flatMap(references)];
       for(const rule of document.master.dependency_rule_master){
         const action=JSON.parse(rule.result_json),condition=JSON.parse(rule.condition_json);
@@ -83,7 +92,7 @@ export function createRowTableUi(document,integration){
     // Clear only invalid descendants following a real parent edit. Initial
     // invalid imports remain errors; valid downstream values are retained.
     for(let pass=0;pass<definitions.size;pass++){
-      const evaluated=evaluateRowTableProjection(projection,selection);let changed=false;
+      const evaluated=evaluateRowTableProjection(activeProjection,selection);let changed=false;
       const affected=new Set([...(context.changedFields??[]),...cleared]),eligible=eligibleFields(evaluated);
       for(const [key,fs] of Object.entries(evaluated.state.fields)){
         if(!present(selection[key])||definitions.get(key).selection_mode==='FIXED')continue;
@@ -94,24 +103,25 @@ export function createRowTableUi(document,integration){
       }
       if(!changed)break;
     }
-    let evaluated=evaluateRowTableProjection(projection,selection);
+    let evaluated=evaluateRowTableProjection(activeProjection,selection);
     // A standard-size tuple must be reevaluated against its actual native scope.
     if(evaluated.input_issues.some(i=>i.field==='size_code')&&(context.changedFields??[]).some(k=>policy.size_parents.includes(k))){
       for(const key of ['size_code','width','height'])if(present(selection[key])){delete selection[key];cleared.add(key);}
-      evaluated=evaluateRowTableProjection(projection,selection);
+      evaluated=evaluateRowTableProjection(activeProjection,selection);
     }
     const state=evaluated.state,eligible=eligibleFields(evaluated);selection=flat(state);
     for(const [key,fs] of Object.entries(state.fields))if(Array.isArray(fs.allowed_values)&&present(selection[key])&&!fs.allowed_values.some(v=>same(v,selection[key])))delete selection[key];
     for(const issue of evaluated.input_issues)if(['UNKNOWN_INPUT_FIELD','UNSOURCED_MULTI_SELECT_VALUE'].includes(issue.code))delete selection[issue.field];
     const outside=[];
     for(const key of Object.keys(selection))if(!eligible.has(key)&&definitions.get(key)?.selection_mode!=='FIXED'){
-      if(present(input[key])&&!cleared.has(key))outside.push({field:key,code:'NATIVE_PRESENTATION_SCOPE',message:'この窓種の表示・適用条件を確認できない値が含まれています。'});
+      if(present((sales?.native??input)[key])&&!cleared.has(key))outside.push({field:key,code:'NATIVE_PRESENTATION_SCOPE',message:'この窓種の表示・適用条件を確認できない値が含まれています。'});
       delete selection[key];
     }
     for(const key of ['width','height'])if(present(evaluated.values[key]))selection[key]=evaluated.values[key];
     const fields=[];const unresolved=[];
     for(const def of projection.master.fields){
       const key=def.field_name,role=policy.fields[key],fs=state.fields[key];
+      if(sales?.hiddenFields.has(key))continue;
       if(['NON_UI','HANDOFF_ONLY'].includes(role.role)){if(role.role==='HANDOFF_ONLY')unresolved.push({field:key,label:def.display_label,message:def.display_label+'：'+role.reason});continue;}
       if(fs.visibility==='HIDE'||fs.state==='NOT_APPLICABLE')continue;
       if(!eligible.has(key))continue;
@@ -147,11 +157,15 @@ export function createRowTableUi(document,integration){
     const reasonMessages=evaluated.all_reason_codes.map(reasonMessage);
     const manufacturerRequests=projection.manual.filter(r=>evaluated.source_manual_rule_ids.includes(r.row.dependency_rule_id??r.row.size_availability_id)).map(r=>({field:r.row.target_field,code:r.row.reason_code,message:reasonMessage(r.row.reason_code),status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー'}));
     if(evaluated.dimension.status==='REVIEW_REQUIRED')manufacturerRequests.push({field:'width',message:'この寸法は原本グラフ・製作条件をメーカーへ確認してください。',status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー'});
-    const confirmations=[...unresolved,...manufacturerRequests];
+    if(sales?.customDimension)evaluated.dimension=sales.customDimension;
+    if(sales?.openingAmbiguous)manufacturerRequests.push({field:'width',message:sales.customDimension.message,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー'});
+    const confirmations=[...unresolved,...manufacturerRequests,...(sales?.confirmations??[])];
+    if(sales){Object.assign(selection,sales.selection);fields.push(...sales.fields());for(const key of sales.cleared)cleared.add(key);}
     const errors=[...lookupErrors,...assignmentErrors,...outside,...evaluated.input_issues.map(i=>({field:i.field,code:i.code,message:'入力値が元の商品仕様と一致しません。'})),...state.errors,
       ...evaluated.source_invalid_rule_ids.map(id=>({code:id,message:'この組合せは選択できません。条件を変更してください。'}))];
+    const missingRequiredFields=[...state.missing_required_fields.filter(k=>!sales?.hiddenFields.has(k)),...(sales?.fields()??[]).filter(f=>f.required&&!present(selection[f.key])).map(f=>f.key)];
     const result={productId:integration.id,manufacturer:integration.manufacturer,series:integration.series,selection,fields:applyDeclaredWindowFlow(fields,integration).map(f=>({...f,displayLabel:fieldLabel(f.key,f.displayLabel)})),clearedFields:[...cleared].filter(key=>!present(selection[key])),
-      validation:{status:errors.length||evaluated.constraint_status==='INVALID'?'INVALID':evaluated.request_complete?'VALID':'INCOMPLETE',errors,missingRequiredFields:state.missing_required_fields},
+      validation:{status:errors.length||(!sales?.openingAmbiguous&&evaluated.constraint_status==='INVALID')?'INVALID':!missingRequiredFields.length?'VALID':'INCOMPLETE',errors,missingRequiredFields},
       dimensionResult:evaluated.dimension,manualWarnings:[...reasonMessages,...(evaluated.constraint_status==='MANUAL_CONFIRMATION_REQUIRED'?['この寸法・仕様はメーカーへの確認が必要です。']:[])],
       confirmationRequests:confirmations,estimateConfirmations:confirmations,runtimeMaster:{packageVersion:integration.packageVersion,sourceMasterSha256:document.source_master.sha256,candidateOnly:true},
       presentation:{independentUserRequirements:true},candidateOnly:true,formalAdoption:false,runtimeUiAdopted:false,automaticOrderability:false,source:'RUNTIME_MASTER',constraintStatus:evaluated.constraint_status};

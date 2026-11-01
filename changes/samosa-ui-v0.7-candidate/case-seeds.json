@@ -6,12 +6,18 @@
         "window_type": "WT-SA-HIKICHIGAI",
         "construction_module": "zairai",
         "opening_class": "window",
-        "width": 1200,
-        "height": 1000,
+        "width": 1690,
+        "height": 1170,
         "color_combination": "SA-COLOR-BLACK",
         "screen_type": "sliding_screen",
         "glass_category": "standard",
-        "glass_type": "low_e_clear"
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     },
     {
@@ -26,7 +32,12 @@
         "screen_type": "sliding_screen",
         "glass_category": "standard",
         "glass_type": "low_e_clear",
-        "screen_middle_bar": "with_middle_bar"
+        "screen_middle_bar": "with_middle_bar",
+        "panel_count": "2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     },
     {
@@ -42,7 +53,12 @@
         "glass_category": "standard",
         "glass_type": "low_e_clear",
         "shutter_operation": "electric",
-        "shutter_type": "standard"
+        "shutter_type": "standard",
+        "panel_count": "2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     },
     {
@@ -59,7 +75,12 @@
         "glass_type": "low_e_clear",
         "storm_shutter_type": "general",
         "storm_shutter_storage_type": "single",
-        "storm_shutter_mirror_panel": "with_mirror_panel"
+        "storm_shutter_mirror_panel": "with_mirror_panel",
+        "panel_count": "2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     },
     {
@@ -70,7 +91,12 @@
         "grille_type": "vertical_grille",
         "width": 1200,
         "height": 1000,
-        "color_combination": "SA-COLOR-BLACK"
+        "color_combination": "SA-COLOR-BLACK",
+        "panel_count": "2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     },
     {
@@ -82,7 +108,11 @@
         "chain_type": "single_loop",
         "width": 1000,
         "height": 500,
-        "color_combination": "SA-COLOR-BLACK"
+        "color_combination": "SA-COLOR-BLACK",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     },
     {
@@ -95,7 +125,11 @@
         "color_combination": "SA-COLOR-BLACK",
         "paid_option": [
           "small_opening_arm"
-        ]
+        ],
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     },
     {
@@ -105,7 +139,11 @@
         "construction_module": "zairai",
         "width": 600,
         "height": 500,
-        "color_combination": "SA-COLOR-BLACK"
+        "color_combination": "SA-COLOR-BLACK",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     },
     {
@@ -115,7 +153,11 @@
         "construction_module": "zairai",
         "width": 600,
         "height": 500,
-        "color_combination": "SA-COLOR-BLACK"
+        "color_combination": "SA-COLOR-BLACK",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     },
     {
@@ -126,7 +168,11 @@
         "opening_angle": "60_degree",
         "width": 600,
         "height": 500,
-        "color_combination": "SA-COLOR-BLACK"
+        "color_combination": "SA-COLOR-BLACK",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     },
     {
@@ -139,7 +185,30 @@
         "height": 1000,
         "color_combination": "SA-COLOR-BLACK",
         "glass_category": "standard",
-        "glass_type": "low_e_clear"
+        "glass_type": "low_e_clear",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "CUSTOM",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
       }
     }
   ],
@@ -157,6 +226,9 @@
     "grille_type": "GRILLE",
     "screen_middle_bar": "TERRACE",
     "screen_mesh_type": "INNER",
-    "paid_option": "TATE"
+    "paid_option": "TATE",
+    "width": "CUSTOM",
+    "height": "CUSTOM",
+    "panel_count": "PRIMARY"
   }
 }
