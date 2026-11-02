@@ -27744,7 +27744,10 @@
           "width",
           "height",
           "size_code"
-        ]
+        ],
+        "mode_key": "size_mode",
+        "mode_label": "サイズ区分",
+        "standard_value": "STANDARD"
       },
       "glazing": [
         {

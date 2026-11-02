@@ -17,7 +17,7 @@ const views=doc.ui_policy.sales_views;
 const seeds=JSON.parse(fs.readFileSync(path.join(base,'case-seeds.json'))),cases=structuredClone(seeds.cases),baseline=seeds.field_baselines,primary=cases.find(c=>c.id==='PRIMARY').input;
 for(const row of source.color_master)cases.push({id:'COLOR_'+row.color_combination_id,input:{...primary,color_combination:row.color_combination_id}});
 for(const row of source.glass_master){const input={...primary};for(const v of views.glazing){const option=v.values.find(o=>o.native_probe===row.glass_type||o.native_value===row.glass_type);if(option)input[v.key]=v.multi?[option.value]:option.value;}if(row.glass_type===views.general_native_value){input.glazing_base='GENERAL';delete input.glazing_performance;input.glazing_gas='AIR';}cases.push({id:'GLASS_'+row.glass_option_id,input});}
-cases.push({id:'PANELS',input:{...primary,opening_class:'terrace',size_code:'25118-2',width:2550,height:1830,panel_count:'2'}});
+cases.push({id:'PANELS',input:{...primary,size_mode:views.standard_size.standard_value,standard_size:'25118:2550:1830:terrace',opening_class:'terrace',size_code:'25118-2',width:2550,height:1830,panel_count:'2'}});
 const scope={repository:'Takuro-Kwkm/sash-app',product_id:entry.id,master_sha256:doc.source_master.sha256,flow_sha256:ref(path.join(base,'flow.json')).sha256};
 const fields=source.field_master.map(f=>{
  const key=f.field_name,role=roles[key],stateId=baseline[key]??'PRIMARY',input=cases.find(c=>c.id===stateId).input;
@@ -47,7 +47,8 @@ const sourceGroups=new Map();for(const row of source.size_master.filter(r=>r.win
  const code=row.size_code.replace(/-[24]$/,''),id=[code,row.width,row.height,row.opening_class].join(':');if(!std.row_panel_counts[row.size_master_id]||std.row_panel_counts[row.size_master_id]===primary.panel_count){if(!sourceGroups.has(id))sourceGroups.set(id,[]);sourceGroups.get(id).push(row);}
 }
 const sourceRowsInOrder=[...sourceGroups].sort(([,a],[,b])=>{for(const column of std.sort_columns??['width','height','size_code']){const x=a[0][column],y=b[0][column],order=typeof x==='number'&&typeof y==='number'?x-y:String(x??'').localeCompare(String(y??''),'ja',{numeric:true});if(order)return order;}return 0;});
-addView(std.key,'規格サイズ','SIZE','size',[...sourceRowsInOrder.map(([key])=>key),std.custom_value],'PRIMARY');
+addView(std.mode_key,fieldLabel(std.mode_key,std.mode_label),'SIZE','size',[std.standard_value,std.custom_value],'PRIMARY');
+addView(std.key,'規格サイズ','SIZE','size',sourceRowsInOrder.map(([key])=>key),'PANELS');
 addView(std.panel_key,'建数','SIZE','size',['2','4'],'PANELS');
 for(const view of views.glazing){
  const configured={...primary};const nativeInput=Object.fromEntries(Object.entries(configured).filter(([k])=>source.field_master.some(f=>f.field_name===k)));
@@ -57,7 +58,7 @@ for(const view of views.glazing){
  addView(view.key,label,'GLAZING',view.slot,values.map(o=>o.value),'PRIMARY',{required:Boolean(view.required),control:view.multi?'checkbox-group':'select',...(images.length?{image_required:true,image_cases:[{state_id:'PRIMARY',candidate_values:images}]}:{})});
 }
 fields.push(...projectionFields);
-fields.sort((a,b)=>GLOBAL_WINDOW_STAGE_ORDER.indexOf(a.stage)-GLOBAL_WINDOW_STAGE_ORDER.indexOf(b.stage)||entry.uiFlowContract.slotOrder.indexOf(a.semantic_slot)-entry.uiFlowContract.slotOrder.indexOf(b.semantic_slot)||({panel_count:20,standard_size:21,width:23,height:24}[a.field_id]??100)-({panel_count:20,standard_size:21,width:23,height:24}[b.field_id]??100));
+fields.sort((a,b)=>GLOBAL_WINDOW_STAGE_ORDER.indexOf(a.stage)-GLOBAL_WINDOW_STAGE_ORDER.indexOf(b.stage)||entry.uiFlowContract.slotOrder.indexOf(a.semantic_slot)-entry.uiFlowContract.slotOrder.indexOf(b.semantic_slot)||({panel_count:20,size_mode:21,standard_size:22,width:23,height:24}[a.field_id]??100)-({panel_count:20,size_mode:21,standard_size:22,width:23,height:24}[b.field_id]??100));
 const presentationPolicy=ref(path.join(sharedRoot,'docs/architecture-v2/screen-presentation-policy.v1.json'));
 fields.push(...[
  {field_id:'__workflow.special_specification_requested',master_field_id:null,stage:'OPTION',semantic_slot:'option',role:'SELECTOR',label:'特別仕様の相談',visible:true,required:false,control:'checkbox-group',candidate_values:[true],state_id:'PRIMARY',source_refs:[presentationPolicy]},

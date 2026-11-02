@@ -8,8 +8,8 @@ import {GLOBAL_WINDOW_STAGE_ORDER} from '../src/catalog/runtime-master/canonical
 import {createProductConfigurationSnapshot} from '../src/work-management/domain.mjs';
 import {createEstimateOutputModel} from '../src/estimate-output/model.mjs';
 const base=new URL('../changes/samosa-ui-v0.7-candidate/',import.meta.url),doc=JSON.parse(fs.readFileSync(new URL('candidate.json',base))),entry=JSON.parse(fs.readFileSync(new URL('candidate-index.json',base))).products[0],ui=createRowTableUi(doc,entry);
-const seed={window_type:'WT-SA-HIKICHIGAI',construction_module:'zairai',standard_size:'CUSTOM',panel_count:'2',width:1200,height:1000,color_combination:'SA-COLOR-BLACK',glazing_base:'LOW_E',glazing_performance:'CLEAR',glazing_appearance:'TRANSPARENT',glazing_gas:'ARGON'};
-const standard={...seed,standard_size:'25118:2550:1830:terrace',width:2550,height:1830};
+const seed={window_type:'WT-SA-HIKICHIGAI',construction_module:'zairai',size_mode:'CUSTOM',panel_count:'2',width:1200,height:1000,color_combination:'SA-COLOR-BLACK',glazing_base:'LOW_E',glazing_performance:'CLEAR',glazing_appearance:'TRANSPARENT',glazing_gas:'ARGON'};
+const standard={...seed,size_mode:'STANDARD',standard_size:'25118:2550:1830:terrace',width:2550,height:1830};
 const field=(r,key)=>r.fields.find(f=>f.key===key),values=(r,key)=>field(r,key)?.values.map(v=>v.value);
 test('source master retains exact Formal bytes and explicit roles for all 45 fields',()=>{assert.deepEqual(JSON.parse(fs.readFileSync(doc.source_master.path)),doc.master);assert.equal(Object.keys(doc.ui_policy.fields).length,45);assert.deepEqual(ui.uiResolver().fields.map(f=>f.key),['window_type']);});
 for(const row of doc.master.window_type_master)test('source screen applicability and canonical order: '+row.display_name,()=>{
@@ -20,12 +20,12 @@ for(const row of doc.master.window_type_master)test('source screen applicability
 });
 test('module → panel count → source-filtered standard size; standard W/H remain hidden',()=>{
  const first=ui.uiResolver({window_type:seed.window_type,construction_module:seed.construction_module});assert.deepEqual(first.fields.slice(0,3).map(f=>f.key),['window_type','construction_module','panel_count']);assert.ok(!field(first,'standard_size'));
- for(const count of ['2','4']){const counted=ui.uiResolver({...first.selection,panel_count:count},{changedFields:['panel_count']});assert.ok(field(counted,'standard_size'));assert.deepEqual(counted.fields.slice(0,4).map(f=>f.key),['window_type','construction_module','panel_count','standard_size']);
- const expected=new Set(doc.master.size_master.filter(r=>r.window_type_id===seed.window_type&&r.construction_module===seed.construction_module&&doc.ui_policy.sales_views.standard_size.row_panel_counts[r.size_master_id]===count).map(r=>[r.size_code.replace(/-[24]$/,''),r.width,r.height,r.opening_class].join(':')));assert.deepEqual(new Set(values(counted,'standard_size').filter(v=>v!=='CUSTOM')),expected);
- const resolved=ui.uiResolver({...counted.selection,standard_size:standard.standard_size},{changedFields:['standard_size']});assert.equal(resolved.selection.size_code,'25118-'+count);for(const k of ['opening_class','size_code','width','height'])assert.ok(!field(resolved,k));}
+ for(const count of ['2','4']){const counted=ui.uiResolver({...first.selection,panel_count:count},{changedFields:['panel_count']});assert.ok(field(counted,'size_mode'));assert.ok(!field(counted,'standard_size'));const standardMode=ui.uiResolver({...counted.selection,size_mode:'STANDARD'},{changedFields:['size_mode']});assert.deepEqual(standardMode.fields.slice(0,5).map(f=>f.key),['window_type','construction_module','panel_count','size_mode','standard_size']);
+ const expected=new Set(doc.master.size_master.filter(r=>r.window_type_id===seed.window_type&&r.construction_module===seed.construction_module&&doc.ui_policy.sales_views.standard_size.row_panel_counts[r.size_master_id]===count).map(r=>[r.size_code.replace(/-[24]$/,''),r.width,r.height,r.opening_class].join(':')));assert.deepEqual(new Set(values(standardMode,'standard_size')),expected);
+ const resolved=ui.uiResolver({...standardMode.selection,standard_size:standard.standard_size},{changedFields:['standard_size']});assert.equal(resolved.selection.size_code,'25118-'+count);for(const k of ['opening_class','size_code','width','height'])assert.ok(!field(resolved,k));}
 });
 test('panel edits keep shared sizes and clear incompatible sizes; clearing size retains upstream count',()=>{
- const first=ui.uiResolver({...seed,standard_size:'16511:1690:1170:window'});const changed=ui.uiResolver({...first.selection,panel_count:'4'},{changedFields:['panel_count']});assert.equal(changed.selection.standard_size,undefined);assert.equal(changed.selection.size_code,undefined);assert.equal(changed.selection.width,undefined);assert.equal(changed.selection.panel_count,'4');
+ const first=ui.uiResolver({...seed,size_mode:'STANDARD',standard_size:'16511:1690:1170:window'});const changed=ui.uiResolver({...first.selection,panel_count:'4'},{changedFields:['panel_count']});assert.equal(changed.selection.standard_size,undefined);assert.equal(changed.selection.size_code,undefined);assert.equal(changed.selection.width,undefined);assert.equal(changed.selection.panel_count,'4');
  const restored=ui.uiResolver(standard),kept=ui.uiResolver({...restored.selection,panel_count:'4'},{changedFields:['panel_count']});assert.equal(kept.selection.standard_size,standard.standard_size);assert.equal(kept.selection.size_code,'25118-4');
  const cleared=ui.uiResolver({...kept.selection,panel_count:undefined},{changedFields:['panel_count']});assert.equal(cleared.selection.standard_size,undefined);assert.ok(!field(cleared,'standard_size'));assert.ok(!field(cleared,'width'));
 });
@@ -34,7 +34,7 @@ test('every source standard row survives the sales projection with exact panel, 
 });
 test('347 source diagram is four sashes without guessing width cutoffs',()=>{const row=doc.master.size_master.find(r=>r.width_nominal==='347');const r=ui.uiResolver({window_type:row.window_type_id,construction_module:row.construction_module,size_code:row.size_code,width:row.width,height:row.height});assert.equal(r.selection.panel_count,'4');assert.equal(field(r,'panel_count').readOnly,false);});
 test('custom only exposes numeric W/H; parent changes replace the hidden standard tuple',()=>{
- let r=ui.uiResolver(standard);r=ui.uiResolver({...r.selection,standard_size:'CUSTOM'},{changedFields:['standard_size']});assert.ok(field(r,'width'));assert.ok(field(r,'height'));assert.equal(r.selection.size_code,undefined);assert.equal(r.selection.width,undefined);assert.ok(!field(r,'opening_class'));
+ let r=ui.uiResolver(standard);r=ui.uiResolver({...r.selection,size_mode:'CUSTOM'},{changedFields:['size_mode']});assert.ok(field(r,'width'));assert.ok(field(r,'height'));assert.equal(r.selection.size_code,undefined);assert.equal(r.selection.width,undefined);assert.ok(!field(r,'opening_class'));
  r=ui.uiResolver({...r.selection,width:1200,height:1000},{changedFields:['width','height']});assert.equal(r.dimensionResult.status,'PASS');assert.equal(r.selection.opening_class,'window');
 });
 test('custom source overlap is explicitly confirmed, without an invented window/terrace threshold',()=>{const r=ui.uiResolver({...seed,height:1550});assert.equal(r.dimensionResult.status,'REVIEW_REQUIRED');assert.ok(r.confirmationRequests.some(r=>r.message.includes('枠仕様')));assert.ok(!field(r,'opening_class'));assert.equal(r.automaticOrderability,false);});
@@ -42,7 +42,7 @@ test('custom count restricts source geometry: four-sash area cannot borrow the t
 test('strict restore rejects wrong standard dimensions, native code or unsupported panel count',()=>{assert.equal(ui.uiResolver({...standard,width:999}).validation.status,'INVALID');assert.equal(ui.uiResolver({...standard,size_code:'25118-4'}).validation.status,'INVALID');assert.equal(ui.uiResolver({...standard,panel_count:'8'}).validation.status,'INVALID');});
 test('screen per-window invalid import is rejected and real window edit clears incompatible screen',()=>{const first=ui.uiResolver({...seed,screen_type:'sliding_screen'});const input={...first.selection,window_type:'WT-SA-YOKO-SUBERI'};assert.equal(ui.uiResolver(input).validation.status,'INVALID');const r=ui.uiResolver(input,{changedFields:['window_type']});assert.equal(r.selection.screen_type,undefined);assert.deepEqual(values(r,'screen_type'),['horizontal_roll_screen','casement_screen']);assert.equal(r.selection.color_combination,seed.color_combination);});
 test('Tate screen H1600 boundary and roll mesh match official matrix footnotes',()=>{
- const r=ui.uiResolver({window_type:'WT-SA-TATE-SUBERI',construction_module:'zairai',standard_size:'CUSTOM',width:600,height:1600});assert.deepEqual(values(r,'screen_type'),['horizontal_roll_screen','vertical_roll_screen','casement_screen']);
+ const r=ui.uiResolver({window_type:'WT-SA-TATE-SUBERI',construction_module:'zairai',size_mode:'CUSTOM',width:600,height:1600});assert.deepEqual(values(r,'screen_type'),['horizontal_roll_screen','vertical_roll_screen','casement_screen']);
  const taller=ui.uiResolver({...r.selection,height:1601},{changedFields:['height']});assert.deepEqual(values(taller,'screen_type'),['vertical_roll_screen']);
  const roll=ui.uiResolver({...r.selection,screen_type:'horizontal_roll_screen'});assert.deepEqual(values(roll,'screen_mesh_type'),['standard_mesh','kirei_net','mushiya_net']);
  const casement=ui.uiResolver({...r.selection,screen_type:'casement_screen'});assert.deepEqual(values(casement,'screen_middle_bar'),['with_middle_bar']);
@@ -87,11 +87,11 @@ test('strict restore rejects a native opening context or glass tuple that contra
  assert.equal(ui.uiResolver({...seed,glass_type:'low_e_clear',glass_category:'option'}).validation.status,'INVALID');
  const old=ui.uiResolver(seed);assert.notEqual(ui.uiResolver({...old.selection,glazing_performance:'GREEN'},{changedFields:['glazing_performance']}).validation.status,'INVALID');
 });
-test('explicitly clearing either standard or custom size never rehydrates the previous dimensions',()=>{
- for(const input of [seed,standard]){const old=ui.uiResolver(input),r=ui.uiResolver({...old.selection,standard_size:undefined},{changedFields:['standard_size']});for(const key of ['standard_size','size_code','width','height','opening_class'])assert.equal(r.selection[key],undefined);assert.ok(!field(r,'width'));assert.ok(r.validation.missingRequiredFields.includes('standard_size'));}
+test('explicitly clearing size mode removes both branches without rehydrating dimensions',()=>{
+ for(const input of [seed,standard]){const old=ui.uiResolver(input),r=ui.uiResolver({...old.selection,size_mode:undefined},{changedFields:['size_mode']});for(const key of ['size_mode','standard_size','size_code','width','height','opening_class'])assert.equal(r.selection[key],undefined);assert.ok(!field(r,'width'));assert.ok(!field(r,'standard_size'));assert.ok(r.validation.missingRequiredFields.includes('size_mode'));}
 });
 test('special-order mesh remains selectable on sourced screen forms and is carried as confirmation',()=>{
- for(const window_type of ['WT-SA-TATE-SUBERI','WT-SA-YOKO-SUBERI']){const r=ui.uiResolver({window_type,construction_module:'zairai',standard_size:'CUSTOM',width:600,height:1000,screen_type:'horizontal_roll_screen',screen_mesh_type:'mushiya_net'});assert.ok(values(r,'screen_mesh_type').includes('mushiya_net'));assert.match(field(r,'screen_mesh_type').values.find(o=>o.value==='mushiya_net').displayLabel,/特注対応/);assert.ok(r.confirmationRequests.some(r=>r.code==='SPECIAL_ORDER_SCREEN_NET'));assert.notEqual(r.validation.status,'INVALID');}
+ for(const window_type of ['WT-SA-TATE-SUBERI','WT-SA-YOKO-SUBERI']){const r=ui.uiResolver({window_type,construction_module:'zairai',size_mode:'CUSTOM',width:600,height:1000,screen_type:'horizontal_roll_screen',screen_mesh_type:'mushiya_net'});assert.ok(values(r,'screen_mesh_type').includes('mushiya_net'));assert.match(field(r,'screen_mesh_type').values.find(o=>o.value==='mushiya_net').displayLabel,/特注対応/);assert.ok(r.confirmationRequests.some(r=>r.code==='SPECIAL_ORDER_SCREEN_NET'));assert.notEqual(r.validation.status,'INVALID');}
 });
 
 test('CUSTOM/native code and category-only contradictory imports cannot be silently normalized',()=>{
@@ -112,13 +112,21 @@ test('new Sash image presentation defaults to modal references, with explicit va
 });
 
 test('standard calls start with smallest nominal widths and heights instead of terrace storage order',()=>{
- const r=ui.uiResolver(seed),choices=field(r,'standard_size').values;assert.deepEqual(choices.slice(0,8).map(o=>o.displayLabel.split(' ｜ ')[0]),['06003','06005','06007','06009','06903','06905','06907','06909']);assert.equal(choices.at(-1).value,'CUSTOM');
- const variants=ui.uiResolver({window_type:seed.window_type,construction_module:'two_by_four',panel_count:'2'});assert.deepEqual(field(variants,'standard_size').values.map(o=>o.displayLabel.split(' ｜ ')[0]).filter(c=>/^160(18|20|22)/.test(c)),['16018A','16018B','16020A','16020B','16022A','16022B']);
+ const r=ui.uiResolver(standard),choices=field(r,'standard_size').values;assert.deepEqual(choices.slice(0,8).map(o=>o.displayLabel.split(' ｜ ')[0]),['06003','06005','06007','06009','06903','06905','06907','06909']);assert.ok(choices.every(o=>o.value!=='CUSTOM'));
+ const variants=ui.uiResolver({window_type:seed.window_type,construction_module:'two_by_four',panel_count:'2',size_mode:'STANDARD'});assert.deepEqual(field(variants,'standard_size').values.map(o=>o.displayLabel.split(' ｜ ')[0]).filter(c=>/^160(18|20|22)/.test(c)),['16018A','16018B','16020A','16020B','16022A','16022B']);
  const selected=ui.uiResolver(standard);assert.equal(selected.selection.size_code,'25118-2');assert.equal(selected.selection.width,2550);assert.equal(selected.selection.height,1830);
 });
 test('all window/module/panel lists sort by nominal width then nominal height and preserve exact native identity',()=>{
  let lists=0;for(const window of doc.master.window_type_master)for(const construction_module of ['zairai','two_by_four'])for(const panel_count of doc.ui_policy.sales_views.standard_size.panel_windows.includes(window.window_type_id)?['2','4']:[undefined]){
-  const r=ui.uiResolver({window_type:window.window_type_id,construction_module,...(panel_count?{panel_count}:{})}),choices=field(r,'standard_size')?.values;if(!choices)continue;lists++;assert.equal(choices.at(-1).value,'CUSTOM');
-  const actual=choices.slice(0,-1).map(o=>o.displayLabel.split(' ｜ ')[0]);for(let i=1;i<actual.length;i++){const a=actual[i-1],b=actual[i],wa=Number(a.slice(0,3)),wb=Number(b.slice(0,3)),ha=Number(a.slice(3,5)),hb=Number(b.slice(3,5));assert.ok(wa<wb||wa===wb&&ha<=hb,window.window_type_id+': '+a+' -> '+b);}
+  const r=ui.uiResolver({window_type:window.window_type_id,construction_module,size_mode:'STANDARD',...(panel_count?{panel_count}:{})}),choices=field(r,'standard_size')?.values;if(!choices)continue;lists++;assert.ok(choices.every(o=>o.value!=='CUSTOM'));
+  const actual=choices.map(o=>o.displayLabel.split(' ｜ ')[0]);for(let i=1;i<actual.length;i++){const a=actual[i-1],b=actual[i],wa=Number(a.slice(0,3)),wb=Number(b.slice(0,3)),ha=Number(a.slice(3,5)),hb=Number(b.slice(3,5));assert.ok(wa<wb||wa===wb&&ha<=hb,window.window_type_id+': '+a+' -> '+b);}
  }assert.ok(lists>=20);
+});
+
+test('independent size mode shows only its branch and round-trips legacy CUSTOM snapshots',()=>{
+ const current=ui.uiResolver(seed);assert.ok(!field(current,'standard_size'));assert.ok(field(current,'width'));assert.deepEqual(values(current,'size_mode'),['STANDARD','CUSTOM']);assert.equal(current.selection.standard_size,undefined);
+ const old={...seed,standard_size:'CUSTOM'};delete old.size_mode;const migrated=ui.uiResolver(old);assert.deepEqual(migrated.selection,current.selection);
+ const switched=ui.uiResolver({...current.selection,size_mode:'STANDARD'},{changedFields:['size_mode']});for(const key of ['width','height','opening_class','size_code'])assert.equal(switched.selection[key],undefined);assert.ok(field(switched,'standard_size'));assert.ok(!field(switched,'width'));assert.ok(values(switched,'standard_size').every(v=>v!=='CUSTOM'));assert.ok(switched.validation.missingRequiredFields.includes('standard_size'));
+ const cleared=ui.uiResolver({...ui.uiResolver(standard).selection,standard_size:undefined},{changedFields:['standard_size']});assert.equal(cleared.selection.size_mode,'STANDARD');assert.equal(cleared.selection.width,undefined);assert.ok(cleared.validation.missingRequiredFields.includes('standard_size'));
+ for(const bad of [{...standard,size_mode:'CUSTOM'},{...seed,size_mode:'STANDARD',standard_size:'CUSTOM'},{...seed,size_mode:'INVALID'}])assert.equal(ui.uiResolver(bad).validation.status,'INVALID');
 });

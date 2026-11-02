@@ -38,7 +38,7 @@ try{
    assert.equal(new Set(fields.map(f=>f.field_id)).size,fields.length);count('CONTROL_AND_VALUES',fields.length);
    const warningText=await page.locator('#warnings').innerText();assert.doesNotMatch(warningText,/元マスター|適用条件が未定義/);
    const sizeLabels=await page.locator('select[data-spec-key="standard_size"] option').allTextContents();
-   if(sizeLabels.length){assert.match(sizeLabels.at(-1),/特注サイズ/);const codes=sizeLabels.slice(1,-1).map(v=>v.split(' ｜ ')[0]);for(let i=1;i<codes.length;i++){const a=codes[i-1],b=codes[i];assert.ok(Number(a.slice(0,3))<Number(b.slice(0,3))||Number(a.slice(0,3))===Number(b.slice(0,3))&&Number(a.slice(3,5))<=Number(b.slice(3,5)),'size order '+a+' -> '+b);}}
+   if(sizeLabels.length){assert.ok(sizeLabels.every(v=>!v.includes('特注')));const codes=sizeLabels.slice(1).map(v=>v.split(' ｜ ')[0]);for(let i=1;i<codes.length;i++){const a=codes[i-1],b=codes[i];assert.ok(Number(a.slice(0,3))<Number(b.slice(0,3))||Number(a.slice(0,3))===Number(b.slice(0,3))&&Number(a.slice(3,5))<=Number(b.slice(3,5)),'size order '+a+' -> '+b);}}
    const body=await page.locator('#dynamicForm').innerText();assert.doesNotMatch(body,/NOT_APPLICABLE|INTERNAL_UNKNOWN_ENUM|dedicated_double_glazing|with_middle_bar|fixed_screen_inner_tilt/);
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);assert.ok(overflow<=1,'horizontal overflow '+overflow);
    for(const target of expected.fields.filter(f=>['SELECTOR','DERIVED'].includes(f.role)&&f.state_id===state.id)){
@@ -79,10 +79,12 @@ try{
   const colored=await page.evaluate(()=>window.__rowTableTestEditor.state.resolved);
   assert.equal(colored.selection.exterior_color,'white');assert.equal(colored.selection.interior_color,'white');assert.notEqual(colored.validation.status,'INVALID');count('MASTER_PROJECTION');
   const sourceSize=sourceDocument.master.size_master.find(row=>row.window_type_id==='WT-SA-FIX-IN'&&row.construction_module==='zairai'&&row.opening_class==='window'&&(row.width!==1200||row.height!==1000));
-  const sizeRevision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
   const viewCode=[sourceSize.size_code.replace(/-[24]$/,''),sourceSize.width,sourceSize.height,sourceSize.opening_class].join(':');
+  await page.selectOption('[data-spec-key="size_mode"]','STANDARD');
+  await page.waitForSelector('[data-spec-key="standard_size"]');
+  const standardRevision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
   await page.selectOption('[data-spec-key="standard_size"]',viewCode);
-  await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision),sizeRevision);
+  await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision),standardRevision);
   const sized=await page.evaluate(()=>window.__rowTableTestEditor.state.resolved);
   assert.equal(sized.selection.width,sourceSize.width);assert.equal(sized.selection.height,sourceSize.height);assert.notEqual(sized.validation.status,'INVALID');assert.ok(!sized.fields.some(f=>f.key==='width'||f.key==='height'||f.key==='opening_class'));
   assert.equal(await page.locator('[data-spec-key="width"]:visible').count(),0);count('MASTER_PROJECTION');count('CONTROL_AND_VALUES');report.transitions.cases++;
@@ -103,13 +105,14 @@ try{
   count('BRANCH_VISIBILITY');count('KEEP_VALID');count('HANDOFF');report.transitions.cases++;
   async function change(key,value){const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');const control=page.locator(`[data-spec-key="${key}"]`);if(await control.evaluate(e=>e.tagName==='SELECT'))await control.selectOption(value);else{await control.fill(String(value));await control.dispatchEvent('change');}await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision),revision);return page.evaluate(()=>window.__rowTableTestEditor.state.resolved);}
   await restore(plan.cases.find(c=>c.id==='PRIMARY').input);
+  await change('size_mode','STANDARD');
   let edited=await change('standard_size','25118:2550:1830:terrace');
   assert.deepEqual(edited.fields.find(f=>f.key==='panel_count').values.map(v=>v.value),['2','4']);
   edited=await change('panel_count','4');assert.equal(edited.selection.size_code,'25118-4');assert.equal(edited.selection.width,2550);assert.equal(edited.selection.height,1830);
   for(const key of ['width','height','opening_class','size_code'])assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0);
-  assert.deepEqual(edited.fields.slice(0,4).map(f=>f.key),['window_type','construction_module','panel_count','standard_size']);count('CONTROL_AND_VALUES');count('MASTER_PROJECTION');report.transitions.cases++;
+  assert.deepEqual(edited.fields.slice(0,5).map(f=>f.key),['window_type','construction_module','panel_count','size_mode','standard_size']);count('CONTROL_AND_VALUES');count('MASTER_PROJECTION');report.transitions.cases++;
   const standardSaved=await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot());await restore(standardSaved.configuration);assert.equal(await page.locator('[data-spec-key="panel_count"]').inputValue(),'4');count('RESTORE');
-  edited=await change('standard_size','CUSTOM');assert.equal(edited.selection.width,undefined);assert.equal(edited.selection.size_code,undefined);assert.equal(await page.locator('[data-spec-key="width"]').count(),1);
+  edited=await change('size_mode','CUSTOM');assert.equal(edited.selection.width,undefined);assert.equal(edited.selection.size_code,undefined);assert.equal(await page.locator('[data-spec-key="width"]').count(),1);
   edited=await change('panel_count','2');await change('width','1200');edited=await change('height','1000');assert.equal(edited.selection.opening_class,'window');assert.equal(edited.dimensionResult.status,'PASS');count('BRANCH_VISIBILITY');count('CLEAR_INVALID');report.transitions.cases++;
   const functionRevision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');await page.locator('[data-multi-key="glazing_functions"] input[value="BLIND"]').check();await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision),functionRevision);
   edited=await change('window_type','WT-SA-YOKO-SUBERI');assert.deepEqual(edited.fields.find(f=>f.key==='screen_type').values.map(v=>v.value),['horizontal_roll_screen','casement_screen']);assert.ok(!edited.selection.glazing_functions.includes('BLIND'));assert.equal(edited.selection.color_combination,'SA-COLOR-BLACK');count('CLEAR_INVALID');count('KEEP_VALID');report.transitions.cases++;
@@ -117,15 +120,36 @@ try{
   await change('glazing_gas','AIR');await change('glazing_appearance','FROSTED');
   const glazingSaved=await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot());assert.equal(glazingSaved.configuration.glazing_appearance,'FROSTED');assert.match(await page.locator('#warnings').innerText(),/組合せ可否/);assert.ok(glazingSaved.confirmation_requests.some(r=>r.code==='SOURCE_GLAZING_COMBINATION_CONFIRMATION'));await restore(glazingSaved.configuration);assert.equal(await page.locator('[data-spec-key="glazing_appearance"]').inputValue(),'FROSTED');count('RESTORE');count('HANDOFF');report.transitions.cases++;
   await restore(plan.cases.find(c=>c.id==='PRIMARY').input);
-  edited=await change('standard_size','');for(const key of ['standard_size','size_code','width','height'])assert.equal(edited.selection[key],undefined);assert.equal(await page.locator('[data-spec-key="width"]').count(),0);count('CLEAR_INVALID');report.transitions.cases++;
-  await change('standard_size','CUSTOM');await change('panel_count','2');await change('width','1200');await change('height','1000');edited=await change('standard_size','');assert.equal(edited.selection.width,undefined);assert.equal(await page.locator('[data-spec-key="width"]').count(),0);count('CLEAR_INVALID');count('BRANCH_VISIBILITY');report.transitions.cases++;
+  await change('size_mode','STANDARD');await change('standard_size','25118:2550:1830:terrace');edited=await change('standard_size','');for(const key of ['standard_size','size_code','width','height'])assert.equal(edited.selection[key],undefined);assert.equal(await page.locator('[data-spec-key="width"]').count(),0);count('CLEAR_INVALID');report.transitions.cases++;
+  await change('size_mode','CUSTOM');await change('panel_count','2');await change('width','1200');await change('height','1000');edited=await change('size_mode','');assert.equal(edited.selection.width,undefined);assert.equal(await page.locator('[data-spec-key="width"]').count(),0);count('CLEAR_INVALID');count('BRANCH_VISIBILITY');report.transitions.cases++;
   await change('window_type','WT-SA-YOKO-SUBERI');await change('screen_type','horizontal_roll_screen');edited=await change('screen_mesh_type','mushiya_net');assert.equal(edited.selection.screen_mesh_type,'mushiya_net');assert.match(await page.locator('#warnings').innerText(),/特注対応/);assert.ok(edited.confirmationRequests.some(r=>r.code==='SPECIAL_ORDER_SCREEN_NET'));const netSaved=await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot());await restore(netSaved.configuration);assert.equal(await page.locator('[data-spec-key="screen_mesh_type"]').inputValue(),'mushiya_net');count('RESTORE');count('HANDOFF');count('CONTROL_AND_VALUES');report.transitions.cases++;
+  await restore(plan.cases.find(c=>c.id==='PRIMARY').input);
+  async function imageSelect(key,value,keyboard=false){
+   if(!await page.locator(`dialog[data-choice-image-preview="${key}"][open]`).count())await page.locator(`[data-image-preview-field="${key}"]`).click();
+   const button=page.locator(`dialog[open] button[data-image-choice-field="${key}"][data-image-choice-value="${value}"]`),revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+   if(keyboard){await button.focus();await page.keyboard.press('Enter');}else await button.click();
+   await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision),revision);
+   await page.locator(`dialog[data-choice-image-preview="${key}"][open]`).waitFor({state:'visible'});
+   return page.evaluate(()=>window.__rowTableTestEditor.state.resolved);
+  }
+  edited=await imageSelect('color_combination','SA-COLOR-WHITE');assert.equal(edited.selection.color_combination,'SA-COLOR-WHITE');assert.equal(edited.selection.exterior_color,'white');assert.equal(await page.locator('[data-spec-key="color_combination"]').inputValue(),'SA-COLOR-WHITE');
+  assert.equal(await page.locator('dialog[open] button[aria-pressed="true"]').getAttribute('data-image-choice-value'),'SA-COLOR-WHITE');
+  await page.screenshot({path:path.join(out,`selectable-image-modal-${width}.png`),fullPage:false});await page.keyboard.press('Escape');await page.locator('dialog[data-choice-image-preview]').waitFor({state:'detached'});
+  assert.equal(await page.locator('[data-image-preview-field="color_combination"]').evaluate(e=>document.activeElement===e),true);
+  edited=await imageSelect('glazing_appearance','FROSTED',true);assert.equal(edited.selection.glazing_appearance,'FROSTED');await page.locator('[data-image-preview-close]').click();
+  edited=await imageSelect('glazing_functions','DISASTER');assert.ok(edited.selection.glazing_functions.includes('DISASTER'));
+  edited=await imageSelect('glazing_functions','GRID');assert.deepEqual([...edited.selection.glazing_functions].sort(),['DISASTER','GRID']);
+  edited=await imageSelect('glazing_functions','DISASTER');assert.deepEqual(edited.selection.glazing_functions,['GRID']);
+  assert.equal(await page.locator('[data-multi-key="glazing_functions"] input[value="GRID"]').isChecked(),true);assert.equal(await page.locator('[data-multi-key="glazing_functions"] input[value="DISASTER"]').isChecked(),false);
+  await page.keyboard.press('Escape');await page.locator('dialog[data-choice-image-preview]').waitFor({state:'detached'});
+  const imageSaved=await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot());const imageRestored=await restore(imageSaved.configuration);assert.deepEqual(imageRestored.snapshot.configuration,imageSaved.configuration);assert.ok(imageRestored.snapshot.confirmation_requests.some(r=>r.code==='SOURCE_GLAZING_COMBINATION_CONFIRMATION'));
+  assert.equal(await page.locator('#dynamicForm img').count(),0);count('RESTORE');count('HANDOFF');count('CONTROL_AND_VALUES',5);report.transitions.cases+=5;
   await page.emulateMedia({colorScheme:'dark'});await page.reload({waitUntil:'networkidle'});await page.waitForSelector('[data-spec-key="window_type"]');await restore(plan.cases.find(c=>c.id==='PRIMARY').input);
   assert.equal(await page.locator('#dynamicForm img').count(),0);
   const readability=[];
   for(const key of ['window_type','glazing_appearance','glazing_performance','glazing_functions']){
    await page.locator(`[data-image-preview-field="${key}"]`).click();await page.locator('dialog[open]').waitFor({state:'visible'});
-   const cards=await page.locator('dialog[open] .runtime-choice-image').evaluateAll(cards=>cards.map(card=>{const text=card.querySelector('figcaption strong');return {field:card.querySelector('img')?.dataset.field,label:text?.textContent,color:getComputedStyle(text??card).color,background:getComputedStyle(card).backgroundColor};}));readability.push(...cards);
+   const cards=await page.locator('dialog[open] .runtime-choice-image').evaluateAll(cards=>cards.map(card=>{const text=card.querySelector('.image-choice-caption strong');return {field:card.querySelector('img')?.dataset.field,label:text?.textContent,color:getComputedStyle(text??card).color,background:getComputedStyle(card).backgroundColor};}));readability.push(...cards);
    if(key==='glazing_appearance')await page.screenshot({path:path.join(out,`image-modal-dark-${width}.png`),fullPage:false});
    await page.keyboard.press('Escape');await page.locator('dialog[data-choice-image-preview]').waitFor({state:'detached'});assert.equal(await page.locator('dialog[data-choice-image-preview]').count(),0);count('KEEP_VALID');
   }
@@ -134,6 +158,7 @@ try{
   (report.readability??=[]).push({viewport:width,scheme:'dark',status:'PASS',observations:readability});report.states.push({id:'DARK_READABILITY',viewport:width,status:'PASS'});count('CONTROL_AND_VALUES',readability.length);report.transitions.cases++;
   await page.screenshot({path:path.join(out,`dark-${width}.png`),fullPage:true});
   await page.emulateMedia({colorScheme:'light'});await page.reload({waitUntil:'networkidle'});await page.waitForSelector('[data-spec-key="window_type"]');await restore(plan.cases.find(c=>c.id==='PRIMARY').input);
+  await change('size_mode','STANDARD');
   await page.locator('[data-spec-key="standard_size"]').click();await page.screenshot({path:path.join(out,`size-order-${width}.png`),fullPage:false});await page.keyboard.press('Escape');
   await context.close();
  }

@@ -1,6 +1,6 @@
 {
   "schema": "DECLARED_WINDOW_FLOW_V1",
-  "revision": "ROW_TABLE_UI_SIZE_ORDER_R4",
+  "revision": "ROW_TABLE_UI_SIZE_MODE_SELECTABLE_IMAGES_R5",
   "slotOrder": [
     "manufacturer",
     "product",
@@ -229,6 +229,10 @@
     "glazing_gas": {
       "slot": "glass_air_layer",
       "stage": "GLAZING"
+    },
+    "size_mode": {
+      "slot": "size",
+      "stage": "SIZE"
     }
   },
   "formalAdoption": false,
