@@ -210,6 +210,12 @@ export class ProductConfigurationEditor {
     const preview=event.target.closest('[data-image-preview-field]');
     if(preview){this.openImagePreview(preview.dataset.imagePreviewField,preview);return;}
     if(event.target.closest('[data-image-preview-close]')){this.closeImagePreview();return;}
+    const remove=event.target.closest('[data-multi-remove-key]');
+    if(remove&&!remove.disabled){
+      const control=[...this.root.querySelectorAll('select[data-spec-key]')].find(row=>row.dataset.specKey===remove.dataset.multiRemoveKey);
+      if(control&&!control.disabled){const option=[...control.options].find(row=>row.value===remove.dataset.multiRemoveValue);if(option){option.selected=false;await this.handleChange({target:control});}}
+      return;
+    }
     const choice=event.target.closest('[data-image-choice-field]');
     if(choice&&!choice.disabled){
       const control=[...this.root.querySelectorAll('select[data-spec-key]')].find(one=>one.dataset.specKey===choice.dataset.imageChoiceField);
@@ -274,6 +280,11 @@ export class ProductConfigurationEditor {
       }
       this.state.productId=product.id;this.state.productSource=product.sourceType;
       await this.resolve({notify:true});return;
+    }
+    if(target.matches?.('select[data-multi-add-key]')){
+      const control=[...this.root.querySelectorAll('select[data-spec-key]')].find(row=>row.dataset.specKey===target.dataset.multiAddKey);
+      if(control&&!control.disabled&&target.value){const option=[...control.options].find(row=>row.value===target.value);if(option&&!option.disabled){option.selected=true;await this.handleChange({target:control});}}
+      return;
     }
     const multiGroup=target.closest?.('[data-multi-enum="true"][data-multi-key]')??null;
     const control=multiGroup??target;
@@ -359,6 +370,12 @@ export class ProductConfigurationEditor {
     if(field.dataType==='TEXT')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="入力してください">${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
     const selected=Array.isArray(this.state.selection[field.key])?this.state.selection[field.key]:[this.state.selection[field.key]];
     const multi=field.dataType==='MULTI_ENUM';
+    if(multi&&field.control==='DROPDOWN_MULTI'){
+      const nativeOptions=field.values.map(value=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some(one=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}</option>`).join('');
+      const addOptions=field.values.map(value=>`<option value="${esc(value.value)}"${value.disabled||selected.some(one=>String(one)===String(value.value))?' disabled':''}>${esc(value.displayLabel)}</option>`).join('');
+      const chosen=field.values.filter(value=>selected.some(one=>String(one)===String(value.value))).map(value=>`<li><span>${esc(value.displayLabel)}</span><button type="button" data-multi-remove-key="${esc(field.key)}" data-multi-remove-value="${esc(value.value)}" aria-label="${esc(value.displayLabel)}を解除"${field.disabled||field.readOnly?' disabled':''}>解除</button></li>`).join('');
+      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select class="multi-enum-native-control" data-spec-key="${esc(field.key)}" ${attributes} multiple aria-hidden="true" tabindex="-1">${nativeOptions}</select><select data-multi-add-key="${esc(field.key)}" aria-label="${esc(field.displayLabel)}を追加"${field.disabled||field.readOnly?' disabled':''}><option value="">選択して追加</option>${addOptions}</select>${chosen?`<ul class="multi-dropdown-selected" aria-label="${esc(field.displayLabel)}の選択内容">${chosen}</ul>`:''}${this.renderChoiceImages(field)}${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
+    }
     if(multi){
       const choices=field.values.map((value)=>`<label class="multi-enum-option"><input type="checkbox" data-multi-value="true" value="${esc(value.value)}"${value.disabled||field.disabled||field.readOnly?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' checked':''}><span>${reviewChoiceLabel(value)}</span>${value.image&&this.state.resolved?.presentation?.choiceImages?.mode!=='MODAL_ON_DEMAND'?`<img src="${esc(value.image.src)}" alt="${esc(value.image.alt)}" data-field="${esc(field.key)}" data-value="${esc(value.value)}" style="max-width:160px;max-height:120px;object-fit:contain"><small>${esc(value.image.source_label)}</small>`:''}</label>`).join('');
       const nativeOptions=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}</option>`).join('');

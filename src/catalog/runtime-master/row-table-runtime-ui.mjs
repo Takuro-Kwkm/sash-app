@@ -151,7 +151,7 @@ export function createRowTableUi(document,integration){
       const readOnly=role.role==='DERIVED'||assigned.has(key)||['RESOLVED','DERIVED'].includes(fs.state)||(key===policy.width_field||key===policy.height_field)&&present(selection[policy.standard_size_field]);
       fields.push({key,fieldId:def.source.field_id??key,displayLabel:fieldLabel(key,role.label??def.display_label),dataType:def.data_type==='number'?'NUMBER':def.data_type==='array'?'MULTI_ENUM':'ENUM',values:choices,
         required:fs.required,readOnly,disabled:readOnly,selectionMode:readOnly?'DERIVED':'USER_SELECTABLE',parentFields:def.parent_fields,
-        ...(def.data_type==='number'?{step:1,unit:'mm'}:{}),helpText:role.helpText??'',displayOrder:def.display_order});
+        ...(def.data_type==='number'?{step:1,unit:'mm'}:{}),helpText:role.helpText??'',control:role.control,displayOrder:def.display_order});
     }
     const messages=new Map(document.master.user_message_master.map(r=>[r.user_message_id,r.message]));
     const reasonMessage=code=>messages.get(document.master.reason_code_master.find(r=>r.reason_code===code)?.default_user_message_id)??'この条件は積算・メーカーへ確認してください。';

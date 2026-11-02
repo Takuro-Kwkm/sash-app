@@ -427,7 +427,8 @@
       "show_after": [
         "window_type"
       ],
-      "label": "有償品"
+      "label": "有償品",
+      "control": "DROPDOWN_MULTI"
     },
     "custom_option": {
       "role": "HANDOFF_ONLY",
@@ -1457,7 +1458,8 @@
             }
           }
         ],
-        "helpText": "必要な機能を選択してください。組合せ可否・寸法条件は積算・メーカーへ確認します。"
+        "helpText": "必要な機能を選択してください。組合せ可否・寸法条件は積算・メーカーへ確認します。",
+        "control": "DROPDOWN_MULTI"
       },
       {
         "key": "glazing_gas",
@@ -1548,7 +1550,2871 @@
         ]
       }
     ],
-    "screen_mesh_basis": "SN2500 printed pp.160-161: circles standard offering, triangles special order. Retain special-order net options; do not confuse triangle with unavailable."
+    "screen_mesh_basis": "SN2500 printed pp.160-161: circles standard offering, triangles special order. Retain special-order net options; do not confuse triangle with unavailable.",
+    "request_fields": [
+      {
+        "key": "catalogue_options",
+        "label": "追加オプション・部材",
+        "slot": "option",
+        "multi": true,
+        "control": "DROPDOWN_MULTI",
+        "values": [
+          {
+            "value": "CAT-SA-161-11",
+            "label": "網戸ストッパー",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "詳細はＰ１８５参照",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-12",
+            "label": "大型把手",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-13",
+            "label": "フィルター付上桟一体換気窓",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "※把手障子は外障子のみ",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-14",
+            "label": "段窓排気ファン",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "※Ｈ１６００以下のみ",
+            "source_cells": {
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-15",
+            "label": "連窓方立180°・連窓方立90°・角度枠90°",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-16",
+            "label": "浴室用連窓方立※１",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": " ※２連窓タイプは不可 ※１マドサイズのみ",
+            "source_cells": {
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": "※2"
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-17",
+            "label": "段窓無目",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-18",
+            "label": "連窓目板",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-19",
+            "label": "連窓目板シャッター付引違い窓用",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SHUTTER-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-20",
+            "label": "連窓目板雨戸付引違い窓用",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-AMADO-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-21",
+            "label": "段窓目板",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-22",
+            "label": "アングルカバー",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-23",
+            "label": "アングルカバー三方",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-FIX-IN"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "▲",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "▲",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "▲",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "▲",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-24",
+            "label": "タイル用四方額縁",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-25",
+            "label": "フラットアタッチメント",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "フラットアタッチメント用網戸は特注対応",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-26",
+            "label": "フラットアタッチメント（シャッター用）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SHUTTER-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "フラットアタッチメント用網戸は特注対応",
+            "source_cells": {
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-27",
+            "label": "フラットアタッチメント用幅木（シャッター用）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SHUTTER-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-161-28",
+            "label": "フラットアタッチメント用ガイドレール（シャッター用）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SHUTTER-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 161,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-01",
+            "label": "アルミ手すりＳ型（シャッター用）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SHUTTER-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-02",
+            "label": "アルミ手すりＳ型（雨戸用）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-AMADO-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-03",
+            "label": "アルミ手すりＳ型取付用部品（雨戸用）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-AMADO-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-04",
+            "label": "アルミ手すり連窓用補助ポールセット",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-AMADO-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-05",
+            "label": "厚壁用ねじセット",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-AMADO-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-06",
+            "label": "窓モール",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "※マドサイズのみ",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "▲",
+                "annotation": "※"
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true,
+            "exclude_when": {
+              "all": [
+                {
+                  "field": "window_type",
+                  "operator": "IN",
+                  "values": [
+                    "WT-SA-HIKICHIGAI"
+                  ]
+                },
+                {
+                  "field": "opening_class",
+                  "operator": "IN",
+                  "values": [
+                    "terrace",
+                    "terrace_simple_step"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "value": "CAT-SA-162-07",
+            "label": "固定式網戸溝カバー",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-KOSHO-YOKO"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-08",
+            "label": "枠付面格子（ブラケット短）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "※網戸併用時は室内からの着脱不可",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "▲",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "▲",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": "※"
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-09",
+            "label": "枠付面格子（ブラケット長）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": " ※２網戸併用時は室内からの着脱不可 ※１段窓排気ファン併用時",
+            "source_cells": {
+              "WT-SA-FIX-IN": {
+                "mark": "▲",
+                "annotation": "※1"
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "▲",
+                "annotation": "※1・2"
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-10",
+            "label": "下枠アタッチメント",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-11",
+            "label": "単純段差アタッチメント",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-FIX-IN"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-12",
+            "label": "枠付水切り（引違い窓用）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-13",
+            "label": "枠付水切り（装飾窓用）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-14",
+            "label": "水切り皿板",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-15",
+            "label": "水切り皿板（シャッター）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SHUTTER-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-16",
+            "label": "水切り皿板エンドキャップ",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "※シャッター用は水切り皿板に同梱",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-17",
+            "label": "浴室用防水部品セット",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": " ※２連窓タイプは不可 ※１電動は不可",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": "※1"
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": "※2"
+              }
+            },
+            "confirmation_required": true,
+            "exclude_when": {
+              "all": [
+                {
+                  "field": "window_type",
+                  "operator": "EQ",
+                  "value": "WT-SA-SHUTTER-HIKI"
+                },
+                {
+                  "field": "shutter_operation",
+                  "operator": "EQ",
+                  "value": "electric"
+                }
+              ]
+            }
+          },
+          {
+            "value": "CAT-SA-162-18",
+            "label": "防水テープ",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-19",
+            "label": "サッシ防水補助シール",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-20",
+            "label": "先張り防水シート",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-162-21",
+            "label": "後付ビード",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-FIX-IN"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 162,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-01",
+            "label": "小開口ストッパー",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "※枚建、非常用進入口は取付不可4スマートクレセント、キー付クレセントとの併用不可",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true,
+            "exclude_when": {
+              "field": "panel_count",
+              "operator": "EQ",
+              "value": "4"
+            }
+          },
+          {
+            "value": "CAT-SA-163-03",
+            "label": "小開口アーム（固定タイプ）",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-TATE-SUBERI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-04",
+            "label": "クレセント",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-05",
+            "label": "ダイヤル錠クレセント",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "小開口ストッパーとの併用不可",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-06",
+            "label": "防虫網",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-UCHIDAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-07",
+            "label": "網戸ローラー",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-UCHIDAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-08",
+            "label": "網押し棒",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-UCHIDAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-09",
+            "label": "ナベワンウェイねじ",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-UCHIDAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-10",
+            "label": "取外し専用工具",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-UCHIDAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-11",
+            "label": "スマートクレセント",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "小開口ストッパーとの併用不可",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-12",
+            "label": "キー付クレセント",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "小開口ストッパーとの併用不可",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-13",
+            "label": "本体止め取付ねじ",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-14",
+            "label": "アングル取付ねじ",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-15",
+            "label": "タイル用四方額縁アングル取付ねじ",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-16",
+            "label": "下枠養生材",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-17",
+            "label": "下枠養生テープ",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SHUTTER-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-18",
+            "label": "コーナー気密部品セット",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-KOSHO-YOKO"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-19",
+            "label": "台風ストッパー",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SHUTTER-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-20",
+            "label": "リモコン",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-KOSHO-YOKO"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-21",
+            "label": "復帰セット",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-22",
+            "label": "フック棒",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-23",
+            "label": "延長ケーブル",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-24",
+            "label": "低頭ねじ",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          },
+          {
+            "value": "CAT-SA-163-25",
+            "label": "ウレタン納まり用躯体固定金具セット",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-HIKICHIGAI",
+                "WT-SA-SHUTTER-HIKI",
+                "WT-SA-AMADO-HIKI",
+                "WT-SA-MENKOSHI-HIKI",
+                "WT-SA-TATE-SUBERI",
+                "WT-SA-YOKO-SUBERI",
+                "WT-SA-KOSHO-YOKO",
+                "WT-SA-FIX-IN",
+                "WT-SA-UCHIDAOSHI",
+                "WT-SA-SOTODAOSHI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "※マドサイズのみ",
+            "source_cells": {
+              "WT-SA-HIKICHIGAI": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-SHUTTER-HIKI": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-MENKOSHI-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-TATE-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-YOKO-SUBERI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-KOSHO-YOKO": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-FIX-IN": {
+                "mark": "●",
+                "annotation": "※"
+              },
+              "WT-SA-UCHIDAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              },
+              "WT-SA-SOTODAOSHI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true,
+            "exclude_when": {
+              "all": [
+                {
+                  "field": "window_type",
+                  "operator": "IN",
+                  "values": [
+                    "WT-SA-HIKICHIGAI",
+                    "WT-SA-SHUTTER-HIKI",
+                    "WT-SA-AMADO-HIKI",
+                    "WT-SA-FIX-IN"
+                  ]
+                },
+                {
+                  "field": "opening_class",
+                  "operator": "IN",
+                  "values": [
+                    "terrace",
+                    "terrace_simple_step"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "value": "CAT-SA-163-26",
+            "label": "鏡板アタッチメント",
+            "when": {
+              "field": "window_type",
+              "operator": "IN",
+              "values": [
+                "WT-SA-AMADO-HIKI"
+              ]
+            },
+            "source_ref": {
+              "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+              "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+            },
+            "printed_page": 163,
+            "source_notes": "",
+            "source_cells": {
+              "WT-SA-AMADO-HIKI": {
+                "mark": "●",
+                "annotation": ""
+              }
+            },
+            "confirmation_required": true
+          }
+        ],
+        "helpText": "必要な部材を選択してください。特注・寸法・納まり・併用条件は選択内容と一緒に積算へ引き継ぎます。"
+      },
+      {
+        "key": "request_remote_control",
+        "label": "リモコン",
+        "slot": "option",
+        "when": {
+          "any": [
+            {
+              "all": [
+                {
+                  "field": "window_type",
+                  "operator": "EQ",
+                  "value": "WT-SA-SHUTTER-HIKI"
+                },
+                {
+                  "field": "shutter_operation",
+                  "operator": "EQ",
+                  "value": "electric"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": "window_type",
+                  "operator": "EQ",
+                  "value": "WT-SA-KOSHO-YOKO"
+                },
+                {
+                  "field": "operation_method",
+                  "operator": "EQ",
+                  "value": "electric_unit"
+                }
+              ]
+            }
+          ]
+        },
+        "values": [
+          {
+            "value": "single_function_remote",
+            "label": "単機能リモコン"
+          },
+          {
+            "value": "high_function_remote",
+            "label": "高機能リモコン"
+          }
+        ],
+        "source_ref": {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        "printed_pages": [
+          54,
+          134
+        ],
+        "helpText": "付属品・追加手配の区分は積算で確認します。"
+      },
+      {
+        "key": "request_smart_app",
+        "label": "スマートフォン操作",
+        "slot": "option",
+        "when": {
+          "any": [
+            {
+              "all": [
+                {
+                  "field": "window_type",
+                  "operator": "EQ",
+                  "value": "WT-SA-SHUTTER-HIKI"
+                },
+                {
+                  "field": "shutter_operation",
+                  "operator": "EQ",
+                  "value": "electric"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": "window_type",
+                  "operator": "EQ",
+                  "value": "WT-SA-KOSHO-YOKO"
+                },
+                {
+                  "field": "operation_method",
+                  "operator": "EQ",
+                  "value": "electric_unit"
+                }
+              ]
+            }
+          ]
+        },
+        "values": [
+          {
+            "value": "my_window",
+            "label": "My Window"
+          },
+          {
+            "value": "life_assist2",
+            "label": "Life Assist2"
+          }
+        ],
+        "source_ref": {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        "printed_pages": [
+          55,
+          134
+        ],
+        "helpText": "Life Assist2は推奨ルーターとホームデバイスが必要です。機器費用は別途確認します。"
+      },
+      {
+        "key": "request_home_device",
+        "label": "ホームデバイス",
+        "slot": "option",
+        "when": {
+          "any": [
+            {
+              "all": [
+                {
+                  "field": "window_type",
+                  "operator": "EQ",
+                  "value": "WT-SA-SHUTTER-HIKI"
+                },
+                {
+                  "field": "shutter_operation",
+                  "operator": "EQ",
+                  "value": "electric"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": "window_type",
+                  "operator": "EQ",
+                  "value": "WT-SA-KOSHO-YOKO"
+                },
+                {
+                  "field": "operation_method",
+                  "operator": "EQ",
+                  "value": "electric_unit"
+                }
+              ]
+            }
+          ]
+        },
+        "values": [
+          {
+            "value": "life_assist2_home_device",
+            "label": "ホームデバイス"
+          }
+        ],
+        "source_ref": {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        "printed_pages": [
+          55,
+          134
+        ],
+        "helpText": "機器の適合と別途手配を積算で確認します。"
+      }
+    ],
+    "request_clear_parents": [
+      "window_type",
+      "construction_module",
+      "opening_class",
+      "size_mode",
+      "standard_size",
+      "panel_count",
+      "width",
+      "height",
+      "shutter_operation",
+      "shutter_type",
+      "operation_method",
+      "request_smart_app",
+      "catalogue_options"
+    ],
+    "request_forbidden": [
+      {
+        "when": {
+          "all": [
+            {
+              "field": "catalogue_options",
+              "operator": "CONTAINS",
+              "value": "CAT-SA-163-01"
+            },
+            {
+              "any": [
+                {
+                  "field": "catalogue_options",
+                  "operator": "CONTAINS",
+                  "value": "CAT-SA-163-05"
+                },
+                {
+                  "field": "catalogue_options",
+                  "operator": "CONTAINS",
+                  "value": "CAT-SA-163-11"
+                },
+                {
+                  "field": "catalogue_options",
+                  "operator": "CONTAINS",
+                  "value": "CAT-SA-163-12"
+                }
+              ]
+            }
+          ]
+        },
+        "message": "小開口ストッパーはダイヤル錠・スマート・キー付クレセントと併用できません。",
+        "source_ref": {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        "printed_page": 163
+      },
+      {
+        "when": {
+          "all": [
+            {
+              "field": "catalogue_options",
+              "operator": "CONTAINS",
+              "value": "CAT-SA-161-14"
+            },
+            {
+              "field": "screen_type",
+              "operator": "EQ",
+              "value": "vertical_roll_screen"
+            }
+          ]
+        },
+        "message": "段窓排気ファンと上げ下げロール網戸は併用できません。",
+        "source_ref": {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        "printed_page": 160
+      },
+      {
+        "when": {
+          "all": [
+            {
+              "field": "catalogue_options",
+              "operator": "CONTAINS",
+              "value": "CAT-SA-162-09"
+            },
+            {
+              "field": "window_type",
+              "operator": "EQ",
+              "value": "WT-SA-FIX-IN"
+            },
+            {
+              "field": "catalogue_options",
+              "operator": "NOT_CONTAINS",
+              "value": "CAT-SA-161-14"
+            }
+          ]
+        },
+        "message": "FIX窓の枠付面格子（ブラケット長）は段窓排気ファン併用時の条件を確認してください。",
+        "source_ref": {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        "printed_page": 162
+      }
+    ]
   },
   "runtime_ui_rules": [
     {

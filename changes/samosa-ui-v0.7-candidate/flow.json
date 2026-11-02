@@ -1,6 +1,6 @@
 {
   "schema": "DECLARED_WINDOW_FLOW_V1",
-  "revision": "ROW_TABLE_UI_SIZE_MODE_SELECTABLE_IMAGES_R5",
+  "revision": "ROW_TABLE_UI_OPTION_AUDIT_DROPDOWN_R6",
   "slotOrder": [
     "manufacturer",
     "product",
@@ -233,6 +233,22 @@
     "size_mode": {
       "slot": "size",
       "stage": "SIZE"
+    },
+    "catalogue_options": {
+      "slot": "option",
+      "stage": "OPTION"
+    },
+    "request_remote_control": {
+      "slot": "option",
+      "stage": "OPTION"
+    },
+    "request_smart_app": {
+      "slot": "option",
+      "stage": "OPTION"
+    },
+    "request_home_device": {
+      "slot": "option",
+      "stage": "OPTION"
     }
   },
   "formalAdoption": false,

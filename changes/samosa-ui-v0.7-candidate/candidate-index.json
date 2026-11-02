@@ -1,7 +1,7 @@
 {
   "schema": "CANDIDATE_RUNTIME_INDEX_V1",
   "adoption": "CANDIDATE_ONLY",
-  "revision": "SAMOSA_SIZE_MODE_SELECTABLE_IMAGES_R5_20261102",
+  "revision": "SAMOSA_DROPDOWN_OPTIONS_R6_20261102",
   "products": [
     {
       "id": "NATIVE_REGISTRY:LIXIL::サーモスA",
@@ -11,13 +11,13 @@
       "candidate": true,
       "adapterType": "ROW_TABLE_UI_CANDIDATE_V1",
       "path": "candidate.json",
-      "sha256": "67da9cfac243c0c690ae2396b511831c84e86ab432fdaa4b35b8c07773a25b65",
-      "packageVersion": "v0.7-ui-candidate-6",
+      "sha256": "650a03b3f308111dc0f49392398de3c5c178a00ff3045a997e32849edac922b9",
+      "packageVersion": "v0.7-ui-candidate-7",
       "schemaVersion": "ROW_TABLE_UI_V1",
       "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
       "uiFlowContract": {
         "schema": "DECLARED_WINDOW_FLOW_V1",
-        "revision": "ROW_TABLE_UI_SIZE_MODE_SELECTABLE_IMAGES_R5",
+        "revision": "ROW_TABLE_UI_OPTION_AUDIT_DROPDOWN_R6",
         "slotOrder": [
           "manufacturer",
           "product",
@@ -250,6 +250,22 @@
           "size_mode": {
             "slot": "size",
             "stage": "SIZE"
+          },
+          "catalogue_options": {
+            "slot": "option",
+            "stage": "OPTION"
+          },
+          "request_remote_control": {
+            "slot": "option",
+            "stage": "OPTION"
+          },
+          "request_smart_app": {
+            "slot": "option",
+            "stage": "OPTION"
+          },
+          "request_home_device": {
+            "slot": "option",
+            "stage": "OPTION"
           }
         },
         "formalAdoption": false,

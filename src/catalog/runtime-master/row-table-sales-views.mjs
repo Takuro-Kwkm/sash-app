@@ -1,12 +1,13 @@
 // Source-backed presentation projections for row-table inputs. Product differences
 // are declared in the bound policy; all rule and geometry execution stays shared.
+import {evaluateCondition} from './runtime-condition.mjs';
 import {evaluateRowTableProjection} from './row-table-runtime-projection.mjs';
 const present=v=>v!==undefined&&v!==null&&v!=='';
 const eq=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 const naturalOrder=new Intl.Collator('ja',{numeric:true});
 export function createRowTableSalesViews(document,projection){
  const policy=document.ui_policy.sales_views;if(!policy)return null;
- const size=policy.standard_size,modeKey=size.mode_key,viewKeys=[modeKey,size.key,size.panel_key,...policy.glazing.map(v=>v.key)];
+ const size=policy.standard_size,modeKey=size.mode_key,viewKeys=[modeKey,size.key,size.panel_key,...policy.glazing.map(v=>v.key),...(policy.request_fields??[]).map(v=>v.key)];
  const matching=(row,input,ignore=[])=>Object.entries(document.projection_policy.dimension_selector_map).every(([key,col])=>ignore.includes(key)||!present(row[col])||row[col]==='NOT_APPLICABLE'||!present(input[key])||eq(row[col],input[key]));
  const groups=input=>{
   if(!present(input.window_type)||!present(input.construction_module))return [];
@@ -129,6 +130,24 @@ export function createRowTableSalesViews(document,projection){
   }else{delete native.glass_type;delete native.glass_category;}
   if(!edited(['glazing_base','glazing_performance'])&&present(suppliedGlass.category)&&present(native.glass_category)&&suppliedGlass.category!==native.glass_category)errors.push({field:'glazing_base',code:'NATIVE_GLAZING_CATEGORY_VIEW_CONFLICT',message:'保存されたガラス分類と選択項目が一致しません。'});
   if(!edited(['glazing_base','glazing_performance'])&&present(suppliedGlass.type)&&present(native.glass_type)&&suppliedGlass.type!==native.glass_type)errors.push({field:'glazing_base',code:'NATIVE_GLAZING_VIEW_CONFLICT',message:'保存されたガラス仕様と選択項目が一致しません。'});
+  const requestValues=()=>({...native,...selection});
+  const matchesRequest=condition=>!condition||evaluateCondition(condition,{fields:Object.fromEntries(Object.entries(requestValues()).map(([key,value])=>[key,{value}]))});
+  const requestOptions=view=>view.values.filter(option=>matchesRequest(option.when)&&(!option.exclude_when||!matchesRequest(option.exclude_when)));
+  for(const view of policy.request_fields??[]){
+   const selected=view.multi?selection[view.key]??[]:present(selection[view.key])?[selection[view.key]]:[];
+   const options=matchesRequest(view.when)?requestOptions(view):[];
+   const valid=Array.isArray(selected)&&new Set(selected).size===selected.length&&selected.every(value=>options.some(o=>o.value===value));
+   if(!valid||!matchesRequest(view.when)){
+    if(present(selection[view.key])&&!edited(policy.request_clear_parents??[]))errors.push({field:view.key,code:'SOURCE_REQUEST_SCOPE',message:'選択したオプションは窓種・寸法・操作条件に対応していません。'});
+    if(view.multi&&Array.isArray(selected))selection[view.key]=selected.filter(value=>options.some(o=>o.value===value));else delete selection[view.key];
+    cleared.push(view.key);
+   }
+  }
+  for(const rule of policy.request_forbidden??[])if(matchesRequest(rule.when))errors.push({field:'catalogue_options',code:'SOURCE_OPTION_COMBINATION_FORBIDDEN',message:rule.message});
+  const requestConfirmations=(policy.request_fields??[]).flatMap(view=>(view.multi?selection[view.key]??[]:present(selection[view.key])?[selection[view.key]]:[]).map(value=>{
+   const option=view.values.find(o=>o.value===value),cell=option.source_cells?.[native.window_type];
+   return {field:view.key,code:'SOURCE_OPTION_REQUEST_CONFIRMATION',message:option.label+'：'+(cell?.mark==='▲'?'特注対応。':'')+(option.source_notes?option.source_notes+'。':'')+'寸法・納まり・手配内容を積算で確認してください。',status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー',selection:value,source_mark:cell?.mark??null,source_refs:[option.source_ref??view.source_ref],printed_pages:option.printed_page?[option.printed_page]:view.printed_pages};
+  }));
   function fields(){
    if(!present(native.window_type))return [];
    const result=[];const add=(key,label,values,other={})=>result.push({key,fieldId:key,displayLabel:label,dataType:'ENUM',values:values.map(o=>({value:o.value,displayLabel:o.label,disabled:false,...(o.image?{image:o.image}:{})})),required:false,readOnly:false,disabled:false,selectionMode:'USER_SELECTABLE',parentFields:[],...other});
@@ -140,11 +159,12 @@ export function createRowTableSalesViews(document,projection){
      if(selection[modeKey]===size.standard_value)add(size.key,size.label,rows.map(g=>({value:g.key,label:g.label})),{required:true,displayOrder:22,parentFields:[modeKey,...(counts.length?[size.panel_key]:[])]});
     }
    }
-   for(const v of policy.glazing)if(visible(v,selection))add(v.key,v.label,v.values.filter(o=>visible(o,selection)&&(!o.native_probe||allowedGlass(o.native_probe))),{required:Boolean(v.required),dataType:v.multi?'MULTI_ENUM':'ENUM',displayOrder:33,helpText:v.helpText??'',parentFields:[]});
+   for(const v of policy.glazing)if(visible(v,selection))add(v.key,v.label,v.values.filter(o=>visible(o,selection)&&(!o.native_probe||allowedGlass(o.native_probe))),{required:Boolean(v.required),dataType:v.multi?'MULTI_ENUM':'ENUM',control:v.control,displayOrder:33,helpText:v.helpText??'',parentFields:[]});
+   for(const v of policy.request_fields??[])if(matchesRequest(v.when))add(v.key,v.label,requestOptions(v).map(o=>({...o,label:o.label+(o.source_cells?.[native.window_type]?.mark==='▲'?'（特注対応）':'')})),{required:false,dataType:v.multi?'MULTI_ENUM':'ENUM',control:v.control,displayOrder:90,helpText:v.helpText??'',parentFields:[]});
    return result;
   }
   return {native,selection,errors,cleared,projection:contextualProjection,custom,customDimension,openingAmbiguous,fields,
-   confirmations:[...(policy.confirmations??[]).filter(r=>Object.entries(r.when).every(([key,value])=>Array.isArray(value)?value.includes(native[key]):native[key]===value)).map(({when,...row})=>({...row,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー'})),...(policy.glazing.some(v=>present(selection[v.key]))?[{field:'glazing_base',code:'SOURCE_GLAZING_COMBINATION_CONFIRMATION',message:policy.glazing_combination_message,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー',selection:structuredClone(selection),source_refs:policy.source_refs}]:[])],
+   confirmations:[...requestConfirmations,...(policy.confirmations??[]).filter(r=>Object.entries(r.when).every(([key,value])=>Array.isArray(value)?value.includes(native[key]):native[key]===value)).map(({when,...row})=>({...row,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー'})),...(policy.glazing.some(v=>present(selection[v.key]))?[{field:'glazing_base',code:'SOURCE_GLAZING_COMBINATION_CONFIRMATION',message:policy.glazing_combination_message,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算・メーカー',selection:structuredClone(selection),source_refs:policy.source_refs}]:[])],
    hiddenFields:new Set(['opening_class','size_code','glass_category','glass_type',...(!custom?['width','height']:[])])};
  }
  return {prepare,keys:viewKeys,groups};

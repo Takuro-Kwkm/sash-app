@@ -130,3 +130,35 @@ test('independent size mode shows only its branch and round-trips legacy CUSTOM 
  const cleared=ui.uiResolver({...ui.uiResolver(standard).selection,standard_size:undefined},{changedFields:['standard_size']});assert.equal(cleared.selection.size_mode,'STANDARD');assert.equal(cleared.selection.width,undefined);assert.ok(cleared.validation.missingRequiredFields.includes('standard_size'));
  for(const bad of [{...standard,size_mode:'CUSTOM'},{...seed,size_mode:'STANDARD',standard_size:'CUSTOM'},{...seed,size_mode:'INVALID'}])assert.equal(ui.uiResolver(bad).validation.status,'INVALID');
 });
+
+test('glazing function presentation remains a dropdown with unchanged multi-value requests',()=>{
+ const result=ui.uiResolver({...seed,glazing_functions:['DISASTER','GRID']});assert.equal(field(result,'glazing_functions').control,'DROPDOWN_MULTI');assert.equal(field(result,'glazing_functions').dataType,'MULTI_ENUM');assert.deepEqual(result.selection.glazing_functions,['DISASTER','GRID']);
+});
+test('all source paid-option matrix columns have explicit coverage and each native window gets its exact request domain',()=>{
+ const audit=JSON.parse(fs.readFileSync(new URL('option-coverage.json',base)));assert.equal(audit.columns.length,97);assert.ok(audit.columns.every(x=>x.coverage));assert.equal(audit.columns.filter(x=>x.coverage==='SOURCE_BACKED_CATALOGUE_REQUEST').length,64);
+ const requests=doc.ui_policy.sales_views.request_fields.find(f=>f.key==='catalogue_options');assert.deepEqual(requests.values.map(o=>o.value),audit.columns.filter(x=>x.coverage==='SOURCE_BACKED_CATALOGUE_REQUEST').map(x=>x.id));
+ for(const window_type of audit.windows){const result=ui.uiResolver({window_type,construction_module:'zairai',panel_count:'2',size_mode:'CUSTOM',width:600,height:1000});
+  const expected=audit.columns.filter(x=>x.coverage==='SOURCE_BACKED_CATALOGUE_REQUEST'&&x.windows[window_type]).map(x=>x.id);assert.deepEqual(values(result,'catalogue_options'),expected,window_type);
+ }
+});
+test('request options reject unsupported imports and clear only invalid descendants on real edits',()=>{
+ const saved=ui.uiResolver({...seed,catalogue_options:['CAT-SA-162-18','CAT-SA-163-11']});assert.notEqual(saved.validation.status,'INVALID');assert.deepEqual(ui.uiResolver(saved.selection).selection,saved.selection);
+ const edited=ui.uiResolver({...saved.selection,window_type:'WT-SA-YOKO-SUBERI'},{changedFields:['window_type']});assert.deepEqual(edited.selection.catalogue_options,['CAT-SA-162-18']);assert.equal(ui.uiResolver({...saved.selection,window_type:'WT-SA-YOKO-SUBERI'}).validation.status,'INVALID');
+ assert.equal(ui.uiResolver({...seed,catalogue_options:['NOT_A_CATALOGUE_OPTION']}).validation.status,'INVALID');
+ assert.equal(ui.uiResolver({...seed,catalogue_options:['CAT-SA-162-18','CAT-SA-162-18']}).validation.status,'INVALID');
+ const snapshot=createProductConfigurationSnapshot({product:entry,result:saved});assert.ok(snapshot.confirmation_requests.some(r=>r.selection==='CAT-SA-163-11'&&r.source_refs[0].sha256));
+});
+test('clear source prohibitions are enforced, including four panels and electric-shutter waterproof parts',()=>{
+ assert.ok(!values(ui.uiResolver({...standard,panel_count:'4'}),'catalogue_options').includes('CAT-SA-163-01'));
+ assert.equal(ui.uiResolver({...seed,catalogue_options:['CAT-SA-163-01','CAT-SA-163-11']}).validation.status,'INVALID');
+ const shutter={...seed,window_type:'WT-SA-SHUTTER-HIKI',shutter_operation:'electric',shutter_type:'standard'};assert.ok(!values(ui.uiResolver(shutter),'catalogue_options').includes('CAT-SA-162-17'));
+ const manual=ui.uiResolver({...shutter,shutter_operation:'manual'});assert.ok(values(manual,'catalogue_options').includes('CAT-SA-162-17'));
+});
+test('remote/app/home-device source choices exist on electric shutters and electric high windows only',()=>{
+ for(const input of [{...seed,window_type:'WT-SA-SHUTTER-HIKI',shutter_operation:'electric',shutter_type:'standard'},{...seed,window_type:'WT-SA-KOSHO-YOKO',panel_count:undefined,width:1000,height:500,operation_method:'electric_unit'}]){
+  const result=ui.uiResolver({...input,request_remote_control:'high_function_remote',request_smart_app:'life_assist2',request_home_device:'life_assist2_home_device'});
+  assert.notEqual(result.validation.status,'INVALID');assert.deepEqual(values(result,'request_remote_control'),['single_function_remote','high_function_remote']);assert.deepEqual(values(result,'request_smart_app'),['my_window','life_assist2']);assert.equal(result.selection.request_home_device,'life_assist2_home_device');
+  const editKey=input.shutter_operation?'shutter_operation':'operation_method',value=input.shutter_operation?'manual':'chain_operator';const edited=ui.uiResolver({...result.selection,[editKey]:value},{changedFields:[editKey]});
+  for(const key of ['request_remote_control','request_smart_app','request_home_device']){assert.equal(edited.selection[key],undefined);assert.ok(!field(edited,key));}
+ }
+});
