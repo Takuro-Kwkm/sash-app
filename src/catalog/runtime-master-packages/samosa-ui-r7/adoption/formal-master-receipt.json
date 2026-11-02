@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "role": "PRODUCT_MASTER",
+  "mode": "EXISTING_FORMAL_CARRY_FORWARD",
+  "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "master_sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e",
+  "current": {
+    "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+    "lifecycle_state": "FORMAL",
+    "revision": "v0.7"
+  },
+  "registry_ref": {
+    "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/registry-live.json",
+    "sha256": "f1c9d99b0690377957be4afa7f7690c20473c1c61826df8dd7852e9fabc05585"
+  },
+  "registry_row": {
+    "": "10",
+    "manufacturer": "LIXIL",
+    "series": "サーモスA",
+    "package_version": "v0.7",
+    "master_status": "FORMAL_PASS",
+    "authoring_status": "PASS",
+    "authoring_file_name": "サーモスA_商品マスター_v0.7.xlsx",
+    "authoring_file_id": "1cDEFzi0g1DzM5YoeGvZtHuXionD7tmFD",
+    "runtime_status": "READY",
+    "runtime_manifest_id": "1GEu9jyvy09YK3guh-0s-xVK0iR0koMO6",
+    "runtime_file_count": "2",
+    "documentation_status": "PASS",
+    "documentation_file_id": "1pKtlSG9XBFUL0pmi6YD3GyXK873UGbtJ",
+    "package_gate": "PASS",
+    "storage_gate": "PASS",
+    "duplicate_check": "PASS",
+    "version_check": "PASS",
+    "canonical_folder": "04_商品マスター/01_LIXIL/サーモスA/01_正本",
+    "canonical_folder_id": "10eHobQhx343aUkUeOHmV8KwD7K5OktuW",
+    "working_folder_id": "1KbegQHaD9EgcsNUKktFVWLwqcm-8EGyl",
+    "old_folder_id": "1kG4goZ0LV_PkJdbn56gLLDNoAyaoyCZ0",
+    "blocking_category": "39",
+    "blocking_items": "39",
+    "updated_at": "2026-09-01",
+    "next_action": "FORMAL PASS維持。次回更新時Startup/Closing Gate必須"
+  },
+  "written_files": 0,
+  "new_human_decisions": 0,
+  "source_adoption_operations": 0,
+  "verification_scope": "CURRENT_REGISTERED_FORMAL_EXACT_BYTES_ONLY",
+  "preserved_local_copy_sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e",
+  "candidate_formal_adoption": false,
+  "runtime_ui_adopted": false
+}

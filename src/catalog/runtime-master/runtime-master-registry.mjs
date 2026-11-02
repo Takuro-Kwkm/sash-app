@@ -19,6 +19,7 @@ import { guardFormalCustomDimensionUiResolver } from './formal-custom-dimension-
 import { adaptFrameRuntime } from './frame-runtime-adapter.mjs';
 import {formalComposedRuntimeEntries,readFormalComposedModule} from './formal-composed-runtime-registry.mjs';
 import {adaptComposedProductRuntime} from './composed-product-runtime-adapter.mjs';
+import {rowTableRuntimeEntries,adaptRowTableRuntimePackage,readRowTableRuntimePackage} from './row-table-runtime-package.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.4');
@@ -37,6 +38,7 @@ const APW430_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw430-20260918
 const APW431_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw431-v1.2');
 
 export const runtimeMasterInventory = Object.freeze([
+  ...rowTableRuntimeEntries,
   ...formalComposedRuntimeEntries,
   Object.freeze({
     manufacturer:'LIXIL', series:'サーモスⅡ-H', manifestSeries:'サーモスⅡH', productId:'SER-LIX-SAMOS2H', masterVersion:'v0.9-R4', schemaVersion:'2.0',
@@ -129,7 +131,10 @@ const runtimePromises = new Map();
 async function loadRuntime(entry) {
   let runtimePackage;
   let adapted;
-  if(entry.packageType==='FORMAL_COMPOSED_PRODUCT_RUNTIME'&&entry.adapterType==='COMPOSED_PRODUCT_MODULE_V1'){
+  if(entry.packageType==='ROW_TABLE_RUNTIME_PACKAGE_V1'){
+    const loaded=adaptRowTableRuntimePackage(entry);adapted=loaded;
+    runtimePackage={documents:{RUNTIME_JSON_PACKAGE:loaded.document},integrity:loaded.integrity,manifest:{packageVersion:entry.packageVersion}};
+  } else if(entry.packageType==='FORMAL_COMPOSED_PRODUCT_RUNTIME'&&entry.adapterType==='COMPOSED_PRODUCT_MODULE_V1'){
     const {document,integrity}=readFormalComposedModule(entry);
     adapted=await adaptComposedProductRuntime(document,entry,async productId=>{
       const {getRuntimeAppIntegration}=await import('./runtime-app-bridge.mjs');
@@ -178,6 +183,7 @@ export async function loadRegisteredRuntime(manufacturer, series) {
   const entry = getRuntimeMasterEntry(manufacturer, series);
   if (!entry) return null;
   if(entry.packageType==='FORMAL_COMPOSED_PRODUCT_RUNTIME')readFormalComposedModule(entry);
+  if(entry.packageType==='ROW_TABLE_RUNTIME_PACKAGE_V1')readRowTableRuntimePackage(entry);
   const key = `${manufacturer}/${series}`;
   if (!runtimePromises.has(key)) runtimePromises.set(key, loadRuntime(entry).catch((error) => { runtimePromises.delete(key); throw error; }));
   return runtimePromises.get(key);

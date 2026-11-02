@@ -1,0 +1,13 @@
+{
+  "schema": "ROW_TABLE_BUSINESS_QA_V1",
+  "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "scope": "SAMOSA_V07_R7_APPROVED_UI_NORMAL_RUNTIME_PUBLICATION",
+  "manifest_file_id": "1GEu9jyvy09YK3guh-0s-xVK0iR0koMO6",
+  "viewports": [
+    1280,
+    768,
+    390
+  ],
+  "cases": "contracts/production/runtime-ui-qa/samosa-r7/cases.json",
+  "expected_inventory": "contracts/production/runtime-ui-qa/samosa-r7/expected-inventory.json"
+}

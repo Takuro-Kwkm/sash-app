@@ -151,6 +151,10 @@
       "runtime_ui_profile": {
         "path": "contracts/production/native-row-table-connection/samosa.v0.7.ui-candidate.json",
         "sha256": "1a75435ac49d43b78a48f176703aa152ed50e0014d2b96464a1dd271a34f64a5"
+      },
+      "runtime_ui_adoption_profile": {
+        "path": "contracts/production/runtime-adoptions/samosa-r7.profile.json",
+        "sha256": "9b3dd4d6093a83b3b4148184749414ac2214be4b1d3834bea23731aa423852dd"
       }
     },
     "NATIVE_REGISTRY:LIXIL::玄関ドアXE": {

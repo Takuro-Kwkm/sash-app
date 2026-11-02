@@ -12,14 +12,18 @@ import {createHash} from 'node:crypto';
 const present=v=>v!==null&&v!==undefined&&v!=='';
 const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 const flat=state=>Object.fromEntries(Object.entries(state.fields).filter(([,v])=>present(v.value)&&v.state!=='NOT_APPLICABLE').map(([k,v])=>[k,v.value]));
-export function createRowTableUi(document,integration){
+export function createRowTableUi(document,integration,sourceBinding={}){
   if(document.schema!=='ROW_TABLE_UI_CANDIDATE_V1'||document.formalAdoption!==false)throw new Error('ROW_TABLE_UI_CANDIDATE_REQUIRED');
-  const source=readFileSync(document.source_master.path);
-  if(lstatSync(document.source_master.path).isSymbolicLink()||createHash('sha256').update(source).digest('hex')!==document.source_master.sha256
+  const sourcePath=sourceBinding.masterPath??document.source_master.path;
+  const source=readFileSync(sourcePath);
+  if(lstatSync(sourcePath).isSymbolicLink()||createHash('sha256').update(source).digest('hex')!==document.source_master.sha256
     ||document.source_master.sha256!==integration.sourceReference?.sourceMasterSha256||document.projection_policy.native_product_id!==integration.id
     ||!same(JSON.parse(source),document.master))throw new Error('ROW_TABLE_SOURCE_MASTER_IDENTITY');
   const projection=projectRowTableMaster(document.master,document.projection_policy);
-  for(const ref of document.ui_policy.sales_views?.source_refs??[]){if(createHash('sha256').update(readFileSync(ref.path)).digest('hex')!==ref.sha256)throw new Error('ROW_TABLE_UI_SOURCE_CHANGED');}
+  for(const ref of document.ui_policy.sales_views?.source_refs??[]){
+    if(sourceBinding.verifyEvidence)sourceBinding.verifyEvidence(ref);
+    else if(createHash('sha256').update(readFileSync(ref.path)).digest('hex')!==ref.sha256)throw new Error('ROW_TABLE_UI_SOURCE_CHANGED');
+  }
   projection.master.dependency_rules.push(...(document.ui_policy.runtime_ui_rules??[]));
   const conditionFields=c=>[...(c.field?[c.field]:[]),...(c.all??c.any??[]).flatMap(conditionFields)];
   for(const rule of document.ui_policy.runtime_ui_rules??[])for(const effect of rule.effects){const def=projection.master.fields.find(f=>f.field_name===effect.field);if(def)def.parent_fields=[...new Set([...def.parent_fields,...conditionFields(rule.conditions).filter(k=>k!==effect.field)])];}

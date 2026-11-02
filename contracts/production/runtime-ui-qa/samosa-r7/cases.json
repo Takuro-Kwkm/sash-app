@@ -1,0 +1,592 @@
+{
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "master_sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e",
+  "flow_sha256": "4da0de403ef4aaccf948abba4f9ae149778adcc4a8a13940cfc522446b8164bf",
+  "cases": [
+    {
+      "id": "PRIMARY",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "TERRACE",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "terrace",
+        "width": 1650,
+        "height": 1800,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "screen_middle_bar": "with_middle_bar",
+        "panel_count": "2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "SHUTTER",
+      "input": {
+        "window_type": "WT-SA-SHUTTER-HIKI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "shutter_operation": "electric",
+        "shutter_type": "standard",
+        "panel_count": "2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "AMADO",
+      "input": {
+        "window_type": "WT-SA-AMADO-HIKI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "storm_shutter_type": "general",
+        "storm_shutter_storage_type": "single",
+        "storm_shutter_mirror_panel": "with_mirror_panel",
+        "panel_count": "2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "GRILLE",
+      "input": {
+        "window_type": "WT-SA-MENKOSHI-HIKI",
+        "construction_module": "zairai",
+        "grille_type": "vertical_grille",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK",
+        "panel_count": "2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "HIGH",
+      "input": {
+        "window_type": "WT-SA-KOSHO-YOKO",
+        "construction_module": "zairai",
+        "operation_method": "chain_operator",
+        "chain_type": "single_loop",
+        "width": 1000,
+        "height": 500,
+        "color_combination": "SA-COLOR-BLACK",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "TATE",
+      "input": {
+        "window_type": "WT-SA-TATE-SUBERI",
+        "construction_module": "zairai",
+        "width": 600,
+        "height": 1100,
+        "color_combination": "SA-COLOR-BLACK",
+        "paid_option": [
+          "small_opening_arm"
+        ],
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "YOKO",
+      "input": {
+        "window_type": "WT-SA-YOKO-SUBERI",
+        "construction_module": "zairai",
+        "width": 600,
+        "height": 500,
+        "color_combination": "SA-COLOR-BLACK",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "INNER",
+      "input": {
+        "window_type": "WT-SA-UCHIDAOSHI",
+        "construction_module": "zairai",
+        "width": 600,
+        "height": 500,
+        "color_combination": "SA-COLOR-BLACK",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "OUTER",
+      "input": {
+        "window_type": "WT-SA-SOTODAOSHI",
+        "construction_module": "zairai",
+        "opening_angle": "60_degree",
+        "width": 600,
+        "height": 500,
+        "color_combination": "SA-COLOR-BLACK",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "FIX",
+      "input": {
+        "window_type": "WT-SA-FIX-IN",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "CUSTOM",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1200,
+        "height": 1000,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "COLOR_SA-COLOR-BLACK",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-AUTUMN-BROWN",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "COLOR_SA-COLOR-SHINE-GRAY",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-SHINE-GRAY",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "COLOR_SA-COLOR-NATURAL-SILVER",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-NATURAL-SILVER",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "COLOR_SA-COLOR-WHITE",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-WHITE",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-001",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-002",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "GREEN",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-003",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "HIGH_SOLAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-004",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "GENERAL",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "AIR"
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-005",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "PATTERNED",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-006",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "FROSTED",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-007",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "MILKY",
+        "glazing_gas": "ARGON"
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-008",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON",
+        "glazing_functions": [
+          "GRID"
+        ]
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-009",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON",
+        "glazing_functions": [
+          "BLIND"
+        ]
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-010",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON",
+        "glazing_functions": [
+          "SAFETY"
+        ]
+      }
+    },
+    {
+      "id": "GLASS_GLASS-SA-011",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "window",
+        "width": 1690,
+        "height": 1170,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "16511",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON",
+        "glazing_functions": [
+          "DISASTER"
+        ]
+      }
+    },
+    {
+      "id": "PANELS",
+      "input": {
+        "window_type": "WT-SA-HIKICHIGAI",
+        "construction_module": "zairai",
+        "opening_class": "terrace",
+        "width": 2550,
+        "height": 1830,
+        "color_combination": "SA-COLOR-BLACK",
+        "screen_type": "sliding_screen",
+        "glass_category": "standard",
+        "glass_type": "low_e_clear",
+        "panel_count": "2",
+        "size_code": "25118-2",
+        "glazing_base": "LOW_E",
+        "glazing_performance": "CLEAR",
+        "glazing_appearance": "TRANSPARENT",
+        "glazing_gas": "ARGON",
+        "size_mode": "STANDARD",
+        "standard_size": "25118:2550:1830:terrace"
+      }
+    }
+  ],
+  "field_baselines": {
+    "opening_angle": "OUTER",
+    "operation_method": "HIGH",
+    "chain_type": "HIGH",
+    "shutter_operation": "SHUTTER",
+    "shutter_type": "SHUTTER",
+    "storm_shutter_type": "AMADO",
+    "storm_shutter_panel": "AMADO",
+    "storm_shutter_storage_type": "AMADO",
+    "storm_shutter_mirror_panel": "AMADO",
+    "mirror_panel_type": "AMADO",
+    "grille_type": "GRILLE",
+    "screen_middle_bar": "TERRACE",
+    "screen_mesh_type": "INNER",
+    "paid_option": "TATE",
+    "width": "CUSTOM",
+    "height": "CUSTOM",
+    "panel_count": "PRIMARY"
+  },
+  "scope": "SOURCE_BUNDLE_AND_ORIGINAL_NATIVE_RULES; REPRESENTATIVE_STATES_NOT_EXHAUSTIVE_SPACE"
+}

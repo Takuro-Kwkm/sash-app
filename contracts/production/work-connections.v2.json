@@ -465,6 +465,10 @@
       },
       "adapters": {
         "ProductMaster": "scripts/production/produce-row-table-runtime-candidate.py"
+      },
+      "runtime_ui_adoption_profile": {
+        "path": "contracts/production/runtime-adoptions/samosa-r7.profile.json",
+        "sha256": "9b3dd4d6093a83b3b4148184749414ac2214be4b1d3834bea23731aa423852dd"
       }
     },
     {

@@ -1,0 +1,18 @@
+{
+  "schema": "NATIVE_LOCAL_RELEASE_REFERENCE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "2098ec3b090560aaa4619a1645abb02d4f1f261e"
+  },
+  "local_qa_release_policy": {
+    "schema": "COMMON_NATIVE_LOCAL_RELEASE_V1",
+    "actions_dispatch_authority": false,
+    "retained_profile": {
+      "path": "contracts/production/release-profiles/samosa-r7.v1.json",
+      "sha256": "43c07fc672d280b5c4175138291c62e2432180a5b7ada32e12b67b547268533e"
+    },
+    "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+    "scope": "SAMOSA_V07_R7_APPROVED_UI_NORMAL_RUNTIME_PUBLICATION"
+  }
+}

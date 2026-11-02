@@ -24,8 +24,12 @@ def verify_capture(shared,record,expected,product_id,formal_product_id,work_id,f
   values[kind]=payload;out[kind]=dict(path=fixed['package_path'],file_id=row['file_id'],bytes=len(payload),sha256=sha(payload))
  check(len({x['file_id']for x in rows})==3,'Duplicate native file IDs')
  index=json.loads(values['index']);module=json.loads(values['module'])
- check(index['schema']=='FORMAL_COMPOSED_RUNTIME_INDEX_V1'and len(index['products'])==1 and index['products'][0]['id']==formal_product_id,'Wrong runtime product')
- check(index['products'][0]['sha256']==sha(values['module'])and module['product_module']['product']['id']==formal_product_id,'Index/module target mismatch')
+ if index.get('schema')=='ROW_TABLE_RUNTIME_INDEX_V1':
+  check(index['product']['id']==formal_product_id and index['product']['adapterType']=='ROW_TABLE_RUNTIME_V1','Wrong row-table runtime product')
+  check(index['document']['sha256']==sha(values['module'])and module['projection_policy']['native_product_id']==formal_product_id,'Row-table index/module target mismatch')
+ else:
+  check(index['schema']=='FORMAL_COMPOSED_RUNTIME_INDEX_V1'and len(index['products'])==1 and index['products'][0]['id']==formal_product_id,'Wrong runtime product')
+  check(index['products'][0]['sha256']==sha(values['module'])and module['product_module']['product']['id']==formal_product_id,'Index/module target mismatch')
  wanted=expected['members'];check(isinstance(wanted,dict)and bool(wanted),'Exact package member set required')
  with zipfile.ZipFile(io.BytesIO(values['package']))as archive:
   names=archive.namelist();check(len(names)==len(set(names))and set(names)==set(wanted),'Archive member set differs')
