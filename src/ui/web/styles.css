@@ -9,3 +9,11 @@ button.runtime-choice-image{cursor:pointer}
 .runtime-choice-image img{width:100%;height:110px;object-fit:contain;display:block}
 .runtime-choice-image small{font-size:11px;color:#536271}
 .runtime-choice-image span{font-size:13px;overflow-wrap:anywhere}
+/* Product image references are opt-in; native select/checkbox controls stay visible. */
+.choice-image-preview-trigger{margin-top:8px;padding:6px 12px;border:1px solid var(--line,#b9c7cf);border-radius:8px;background:var(--surface,#fff);color:var(--ink,#1f2933);font:inherit;font-size:13px;cursor:pointer}
+.runtime-image-dialog{width:min(820px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:calc(100dvh - 32px);padding:20px;border:1px solid var(--line,#cbd5df);border-radius:14px;background:var(--surface,#fff);color:var(--ink,#1f2933);overflow:auto;overscroll-behavior:contain}
+.runtime-image-dialog::backdrop{background:rgba(0,0,0,.58)}
+.runtime-image-dialog header{display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:-20px;padding:12px 0;background:var(--surface,#fff);z-index:1}
+.runtime-image-dialog h2{margin:0}.runtime-image-dialog header button{padding:8px 14px;min-height:40px;background:var(--surface,#fff);color:var(--ink,#1f2933);border:1px solid var(--line,#cbd5df);border-radius:8px;cursor:pointer}
+.runtime-image-dialog p{font-size:13px;line-height:1.6}.runtime-image-dialog figure{margin:0}.runtime-image-dialog figcaption{font-size:14px}.runtime-image-dialog .runtime-choice-image[data-selected="true"]{outline:2px solid #247d78;background:#edf8f5}.image-preview-selected{display:block;color:#17574c;font-size:12px;margin-top:4px}
+@media(max-width:480px){.runtime-image-dialog{padding:14px}.runtime-image-dialog header{top:-14px}.runtime-image-dialog .runtime-choice-images{grid-template-columns:repeat(2,minmax(0,1fr))}}

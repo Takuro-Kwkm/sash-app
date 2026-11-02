@@ -18,15 +18,21 @@ for(const row of doc.master.window_type_master)test('source screen applicability
  const expected=doc.ui_policy.sales_views.screen_domains[row.window_type_id];if(row.window_type_id==='WT-SA-UCHIDAOSHI')assert.equal(r.selection.screen_type,expected[0]);else if(expected.length)assert.deepEqual(values(r,'screen_type'),expected);else assert.ok(!field(r,'screen_type'));
  assert.ok(!field(r,'opening_class'));assert.ok(!field(r,'size_code'));assert.ok(!field(r,'width'));assert.ok(!field(r,'height'));assert.equal(r.formalAdoption,false);assert.equal(r.automaticOrderability,false);
 });
-test('module → standard size; size chosen before building count; standard W/H have no duplicate controls',()=>{
- const first=ui.uiResolver({window_type:seed.window_type,construction_module:seed.construction_module});assert.deepEqual(first.fields.slice(0,3).map(f=>f.key),['window_type','construction_module','standard_size']);
- const r=ui.uiResolver({...first.selection,standard_size:standard.standard_size},{changedFields:['standard_size']});assert.deepEqual(values(r,'panel_count'),['2','4']);assert.ok(r.validation.missingRequiredFields.includes('panel_count'));
- for(const count of ['2','4']){const resolved=ui.uiResolver({...r.selection,panel_count:count},{changedFields:['panel_count']});assert.equal(resolved.selection.size_code,'25118-'+count);assert.equal(resolved.selection.width,2550);assert.equal(resolved.selection.height,1830);assert.equal(resolved.selection.opening_class,'terrace');for(const k of ['opening_class','size_code','width','height'])assert.ok(!field(resolved,k));}
+test('module → panel count → source-filtered standard size; standard W/H remain hidden',()=>{
+ const first=ui.uiResolver({window_type:seed.window_type,construction_module:seed.construction_module});assert.deepEqual(first.fields.slice(0,3).map(f=>f.key),['window_type','construction_module','panel_count']);assert.ok(!field(first,'standard_size'));
+ for(const count of ['2','4']){const counted=ui.uiResolver({...first.selection,panel_count:count},{changedFields:['panel_count']});assert.ok(field(counted,'standard_size'));assert.deepEqual(counted.fields.slice(0,4).map(f=>f.key),['window_type','construction_module','panel_count','standard_size']);
+ const expected=new Set(doc.master.size_master.filter(r=>r.window_type_id===seed.window_type&&r.construction_module===seed.construction_module&&doc.ui_policy.sales_views.standard_size.row_panel_counts[r.size_master_id]===count).map(r=>[r.size_code.replace(/-[24]$/,''),r.width,r.height,r.opening_class].join(':')));assert.deepEqual(new Set(values(counted,'standard_size').filter(v=>v!=='CUSTOM')),expected);
+ const resolved=ui.uiResolver({...counted.selection,standard_size:standard.standard_size},{changedFields:['standard_size']});assert.equal(resolved.selection.size_code,'25118-'+count);for(const k of ['opening_class','size_code','width','height'])assert.ok(!field(resolved,k));}
+});
+test('panel edits keep shared sizes and clear incompatible sizes; clearing size retains upstream count',()=>{
+ const first=ui.uiResolver({...seed,standard_size:'16511:1690:1170:window'});const changed=ui.uiResolver({...first.selection,panel_count:'4'},{changedFields:['panel_count']});assert.equal(changed.selection.standard_size,undefined);assert.equal(changed.selection.size_code,undefined);assert.equal(changed.selection.width,undefined);assert.equal(changed.selection.panel_count,'4');
+ const restored=ui.uiResolver(standard),kept=ui.uiResolver({...restored.selection,panel_count:'4'},{changedFields:['panel_count']});assert.equal(kept.selection.standard_size,standard.standard_size);assert.equal(kept.selection.size_code,'25118-4');
+ const cleared=ui.uiResolver({...kept.selection,panel_count:undefined},{changedFields:['panel_count']});assert.equal(cleared.selection.standard_size,undefined);assert.ok(!field(cleared,'standard_size'));assert.ok(!field(cleared,'width'));
 });
 test('every source standard row survives the sales projection with exact panel, dimensions and native scope',()=>{
  for(const row of doc.master.size_master){const input={window_type:row.window_type_id,construction_module:row.construction_module,...(row.configuration_type?{configuration_type:row.configuration_type}:{}),...(row.opening_angle?{opening_angle:row.opening_angle}:{}),opening_class:row.opening_class,size_code:row.size_code,width:row.width,height:row.height};const r=ui.uiResolver(input);assert.equal(r.selection.size_code,row.size_code,row.size_master_id);assert.equal(r.selection.width,row.width);assert.equal(r.selection.height,row.height);assert.ok(r.selection.standard_size);const count=doc.ui_policy.sales_views.standard_size.row_panel_counts[row.size_master_id];if(count)assert.equal(r.selection.panel_count,count);}
 });
-test('347 source diagram is four sashes without guessing width cutoffs',()=>{const row=doc.master.size_master.find(r=>r.width_nominal==='347');const r=ui.uiResolver({window_type:row.window_type_id,construction_module:row.construction_module,size_code:row.size_code,width:row.width,height:row.height});assert.equal(r.selection.panel_count,'4');assert.equal(field(r,'panel_count').readOnly,true);});
+test('347 source diagram is four sashes without guessing width cutoffs',()=>{const row=doc.master.size_master.find(r=>r.width_nominal==='347');const r=ui.uiResolver({window_type:row.window_type_id,construction_module:row.construction_module,size_code:row.size_code,width:row.width,height:row.height});assert.equal(r.selection.panel_count,'4');assert.equal(field(r,'panel_count').readOnly,false);});
 test('custom only exposes numeric W/H; parent changes replace the hidden standard tuple',()=>{
  let r=ui.uiResolver(standard);r=ui.uiResolver({...r.selection,standard_size:'CUSTOM'},{changedFields:['standard_size']});assert.ok(field(r,'width'));assert.ok(field(r,'height'));assert.equal(r.selection.size_code,undefined);assert.equal(r.selection.width,undefined);assert.ok(!field(r,'opening_class'));
  r=ui.uiResolver({...r.selection,width:1200,height:1000},{changedFields:['width','height']});assert.equal(r.dimensionResult.status,'PASS');assert.equal(r.selection.opening_class,'window');
@@ -82,7 +88,7 @@ test('strict restore rejects a native opening context or glass tuple that contra
  const old=ui.uiResolver(seed);assert.notEqual(ui.uiResolver({...old.selection,glazing_performance:'GREEN'},{changedFields:['glazing_performance']}).validation.status,'INVALID');
 });
 test('explicitly clearing either standard or custom size never rehydrates the previous dimensions',()=>{
- for(const input of [seed,standard]){const old=ui.uiResolver(input),r=ui.uiResolver({...old.selection,standard_size:undefined},{changedFields:['standard_size']});for(const key of ['standard_size','size_code','width','height','opening_class','panel_count'])assert.equal(r.selection[key],undefined);assert.ok(!field(r,'width'));assert.ok(r.validation.missingRequiredFields.includes('standard_size'));}
+ for(const input of [seed,standard]){const old=ui.uiResolver(input),r=ui.uiResolver({...old.selection,standard_size:undefined},{changedFields:['standard_size']});for(const key of ['standard_size','size_code','width','height','opening_class'])assert.equal(r.selection[key],undefined);assert.ok(!field(r,'width'));assert.ok(r.validation.missingRequiredFields.includes('standard_size'));}
 });
 test('special-order mesh remains selectable on sourced screen forms and is carried as confirmation',()=>{
  for(const window_type of ['WT-SA-TATE-SUBERI','WT-SA-YOKO-SUBERI']){const r=ui.uiResolver({window_type,construction_module:'zairai',standard_size:'CUSTOM',width:600,height:1000,screen_type:'horizontal_roll_screen',screen_mesh_type:'mushiya_net'});assert.ok(values(r,'screen_mesh_type').includes('mushiya_net'));assert.match(field(r,'screen_mesh_type').values.find(o=>o.value==='mushiya_net').displayLabel,/特注対応/);assert.ok(r.confirmationRequests.some(r=>r.code==='SPECIAL_ORDER_SCREEN_NET'));assert.notEqual(r.validation.status,'INVALID');}
@@ -97,4 +103,10 @@ test('CUSTOM/native code and category-only contradictory imports cannot be silen
 test('internal source gaps are retained for handoff, while actual customer confirmations stay visible',()=>{
  const result=ui.uiResolver(seed),gaps=result.confirmationRequests.filter(r=>r.message.includes('元マスター'));assert.equal(gaps.length,13);assert.ok(gaps.every(r=>r.customer_visible===false));assert.ok(result.confirmationRequests.some(r=>r.code==='SOURCE_GLAZING_COMBINATION_CONFIRMATION'&&r.customer_visible!==false));
  const snapshot=createProductConfigurationSnapshot({product:entry,result});assert.equal(snapshot.confirmation_requests.filter(r=>r.customer_visible===false).length,13);
+});
+
+test('new Sash image presentation defaults to modal references, with explicit validated settings',()=>{
+ assert.equal(ui.uiResolver(seed).presentation.choiceImages.mode,'MODAL_ON_DEMAND');
+ assert.equal(createRowTableUi(doc,{...entry,imagePresentation:'INLINE'}).uiResolver(seed).presentation.choiceImages.mode,'INLINE');
+ assert.throws(()=>createRowTableUi(doc,{...entry,imagePresentation:'unknown'}).uiResolver(seed),/CHOICE_IMAGE_PRESENTATION_INVALID/);
 });

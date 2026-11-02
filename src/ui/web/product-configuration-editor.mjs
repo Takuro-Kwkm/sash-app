@@ -140,7 +140,7 @@ export class ProductConfigurationEditor {
     }
   }
 
-  destroy(){this.root.removeEventListener('change',this.boundChange);this.root.removeEventListener('click',this.boundClick);}
+  destroy(){this.closeImagePreview();this.root.removeEventListener('change',this.boundChange);this.root.removeEventListener('click',this.boundClick);}
   getSnapshot(){return this.state.snapshot;}
 
   productsForManufacturer(manufacturer){return this.state.products.filter((row)=>row.manufacturer===manufacturer);}
@@ -207,6 +207,9 @@ export class ProductConfigurationEditor {
   }
 
   async handleClick(event){
+    const preview=event.target.closest('[data-image-preview-field]');
+    if(preview){this.openImagePreview(preview.dataset.imagePreviewField,preview);return;}
+    if(event.target.closest('[data-image-preview-close]')){this.closeImagePreview();return;}
     const choice=event.target.closest('[data-image-choice-field]');
     if(choice&&!choice.disabled){
       const control=[...this.root.querySelectorAll('select[data-spec-key]')].find(one=>one.dataset.specKey===choice.dataset.imageChoiceField);
@@ -299,6 +302,7 @@ export class ProductConfigurationEditor {
     if(revision!==this.state.resolveRevision||productId!==this.state.productId)return;
     const clearedLabels=(result.clearedFields??[]).map(key=>this.state.resolved?.fields?.find(field=>field.key===key)?.displayLabel).filter(Boolean);
     if(clearedLabels.length)result.notices=[...(result.notices??[]),`条件変更により解除しました：${clearedLabels.join('、')}。必要な項目を再選択してください。`];
+    this.closeImagePreview();
     this.state.selection=result.selection;this.state.resolved=result;
     const dynamicForm=this.root.querySelector('#dynamicForm');
     dynamicForm.innerHTML=this.renderFields(result.fields);
@@ -344,9 +348,9 @@ export class ProductConfigurationEditor {
     const selected=Array.isArray(this.state.selection[field.key])?this.state.selection[field.key]:[this.state.selection[field.key]];
     const multi=field.dataType==='MULTI_ENUM';
     if(multi){
-      const choices=field.values.map((value)=>`<label class="multi-enum-option"><input type="checkbox" data-multi-value="true" value="${esc(value.value)}"${value.disabled||field.disabled||field.readOnly?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' checked':''}><span>${reviewChoiceLabel(value)}</span>${value.image?`<img src="${esc(value.image.src)}" alt="${esc(value.image.alt)}" data-field="${esc(field.key)}" data-value="${esc(value.value)}" style="max-width:160px;max-height:120px;object-fit:contain"><small>${esc(value.image.source_label)}</small>`:''}</label>`).join('');
+      const choices=field.values.map((value)=>`<label class="multi-enum-option"><input type="checkbox" data-multi-value="true" value="${esc(value.value)}"${value.disabled||field.disabled||field.readOnly?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' checked':''}><span>${reviewChoiceLabel(value)}</span>${value.image&&this.state.resolved?.presentation?.choiceImages?.mode!=='MODAL_ON_DEMAND'?`<img src="${esc(value.image.src)}" alt="${esc(value.image.alt)}" data-field="${esc(field.key)}" data-value="${esc(value.value)}" style="max-width:160px;max-height:120px;object-fit:contain"><small>${esc(value.image.source_label)}</small>`:''}</label>`).join('');
       const nativeOptions=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}</option>`).join('');
-      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select class="multi-enum-native-control" data-spec-key="${esc(field.key)}" ${attributes} multiple aria-hidden="true" tabindex="-1">${nativeOptions}</select><div class="multi-enum-group" role="group" aria-label="${esc(field.displayLabel)}" data-multi-enum="true" data-multi-key="${esc(field.key)}">${choices}</div><small class="field-help">${esc(field.helpText??'複数選択できます')}</small></div>`;
+      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select class="multi-enum-native-control" data-spec-key="${esc(field.key)}" ${attributes} multiple aria-hidden="true" tabindex="-1">${nativeOptions}</select><div class="multi-enum-group" role="group" aria-label="${esc(field.displayLabel)}" data-multi-enum="true" data-multi-key="${esc(field.key)}">${choices}</div>${this.state.resolved?.presentation?.choiceImages?.mode==='MODAL_ON_DEMAND'?this.renderChoiceImages(field):''}<small class="field-help">${esc(field.helpText??'複数選択できます')}</small></div>`;
     }
     const options=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${reviewChoiceLabel(value)}</option>`).join('');
     return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}" ${attributes}><option value="">選択してください</option>${options}</select>${this.renderChoiceImages(field)}${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
@@ -356,10 +360,32 @@ export class ProductConfigurationEditor {
     const selected=this.state.selection[field.key];
     const values=field.values.filter(row=>row.image&&(!readOnly||String(row.value)===String(selected)));
     if(!values.length)return '';
+    if(this.state.resolved?.presentation?.choiceImages?.mode==='MODAL_ON_DEMAND')return `<button type="button" class="choice-image-preview-trigger" data-image-preview-field="${esc(field.key)}" aria-haspopup="dialog" aria-label="${esc(field.displayLabel)}の画像を確認">画像で確認</button>`;
     return `<div class="runtime-choice-images" role="group" aria-label="${esc(field.displayLabel)}の画像">${values.map(row=>{
       const visual=row.image,contents=`<img src="${esc(visual.src)}" alt="${esc(visual.alt)}" data-field="${esc(field.key)}" data-value="${esc(row.value)}"><span>${esc(row.displayLabel)}</span><small>${esc(visual.source_label)}</small>`;
       return readOnly?`<div class="runtime-choice-image">${contents}</div>`:`<button type="button" class="runtime-choice-image" data-image-choice-field="${esc(field.key)}" data-image-choice-value="${esc(row.value)}" aria-pressed="${String(row.value)===String(selected)}"${row.disabled||field.disabled?' disabled':''}>${contents}</button>`;
     }).join('')}</div>`;
+  }
+
+  closeImagePreview(){
+    const dialog=this.root.querySelector('dialog[data-choice-image-preview]');
+    if(dialog){if(dialog.open)dialog.close();else dialog.remove();}
+  }
+
+  openImagePreview(key,opener){
+    const field=this.state.resolved?.fields?.find(f=>f.key===key);if(!field)return;
+    this.closeImagePreview();
+    const selected=this.state.selection[key],selectedValues=Array.isArray(selected)?selected:[selected];
+    const readOnly=field.readOnly&&field.selectionMode==='DERIVED';
+    const values=field.values.filter(row=>row.image&&(!readOnly||selectedValues.some(v=>String(v)===String(row.value))));
+    if(!values.length)return;
+    const dialog=document.createElement('dialog');dialog.className='runtime-image-dialog';dialog.dataset.choiceImagePreview=key;dialog.setAttribute('aria-label',field.displayLabel+'の画像');
+    dialog.innerHTML=`<header><h2>${esc(field.displayLabel)}の画像</h2><button type="button" data-image-preview-close autofocus>閉じる</button></header><p>画像は確認用です。選択は元の項目で変更してください。</p><div class="runtime-choice-images">${values.map(row=>{
+      const active=selectedValues.some(v=>String(v)===String(row.value));return `<figure class="runtime-choice-image" data-selected="${active}"><img src="${esc(row.image.src)}" alt="${esc(row.image.alt)}" data-field="${esc(key)}" data-value="${esc(row.value)}"><figcaption><strong>${esc(row.displayLabel)}</strong>${active?'<span class="image-preview-selected">選択中</span>':''}</figcaption><small>${esc(row.image.source_label)}</small></figure>`;
+    }).join('')}</div>`;
+    dialog.addEventListener('close',()=>{dialog.remove();if(opener?.isConnected)opener.focus();},{once:true});
+    dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
+    this.root.append(dialog);dialog.showModal();
   }
 
   renderWarnings(result){

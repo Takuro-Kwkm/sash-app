@@ -1,3 +1,4 @@
+import {choiceImagePresentation} from '../../../contracts/ui-common/choice-images.v1.mjs';
 import {readFileSync,lstatSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {resolve,dirname,relative,isAbsolute} from 'node:path';
@@ -30,7 +31,7 @@ function readIndex(){
     const modulePath=resolve(root,row.path),rel=relative(root,modulePath);
     if(rel.startsWith('..')||isAbsolute(rel)||lstatSync(modulePath).isSymbolicLink()||digest(readFileSync(modulePath))!==row.sha256)fail('CANDIDATE_MODULE_BYTES_CHANGED');
     verifyFlowSource(row,root);
-    return Object.freeze({...row,series:row.series+'（候補）',displayName:row.displayName+'（候補）',productId:row.id,packageType:'CANDIDATE_PRODUCT_MODULE',modulePath,
+    return Object.freeze({...row,imagePresentation:choiceImagePresentation(row.imagePresentation).mode,series:row.series+'（候補）',displayName:row.displayName+'（候補）',productId:row.id,packageType:'CANDIDATE_PRODUCT_MODULE',modulePath,
       runtimeManifestSha256:row.sha256,canonicalRuntimeReference:{...(row.adapterType==='ROW_TABLE_UI_CANDIDATE_V1'?row.sourceReference:{runtimeManifestDriveFileId:manifestFileId}),candidateSha256:row.sha256,candidateRevision:index.revision,adoption:'CANDIDATE_ONLY'},
       candidateRuntimeReference:{revision:index.revision,sha256:row.sha256,indexSha256:digest(bytes)},
       registrationState:'CANDIDATE_LOCAL_ONLY',formalAdoption:false});

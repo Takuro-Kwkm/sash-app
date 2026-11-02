@@ -47,7 +47,16 @@ try{
    if(state.id==='FIX'||state.id==='OUTER'){assert.ok(!fields.some(f=>f.field_id==='screen_type'));count('BRANCH_VISIBILITY');}
    const targets=[];
    for(const field of expected.fields){const imageCase=field.image_cases?.find(c=>c.state_id===state.id);if(!imageCase)continue;for(const value of imageCase.candidate_values)targets.push({field_id:field.field_id,value,selector:`img[data-field="${field.field_id}"][data-value="${value}"]`});}
-   if(targets.length){const observations=await page.evaluate(observeChoiceImages,{targets,state_id:state.id});assert.ok(observations.every(r=>r.loaded&&r.visible&&r.image_sha256));report.image_observations.push(...observations);}
+   assert.equal(await page.locator('#dynamicForm img').count(),0,'images must be absent by default');
+   for(const field_id of [...new Set(targets.map(t=>t.field_id))]){
+    const beforePreview=JSON.stringify(await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot()));
+    const trigger=page.locator(`[data-image-preview-field="${field_id}"]`);await trigger.click();const dialog=page.locator('dialog[data-choice-image-preview][open]');await dialog.waitFor({state:'visible'});
+    await dialog.locator('img').evaluateAll(es=>Promise.all(es.map(img=>img.decode())));
+    assert.equal(await dialog.evaluate(e=>e.matches(':modal')),true);
+    const observations=await page.evaluate(observeChoiceImages,{targets:targets.filter(t=>t.field_id===field_id),state_id:state.id});assert.ok(observations.every(r=>r.loaded&&r.visible&&r.image_sha256));report.image_observations.push(...observations);
+    await page.locator('[data-image-preview-close]').click();await dialog.waitFor({state:'detached'});assert.equal(await page.locator('dialog[data-choice-image-preview]').count(),0);assert.equal(await page.locator('#dynamicForm img').count(),0);
+    assert.equal(await trigger.evaluate(e=>document.activeElement===e),true);assert.equal(JSON.stringify(await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot())),beforePreview);count('KEEP_VALID');
+   }
    assert.deepEqual(loaded.snapshot.configuration,result.selection);assert.ok(loaded.snapshot.confirmation_requests.length>=13);assert.ok(loaded.snapshot.confirmation_requests.every(r=>r.message));count('HANDOFF');count('RESTORE');report.transitions.cases++;
    if(['PRIMARY','SHUTTER','FIX'].includes(state.id))await page.screenshot({path:path.join(out,`${state.id.toLowerCase()}-${width}.png`),fullPage:true});
    report.states.push({id:state.id,viewport:width,status:'PASS',field_ids:fields.map(f=>f.field_id),validation_status:result.validation.status});
@@ -60,9 +69,9 @@ try{
   assert.equal(after.result.selection.screen_type,undefined);assert.equal(await page.locator('[data-spec-key="screen_type"]').count(),0);count('CLEAR_INVALID');
   assert.equal(after.result.selection.color_combination,before.result.selection.color_combination);count('KEEP_VALID');
   assert.ok(after.snapshot.confirmation_requests.length>=13);count('HANDOFF');report.transitions.cases++;
-  // Exercise the actual image-button selection event, then the scalar control.
+  // Native selection stays the input control; image previews never change values.
   const colorRevision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
-  await page.locator('[data-image-choice-field="color_combination"][data-image-choice-value="SA-COLOR-WHITE"]').click();
+  await page.selectOption('[data-spec-key="color_combination"]','SA-COLOR-WHITE');
   await page.waitForFunction(previous=>Number(document.querySelector('#dynamicForm').dataset.resolveRevision)>Number(previous)&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.__rowTableTestEditor.state.resolveRevision)&&window.__rowTableTestEditor.state.resolved?.selection.color_combination==='SA-COLOR-WHITE',colorRevision);
   assert.equal(await page.locator('[data-spec-key="color_combination"]').inputValue(),'SA-COLOR-WHITE');count('CONTROL_AND_VALUES');report.transitions.cases++;
   const colored=await page.evaluate(()=>window.__rowTableTestEditor.state.resolved);
@@ -96,7 +105,7 @@ try{
   assert.deepEqual(edited.fields.find(f=>f.key==='panel_count').values.map(v=>v.value),['2','4']);
   edited=await change('panel_count','4');assert.equal(edited.selection.size_code,'25118-4');assert.equal(edited.selection.width,2550);assert.equal(edited.selection.height,1830);
   for(const key of ['width','height','opening_class','size_code'])assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0);
-  assert.deepEqual(edited.fields.slice(0,4).map(f=>f.key),['window_type','construction_module','standard_size','panel_count']);count('CONTROL_AND_VALUES');count('MASTER_PROJECTION');report.transitions.cases++;
+  assert.deepEqual(edited.fields.slice(0,4).map(f=>f.key),['window_type','construction_module','panel_count','standard_size']);count('CONTROL_AND_VALUES');count('MASTER_PROJECTION');report.transitions.cases++;
   const standardSaved=await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot());await restore(standardSaved.configuration);assert.equal(await page.locator('[data-spec-key="panel_count"]').inputValue(),'4');count('RESTORE');
   edited=await change('standard_size','CUSTOM');assert.equal(edited.selection.width,undefined);assert.equal(edited.selection.size_code,undefined);assert.equal(await page.locator('[data-spec-key="width"]').count(),1);
   edited=await change('panel_count','2');await change('width','1200');edited=await change('height','1000');assert.equal(edited.selection.opening_class,'window');assert.equal(edited.dimensionResult.status,'PASS');count('BRANCH_VISIBILITY');count('CLEAR_INVALID');report.transitions.cases++;
@@ -106,13 +115,19 @@ try{
   await change('glazing_gas','AIR');await change('glazing_appearance','FROSTED');
   const glazingSaved=await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot());assert.equal(glazingSaved.configuration.glazing_appearance,'FROSTED');assert.match(await page.locator('#warnings').innerText(),/組合せ可否/);assert.ok(glazingSaved.confirmation_requests.some(r=>r.code==='SOURCE_GLAZING_COMBINATION_CONFIRMATION'));await restore(glazingSaved.configuration);assert.equal(await page.locator('[data-spec-key="glazing_appearance"]').inputValue(),'FROSTED');count('RESTORE');count('HANDOFF');report.transitions.cases++;
   await restore(plan.cases.find(c=>c.id==='PRIMARY').input);
-  edited=await change('standard_size','');for(const key of ['standard_size','size_code','width','height','panel_count'])assert.equal(edited.selection[key],undefined);assert.equal(await page.locator('[data-spec-key="width"]').count(),0);count('CLEAR_INVALID');report.transitions.cases++;
+  edited=await change('standard_size','');for(const key of ['standard_size','size_code','width','height'])assert.equal(edited.selection[key],undefined);assert.equal(await page.locator('[data-spec-key="width"]').count(),0);count('CLEAR_INVALID');report.transitions.cases++;
   await change('standard_size','CUSTOM');await change('panel_count','2');await change('width','1200');await change('height','1000');edited=await change('standard_size','');assert.equal(edited.selection.width,undefined);assert.equal(await page.locator('[data-spec-key="width"]').count(),0);count('CLEAR_INVALID');count('BRANCH_VISIBILITY');report.transitions.cases++;
   await change('window_type','WT-SA-YOKO-SUBERI');await change('screen_type','horizontal_roll_screen');edited=await change('screen_mesh_type','mushiya_net');assert.equal(edited.selection.screen_mesh_type,'mushiya_net');assert.match(await page.locator('#warnings').innerText(),/特注対応/);assert.ok(edited.confirmationRequests.some(r=>r.code==='SPECIAL_ORDER_SCREEN_NET'));const netSaved=await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot());await restore(netSaved.configuration);assert.equal(await page.locator('[data-spec-key="screen_mesh_type"]').inputValue(),'mushiya_net');count('RESTORE');count('HANDOFF');count('CONTROL_AND_VALUES');report.transitions.cases++;
   await page.emulateMedia({colorScheme:'dark'});await page.reload({waitUntil:'networkidle'});await page.waitForSelector('[data-spec-key="window_type"]');await restore(plan.cases.find(c=>c.id==='PRIMARY').input);
-  const readability=await page.locator('.runtime-choice-image').evaluateAll(cards=>cards.map(card=>{const text=card.querySelector('span');return {field:card.querySelector('img')?.dataset.field,label:text?.textContent,color:getComputedStyle(text??card).color,background:getComputedStyle(card).backgroundColor};}));
+  assert.equal(await page.locator('#dynamicForm img').count(),0);
+  const readability=[];
+  for(const key of ['window_type','glazing_appearance','glazing_performance','glazing_functions']){
+   await page.locator(`[data-image-preview-field="${key}"]`).click();await page.locator('dialog[open]').waitFor({state:'visible'});
+   const cards=await page.locator('dialog[open] .runtime-choice-image').evaluateAll(cards=>cards.map(card=>{const text=card.querySelector('figcaption strong');return {field:card.querySelector('img')?.dataset.field,label:text?.textContent,color:getComputedStyle(text??card).color,background:getComputedStyle(card).backgroundColor};}));readability.push(...cards);
+   if(key==='glazing_appearance')await page.screenshot({path:path.join(out,`image-modal-dark-${width}.png`),fullPage:false});
+   await page.keyboard.press('Escape');await page.locator('dialog[data-choice-image-preview]').waitFor({state:'detached'});assert.equal(await page.locator('dialog[data-choice-image-preview]').count(),0);count('KEEP_VALID');
+  }
   const luminance=color=>{const channels=color.match(/[\d.]+/g).slice(0,3).map(v=>Number(v)/255).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);return .2126*channels[0]+.7152*channels[1]+.0722*channels[2];};
-  assert.ok(readability.some(r=>r.field==='window_type'));assert.ok(readability.some(r=>r.field==='glazing_appearance'));
   for(const row of readability){const a=luminance(row.color),b=luminance(row.background);row.contrast=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);assert.ok(row.contrast>=4.5,`unreadable dark choice ${row.label}: ${row.contrast}`);}
   (report.readability??=[]).push({viewport:width,scheme:'dark',status:'PASS',observations:readability});report.states.push({id:'DARK_READABILITY',viewport:width,status:'PASS'});count('CONTROL_AND_VALUES',readability.length);report.transitions.cases++;
   await page.screenshot({path:path.join(out,`dark-${width}.png`),fullPage:true});

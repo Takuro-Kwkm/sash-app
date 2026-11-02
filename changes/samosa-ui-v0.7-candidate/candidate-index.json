@@ -1,7 +1,7 @@
 {
   "schema": "CANDIDATE_RUNTIME_INDEX_V1",
   "adoption": "CANDIDATE_ONLY",
-  "revision": "SAMOSA_UI_HUMAN_R2_CORRECTION2_20261102",
+  "revision": "SAMOSA_MODAL_R3_20261102",
   "products": [
     {
       "id": "NATIVE_REGISTRY:LIXIL::サーモスA",
@@ -12,12 +12,12 @@
       "adapterType": "ROW_TABLE_UI_CANDIDATE_V1",
       "path": "candidate.json",
       "sha256": "9b3c23d7a4b06a494de613c81e4bfef728e9cea25e00882bf37abff8c3a70151",
-      "packageVersion": "v0.7-ui-candidate-3",
+      "packageVersion": "v0.7-ui-candidate-4",
       "schemaVersion": "ROW_TABLE_UI_V1",
       "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
       "uiFlowContract": {
         "schema": "DECLARED_WINDOW_FLOW_V1",
-        "revision": "ROW_TABLE_UI_HUMAN_R2",
+        "revision": "ROW_TABLE_UI_MODAL_R3",
         "slotOrder": [
           "manufacturer",
           "product",
@@ -282,7 +282,8 @@
       "sourceReference": {
         "runtimeManifestDriveFileId": "1GEu9jyvy09YK3guh-0s-xVK0iR0koMO6",
         "sourceMasterSha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
-      }
+      },
+      "imagePresentation": "MODAL_ON_DEMAND"
     }
   ]
 }

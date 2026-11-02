@@ -21,7 +21,7 @@ export function createRowTableSalesViews(document,projection){
   for(const key of viewKeys)delete native[key];
   const edited=keys=>keys.some(k=>changed.includes(k));
   const explicitSizeClear=changed.includes(size.key)&&!present(selection[size.key]);
-  if(explicitSizeClear){delete selection[size.panel_key];for(const key of ['opening_class','size_code','width','height'])delete native[key];}
+  if(explicitSizeClear){for(const key of ['opening_class','size_code','width','height'])delete native[key];}
   if(!changed.length&&Object.hasOwn(input,size.key)&&!present(input[size.key])&&['size_code','width','height'].some(k=>present(native[k])))errors.push({field:size.key,code:'EMPTY_SIZE_VIEW_CONFLICT',message:'未選択のサイズに寸法が保存されています。規格サイズを選び直してください。'});
   if(edited(['window_type','construction_module','opening_angle'])&&selection[size.key]!==size.custom_value){
    delete selection[size.key];delete selection[size.panel_key];for(const key of ['opening_class','size_code','width','height'])delete native[key];
@@ -32,10 +32,16 @@ export function createRowTableSalesViews(document,projection){
    if(group){selection[size.key]=group.key;const row=group.rows.find(r=>r.size_code===native.size_code);if(size.row_panel_counts[row.size_master_id]&&!present(selection[size.panel_key]))selection[size.panel_key]=size.row_panel_counts[row.size_master_id];}
   }
   if(!explicitSizeClear&&!Object.hasOwn(input,size.key)&&!present(selection[size.key])&&!present(native.size_code)&&(present(native.width)||present(native.height)))selection[size.key]=size.custom_value;
+  const panelDomain=[...new Set(available.flatMap(g=>g.rows.map(r=>size.row_panel_counts[r.size_master_id]).filter(present)))];
+  if(changed.includes(size.panel_key)&&!present(selection[size.panel_key])){delete selection[size.key];for(const key of ['opening_class','size_code','width','height'])delete native[key];}
   let group=available.find(g=>g.key===selection[size.key]);
   if(present(selection[size.key])&&selection[size.key]!==size.custom_value&&!group){errors.push({field:size.key,code:'SOURCE_SIZE_VIEW_SCOPE',message:'規格サイズを選び直してください。'});delete selection[size.key];}
   const custom=selection[size.key]===size.custom_value;
-  const counts=custom&&size.panel_windows.includes(native.window_type)?['2','4']:group?[...new Set(group.rows.map(r=>size.row_panel_counts[r.size_master_id]).filter(present))]:[];
+  const counts=panelDomain;
+  if(group&&counts.length&&present(selection[size.panel_key])&&!group.rows.some(r=>size.row_panel_counts[r.size_master_id]===selection[size.panel_key])){
+   if(changed.includes(size.panel_key)){delete selection[size.key];for(const key of ['opening_class','size_code','width','height'])delete native[key];cleared.push(size.key);group=null;}
+   else errors.push({field:size.key,code:'STANDARD_PANEL_SCOPE',message:'建数に対応する規格サイズを選択してください。'});
+  }
   if(counts.length===1){
    if(present(selection[size.panel_key])&&selection[size.panel_key]!==counts[0]&&!edited([size.key,'window_type','construction_module']))errors.push({field:size.panel_key,code:'FIXED_PANEL_CONFLICT',message:'保存された建数と規格サイズが一致しません。'});
    selection[size.panel_key]=counts[0];
@@ -108,8 +114,11 @@ export function createRowTableSalesViews(document,projection){
    if(!present(native.window_type))return [];
    const result=[];const add=(key,label,values,other={})=>result.push({key,fieldId:key,displayLabel:label,dataType:'ENUM',values:values.map(o=>({value:o.value,displayLabel:o.label,disabled:false,...(o.image?{image:o.image}:{})})),required:false,readOnly:false,disabled:false,selectionMode:'USER_SELECTABLE',parentFields:[],...other});
    if(present(native.construction_module)){
-    add(size.key,size.label,[...available.map(g=>({value:g.key,label:g.label})),{value:size.custom_value,label:'特注サイズ（W・Hを入力）'}],{required:true,displayOrder:21,parentFields:['construction_module']});
-    if(counts.length)add(size.panel_key,size.panel_label,counts.map(value=>({value,label:value+'枚建'})),{required:true,displayOrder:22,readOnly:counts.length===1,disabled:counts.length===1,selectionMode:counts.length===1?'DERIVED':'USER_SELECTABLE',parentFields:[size.key]});
+    if(counts.length)add(size.panel_key,size.panel_label,counts.map(value=>({value,label:value+'枚建'})),{required:true,displayOrder:20,readOnly:counts.length===1,disabled:counts.length===1,selectionMode:counts.length===1?'DERIVED':'USER_SELECTABLE',parentFields:['construction_module']});
+    if(!counts.length||counts.includes(selection[size.panel_key])){
+     const rows=available.filter(g=>!counts.length||g.rows.some(r=>size.row_panel_counts[r.size_master_id]===selection[size.panel_key]));
+     add(size.key,size.label,[...rows.map(g=>({value:g.key,label:g.label})),{value:size.custom_value,label:'特注サイズ（W・Hを入力）'}],{required:true,displayOrder:21,parentFields:counts.length?[size.panel_key]:['construction_module']});
+    }
    }
    for(const v of policy.glazing)if(visible(v,selection))add(v.key,v.label,v.values.filter(o=>visible(o,selection)&&(!o.native_probe||allowedGlass(o.native_probe))),{required:Boolean(v.required),dataType:v.multi?'MULTI_ENUM':'ENUM',displayOrder:33,helpText:v.helpText??'',parentFields:[]});
    return result;

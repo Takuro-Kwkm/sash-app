@@ -4,6 +4,7 @@ import {evaluateCondition} from './runtime-condition.mjs';
 import {selectorMatches} from '../selector.mjs';
 import {applyDeclaredWindowFlow} from './declared-window-flow.mjs';
 import {createRowTableSalesViews} from './row-table-sales-views.mjs';
+import {choiceImagePresentation} from '../../../contracts/ui-common/choice-images.v1.mjs';
 import {fieldLabel} from '../../../contracts/ui-common/field-labels.v1.mjs';
 import {readFileSync,lstatSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -168,7 +169,7 @@ export function createRowTableUi(document,integration){
       validation:{status:errors.length||(!sales?.openingAmbiguous&&evaluated.constraint_status==='INVALID')?'INVALID':!missingRequiredFields.length?'VALID':'INCOMPLETE',errors,missingRequiredFields},
       dimensionResult:evaluated.dimension,manualWarnings:[...reasonMessages,...(evaluated.constraint_status==='MANUAL_CONFIRMATION_REQUIRED'?['この寸法・仕様はメーカーへの確認が必要です。']:[])],
       confirmationRequests:confirmations,estimateConfirmations:confirmations,runtimeMaster:{packageVersion:integration.packageVersion,sourceMasterSha256:document.source_master.sha256,candidateOnly:true},
-      presentation:{independentUserRequirements:true},candidateOnly:true,formalAdoption:false,runtimeUiAdopted:false,automaticOrderability:false,source:'RUNTIME_MASTER',constraintStatus:evaluated.constraint_status};
+      presentation:{independentUserRequirements:true,choiceImages:choiceImagePresentation(integration.imagePresentation)},candidateOnly:true,formalAdoption:false,runtimeUiAdopted:false,automaticOrderability:false,source:'RUNTIME_MASTER',constraintStatus:evaluated.constraint_status};
     return result;
   }
   return {projection,uiResolver:resolve};

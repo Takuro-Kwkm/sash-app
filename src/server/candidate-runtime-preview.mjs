@@ -1,3 +1,4 @@
+import {choiceImagePresentation} from '../../contracts/ui-common/choice-images.v1.mjs';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
@@ -43,7 +44,7 @@ export function createCandidateRuntimePreview(){
             result.configurationMigration={from:version,to:entry.packageVersion,originalSelection:input};
             result.manualWarnings.push('保存済みの選択を現在の項目に整理しました。本体色・カバー仕様・ガラスを確認してください。');
           }
-          return json(res,200,{...result,productId:entry.id,manufacturer:entry.manufacturer,series:entry.series,source:'RUNTIME_MASTER',status:'CANDIDATE_LOCAL_READY',fields:entry.adapterType==='ROW_TABLE_UI_CANDIDATE_V1'?result.fields:applyDeclaredWindowFlow(result.fields,entry)});
+          return json(res,200,{...result,presentation:{...result.presentation,choiceImages:choiceImagePresentation(entry.imagePresentation)},productId:entry.id,manufacturer:entry.manufacturer,series:entry.series,source:'RUNTIME_MASTER',status:'CANDIDATE_LOCAL_READY',fields:entry.adapterType==='ROW_TABLE_UI_CANDIDATE_V1'?result.fields:applyDeclaredWindowFlow(result.fields,entry)});
         }catch(error){return json(res,400,{code:error.code??'CANDIDATE_RESOLVE_FAILED',error:error.message});}
       }
     }
