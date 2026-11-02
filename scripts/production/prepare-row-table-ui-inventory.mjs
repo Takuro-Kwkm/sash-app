@@ -46,7 +46,8 @@ const std=views.standard_size;
 const sourceGroups=new Map();for(const row of source.size_master.filter(r=>r.window_type_id===primary.window_type&&r.construction_module===primary.construction_module)){
  const code=row.size_code.replace(/-[24]$/,''),id=[code,row.width,row.height,row.opening_class].join(':');if(!std.row_panel_counts[row.size_master_id]||std.row_panel_counts[row.size_master_id]===primary.panel_count){if(!sourceGroups.has(id))sourceGroups.set(id,[]);sourceGroups.get(id).push(row);}
 }
-addView(std.key,'規格サイズ','SIZE','size',[...sourceGroups.keys(),std.custom_value],'PRIMARY');
+const sourceRowsInOrder=[...sourceGroups].sort(([,a],[,b])=>{for(const column of std.sort_columns??['width','height','size_code']){const x=a[0][column],y=b[0][column],order=typeof x==='number'&&typeof y==='number'?x-y:String(x??'').localeCompare(String(y??''),'ja',{numeric:true});if(order)return order;}return 0;});
+addView(std.key,'規格サイズ','SIZE','size',[...sourceRowsInOrder.map(([key])=>key),std.custom_value],'PRIMARY');
 addView(std.panel_key,'建数','SIZE','size',['2','4'],'PANELS');
 for(const view of views.glazing){
  const configured={...primary};const nativeInput=Object.fromEntries(Object.entries(configured).filter(([k])=>source.field_master.some(f=>f.field_name===k)));

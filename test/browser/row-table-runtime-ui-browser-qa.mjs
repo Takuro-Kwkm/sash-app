@@ -37,6 +37,8 @@ try{
    const stages=['PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZING','INSTALLATION_SURVEY','OPTION'];let last=-1;for(const field of fields){const i=stages.indexOf(field.stage);assert.ok(i>=last&&i>=0);last=i;}count('FLOW_ORDER',fields.length);
    assert.equal(new Set(fields.map(f=>f.field_id)).size,fields.length);count('CONTROL_AND_VALUES',fields.length);
    const warningText=await page.locator('#warnings').innerText();assert.doesNotMatch(warningText,/元マスター|適用条件が未定義/);
+   const sizeLabels=await page.locator('select[data-spec-key="standard_size"] option').allTextContents();
+   if(sizeLabels.length){assert.match(sizeLabels.at(-1),/特注サイズ/);const codes=sizeLabels.slice(1,-1).map(v=>v.split(' ｜ ')[0]);for(let i=1;i<codes.length;i++){const a=codes[i-1],b=codes[i];assert.ok(Number(a.slice(0,3))<Number(b.slice(0,3))||Number(a.slice(0,3))===Number(b.slice(0,3))&&Number(a.slice(3,5))<=Number(b.slice(3,5)),'size order '+a+' -> '+b);}}
    const body=await page.locator('#dynamicForm').innerText();assert.doesNotMatch(body,/NOT_APPLICABLE|INTERNAL_UNKNOWN_ENUM|dedicated_double_glazing|with_middle_bar|fixed_screen_inner_tilt/);
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);assert.ok(overflow<=1,'horizontal overflow '+overflow);
    for(const target of expected.fields.filter(f=>['SELECTOR','DERIVED'].includes(f.role)&&f.state_id===state.id)){
@@ -131,6 +133,8 @@ try{
   for(const row of readability){const a=luminance(row.color),b=luminance(row.background);row.contrast=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);assert.ok(row.contrast>=4.5,`unreadable dark choice ${row.label}: ${row.contrast}`);}
   (report.readability??=[]).push({viewport:width,scheme:'dark',status:'PASS',observations:readability});report.states.push({id:'DARK_READABILITY',viewport:width,status:'PASS'});count('CONTROL_AND_VALUES',readability.length);report.transitions.cases++;
   await page.screenshot({path:path.join(out,`dark-${width}.png`),fullPage:true});
+  await page.emulateMedia({colorScheme:'light'});await page.reload({waitUntil:'networkidle'});await page.waitForSelector('[data-spec-key="window_type"]');await restore(plan.cases.find(c=>c.id==='PRIMARY').input);
+  await page.locator('[data-spec-key="standard_size"]').click();await page.screenshot({path:path.join(out,`size-order-${width}.png`),fullPage:false});await page.keyboard.press('Escape');
   await context.close();
  }
  report.fields.sort((a,b)=>expected.fields.findIndex(f=>f.field_id===a.field_id)-expected.fields.findIndex(f=>f.field_id===b.field_id));

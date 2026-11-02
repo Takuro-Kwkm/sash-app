@@ -1249,7 +1249,14 @@
           "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
         }
       ],
-      "basis": "IS6900 PDF pp.8-59 standard size tables and sash diagrams; no numeric width or height threshold inferred."
+      "basis": "IS6900 PDF pp.8-59 standard size tables and sash diagrams; no numeric width or height threshold inferred.",
+      "sort_columns": [
+        "width_nominal",
+        "height_nominal",
+        "width",
+        "height",
+        "size_code"
+      ]
     },
     "glazing": [
       {

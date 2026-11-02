@@ -110,3 +110,15 @@ test('new Sash image presentation defaults to modal references, with explicit va
  assert.equal(createRowTableUi(doc,{...entry,imagePresentation:'INLINE'}).uiResolver(seed).presentation.choiceImages.mode,'INLINE');
  assert.throws(()=>createRowTableUi(doc,{...entry,imagePresentation:'unknown'}).uiResolver(seed),/CHOICE_IMAGE_PRESENTATION_INVALID/);
 });
+
+test('standard calls start with smallest nominal widths and heights instead of terrace storage order',()=>{
+ const r=ui.uiResolver(seed),choices=field(r,'standard_size').values;assert.deepEqual(choices.slice(0,8).map(o=>o.displayLabel.split(' ｜ ')[0]),['06003','06005','06007','06009','06903','06905','06907','06909']);assert.equal(choices.at(-1).value,'CUSTOM');
+ const variants=ui.uiResolver({window_type:seed.window_type,construction_module:'two_by_four',panel_count:'2'});assert.deepEqual(field(variants,'standard_size').values.map(o=>o.displayLabel.split(' ｜ ')[0]).filter(c=>/^160(18|20|22)/.test(c)),['16018A','16018B','16020A','16020B','16022A','16022B']);
+ const selected=ui.uiResolver(standard);assert.equal(selected.selection.size_code,'25118-2');assert.equal(selected.selection.width,2550);assert.equal(selected.selection.height,1830);
+});
+test('all window/module/panel lists sort by nominal width then nominal height and preserve exact native identity',()=>{
+ let lists=0;for(const window of doc.master.window_type_master)for(const construction_module of ['zairai','two_by_four'])for(const panel_count of doc.ui_policy.sales_views.standard_size.panel_windows.includes(window.window_type_id)?['2','4']:[undefined]){
+  const r=ui.uiResolver({window_type:window.window_type_id,construction_module,...(panel_count?{panel_count}:{})}),choices=field(r,'standard_size')?.values;if(!choices)continue;lists++;assert.equal(choices.at(-1).value,'CUSTOM');
+  const actual=choices.slice(0,-1).map(o=>o.displayLabel.split(' ｜ ')[0]);for(let i=1;i<actual.length;i++){const a=actual[i-1],b=actual[i],wa=Number(a.slice(0,3)),wb=Number(b.slice(0,3)),ha=Number(a.slice(3,5)),hb=Number(b.slice(3,5));assert.ok(wa<wb||wa===wb&&ha<=hb,window.window_type_id+': '+a+' -> '+b);}
+ }assert.ok(lists>=20);
+});

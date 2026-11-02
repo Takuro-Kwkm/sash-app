@@ -1,7 +1,7 @@
 {
   "schema": "CANDIDATE_RUNTIME_INDEX_V1",
   "adoption": "CANDIDATE_ONLY",
-  "revision": "SAMOSA_MODAL_R3_20261102",
+  "revision": "SAMOSA_SIZE_ORDER_R4_20261102",
   "products": [
     {
       "id": "NATIVE_REGISTRY:LIXIL::サーモスA",
@@ -11,13 +11,13 @@
       "candidate": true,
       "adapterType": "ROW_TABLE_UI_CANDIDATE_V1",
       "path": "candidate.json",
-      "sha256": "9b3c23d7a4b06a494de613c81e4bfef728e9cea25e00882bf37abff8c3a70151",
-      "packageVersion": "v0.7-ui-candidate-4",
+      "sha256": "9df04c783fa9e5eebdc6ec5526948fe7959604cfeaab3a6656ed2d4655eca016",
+      "packageVersion": "v0.7-ui-candidate-5",
       "schemaVersion": "ROW_TABLE_UI_V1",
       "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
       "uiFlowContract": {
         "schema": "DECLARED_WINDOW_FLOW_V1",
-        "revision": "ROW_TABLE_UI_MODAL_R3",
+        "revision": "ROW_TABLE_UI_SIZE_ORDER_R4",
         "slotOrder": [
           "manufacturer",
           "product",

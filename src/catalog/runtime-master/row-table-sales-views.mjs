@@ -3,6 +3,7 @@
 import {evaluateRowTableProjection} from './row-table-runtime-projection.mjs';
 const present=v=>v!==undefined&&v!==null&&v!=='';
 const eq=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+const naturalOrder=new Intl.Collator('ja',{numeric:true});
 export function createRowTableSalesViews(document,projection){
  const policy=document.ui_policy.sales_views;if(!policy)return null;
  const size=policy.standard_size,viewKeys=[size.key,size.panel_key,...policy.glazing.map(v=>v.key)];
@@ -12,7 +13,12 @@ export function createRowTableSalesViews(document,projection){
   const map=new Map();for(const row of document.master.size_master.filter(r=>matching(r,input,['opening_class']))){
    const code=row.size_code.replace(/-[24]$/,''),key=`${code}:${row.width}:${row.height}:${row.opening_class}`;
    if(!map.has(key))map.set(key,{key,label:`${code} ｜ W ${row.width} × H ${row.height}`,rows:[]});map.get(key).rows.push(row);
-  }return [...map.values()];
+  }return [...map.values()].sort((a,b)=>{
+   for(const column of size.sort_columns??['width','height','size_code']){
+    const x=a.rows[0][column],y=b.rows[0][column];
+    const order=typeof x==='number'&&typeof y==='number'?x-y:naturalOrder.compare(String(x??''),String(y??''));if(order)return order;
+   }return naturalOrder.compare(a.key,b.key);
+  });
  };
  const filteredProjection=count=>({...projection,dimensionCatalog:{...projection.dimensionCatalog,ruleSets:projection.dimensionCatalog.ruleSets.map(set=>({...set,payload:set.payload.filter(r=>!size.region_panel_counts[r.id]||size.region_panel_counts[r.id]===count)}))}});
  const visible=(definition,values)=>Object.entries(definition.show_when??{}).every(([k,v])=>values[k]===v);

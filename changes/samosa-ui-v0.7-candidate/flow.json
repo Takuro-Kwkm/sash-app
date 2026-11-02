@@ -1,6 +1,6 @@
 {
   "schema": "DECLARED_WINDOW_FLOW_V1",
-  "revision": "ROW_TABLE_UI_MODAL_R3",
+  "revision": "ROW_TABLE_UI_SIZE_ORDER_R4",
   "slotOrder": [
     "manufacturer",
     "product",
