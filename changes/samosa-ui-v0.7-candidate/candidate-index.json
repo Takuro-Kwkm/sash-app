@@ -1,7 +1,7 @@
 {
   "schema": "CANDIDATE_RUNTIME_INDEX_V1",
   "adoption": "CANDIDATE_ONLY",
-  "revision": "SAMOSA_DROPDOWN_OPTIONS_R6_C1_20261102",
+  "revision": "SAMOSA_OPTION_UX_R7_20261103",
   "products": [
     {
       "id": "NATIVE_REGISTRY:LIXIL::サーモスA",
@@ -11,13 +11,13 @@
       "candidate": true,
       "adapterType": "ROW_TABLE_UI_CANDIDATE_V1",
       "path": "candidate.json",
-      "sha256": "72ec1ae2190818332268f283fab00938a1dd14de1c69ff6e463c9aae40397a1e",
-      "packageVersion": "v0.7-ui-candidate-7.1",
+      "sha256": "e99f8a84c9603482e74444f8900a10a5b2efd476185f46a152839e29a18d094a",
+      "packageVersion": "v0.7-ui-candidate-8",
       "schemaVersion": "ROW_TABLE_UI_V1",
       "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
       "uiFlowContract": {
         "schema": "DECLARED_WINDOW_FLOW_V1",
-        "revision": "ROW_TABLE_UI_OPTION_AUDIT_DROPDOWN_R6_C1",
+        "revision": "ROW_TABLE_UI_OPTION_CHECKBOX_AUTO_CLOSE_R7",
         "slotOrder": [
           "manufacturer",
           "product",

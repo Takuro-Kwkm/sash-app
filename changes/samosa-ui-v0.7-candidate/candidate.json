@@ -26915,8 +26915,7 @@
         "show_after": [
           "window_type"
         ],
-        "label": "有償品",
-        "control": "DROPDOWN_MULTI"
+        "label": "有償品"
       },
       "custom_option": {
         "role": "HANDOFF_ONLY",
@@ -28045,7 +28044,6 @@
           "label": "追加オプション・部材",
           "slot": "option",
           "multi": true,
-          "control": "DROPDOWN_MULTI",
           "values": [
             {
               "value": "CAT-SA-161-11",

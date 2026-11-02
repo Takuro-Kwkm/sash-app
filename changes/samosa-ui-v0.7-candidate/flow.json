@@ -1,6 +1,6 @@
 {
   "schema": "DECLARED_WINDOW_FLOW_V1",
-  "revision": "ROW_TABLE_UI_OPTION_AUDIT_DROPDOWN_R6_C1",
+  "revision": "ROW_TABLE_UI_OPTION_CHECKBOX_AUTO_CLOSE_R7",
   "slotOrder": [
     "manufacturer",
     "product",

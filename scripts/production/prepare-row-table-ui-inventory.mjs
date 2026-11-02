@@ -62,7 +62,7 @@ for(const view of views.request_fields??[]){
  const state_id=view.key==='catalogue_options'?'PRIMARY':'SHUTTER',input=cases.find(c=>c.id===state_id).input;
  const matches=condition=>!condition||evaluateCondition(condition,{fields:Object.fromEntries(Object.entries(input).map(([key,value])=>[key,{value}]))});
  const candidates=view.values.filter(o=>matches(o.when)&&(!o.exclude_when||!matches(o.exclude_when))).map(o=>o.value);
- addView(view.key,view.label,'OPTION','option',candidates,state_id,{required:false,control:view.multi?'select-add-remove':'select'});
+ addView(view.key,view.label,'OPTION','option',candidates,state_id,{required:false,control:view.multi?(view.control==='DROPDOWN_MULTI'?'select-add-remove':'checkbox-group'):'select'});
 }
 fields.push(...projectionFields);
 fields.sort((a,b)=>GLOBAL_WINDOW_STAGE_ORDER.indexOf(a.stage)-GLOBAL_WINDOW_STAGE_ORDER.indexOf(b.stage)||entry.uiFlowContract.slotOrder.indexOf(a.semantic_slot)-entry.uiFlowContract.slotOrder.indexOf(b.semantic_slot)||({panel_count:20,size_mode:21,standard_size:22,width:23,height:24}[a.field_id]??100)-({panel_count:20,size_mode:21,standard_size:22,width:23,height:24}[b.field_id]??100));

@@ -228,7 +228,7 @@ export class ProductConfigurationEditor {
           await this.handleChange({target:control});
           if(modal){
             const opener=[...this.root.querySelectorAll('[data-image-preview-field]')].find(row=>row.dataset.imagePreviewField===key);
-            if(opener){this.openImagePreview(key,opener);[...(this.imagePreviewDialog?.querySelectorAll('[data-image-choice-value]')??[])].find(row=>row.dataset.imageChoiceValue===value)?.focus();}
+            if(opener)opener.focus();
           }
         }finally{this.imageChoicePending=false;if(modal?.isConnected)modal.removeAttribute('aria-busy');}
       }
@@ -414,7 +414,7 @@ export class ProductConfigurationEditor {
     const values=field.values.filter(row=>row.image&&(!readOnly||selectedValues.some(v=>String(v)===String(row.value))));
     if(!values.length)return;
     const dialog=document.createElement('dialog');dialog.className='runtime-image-dialog';dialog.dataset.choiceImagePreview=key;dialog.setAttribute('aria-label',field.displayLabel+'の画像');
-    dialog.innerHTML=`<header><h2>${esc(field.displayLabel)}の画像</h2><button type="button" data-image-preview-close autofocus>閉じる</button></header><p>${readOnly?'現在の選択内容を表示しています。':field.dataType==='MULTI_ENUM'?'画像を選んで追加・解除できます。複数選択できます。':'画像を選ぶと項目に反映されます。'}</p><div class="runtime-choice-images" role="group" aria-label="${esc(field.displayLabel)}の選択肢">${values.map(row=>{
+    dialog.innerHTML=`<header><h2>${esc(field.displayLabel)}の画像</h2><button type="button" data-image-preview-close autofocus>閉じる</button></header><p>${readOnly?'現在の選択内容を表示しています。':field.dataType==='MULTI_ENUM'?'画像を選ぶと追加・解除して閉じます。複数選択はもう一度開いて追加できます。':'画像を選ぶと項目に反映して閉じます。'}</p><div class="runtime-choice-images" role="group" aria-label="${esc(field.displayLabel)}の選択肢">${values.map(row=>{
       const active=selectedValues.some(v=>String(v)===String(row.value));
       const contents=`<img src="${esc(row.image.src)}" alt="${esc(row.image.alt)}" data-field="${esc(key)}" data-value="${esc(row.value)}"><span class="image-choice-caption"><strong>${esc(row.displayLabel)}</strong>${active?'<span class="image-preview-selected">選択中</span>':''}</span><small>${esc(row.image.source_label)}</small>`;
       return readOnly?`<div class="runtime-choice-image" data-selected="${active}">${contents}</div>`:`<button type="button" class="runtime-choice-image" data-selected="${active}" data-image-choice-field="${esc(key)}" data-image-choice-value="${esc(row.value)}" aria-pressed="${active}"${row.disabled||field.disabled||field.readOnly?' disabled':''}>${contents}</button>`;

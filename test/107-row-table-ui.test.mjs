@@ -169,3 +169,7 @@ test('reviewed source footnotes enforce TATE fan H1600 boundary and INNER long-b
  const selected=ui.uiResolver({...low,catalogue_options:['CAT-SA-161-14']});const edited=ui.uiResolver({...selected.selection,height:1601},{changedFields:['height']});assert.deepEqual(edited.selection.catalogue_options,[]);assert.equal(ui.uiResolver({...selected.selection,height:1601}).validation.status,'INVALID');
  const inner={...seed,window_type:'WT-SA-UCHIDAOSHI',panel_count:undefined,width:600,height:600,catalogue_options:['CAT-SA-162-09']};assert.ok(ui.uiResolver(inner).validation.errors.some(e=>e.code==='SOURCE_OPTION_COMBINATION_FORBIDDEN'));assert.ok(!ui.uiResolver({...inner,catalogue_options:['CAT-SA-162-09','CAT-SA-161-14']}).validation.errors.some(e=>e.code==='SOURCE_OPTION_COMBINATION_FORBIDDEN'));
 });
+
+test('option lists use the shared checkbox presentation while glass functions keep the requested dropdown',()=>{
+ const r=ui.uiResolver(seed);assert.equal(field(r,'catalogue_options').dataType,'MULTI_ENUM');assert.notEqual(field(r,'catalogue_options').control,'DROPDOWN_MULTI');assert.notEqual(doc.ui_policy.fields.paid_option.control,'DROPDOWN_MULTI');assert.equal(field(r,'glazing_functions').control,'DROPDOWN_MULTI');
+});
