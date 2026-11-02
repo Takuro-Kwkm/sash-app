@@ -155,6 +155,8 @@ try{
   await restore(plan.cases.find(c=>c.id==='SHUTTER').input);edited=await change('request_remote_control','high_function_remote');edited=await change('request_smart_app','life_assist2');edited=await change('request_home_device','life_assist2_home_device');
   const remoteSaved=await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot());const remoteRestored=await restore(remoteSaved.configuration);assert.equal(remoteRestored.snapshot.configuration.request_home_device,'life_assist2_home_device');
   edited=await change('shutter_operation','manual');for(const key of ['request_remote_control','request_smart_app','request_home_device']){assert.equal(edited.selection[key],undefined);assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0);}count('CLEAR_INVALID');count('RESTORE');count('HANDOFF');report.transitions.cases+=8;
+  await restore({...plan.cases.find(c=>c.id==='TATE').input,height:1600});edited=await addRequest('catalogue_options','CAT-SA-161-14');assert.ok(edited.selection.catalogue_options.includes('CAT-SA-161-14'));
+  edited=await change('height','1601');assert.deepEqual(edited.selection.catalogue_options,[]);assert.ok(!edited.fields.find(f=>f.key==='catalogue_options').values.some(o=>o.value==='CAT-SA-161-14'));count('CLEAR_INVALID');count('BRANCH_VISIBILITY');report.transitions.cases++;
   await page.emulateMedia({colorScheme:'dark'});await page.reload({waitUntil:'networkidle'});await page.waitForSelector('[data-spec-key="window_type"]');await restore(plan.cases.find(c=>c.id==='PRIMARY').input);
   assert.equal(await page.locator('#dynamicForm img').count(),0);
   const readability=[];

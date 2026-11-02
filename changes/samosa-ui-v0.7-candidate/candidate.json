@@ -28206,7 +28206,21 @@
                   "annotation": ""
                 }
               },
-              "confirmation_required": true
+              "confirmation_required": true,
+              "exclude_when": {
+                "all": [
+                  {
+                    "field": "window_type",
+                    "operator": "EQ",
+                    "value": "WT-SA-TATE-SUBERI"
+                  },
+                  {
+                    "field": "height",
+                    "operator": "GT",
+                    "value": 1600
+                  }
+                ]
+              }
             },
             {
               "value": "CAT-SA-161-15",
@@ -30885,8 +30899,11 @@
               },
               {
                 "field": "window_type",
-                "operator": "EQ",
-                "value": "WT-SA-FIX-IN"
+                "operator": "IN",
+                "values": [
+                  "WT-SA-FIX-IN",
+                  "WT-SA-UCHIDAOSHI"
+                ]
               },
               {
                 "field": "catalogue_options",
@@ -30895,7 +30912,7 @@
               }
             ]
           },
-          "message": "FIX窓の枠付面格子（ブラケット長）は段窓排気ファン併用時の条件を確認してください。",
+          "message": "FIX窓・内倒し窓の枠付面格子（ブラケット長）は段窓排気ファン併用時の条件を確認してください。",
           "source_ref": {
             "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
             "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"

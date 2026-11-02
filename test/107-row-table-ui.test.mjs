@@ -162,3 +162,10 @@ test('remote/app/home-device source choices exist on electric shutters and elect
   for(const key of ['request_remote_control','request_smart_app','request_home_device']){assert.equal(edited.selection[key],undefined);assert.ok(!field(edited,key));}
  }
 });
+
+test('reviewed source footnotes enforce TATE fan H1600 boundary and INNER long-bracket fan requirement',()=>{
+ const low={...seed,window_type:'WT-SA-TATE-SUBERI',panel_count:undefined,width:600,height:1600};assert.ok(values(ui.uiResolver(low),'catalogue_options').includes('CAT-SA-161-14'));
+ assert.ok(!values(ui.uiResolver({...low,height:1601}),'catalogue_options').includes('CAT-SA-161-14'));
+ const selected=ui.uiResolver({...low,catalogue_options:['CAT-SA-161-14']});const edited=ui.uiResolver({...selected.selection,height:1601},{changedFields:['height']});assert.deepEqual(edited.selection.catalogue_options,[]);assert.equal(ui.uiResolver({...selected.selection,height:1601}).validation.status,'INVALID');
+ const inner={...seed,window_type:'WT-SA-UCHIDAOSHI',panel_count:undefined,width:600,height:600,catalogue_options:['CAT-SA-162-09']};assert.ok(ui.uiResolver(inner).validation.errors.some(e=>e.code==='SOURCE_OPTION_COMBINATION_FORBIDDEN'));assert.ok(!ui.uiResolver({...inner,catalogue_options:['CAT-SA-162-09','CAT-SA-161-14']}).validation.errors.some(e=>e.code==='SOURCE_OPTION_COMBINATION_FORBIDDEN'));
+});
