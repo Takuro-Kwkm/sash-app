@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
 import {execFileSync} from 'node:child_process';
 const read=p=>JSON.parse(fs.readFileSync(p)),base=p=>JSON.parse(execFileSync('git',['show','8ff4460977f6e67dc54e2f9c09fff8292c2369e5:'+p],{maxBuffer:16*1024*1024}));
 const pid='NATIVE_REGISTRY:LIXIL::サーモスA',profile=read('contracts/production/runtime-adoptions/samosa-r7.profile.json');
@@ -19,4 +22,8 @@ test('product release declares its own QA and app canonical destination with exi
 });
 test('new publication resolves through the common local profile mechanism without Actions authority',()=>{
  const name='contracts/production/release-profiles/samosa-r7.v1.json',c=read('contracts/production/common-local-release.v1.json'),local=read(c.profiles[name]);assert.equal(local.local_qa_release_policy.schema,'COMMON_NATIVE_LOCAL_RELEASE_V1');assert.equal(local.local_qa_release_policy.actions_dispatch_authority,false);assert.equal(local.local_qa_release_policy.product_id,pid);assert.equal(local.local_qa_release_policy.retained_profile.path,name);
+});
+
+test('native preparer refuses to turn a local-candidate input into formal Runtime adoption',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'row-adoption-mode-'));try{const file=path.join(root,'input.json'),destination=path.join(root,'work');fs.writeFileSync(file,JSON.stringify({schema:'NATIVE_ROW_TABLE_RUNTIME_ADOPTION_INPUT_V1',execution_mode:'LOCAL_CANDIDATE',profile:{path:path.resolve('contracts/production/runtime-adoptions/samosa-r7.profile.json')}}));const python=process.env.ROW_TABLE_QA_PYTHON??'python3',shared=root;const result=spawnSync(python,['-B','scripts/production/prepare-row-table-runtime-adoption.py','--shared',shared,'--checkout',process.cwd(),'--contract',file,'--destination',destination],{encoding:'utf8'});assert.notEqual(result.status,0);assert.match(result.stderr,/Real native adoption input required/);assert.equal(fs.existsSync(destination),false);}finally{fs.rmSync(root,{recursive:true,force:true});}
 });

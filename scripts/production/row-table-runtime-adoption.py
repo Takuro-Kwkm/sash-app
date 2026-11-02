@@ -13,6 +13,7 @@ def execute(shared,contract,stage,work):
  c=read_json(contract);n=Path(c['checkout']);p=read_json(c['profile']['path']);capture('/',c['profile'])
  check=lambda ok,msg:require(ok,'ROW_TABLE_RUNTIME_ADOPTION',msg,stage)
  scope=json.loads(capture('/',c['scope']));authorization=json.loads(capture('/',c['authorization']));validate_authorization(scope,authorization)
+ check(c.get('schema')=='NATIVE_ROW_TABLE_RUNTIME_ADOPTION_INPUT_V1'and c.get('execution_mode')=='REAL','Real native adoption input required')
  check(p['format']=='ROW_TABLE_RUNTIME_V1'and p['product_id']==scope['product_id']and scope['target_gate']==p['target_gate']=='RUNTIME_UI_ADOPTED','Actual scope differs')
  for ref in c['inputs'].values():capture('/',ref)
  if stage not in ('PREVIEW_IDENTITY','PACKAGE_TRANSFORM'):
@@ -20,6 +21,7 @@ def execute(shared,contract,stage,work):
   definition=importlib.util.spec_from_file_location('adoption_entry',n/'scripts/production/private-runtime-ui-adoption-work.py');entry=importlib.util.module_from_spec(definition);definition.loader.exec_module(entry)
   entry.validate_spec(shared,n,Path(c['profile']['path']),read_json(c['native_spec_path']))
  root=Path(c['package_root']);index=read_json(root/'runtime_index.json')
+ check(root.resolve()==(n/p['runtime_package']).resolve().parent and sha((root/'runtime_index.json').read_bytes())==p['runtime_index_sha256'],'Package must be the profile-bound normal Runtime')
  if stage=='PREVIEW_IDENTITY':
   previous=c['review_work'];spec,state,_,_=inspected_work(previous,p['product_id']);validate_original_decision(previous,spec,'HUMAN_UI_REVIEW')
   for path,digest in p['approved_presentation'].items():check(sha((n/path).read_bytes())==digest,'Approved UI changed: '+path)
@@ -32,6 +34,7 @@ def execute(shared,contract,stage,work):
   record=Path(c['staged_capture_path']if stage=='STORAGE_READBACK'else c['formal_capture_path']);check(record.is_file(),'Native Drive full-byte captures required')
   folder=c['working_folder_id']if stage=='STORAGE_READBACK'else c['formal_folder_id']
   proof=verifier.verify_capture(shared,read_json(record),read_json(c['inputs']['storage_expected']['path']),p['product_id'],p['product_id'],c['work_id'],folder)
+  check(proof['index']['sha256']==p['runtime_index_sha256'],'Drive readback belongs to a different Runtime package')
   result={'status':'PASS','gate':stage,'actual_readback':proof}
  elif stage=='FORMAL_RUNTIME_QA':
   evidence=json.loads(capture('/',c['inputs']['local_qa']));revalidate(evidence)

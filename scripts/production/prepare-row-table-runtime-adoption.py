@@ -5,7 +5,10 @@ All inputs, including actual Main/readback sources, are acquired by the host.
 import argparse,json,sys
 from pathlib import Path
 def prepare(shared,checkout,contract,destination):
- shared,checkout,contract,destination=map(lambda x:Path(x).resolve(),(shared,checkout,contract,destination));sys.path.insert(0,str(shared))
+ shared,checkout,contract,destination=map(lambda x:Path(x).resolve(),(shared,checkout,contract,destination))
+ incoming=json.loads(contract.read_bytes())
+ if incoming.get('schema')!='NATIVE_ROW_TABLE_RUNTIME_ADOPTION_INPUT_V1'or incoming.get('execution_mode')!='REAL':raise ValueError('Real native adoption input required; local QA is not adoption')
+ sys.path.insert(0,str(shared))
  from harness.core import read_json,write_json,require
  from harness.common_development import inspected_work,ref
  from harness.architecture import route_instruction
@@ -18,7 +21,9 @@ def prepare(shared,checkout,contract,destination):
  stages=p['required_stages'];worker=ref(checkout/p['native_worker']);steps=[{'id':name,'kind':'validator','needs':[stages[i-1]]if i else[],'script':worker,'args':['--central',str(shared),'--contract','{input}','--stage',name,'--work','{work}','--out','{work}/'+name+'.json'],'output':'{work}/'+name+'.json','result_path':['status'],'expected_result':'PASS','timeout_seconds':600}for i,name in enumerate(stages)]
  steps.append({'id':'SAVE_ADOPTION_RESULT','kind':'storage','needs':[stages[-1]],'source':'{work}/RUNTIME_UI_ADOPTION.json','destination':'RUNTIME_UI_ADOPTION.json'})
  workflow={'workflow_id':'NATIVE_ROW_TABLE_RUNTIME_ADOPTION','version':'1','status':'ACTIVE','work_skill':'product-change-work','steps':steps,'targets':{'RUNTIME_UI_ADOPTED':['SAVE_ADOPTION_RESULT']}};write_json(destination/'workflow.json',workflow)
- spec={**base,'workflow_id':c['work_id'],'target_gate':'RUNTIME_UI_ADOPTED','workflow':ref(destination/'workflow.json'),'input':ref(contract),'skill_root':str(shared/'work_skills/product-change-work'),'storage_root':str(destination/'saved'),'production_binding':c['production_binding'],'runtime_refs':base.get('runtime_refs',[])+[ref(profile_path),worker,ref(checkout/p['native_preparer']),ref(checkout/p['native_validator'])]+list(c['inputs'].values())}
+ authority={**ref(profile_path),'authority_id':'NATIVE_ROW_TABLE_RUNTIME_ADOPTION','authority_type':'NATIVE_EXECUTION_CONTRACT','repository':p['repository'],'version':'1','status':'ACTIVE','scope_axis':'RUNTIME_UI_ADOPTION_NO_PRODUCT_MASTER_MUTATION','resolution_source':'Current router selected native format profile'}
+ authorities=read_json(base['authority_index']['path']);authorities['entries'].append(authority);write_json(destination/'authority-index.json',authorities)
+ spec={**base,'execution_mode':'REAL','workflow_id':c['work_id'],'target_gate':'RUNTIME_UI_ADOPTED','workflow':ref(destination/'workflow.json'),'input':ref(contract),'authority_index':ref(destination/'authority-index.json'),'authorities':base['authorities']+[authority],'skill_root':str(shared/'work_skills/product-change-work'),'storage_root':str(destination/'saved'),'production_binding':c['production_binding'],'runtime_refs':base.get('runtime_refs',[])+[ref(profile_path),worker,ref(checkout/p['native_preparer']),ref(checkout/p['native_validator'])]+list(c['inputs'].values())}
  for k in ('decision','decisions','authorization','receipts','formal_receipt','local_qa'):spec.pop(k,None)
  write_json(destination/'spec.json',spec);return {'state':'PREPARED_NOT_ADOPTED','spec':str(destination/'spec.json'),'work':str(destination/'checkpoint'),'native_entry':p['native_preparer'],'source_master_mutations':0,'publication':False}
 if __name__=='__main__':

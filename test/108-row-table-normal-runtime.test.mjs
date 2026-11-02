@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createRowTableUi} from '../src/catalog/runtime-master/row-table-runtime-ui.mjs';
-import {rowTableRuntimeEntries,readRowTableRuntimePackage} from '../src/catalog/runtime-master/row-table-runtime-package.mjs';
+import {rowTableRuntimeEntries,readRowTableRuntimePackage,adaptRowTableRuntimePackage} from '../src/catalog/runtime-master/row-table-runtime-package.mjs';
 import {resolveRuntimeAppProduct,runtimeAppIntegrationInventory} from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 const base='changes/samosa-ui-v0.7-candidate/',doc=JSON.parse(fs.readFileSync(base+'candidate.json')),prior=JSON.parse(fs.readFileSync(base+'candidate-index.json')).products[0],candidate=createRowTableUi(doc,prior),entry=rowTableRuntimeEntries.find(e=>e.id===prior.id);
 const cases=JSON.parse(fs.readFileSync('contracts/production/runtime-ui-qa/samosa-r7/cases.json')).cases;
@@ -26,9 +26,9 @@ test('normal package carries the exact approved UI data and presentation files',
 });
 test('unadopted Runtime fails closed in production and Vercel',()=>{for(const env of [{NODE_ENV:'production'},{VERCEL:'1'}])assert.throws(()=>readRowTableRuntimePackage(entry,env),/ROW_RUNTIME_ADOPTION_REQUIRED/);});
 test('portable normal package works without any retained PDF/source path reads and rejects tampering/symlinks',()=>{
- const root=fs.mkdtempSync(path.join(os.tmpdir(),'row-runtime-'));try{fs.cpSync(entry.packageRoot,root,{recursive:true});const e={...entry,packageRoot:root};assert.ok(readRowTableRuntimePackage(e));const p=path.join(root,'master.json'),b=fs.readFileSync(p);fs.writeFileSync(p,'{}');assert.throws(()=>readRowTableRuntimePackage(e),/ROW_RUNTIME_BYTES/);fs.writeFileSync(p,b);fs.unlinkSync(p);fs.symlinkSync(path.join(entry.packageRoot,'master.json'),p);assert.throws(()=>readRowTableRuntimePackage(e),/ROW_RUNTIME_PATH/);}finally{fs.rmSync(root,{recursive:true,force:true});}
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'row-runtime-'));try{fs.cpSync(entry.packageRoot,root,{recursive:true});const e={...entry,packageRoot:root};assert.ok(readRowTableRuntimePackage(e));assert.ok(adaptRowTableRuntimePackage(e).uiResolver(cases[0].input).fields.length);const p=path.join(root,'master.json'),b=fs.readFileSync(p);fs.writeFileSync(p,'{}');assert.throws(()=>readRowTableRuntimePackage(e),/ROW_RUNTIME_BYTES/);fs.writeFileSync(p,b);fs.unlinkSync(p);fs.symlinkSync(path.join(entry.packageRoot,'master.json'),p);assert.throws(()=>readRowTableRuntimePackage(e),/ROW_RUNTIME_PATH/);}finally{fs.rmSync(root,{recursive:true,force:true});}
 });
 
-test('production discovery excludes pending row-table Runtime while keeping released products available',()=>{
- const result=JSON.parse(execFileSync(process.execPath,['--input-type=module','-e',"import {runtimeAppIntegrationInventory} from './src/catalog/runtime-master/runtime-app-bridge.mjs';console.log(JSON.stringify(runtimeAppIntegrationInventory().map(p=>p.id)));"],{env:{...process.env,NODE_ENV:'production'},encoding:'utf8'}));assert.ok(!result.includes(prior.id));assert.ok(result.includes('SER-LIX-SAMOSL'));
+test('production discovery omits the unadopted row-table product',()=>{
+ const result=JSON.parse(execFileSync(process.execPath,['--input-type=module','-e',"import {rowTableRuntimeEntries} from './src/catalog/runtime-master/row-table-runtime-package.mjs';console.log(JSON.stringify(rowTableRuntimeEntries.map(p=>p.id)));"],{env:{...process.env,NODE_ENV:'production'},encoding:'utf8'}));assert.deepEqual(result,[]);
 });

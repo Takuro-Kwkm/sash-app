@@ -10,7 +10,7 @@
     "actions_dispatch_authority": false,
     "retained_profile": {
       "path": "contracts/production/release-profiles/samosa-r7.v1.json",
-      "sha256": "43c07fc672d280b5c4175138291c62e2432180a5b7ada32e12b67b547268533e"
+      "sha256": "2443078cf33c3e4b9a93adeb65ace90d25b1291ff947ce8bbbbce92a239981cf"
     },
     "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
     "scope": "SAMOSA_V07_R7_APPROVED_UI_NORMAL_RUNTIME_PUBLICATION"

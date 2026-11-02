@@ -468,7 +468,7 @@
       },
       "runtime_ui_adoption_profile": {
         "path": "contracts/production/runtime-adoptions/samosa-r7.profile.json",
-        "sha256": "9b3dd4d6093a83b3b4148184749414ac2214be4b1d3834bea23731aa423852dd"
+        "sha256": "3a60b4a3b2445519a7bd4b19d60121a01ea305378bf7520bc9c93d0b2c754bae"
       }
     },
     {
