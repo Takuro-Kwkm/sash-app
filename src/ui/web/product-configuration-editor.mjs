@@ -369,7 +369,12 @@ export class ProductConfigurationEditor {
 
   closeImagePreview(){
     const dialog=this.root.querySelector('dialog[data-choice-image-preview]');
-    if(dialog){if(dialog.open)dialog.close();else dialog.remove();}
+    if(dialog){if(dialog.open)dialog.close();this.finishImagePreview(dialog);}
+  }
+
+  finishImagePreview(dialog){
+    if(this.imagePreviewDialog!==dialog)return;
+    const opener=this.imagePreviewOpener;this.imagePreviewDialog=null;this.imagePreviewOpener=null;dialog.remove();if(opener?.isConnected)opener.focus();
   }
 
   openImagePreview(key,opener){
@@ -383,8 +388,9 @@ export class ProductConfigurationEditor {
     dialog.innerHTML=`<header><h2>${esc(field.displayLabel)}の画像</h2><button type="button" data-image-preview-close autofocus>閉じる</button></header><p>画像は確認用です。選択は元の項目で変更してください。</p><div class="runtime-choice-images">${values.map(row=>{
       const active=selectedValues.some(v=>String(v)===String(row.value));return `<figure class="runtime-choice-image" data-selected="${active}"><img src="${esc(row.image.src)}" alt="${esc(row.image.alt)}" data-field="${esc(key)}" data-value="${esc(row.value)}"><figcaption><strong>${esc(row.displayLabel)}</strong>${active?'<span class="image-preview-selected">選択中</span>':''}</figcaption><small>${esc(row.image.source_label)}</small></figure>`;
     }).join('')}</div>`;
-    dialog.addEventListener('close',()=>{dialog.remove();if(opener?.isConnected)opener.focus();},{once:true});
-    dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
+    this.imagePreviewDialog=dialog;this.imagePreviewOpener=opener;
+    dialog.addEventListener('close',()=>this.finishImagePreview(dialog),{once:true});
+    dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)this.closeImagePreview();}});
     this.root.append(dialog);dialog.showModal();
   }
 

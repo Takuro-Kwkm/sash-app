@@ -54,7 +54,7 @@ try{
     await dialog.locator('img').evaluateAll(es=>Promise.all(es.map(img=>img.decode())));
     assert.equal(await dialog.evaluate(e=>e.matches(':modal')),true);
     const observations=await page.evaluate(observeChoiceImages,{targets:targets.filter(t=>t.field_id===field_id),state_id:state.id});assert.ok(observations.every(r=>r.loaded&&r.visible&&r.image_sha256));report.image_observations.push(...observations);
-    await page.locator('[data-image-preview-close]').click();await dialog.waitFor({state:'detached'});assert.equal(await page.locator('dialog[data-choice-image-preview]').count(),0);assert.equal(await page.locator('#dynamicForm img').count(),0);
+    await page.locator('[data-image-preview-close]').click();await page.locator('dialog[data-choice-image-preview]').waitFor({state:'detached'});assert.equal(await page.locator('dialog[data-choice-image-preview]').count(),0);assert.equal(await page.locator('#dynamicForm img').count(),0);
     assert.equal(await trigger.evaluate(e=>document.activeElement===e),true);assert.equal(JSON.stringify(await page.evaluate(()=>window.__rowTableTestEditor.getSnapshot())),beforePreview);count('KEEP_VALID');
    }
    assert.deepEqual(loaded.snapshot.configuration,result.selection);assert.ok(loaded.snapshot.confirmation_requests.length>=13);assert.ok(loaded.snapshot.confirmation_requests.every(r=>r.message));count('HANDOFF');count('RESTORE');report.transitions.cases++;
