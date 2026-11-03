@@ -29,3 +29,7 @@ Mainの実コード・原UI承認・実QAログとBrowser report・Drive全量re
 PDF/XLSX生成・model検証と、PDFの目視確認・最終Release承認は区別する。
 
 この変更は接続実装。Mainマージ、正式Runtime/UI採用、公開、Drive保存は、それぞれの実証跡が揃うまで未完了。
+
+採用記録はRuntime indexと独立したregistryの `adoption` ref（path/hash/work_id）で固定する。
+packageへ採用JSONを置くだけでは本番採用にできない。完了native Workを検証したinstallerが新コピー用のregistry bindingを出力し、元registryへは書き込まない。
+Drive読戻しでは、callerの期待リストだけでなく、取得したindex.filesとstandalone indexの全要素・全digestをZIPと照合する。欠落・余分・callerが付け替えた改変digestは拒否する。

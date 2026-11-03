@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
 import {createRowTableUi} from '../src/catalog/runtime-master/row-table-runtime-ui.mjs';
 import {rowTableRuntimeEntries,readRowTableRuntimePackage,adaptRowTableRuntimePackage} from '../src/catalog/runtime-master/row-table-runtime-package.mjs';
 import {resolveRuntimeAppProduct,runtimeAppIntegrationInventory} from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
@@ -31,4 +32,14 @@ test('portable normal package works without any retained PDF/source path reads a
 
 test('production discovery omits the unadopted row-table product',()=>{
  const result=JSON.parse(execFileSync(process.execPath,['--input-type=module','-e',"import {rowTableRuntimeEntries} from './src/catalog/runtime-master/row-table-runtime-package.mjs';console.log(JSON.stringify(rowTableRuntimeEntries.map(p=>p.id)));"],{env:{...process.env,NODE_ENV:'production'},encoding:'utf8'}));assert.deepEqual(result,[]);
+});
+test('loose fabricated receipt/Main/Drive files cannot enable production without registry-pinned adoption',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'row-adoption-forgery-'));const hash=b=>createHash('sha256').update(b).digest('hex');try{
+  fs.cpSync(entry.packageRoot,root,{recursive:true});const put=(name,value)=>{const p=path.join(root,'adoption',name),b=JSON.stringify(value);fs.writeFileSync(p,b);return {path:'adoption/'+name,sha256:hash(b)};};
+  const main=put('native-main.json',{receipt:{status:'MERGE_CLOSED',repository:'Takuro-Kwkm/sash-app',merge_sha:'f'.repeat(40)},main:{commit:{sha:'f'.repeat(40)}},pr:{merged:true},files_verified:1});
+  const formal=put('formal-readback.json',{status:'PASS',actual_readback:{source:'CONNECTED_GOOGLE_DRIVE_TOOL',full_bytes_verified:true,product_id:entry.id,index:{sha256:entry.runtimeManifestSha256}}});
+  put('runtime-adoption.json',{status:'PASS',state:'RUNTIME_UI_ADOPTED',product_id:entry.id,package_index_sha256:entry.runtimeManifestSha256,product_master_mutations:0,release:false,work_id:'FABRICATED_FIXTURE',main_readback:main,formal_readback:formal});
+  assert.throws(()=>readRowTableRuntimePackage({...entry,packageRoot:root},{NODE_ENV:'production'}),/ROW_RUNTIME_UNREGISTERED_ADOPTION/);
+  assert.throws(()=>readRowTableRuntimePackage({...entry,packageRoot:root,runtimeAdoption:{path:'adoption/runtime-adoption.json',sha256:'0'.repeat(64),work_id:'FABRICATED_FIXTURE'}},{NODE_ENV:'production'}),/ROW_RUNTIME_BYTES/);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
 });

@@ -33,6 +33,11 @@ def verify_capture(shared,record,expected,product_id,formal_product_id,work_id,f
  wanted=expected['members'];check(isinstance(wanted,dict)and bool(wanted),'Exact package member set required')
  with zipfile.ZipFile(io.BytesIO(values['package']))as archive:
   names=archive.namelist();check(len(names)==len(set(names))and set(names)==set(wanted),'Archive member set differs')
+  if index.get('schema')=='ROW_TABLE_RUNTIME_INDEX_V1':
+   declared=index.get('files');check(isinstance(declared,dict)and bool(declared),'Row-table package dependency manifest required')
+   required=set(declared)|{expected['index']['package_path']}
+   check(set(names)==required and expected['module']['package_path']==index['document']['path']and declared.get(index['document']['path'])==sha(values['module']),'Row-table archive must contain every declared dependency, exactly once')
+   for name,digest in declared.items():check(sha(archive.read(name))==digest,'Row-table index dependency digest differs: '+name)
   for name in names:
    check(not Path(name).is_absolute()and '..'not in Path(name).parts,'Unsafe archive member')
    value=archive.read(name);fixed=wanted[name];check(len(value)==fixed['bytes']and sha(value)==fixed['sha256'],'Archive member bytes differ: '+name)
