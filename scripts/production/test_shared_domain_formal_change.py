@@ -122,6 +122,28 @@ class SharedDomainFormalChangeTests(unittest.TestCase):
         with self.assertRaises(Blocked):
             legacy.normalize_formal(before, after)
 
+    def connection_validator(self):
+        spec = importlib.util.spec_from_file_location('connection_validator', Path(__file__).with_name('validate-sheet-package-connection.py'))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
+    def test_selected_formal_connection_checks_exact_profile_and_adapter(self):
+        root = Path(__file__).resolve().parents[2]
+        connection = json.loads((root/'contracts/production/work-connections.v2.json').read_text())
+        row = next(p for p in connection['products'] if p.get('connection_scope') == 'EXISTING_FORMAL_SHARED_DOMAIN_CHANGE')
+        self.assertEqual(self.connection_validator().validate(root, row['product_id'])['selected_product'], row['product_id'])
+
+    def test_unknown_selected_connection_rejected(self):
+        with self.assertRaises(AssertionError):
+            self.connection_validator().validate(Path(__file__).resolve().parents[2], 'UNREGISTERED')
+
+    def test_unrelated_unadopted_legacy_profile_is_still_rejected(self):
+        # Default all-product validation keeps its pre-existing admission guard.
+        # A selected-product success does not certify another product's status.
+        with self.assertRaisesRegex(AssertionError, 'Native target drift'):
+            self.connection_validator().validate(Path(__file__).resolve().parents[2])
+
 
 if __name__ == '__main__':
     unittest.main()
