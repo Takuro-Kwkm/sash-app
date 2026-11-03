@@ -843,7 +843,8 @@
       "native_adapter": "scripts/production/sheet-package-formal.py",
       "prepare_adapter": "scripts/production/prepare-sheet-package-formal.py",
       "validators": [
-        "scripts/production/shared-domain-formal-change.py"
+        "scripts/production/shared-domain-formal-change.py",
+        "scripts/production/inspect-adopted-domain.py"
       ],
       "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed recovery is INSPECT_ONLY",
       "build_profile": {
@@ -865,7 +866,8 @@
       "current_formal_version": "v1.1-R5-F1-20261103",
       "adapters": {
         "ProductMaster": "scripts/production/sheet-package-formal.py",
-        "Validator": "scripts/production/shared-domain-formal-change.py"
+        "Validator": "scripts/production/shared-domain-formal-change.py",
+        "CommonFlow": "scripts/production/inspect-adopted-domain.py"
       },
       "runtime_ui_adoption_profile": {
         "path": "contracts/production/runtime-adoptions/doorremo-r5-g12.profile.json",

@@ -286,7 +286,8 @@
       "state": "READY",
       "scope": "EXISTING_WORKING_SALES_QA",
       "validators": [
-        "scripts/production/shared-domain-formal-change.py"
+        "scripts/production/shared-domain-formal-change.py",
+        "scripts/production/inspect-adopted-domain.py"
       ],
       "no_fallback": true,
       "native_profile": {

@@ -59,6 +59,62 @@
       "adoption_result_sha256": "f1ceb531226c6330c55253374d764a6218c470b160b45cb2a27fcc69d6b1c770",
       "product_master_mutations": 0,
       "publication_requires_native_release_gate": true
+    },
+    {
+      "id": "DOORREMO-R5-G12-20261103",
+      "native_product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
+      "product_id": "CANDIDATE:DOORREMO_NONFIRE",
+      "root": "src/catalog/runtime-release-data/doorremo-r5-g12",
+      "files": {
+        "candidates/module.json": {
+          "sha256": "e9839c33b3266c1d62feb8171ebf188695d39b3056a20547f9afc413d1cda7f4",
+          "bytes": 82570524
+        },
+        "review/authorization.json": {
+          "sha256": "9dc0338dd6edd3349987892bdf3431191d12ecee427af8bba6cb99fe9b64c808",
+          "bytes": 723
+        },
+        "review/candidate-index.json": {
+          "sha256": "c3ada6297cdea4f5b57a41782842b3c90f8976ff220e7579c55df9bee16d32d7",
+          "bytes": 21550
+        },
+        "review/human-source.json": {
+          "sha256": "527972249e9635dacc117163207ba96cfd313aff12fbfed6c31f883130633047",
+          "bytes": 2688
+        },
+        "review/review.json": {
+          "sha256": "00e31d90fc52d0dd988c8d15242d50a8b24dad5b1c72df02aca71bdc07a2a43c",
+          "bytes": 2318
+        },
+        "runtime_index.json": {
+          "sha256": "b996473c0e541dc061e86a81064b7dac149e35b15a0258934b1fbd2988cc96e6",
+          "bytes": 22667
+        },
+        "sources/UI_STANDARD_v2.1.docx": {
+          "sha256": "e14b802dd96c1b90ea39809137ea03824878db2b7c07aa058657f3603a928e9a",
+          "bytes": 1328723
+        }
+      },
+      "sourceReferences": {
+        "sources/PRODUCT_MASTER.json": {
+          "schema": "ADOPTED_FORMAL_SOURCE_REFERENCE_V1",
+          "role": "FORMAL_PRODUCT_MASTER",
+          "sha256": "285bb07926ed073391e731fd610a773b3523c78e42efc86a3fc6bc3eb3adc700",
+          "bytes": 14202008,
+          "file_id": "1Wfy4-nwyrwFY_UaohBfviE3XM42o4fNp",
+          "verification": "INSPECT_COMPLETED_NATIVE_ADOPTION_SOURCE_BYTES",
+          "adoption_work_id": "DOORREMO-R5-G12-RUNTIME-20261103"
+        }
+      },
+      "index": {
+        "path": "runtime_index.json",
+        "sha256": "b996473c0e541dc061e86a81064b7dac149e35b15a0258934b1fbd2988cc96e6",
+        "manifestFileId": "1QcOb7Ind_qONJKoVX9ObXjtLFsrISWjd"
+      },
+      "adoption_work_id": "DOORREMO-R5-G12-RUNTIME-20261103",
+      "adoption_result_sha256": "9e24956d8d4b6dba67a1fe2bcfaae0f5122e079b02c04f75a16d0bd8e21356db",
+      "product_master_mutations": 0,
+      "publication_requires_native_release_gate": true
     }
   ]
 }
