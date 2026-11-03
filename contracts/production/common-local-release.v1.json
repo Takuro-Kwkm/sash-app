@@ -159,6 +159,7 @@
     "scripts/production/private-runtime-readback.py": "c75161848ec62f41b691e7e992042e5c43ea59f2742beb93dfbd09bf053106a7",
     "contracts/production/select-pg-publication-lifecycle.v1.json": "a40d82ca326f9c362ecfdfccc068e2bac7e1064f72bdc5c59497615be7fdb75e",
     "src/catalog/runtime-master/row-table-runtime-registry.json": "f54da9924ca216c44d7adad72987c7c8f61c4ae967f75624b334fdfcb1a22ed5",
-    "test/108-row-table-normal-runtime.test.mjs": "b8064be229686f0b1d9565ad06bbd70ada5437825d0ebf73563b0cf1a28b699b"
+    "test/108-row-table-normal-runtime.test.mjs": "b8064be229686f0b1d9565ad06bbd70ada5437825d0ebf73563b0cf1a28b699b",
+    "test/109-row-table-release-connection.test.mjs": "8a48cca88cef87352b3861b85229c9fdc215bc46a286d055da54662cee37c252"
   }
 }
