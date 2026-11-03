@@ -436,7 +436,7 @@
         "サーモスA"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
+      "connection_state": "CONNECTED",
       "current_formal_version": "v0.7",
       "formal_registry_selector": "LIXIL::サーモスA",
       "safe_failure": {
@@ -445,6 +445,30 @@
         "writes": 0,
         "fallback": false,
         "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      },
+      "default_gate": "NATIVE_UI_CANDIDATE",
+      "native_adapter": "scripts/production/validate-row-table-ui.py",
+      "validators": [
+        "scripts/production/validate-row-table-ui.py"
+      ],
+      "baseline_selector": "LIXIL::サーモスA",
+      "source_selector": "CURRENT_ADOPTED_FORMAL_BYTES_ONLY",
+      "resume_selector": "EXPLICIT_SAVED_IMMUTABLE_BINDING",
+      "native_reconnect_profile": {
+        "path": "contracts/production/native-row-table-connection/samosa.v0.7.candidate.json",
+        "sha256": "df70c85f5c63a67184a9d44d2c50e862178f9194a93ff5544b10148dc3146885"
+      },
+      "native_scope": "EXISTING_FORMAL_LOCAL_UI_CANDIDATE_ONLY",
+      "runtime_ui_profile": {
+        "path": "contracts/production/native-row-table-connection/samosa.v0.7.ui-candidate.json",
+        "sha256": "1a75435ac49d43b78a48f176703aa152ed50e0014d2b96464a1dd271a34f64a5"
+      },
+      "adapters": {
+        "ProductMaster": "scripts/production/produce-row-table-runtime-candidate.py"
+      },
+      "runtime_ui_adoption_profile": {
+        "path": "contracts/production/runtime-adoptions/samosa-r7.profile.json",
+        "sha256": "3a60b4a3b2445519a7bd4b19d60121a01ea305378bf7520bc9c93d0b2c754bae"
       }
     },
     {

@@ -1,0 +1,2713 @@
+{
+  "schema": "SOURCE_OPTION_MATRIX_AUDIT_V1",
+  "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "scope": "All97 columns of SN2500 pp160-163 for the10 registered window types; plus source chapter shutter options reviewed separately. Not a complete manufacturing BOM/price catalogue.",
+  "source_ref": {
+    "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+    "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+  },
+  "windows": [
+    "WT-SA-HIKICHIGAI",
+    "WT-SA-SHUTTER-HIKI",
+    "WT-SA-AMADO-HIKI",
+    "WT-SA-MENKOSHI-HIKI",
+    "WT-SA-TATE-SUBERI",
+    "WT-SA-YOKO-SUBERI",
+    "WT-SA-KOSHO-YOKO",
+    "WT-SA-FIX-IN",
+    "WT-SA-UCHIDAOSHI",
+    "WT-SA-SOTODAOSHI"
+  ],
+  "columns": [
+    {
+      "id": "CAT-SA-160-01",
+      "label": "マドサイズ引違い網戸（中桟無）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        126.85,
+        145.56
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "standard_mesh",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-02",
+      "label": "テラスサイズ引違い網戸（中桟無・中桟付）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        145.56,
+        164.27
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "standard_mesh",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-03",
+      "label": "固定式網戸（フレームレス）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        164.27,
+        182.98
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "standard_mesh",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-04",
+      "label": "固定式網戸（タグ付フレームレス）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        182.98,
+        201.69
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "standard_mesh",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-05",
+      "label": "固定式網戸（フレーム付）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        201.69,
+        220.39
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "standard_mesh",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-06",
+      "label": "固定式網戸（内倒し窓用）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        220.39,
+        239.1
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "standard_mesh",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-07",
+      "label": "横引きロール網戸",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        239.1,
+        257.81
+      ],
+      "notes": "※Ｈ１６００以下のみ",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "standard_mesh",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-08",
+      "label": "上げ下げロール網戸（木額縁用）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        257.81,
+        276.52
+      ],
+      "notes": "段窓排気ファン併用時は不可",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "standard_mesh",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-09",
+      "label": "開き網戸",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        276.52,
+        295.23
+      ],
+      "notes": "※Ｈ１３７０以上は中桟付※Ｈ１６００以下のみ",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "standard_mesh",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-10",
+      "label": "マドサイズ引違い網戸（中桟無）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        295.23,
+        313.94
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "kirei_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-11",
+      "label": "テラスサイズ引違い網戸（中桟無・中桟付）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        313.94,
+        332.65
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "kirei_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-12",
+      "label": "固定式網戸（フレームレス）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        332.65,
+        351.35
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "kirei_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-13",
+      "label": "固定式網戸（タグ付フレームレス）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        351.35,
+        370.06
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "kirei_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-14",
+      "label": "固定式網戸（フレーム付）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        370.06,
+        388.77
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "kirei_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-15",
+      "label": "固定式網戸（内倒し窓用）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        388.77,
+        407.48
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "kirei_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-16",
+      "label": "横引きロール網戸",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        407.48,
+        426.19
+      ],
+      "notes": "※Ｈ１６００以下のみ",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "kirei_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-17",
+      "label": "上げ下げロール網戸（木額縁用）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        426.19,
+        444.9
+      ],
+      "notes": "段窓排気ファン併用時は不可",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "kirei_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-18",
+      "label": "開き網戸",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        444.9,
+        463.61
+      ],
+      "notes": "※Ｈ１３７０以上は中桟付※Ｈ１６００以下のみ",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "kirei_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-19",
+      "label": "マドサイズ引違い網戸（中桟無）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        463.61,
+        482.31
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "mushiya_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-20",
+      "label": "テラスサイズ引違い網戸（中桟無・中桟付）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        482.31,
+        501.02
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "mushiya_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-21",
+      "label": "固定式網戸（フレームレス）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        501.02,
+        519.73
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "mushiya_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-160-22",
+      "label": "固定式網戸（タグ付フレームレス）",
+      "source_pdf_page": 162,
+      "printed_page": 160,
+      "source_column_bounds": [
+        519.73,
+        538.44
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "mushiya_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-01",
+      "label": "固定式網戸（フレーム付）",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        56.55,
+        73.25
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "mushiya_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-02",
+      "label": "固定式網戸（内倒し窓用）",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        73.25,
+        89.95
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "mushiya_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-03",
+      "label": "横引きロール網戸",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        89.95,
+        106.65
+      ],
+      "notes": "※Ｈ１６００以下のみ",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "▲",
+          "annotation": "※"
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "mushiya_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-04",
+      "label": "上げ下げロール網戸（木額縁用）",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        106.65,
+        123.35
+      ],
+      "notes": "段窓排気ファン併用時は不可",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "mushiya_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-05",
+      "label": "開き網戸",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        123.35,
+        140.05
+      ],
+      "notes": "※Ｈ１３７０以上は中桟付※Ｈ１６００以下のみ",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "▲",
+          "annotation": "※"
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "mushiya_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-06",
+      "label": "マドサイズ引違い網戸（中桟無）",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        140.05,
+        156.75
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "pet_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-07",
+      "label": "テラスサイズ引違い網戸（中桟無・中桟付）",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        156.75,
+        173.45
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "pet_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-08",
+      "label": "固定式網戸（フレーム付）",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        173.45,
+        190.15
+      ],
+      "notes": "Wより大きい場合、製作不可780",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "pet_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-09",
+      "label": "固定式網戸（内倒し窓用）",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        190.15,
+        206.85
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "pet_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-10",
+      "label": "開き網戸",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        206.85,
+        223.55
+      ],
+      "notes": "※Ｈ１３７０以上は中桟付※Ｈ１６００以下のみ",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "▲",
+          "annotation": "※"
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "screen_mesh": "pet_net",
+      "coverage": "EXISTING_SCREEN_FORM_AND_MESH"
+    },
+    {
+      "id": "CAT-SA-161-11",
+      "label": "網戸ストッパー",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        223.55,
+        240.25
+      ],
+      "notes": "詳細はＰ１８５参照",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-12",
+      "label": "大型把手",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        240.25,
+        256.95
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-13",
+      "label": "フィルター付上桟一体換気窓",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        256.95,
+        273.65
+      ],
+      "notes": "※把手障子は外障子のみ",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-14",
+      "label": "段窓排気ファン",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        273.65,
+        290.36
+      ],
+      "notes": "※Ｈ１６００以下のみ",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-15",
+      "label": "連窓方立180°・連窓方立90°・角度枠90°",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        290.36,
+        307.06
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-16",
+      "label": "浴室用連窓方立※１",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        307.06,
+        323.76
+      ],
+      "notes": " ※２連窓タイプは不可 ※１マドサイズのみ",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": "※2"
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-17",
+      "label": "段窓無目",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        323.76,
+        340.46
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-18",
+      "label": "連窓目板",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        340.46,
+        357.16
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-19",
+      "label": "連窓目板シャッター付引違い窓用",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        357.16,
+        373.86
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-20",
+      "label": "連窓目板雨戸付引違い窓用",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        373.86,
+        390.56
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-21",
+      "label": "段窓目板",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        390.56,
+        407.26
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-22",
+      "label": "アングルカバー",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        407.26,
+        423.96
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-23",
+      "label": "アングルカバー三方",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        423.96,
+        440.66
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "▲",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-24",
+      "label": "タイル用四方額縁",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        440.66,
+        457.36
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-25",
+      "label": "フラットアタッチメント",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        457.36,
+        474.06
+      ],
+      "notes": "フラットアタッチメント用網戸は特注対応",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-26",
+      "label": "フラットアタッチメント（シャッター用）",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        474.06,
+        490.76
+      ],
+      "notes": "フラットアタッチメント用網戸は特注対応",
+      "windows": {
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-27",
+      "label": "フラットアタッチメント用幅木（シャッター用）",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        490.76,
+        507.46
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-161-28",
+      "label": "フラットアタッチメント用ガイドレール（シャッター用）",
+      "source_pdf_page": 163,
+      "printed_page": 161,
+      "source_column_bounds": [
+        507.46,
+        524.16
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-01",
+      "label": "アルミ手すりＳ型（シャッター用）",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        126.85,
+        146.41
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-02",
+      "label": "アルミ手すりＳ型（雨戸用）",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        146.41,
+        165.97
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-03",
+      "label": "アルミ手すりＳ型取付用部品（雨戸用）",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        165.97,
+        185.53
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-04",
+      "label": "アルミ手すり連窓用補助ポールセット",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        185.53,
+        205.09
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-05",
+      "label": "厚壁用ねじセット",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        205.09,
+        224.65
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-06",
+      "label": "窓モール",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        224.65,
+        244.2
+      ],
+      "notes": "※マドサイズのみ",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "▲",
+          "annotation": "※"
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-07",
+      "label": "固定式網戸溝カバー",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        244.2,
+        263.76
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-08",
+      "label": "枠付面格子（ブラケット短）",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        263.76,
+        283.32
+      ],
+      "notes": "※網戸併用時は室内からの着脱不可",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "▲",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": "※"
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-09",
+      "label": "枠付面格子（ブラケット長）",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        283.32,
+        302.88
+      ],
+      "notes": " ※２網戸併用時は室内からの着脱不可 ※１段窓排気ファン併用時",
+      "windows": {
+        "WT-SA-FIX-IN": {
+          "mark": "▲",
+          "annotation": "※1"
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "▲",
+          "annotation": "※1・2"
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-10",
+      "label": "下枠アタッチメント",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        302.88,
+        322.44
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-11",
+      "label": "単純段差アタッチメント",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        322.44,
+        342.0
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-12",
+      "label": "枠付水切り（引違い窓用）",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        342.0,
+        361.56
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-13",
+      "label": "枠付水切り（装飾窓用）",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        361.56,
+        381.12
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-14",
+      "label": "水切り皿板",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        381.12,
+        400.68
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-15",
+      "label": "水切り皿板（シャッター）",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        400.68,
+        420.24
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-16",
+      "label": "水切り皿板エンドキャップ",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        420.24,
+        439.79
+      ],
+      "notes": "※シャッター用は水切り皿板に同梱",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-17",
+      "label": "浴室用防水部品セット",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        439.79,
+        459.35
+      ],
+      "notes": " ※２連窓タイプは不可 ※１電動は不可",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": "※1"
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": "※2"
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-18",
+      "label": "防水テープ",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        459.35,
+        478.91
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-19",
+      "label": "サッシ防水補助シール",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        478.91,
+        498.47
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-20",
+      "label": "先張り防水シート",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        498.47,
+        518.03
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-162-21",
+      "label": "後付ビード",
+      "source_pdf_page": 164,
+      "printed_page": 162,
+      "source_column_bounds": [
+        518.03,
+        537.59
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-01",
+      "label": "小開口ストッパー",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        56.69,
+        74.67
+      ],
+      "notes": "※枚建、非常用進入口は取付不可4スマートクレセント、キー付クレセントとの併用不可",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-02",
+      "label": "小開口アーム",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        74.67,
+        92.65
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "EXISTING_PAID_OPTION_SMALL_OPENING_ARM"
+    },
+    {
+      "id": "CAT-SA-163-03",
+      "label": "小開口アーム（固定タイプ）",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        92.65,
+        110.63
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-04",
+      "label": "クレセント",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        110.63,
+        128.61
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-05",
+      "label": "ダイヤル錠クレセント",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        128.61,
+        146.59
+      ],
+      "notes": "小開口ストッパーとの併用不可",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-06",
+      "label": "防虫網",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        146.59,
+        164.57
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-07",
+      "label": "網戸ローラー",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        164.57,
+        182.55
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-08",
+      "label": "網押し棒",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        182.55,
+        200.53
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-09",
+      "label": "ナベワンウェイねじ",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        200.53,
+        218.51
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-10",
+      "label": "取外し専用工具",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        218.51,
+        236.49
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-11",
+      "label": "スマートクレセント",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        236.49,
+        254.47
+      ],
+      "notes": "小開口ストッパーとの併用不可",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-12",
+      "label": "キー付クレセント",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        254.47,
+        272.45
+      ],
+      "notes": "小開口ストッパーとの併用不可",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-13",
+      "label": "本体止め取付ねじ",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        272.45,
+        290.44
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-14",
+      "label": "アングル取付ねじ",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        290.44,
+        308.42
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-15",
+      "label": "タイル用四方額縁アングル取付ねじ",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        308.42,
+        326.39
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-16",
+      "label": "下枠養生材",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        326.39,
+        344.37
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-17",
+      "label": "下枠養生テープ",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        344.37,
+        362.35
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-18",
+      "label": "コーナー気密部品セット",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        362.35,
+        380.34
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-19",
+      "label": "台風ストッパー",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        380.34,
+        398.32
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-20",
+      "label": "リモコン",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        398.32,
+        416.3
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-21",
+      "label": "復帰セット",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        416.3,
+        434.28
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-22",
+      "label": "フック棒",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        434.28,
+        452.26
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-23",
+      "label": "延長ケーブル",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        452.26,
+        470.24
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-24",
+      "label": "低頭ねじ",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        470.24,
+        488.22
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-25",
+      "label": "ウレタン納まり用躯体固定金具セット",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        488.22,
+        506.2
+      ],
+      "notes": "※マドサイズのみ",
+      "windows": {
+        "WT-SA-HIKICHIGAI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-SHUTTER-HIKI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-MENKOSHI-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-TATE-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-YOKO-SUBERI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-KOSHO-YOKO": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-FIX-IN": {
+          "mark": "●",
+          "annotation": "※"
+        },
+        "WT-SA-UCHIDAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        },
+        "WT-SA-SOTODAOSHI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    },
+    {
+      "id": "CAT-SA-163-26",
+      "label": "鏡板アタッチメント",
+      "source_pdf_page": 165,
+      "printed_page": 163,
+      "source_column_bounds": [
+        506.2,
+        524.18
+      ],
+      "notes": "",
+      "windows": {
+        "WT-SA-AMADO-HIKI": {
+          "mark": "●",
+          "annotation": ""
+        }
+      },
+      "coverage": "SOURCE_BACKED_CATALOGUE_REQUEST"
+    }
+  ],
+  "counts": {
+    "matrix_columns": 97,
+    "screen_columns": 32,
+    "existing_paid_option_columns": 1,
+    "new_catalogue_columns": 64,
+    "source_chapter_shutter_choices": 5
+  },
+  "unverified_scope": [
+    "Complete catalogue content beyond the common paid-option matrix and shutter option chapter",
+    "Manufacturer final compatibility, quantities, codes, prices and BOM",
+    "Exact images for newly exposed options are not registered"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "VERIFIED_ROW_TABLE_SOURCE_DIGESTS_V1",
+  "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "master_sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e",
+  "sources": [
+    {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+      "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407",
+      "bytes": 73214475,
+      "verification": "RETAINED_OFFICIAL_BYTES_SHA256_VERIFIED"
+    },
+    {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+      "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c",
+      "bytes": 28735736,
+      "verification": "RETAINED_OFFICIAL_BYTES_SHA256_VERIFIED"
+    }
+  ]
+}

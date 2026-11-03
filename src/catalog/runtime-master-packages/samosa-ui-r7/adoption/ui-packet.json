@@ -1,0 +1,996 @@
+{
+  "workflow_id": "SAMOSA_OPTION_UX_R7_UI_REVIEW_20261103",
+  "gate": "HUMAN_UI_REVIEW",
+  "payload_sha256": "52f5f39f9e5967576243b2e66cfd3eaa8cbeb7a306f3a3f095a1da69f7f43faa",
+  "status": "PREPARED_NOT_APPROVED",
+  "native_packet": {
+    "decision_scope": "UI_FLOW_ONLY",
+    "ui_identity": {
+      "repository": "Takuro-Kwkm/sash-app",
+      "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+      "destination": {
+        "kind": "LOCAL_UI_REVIEW_ONLY",
+        "url": "http://127.0.0.1:4275",
+        "publication_authority": false
+      },
+      "master": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e",
+      "master_projection": "c67b998afcf68b4361ebaa19ad5dd7205a5c1d118cc4957451249a69efa26362",
+      "flow": "4da0de403ef4aaccf948abba4f9ae149778adcc4a8a13940cfc522446b8164bf",
+      "expected_inventory": "bdb989e2bd25a794b23655cf0ea33a3af00a61b15789d98702a0b12268da9604",
+      "mapping": "e3c10b8cfb5d0ee28f9df8d826501857aeb1cd917446dd58a5bab0729f9f443a",
+      "preview": "a092640db5a2931bf6f329a21bda28ed0086060914776345f83cef0f7f7cd8d1",
+      "ui_files": [
+        {
+          "path": "changes/samosa-ui-v0.7-candidate/candidate-index.json",
+          "sha256": "039e1255bd1b0d06930af12958b959e4fd9013809594a2e4bc6f8efe424f68e3"
+        },
+        {
+          "path": "changes/samosa-ui-v0.7-candidate/candidate.json",
+          "sha256": "e99f8a84c9603482e74444f8900a10a5b2efd476185f46a152839e29a18d094a"
+        },
+        {
+          "path": "changes/samosa-ui-v0.7-candidate/case-seeds.json",
+          "sha256": "848770d349931550356aea1bf20ad3ec80cee26d95f4300841c44511a43570b0"
+        },
+        {
+          "path": "changes/samosa-ui-v0.7-candidate/flow.json",
+          "sha256": "4da0de403ef4aaccf948abba4f9ae149778adcc4a8a13940cfc522446b8164bf"
+        },
+        {
+          "path": "changes/samosa-ui-v0.7-candidate/option-coverage.json",
+          "sha256": "b3cdc18c0180f99f324e48df1cc378c8459aa92e1fdfc5047ffa3a2dda8b3a4b"
+        },
+        {
+          "path": "changes/samosa-ui-v0.7-candidate/ui-policy.json",
+          "sha256": "0115f432ee95a199b2dea567a7f3943f165e08f412f3a81f74706c7596130c59"
+        },
+        {
+          "path": "contracts/ui-common/choice-images.v1.mjs",
+          "sha256": "3df1f7be21b4a16e2621319478212393db7a4076c9a0c37ee1f677fd55d698e8"
+        },
+        {
+          "path": "contracts/ui-common/field-labels.v1.mjs",
+          "sha256": "5092fe31c89752e60d81fad410b518870b2848f76e5388363c1d8273eaa3a1d7"
+        },
+        {
+          "path": "src/catalog/dimension-resolver.mjs",
+          "sha256": "cab3841254d161a5f2c9992735ca619f52ffb524be26eb5c30720b086dfdb3ac"
+        },
+        {
+          "path": "src/catalog/runtime-master/candidate-runtime-registry.mjs",
+          "sha256": "6977776677ded397321ff7cc6f99bc45d15eb18e676453f3069c620597d45372"
+        },
+        {
+          "path": "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
+          "sha256": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7"
+        },
+        {
+          "path": "src/catalog/runtime-master/declared-window-flow.mjs",
+          "sha256": "68166e3844e00a0655bac9959b0feab33ee5466b2412a2110110cb7782fe1816"
+        },
+        {
+          "path": "src/catalog/runtime-master/generic-rule-engine.mjs",
+          "sha256": "b48e53ca77fcbf5d1866e5d8e8c8f6c3a7f20bf0558510d767c0a27d506e7618"
+        },
+        {
+          "path": "src/catalog/runtime-master/global-window-selection-flow-engine.mjs",
+          "sha256": "4aaa70768c13129f412478926bbc800f8b72c8eec90a0febf59fc72c86833a21"
+        },
+        {
+          "path": "src/catalog/runtime-master/row-table-runtime-projection.mjs",
+          "sha256": "75b5b63a3404f0ce4b365903a32732143807dea4bfccddf0a4c5668f6a4b8ecd"
+        },
+        {
+          "path": "src/catalog/runtime-master/row-table-runtime-ui.mjs",
+          "sha256": "058767a89fc46849c95366316c4b6026a323dbbe3026af0261d2520da990e501"
+        },
+        {
+          "path": "src/catalog/runtime-master/row-table-sales-views.mjs",
+          "sha256": "a06f9fde096535fcf0d89ba602650f94f57466459d74ead0ba4a83e4337f2b4a"
+        },
+        {
+          "path": "src/catalog/runtime-master/runtime-condition.mjs",
+          "sha256": "ae5e442f90b5f7007ff8ea6fed46a0d7ce2937afbf5570f9fefefa2b113cdb8e"
+        },
+        {
+          "path": "src/catalog/runtime-master/runtime-effects.mjs",
+          "sha256": "261c361345e605f48a943ca02bdf66255ac4823883877836ba4e3befd39d24bc"
+        },
+        {
+          "path": "src/catalog/runtime-master/runtime-state.mjs",
+          "sha256": "0b8ce17322d2e51fe914af1f0bfa7c8a9787e51695762d67ecd622bd0244a2b9"
+        },
+        {
+          "path": "src/catalog/runtime-master/window-field-labels.mjs",
+          "sha256": "606f62f417fcd516dd93831b01ee3c1e8fe899b3f808ebe19b9e175035fb21d7"
+        },
+        {
+          "path": "src/catalog/selector.mjs",
+          "sha256": "28974cd66ae488e22bb9ee04aac9a604b0a671361fe24a26399e7982768f42d5"
+        },
+        {
+          "path": "src/server/candidate-runtime-preview.mjs",
+          "sha256": "0f478ecfa453591cc781cd3775aadd94ebf3e6c441a7a8740ee7a1212876bb42"
+        },
+        {
+          "path": "src/server/recovery-app.mjs",
+          "sha256": "ec622027183eef34988e184c78c3c0229aed26ecfb3adea70c49f792df5e7481"
+        },
+        {
+          "path": "src/ui/web/app.js",
+          "sha256": "8767f968393bd0dd3df15da9906525939002ca58ff5dca0560b744e1a85b39eb"
+        },
+        {
+          "path": "src/ui/web/estimate-output-integration.mjs",
+          "sha256": "0088dca6579f734ffc8b9b09373bbdd39b0b7f63c489ccef05d615996add8c24"
+        },
+        {
+          "path": "src/ui/web/estimate-output.css",
+          "sha256": "f705f00eaf2af35cc6ccafe53923c7ff6667847fa5c27f9b60045b14488287fb"
+        },
+        {
+          "path": "src/ui/web/index.html",
+          "sha256": "3ddd021c6b9019c51e4becc7afc5e615637c96df1e9775910e9c5c9d3e981e49"
+        },
+        {
+          "path": "src/ui/web/product-choice-model.mjs",
+          "sha256": "6b207d1b6fc0b90c322fbb4f7eb1b6f86be56b60c1cd59875604359db240d378"
+        },
+        {
+          "path": "src/ui/web/product-configuration-editor.mjs",
+          "sha256": "eac991e202a717f202b16fd12a475759258ddc2281573ee07c81ba66c91a19fa"
+        },
+        {
+          "path": "src/ui/web/styles-wave3.css",
+          "sha256": "fc3762eeccd205f404a7f2f4df58d3b1e1b0f95e5bfac88294eb0763a6e40dbe"
+        },
+        {
+          "path": "src/ui/web/styles.css",
+          "sha256": "85e9506efa22fa16537f20bbebb038945cacfb6188884632affee41e933b5a97"
+        },
+        {
+          "path": "src/ui/web/theme.css",
+          "sha256": "8687198f6e0b3484b61283b082cdbaa86b4ab153680558c4025eba2886b2cc1c"
+        },
+        {
+          "path": "src/ui/web/theme.js",
+          "sha256": "08277fed67573ad5d116c41b340474a430ba9fa00fae2f78158a3f75ca462ec6"
+        },
+        {
+          "path": "src/ui/web/work-management.css",
+          "sha256": "486cb00b2862739e365381e53835a0667bb9f324dff617f7893da71790ac123e"
+        },
+        {
+          "path": "src/work-management/configuration-migration.mjs",
+          "sha256": "93ae2f70a0317882f608aba714fee4f78b4815d4f137d5d08b3a1f5044f3d626"
+        },
+        {
+          "path": "src/work-management/domain.mjs",
+          "sha256": "31d3d7f23584fc173a1e5ffac7c7f63eb7e533a5da2237f62ef9befcaabc7ff1"
+        },
+        {
+          "path": "src/work-management/field-workflow-scope.mjs",
+          "sha256": "6458a62cbbc2bbf29f541ab6d5faea3698f085cb2fdbb739ce435dc24fd5f905"
+        }
+      ]
+    },
+    "preview": {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-option-ux-r7-20261103/ui-inputs/preview.json",
+      "sha256": "a092640db5a2931bf6f329a21bda28ed0086060914776345f83cef0f7f7cd8d1"
+    },
+    "mapping": {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-option-ux-r7-20261103/ui-inputs/mapping.json",
+      "sha256": "e3c10b8cfb5d0ee28f9df8d826501857aeb1cd917446dd58a5bab0729f9f443a"
+    },
+    "checks": [
+      "項目の欠落・重複",
+      "表示順",
+      "条件分岐",
+      "値の保持・解除",
+      "保存・見積依頼への引渡し",
+      "画像の不足・表示・意味"
+    ],
+    "image_coverage": {
+      "schema": "UI_IMAGE_PREFLIGHT_V1",
+      "status": "PASS",
+      "required_choices": 36,
+      "required_states": 56,
+      "excluded_choices": 0,
+      "checked_choices": 36,
+      "viewports": [
+        1360,
+        390
+      ],
+      "observed": [
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-BLACK",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "4d64ca91172137fe6d1c31facde3c58c7cf1e5f9c902f8dbdf9e38f058301604"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-BLACK",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "4d64ca91172137fe6d1c31facde3c58c7cf1e5f9c902f8dbdf9e38f058301604"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-BLACK",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "4d64ca91172137fe6d1c31facde3c58c7cf1e5f9c902f8dbdf9e38f058301604"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-BLACK",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "4d64ca91172137fe6d1c31facde3c58c7cf1e5f9c902f8dbdf9e38f058301604"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-BLACK",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "4d64ca91172137fe6d1c31facde3c58c7cf1e5f9c902f8dbdf9e38f058301604"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-BLACK",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "4d64ca91172137fe6d1c31facde3c58c7cf1e5f9c902f8dbdf9e38f058301604"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-BLACK",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "4d64ca91172137fe6d1c31facde3c58c7cf1e5f9c902f8dbdf9e38f058301604"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-BLACK",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "4d64ca91172137fe6d1c31facde3c58c7cf1e5f9c902f8dbdf9e38f058301604"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-BLACK",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "4d64ca91172137fe6d1c31facde3c58c7cf1e5f9c902f8dbdf9e38f058301604"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-BLACK",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "4d64ca91172137fe6d1c31facde3c58c7cf1e5f9c902f8dbdf9e38f058301604"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-SHINE-GRAY",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "d8cfc5ea24646d3aac30668c53f4faf928143c27c5ab97546406c6a1c8a37dd0"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-SHINE-GRAY",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "d8cfc5ea24646d3aac30668c53f4faf928143c27c5ab97546406c6a1c8a37dd0"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-SHINE-GRAY",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "d8cfc5ea24646d3aac30668c53f4faf928143c27c5ab97546406c6a1c8a37dd0"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-SHINE-GRAY",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "d8cfc5ea24646d3aac30668c53f4faf928143c27c5ab97546406c6a1c8a37dd0"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-SHINE-GRAY",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "d8cfc5ea24646d3aac30668c53f4faf928143c27c5ab97546406c6a1c8a37dd0"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-SHINE-GRAY",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "d8cfc5ea24646d3aac30668c53f4faf928143c27c5ab97546406c6a1c8a37dd0"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-SHINE-GRAY",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "d8cfc5ea24646d3aac30668c53f4faf928143c27c5ab97546406c6a1c8a37dd0"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-SHINE-GRAY",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "d8cfc5ea24646d3aac30668c53f4faf928143c27c5ab97546406c6a1c8a37dd0"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-SHINE-GRAY",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "d8cfc5ea24646d3aac30668c53f4faf928143c27c5ab97546406c6a1c8a37dd0"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-SHINE-GRAY",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "d8cfc5ea24646d3aac30668c53f4faf928143c27c5ab97546406c6a1c8a37dd0"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-WHITE",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "bde28ac2d922a5e4de1817b53158f3c6597cb014520fac8a7e20042c8e597b80"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-WHITE",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "bde28ac2d922a5e4de1817b53158f3c6597cb014520fac8a7e20042c8e597b80"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-WHITE",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "bde28ac2d922a5e4de1817b53158f3c6597cb014520fac8a7e20042c8e597b80"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-WHITE",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "bde28ac2d922a5e4de1817b53158f3c6597cb014520fac8a7e20042c8e597b80"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-WHITE",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "bde28ac2d922a5e4de1817b53158f3c6597cb014520fac8a7e20042c8e597b80"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-WHITE",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "bde28ac2d922a5e4de1817b53158f3c6597cb014520fac8a7e20042c8e597b80"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-WHITE",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "bde28ac2d922a5e4de1817b53158f3c6597cb014520fac8a7e20042c8e597b80"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-WHITE",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "bde28ac2d922a5e4de1817b53158f3c6597cb014520fac8a7e20042c8e597b80"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-WHITE",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "bde28ac2d922a5e4de1817b53158f3c6597cb014520fac8a7e20042c8e597b80"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-WHITE",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "bde28ac2d922a5e4de1817b53158f3c6597cb014520fac8a7e20042c8e597b80"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-NATURAL-SILVER",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "b8ff5fc5f0ce5c18cecafee56e8cada5b33d4a4d2484666af20122d94f4c35d4"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-NATURAL-SILVER",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "b8ff5fc5f0ce5c18cecafee56e8cada5b33d4a4d2484666af20122d94f4c35d4"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-NATURAL-SILVER",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "b8ff5fc5f0ce5c18cecafee56e8cada5b33d4a4d2484666af20122d94f4c35d4"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-NATURAL-SILVER",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "b8ff5fc5f0ce5c18cecafee56e8cada5b33d4a4d2484666af20122d94f4c35d4"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-NATURAL-SILVER",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "b8ff5fc5f0ce5c18cecafee56e8cada5b33d4a4d2484666af20122d94f4c35d4"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-NATURAL-SILVER",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "b8ff5fc5f0ce5c18cecafee56e8cada5b33d4a4d2484666af20122d94f4c35d4"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-NATURAL-SILVER",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "b8ff5fc5f0ce5c18cecafee56e8cada5b33d4a4d2484666af20122d94f4c35d4"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-NATURAL-SILVER",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "b8ff5fc5f0ce5c18cecafee56e8cada5b33d4a4d2484666af20122d94f4c35d4"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-NATURAL-SILVER",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "b8ff5fc5f0ce5c18cecafee56e8cada5b33d4a4d2484666af20122d94f4c35d4"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-NATURAL-SILVER",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "b8ff5fc5f0ce5c18cecafee56e8cada5b33d4a4d2484666af20122d94f4c35d4"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-AUTUMN-BROWN",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "0b9b2aea970cd0b203536fabf57ee379cace17bad752c29c1898caf2c8a4ebfa"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-AUTUMN-BROWN",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "0b9b2aea970cd0b203536fabf57ee379cace17bad752c29c1898caf2c8a4ebfa"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-AUTUMN-BROWN",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "0b9b2aea970cd0b203536fabf57ee379cace17bad752c29c1898caf2c8a4ebfa"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-AUTUMN-BROWN",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "0b9b2aea970cd0b203536fabf57ee379cace17bad752c29c1898caf2c8a4ebfa"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-AUTUMN-BROWN",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "0b9b2aea970cd0b203536fabf57ee379cace17bad752c29c1898caf2c8a4ebfa"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-AUTUMN-BROWN",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "0b9b2aea970cd0b203536fabf57ee379cace17bad752c29c1898caf2c8a4ebfa"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-AUTUMN-BROWN",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "0b9b2aea970cd0b203536fabf57ee379cace17bad752c29c1898caf2c8a4ebfa"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-AUTUMN-BROWN",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "0b9b2aea970cd0b203536fabf57ee379cace17bad752c29c1898caf2c8a4ebfa"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-AUTUMN-BROWN",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "0b9b2aea970cd0b203536fabf57ee379cace17bad752c29c1898caf2c8a4ebfa"
+        },
+        {
+          "field_id": "color_combination",
+          "value": "SA-COLOR-AUTUMN-BROWN",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "0b9b2aea970cd0b203536fabf57ee379cace17bad752c29c1898caf2c8a4ebfa"
+        },
+        {
+          "field_id": "exterior_color",
+          "value": "black",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "376f5a114cbc2608daf946dbc394fa9cf2712b59a706b3f4cbffb4fc665f2693"
+        },
+        {
+          "field_id": "exterior_color",
+          "value": "black",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "376f5a114cbc2608daf946dbc394fa9cf2712b59a706b3f4cbffb4fc665f2693"
+        },
+        {
+          "field_id": "exterior_color",
+          "value": "natural_silver",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "dbc50d9f0818db6e530737504305680b6b991c5846f94d7d07151484387d26eb"
+        },
+        {
+          "field_id": "exterior_color",
+          "value": "natural_silver",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "dbc50d9f0818db6e530737504305680b6b991c5846f94d7d07151484387d26eb"
+        },
+        {
+          "field_id": "exterior_color",
+          "value": "white",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "0bedbc0cb25780e4f160c8e2f52faf745d900b2515371ba4ae2e03a676e2d89d"
+        },
+        {
+          "field_id": "exterior_color",
+          "value": "white",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "0bedbc0cb25780e4f160c8e2f52faf745d900b2515371ba4ae2e03a676e2d89d"
+        },
+        {
+          "field_id": "exterior_color",
+          "value": "shine_gray",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "4f3be8bd79eb9e87d741d42b6e9323de5087c8c9a7f09b17c0a7237df90f8d49"
+        },
+        {
+          "field_id": "exterior_color",
+          "value": "shine_gray",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "4f3be8bd79eb9e87d741d42b6e9323de5087c8c9a7f09b17c0a7237df90f8d49"
+        },
+        {
+          "field_id": "exterior_color",
+          "value": "autumn_brown",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "00c7d70d6fff515e1939f8e5fabc168c8c40519f6d863b1de75eebe9bf108796"
+        },
+        {
+          "field_id": "exterior_color",
+          "value": "autumn_brown",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "00c7d70d6fff515e1939f8e5fabc168c8c40519f6d863b1de75eebe9bf108796"
+        },
+        {
+          "field_id": "glazing_appearance",
+          "value": "FROSTED",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "9d8392430b17478120a7a74f4e543fb2c2329eb2b2c1a954d0117018f7bdc1bc"
+        },
+        {
+          "field_id": "glazing_appearance",
+          "value": "FROSTED",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "9d8392430b17478120a7a74f4e543fb2c2329eb2b2c1a954d0117018f7bdc1bc"
+        },
+        {
+          "field_id": "glazing_appearance",
+          "value": "TRANSPARENT",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "0b5a33f73450bed97b1e4febf9875760fd26a87fcaa42b411fdfaeeb6945af6c"
+        },
+        {
+          "field_id": "glazing_appearance",
+          "value": "TRANSPARENT",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "0b5a33f73450bed97b1e4febf9875760fd26a87fcaa42b411fdfaeeb6945af6c"
+        },
+        {
+          "field_id": "glazing_appearance",
+          "value": "MILKY",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "404d9b44a5c6f3c588c0988c477a41baa99230a4a8009c034adc5c453a6f5c1c"
+        },
+        {
+          "field_id": "glazing_appearance",
+          "value": "MILKY",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "404d9b44a5c6f3c588c0988c477a41baa99230a4a8009c034adc5c453a6f5c1c"
+        },
+        {
+          "field_id": "glazing_appearance",
+          "value": "PATTERNED",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "d9fee625cd1cd4ed9ef0539d4c7315c3100ebb06ce47112ff93d86da5a115919"
+        },
+        {
+          "field_id": "glazing_appearance",
+          "value": "PATTERNED",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "d9fee625cd1cd4ed9ef0539d4c7315c3100ebb06ce47112ff93d86da5a115919"
+        },
+        {
+          "field_id": "glazing_functions",
+          "value": "SAFETY",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "cb588432cb15efcfd31113e47ae0e3d45e8232d7a28e036eafd1612b60375b0a"
+        },
+        {
+          "field_id": "glazing_functions",
+          "value": "SAFETY",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "cb588432cb15efcfd31113e47ae0e3d45e8232d7a28e036eafd1612b60375b0a"
+        },
+        {
+          "field_id": "glazing_functions",
+          "value": "BLIND",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "53fa687dc52a3afad4426fdfcd674ca4f74d28e3c9bb4ed8a638030cb42939b1"
+        },
+        {
+          "field_id": "glazing_functions",
+          "value": "BLIND",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "53fa687dc52a3afad4426fdfcd674ca4f74d28e3c9bb4ed8a638030cb42939b1"
+        },
+        {
+          "field_id": "glazing_functions",
+          "value": "DISASTER",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "60e612185da460e96fc7ded413cf9870d90b71a48199dc2af68c5a45d9db54dd"
+        },
+        {
+          "field_id": "glazing_functions",
+          "value": "DISASTER",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "60e612185da460e96fc7ded413cf9870d90b71a48199dc2af68c5a45d9db54dd"
+        },
+        {
+          "field_id": "glazing_functions",
+          "value": "GRID",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "0b22efbdfd4014cd7efb254a7ef262a8a56037196869d4ff9925dfd0616ec606"
+        },
+        {
+          "field_id": "glazing_functions",
+          "value": "GRID",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "0b22efbdfd4014cd7efb254a7ef262a8a56037196869d4ff9925dfd0616ec606"
+        },
+        {
+          "field_id": "glazing_performance",
+          "value": "CLEAR",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "e82cd25af2129f9f2907d5acbaee73d7a3359fe4924f0d2a9f66e67a511e3000"
+        },
+        {
+          "field_id": "glazing_performance",
+          "value": "CLEAR",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "e82cd25af2129f9f2907d5acbaee73d7a3359fe4924f0d2a9f66e67a511e3000"
+        },
+        {
+          "field_id": "glazing_performance",
+          "value": "GREEN",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "9d7d4be1131d18a1b44f6227100eba3268d1429e6f81fa9990f3315252603d09"
+        },
+        {
+          "field_id": "glazing_performance",
+          "value": "GREEN",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "9d7d4be1131d18a1b44f6227100eba3268d1429e6f81fa9990f3315252603d09"
+        },
+        {
+          "field_id": "glazing_performance",
+          "value": "HIGH_SOLAR",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "ee9084442485db607447ad9f542e004f5a1c6d37059fe5c067e263b7de7973c1"
+        },
+        {
+          "field_id": "glazing_performance",
+          "value": "HIGH_SOLAR",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "ee9084442485db607447ad9f542e004f5a1c6d37059fe5c067e263b7de7973c1"
+        },
+        {
+          "field_id": "interior_color",
+          "value": "black",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "3ff703101b35c4961935af5e5b7b188141cea096ba5f31f59ae238156cfde343"
+        },
+        {
+          "field_id": "interior_color",
+          "value": "black",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "image_sha256": "3ff703101b35c4961935af5e5b7b188141cea096ba5f31f59ae238156cfde343"
+        },
+        {
+          "field_id": "interior_color",
+          "value": "natural_silver",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "2ab0b19c3564ade571d439ab8b23c9802c904b53a25c52b32c0c6cfca179bf4c"
+        },
+        {
+          "field_id": "interior_color",
+          "value": "natural_silver",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "image_sha256": "2ab0b19c3564ade571d439ab8b23c9802c904b53a25c52b32c0c6cfca179bf4c"
+        },
+        {
+          "field_id": "interior_color",
+          "value": "white",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "535750751774c1697ed05df6c03c6b5aa22fb62004c3e7ebddae8bfcafade94f"
+        },
+        {
+          "field_id": "interior_color",
+          "value": "white",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "image_sha256": "535750751774c1697ed05df6c03c6b5aa22fb62004c3e7ebddae8bfcafade94f"
+        },
+        {
+          "field_id": "interior_color",
+          "value": "shine_gray",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "986500fc2355d1551411ebf4b557fdef12d312183ec2f62828d0cfc912381949"
+        },
+        {
+          "field_id": "interior_color",
+          "value": "shine_gray",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "image_sha256": "986500fc2355d1551411ebf4b557fdef12d312183ec2f62828d0cfc912381949"
+        },
+        {
+          "field_id": "interior_color",
+          "value": "autumn_brown",
+          "viewport": 1360,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "a0a268506d04f0f108ac0e19530cfc9f70d392f4c021cc37b048f9da1710d434"
+        },
+        {
+          "field_id": "interior_color",
+          "value": "autumn_brown",
+          "viewport": 390,
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "image_sha256": "a0a268506d04f0f108ac0e19530cfc9f70d392f4c021cc37b048f9da1710d434"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-UCHIDAOSHI",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "5e4aa29bb7d9c845dbbdd109932feddfd0affd505fc30e4a8fd93f8a25911828"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-UCHIDAOSHI",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "5e4aa29bb7d9c845dbbdd109932feddfd0affd505fc30e4a8fd93f8a25911828"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-TATE-SUBERI",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "b14076cdf86e39018d8f152277912fdf249c1ccfc7c3b1ec676b47babe8908bf"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-TATE-SUBERI",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "b14076cdf86e39018d8f152277912fdf249c1ccfc7c3b1ec676b47babe8908bf"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-KOSHO-YOKO",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "28cde94146cd1e041e2dc9728d9509cd9479f87aacc87fa706e4dde2d1ecb044"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-KOSHO-YOKO",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "28cde94146cd1e041e2dc9728d9509cd9479f87aacc87fa706e4dde2d1ecb044"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-YOKO-SUBERI",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "ff5a6e6c738dc201df941036c0f2230b3064633fc61587c32d11324b4f9afe2b"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-YOKO-SUBERI",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "ff5a6e6c738dc201df941036c0f2230b3064633fc61587c32d11324b4f9afe2b"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-MENKOSHI-HIKI",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "eca8008b8b9e19e119cdc8ad8e2ec97ba155792fce3e99ca2cf159af272c061f"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-MENKOSHI-HIKI",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "eca8008b8b9e19e119cdc8ad8e2ec97ba155792fce3e99ca2cf159af272c061f"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-SHUTTER-HIKI",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "bc9e3e61a890b7c0890197af8c6124b4ec98f4df323131333a8c82b9e3bf8468"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-SHUTTER-HIKI",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "bc9e3e61a890b7c0890197af8c6124b4ec98f4df323131333a8c82b9e3bf8468"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-HIKICHIGAI",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "992e983d1d6c8ff21afac2e83fc23c6cda2db4d774ef9ebac45b1cc6523f5515"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-HIKICHIGAI",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "992e983d1d6c8ff21afac2e83fc23c6cda2db4d774ef9ebac45b1cc6523f5515"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-FIX-IN",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "ae52c9deb05d6e17c9001976195d48d25b88725042e84491db8d0a52af7d2fc0"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-FIX-IN",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "ae52c9deb05d6e17c9001976195d48d25b88725042e84491db8d0a52af7d2fc0"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-AMADO-HIKI",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "8f657fb8023f3273b8cb2fb5e8454260ab56bf93fb38db3a00aa9d3948389e4d"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-AMADO-HIKI",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "8f657fb8023f3273b8cb2fb5e8454260ab56bf93fb38db3a00aa9d3948389e4d"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-SOTODAOSHI",
+          "viewport": 1360,
+          "state_id": "PRIMARY",
+          "image_sha256": "7d7886c601a0487d16110d924a5f7a2e7ea4181e24020b76833aac357bb2b98f"
+        },
+        {
+          "field_id": "window_type",
+          "value": "WT-SA-SOTODAOSHI",
+          "viewport": 390,
+          "state_id": "PRIMARY",
+          "image_sha256": "7d7886c601a0487d16110d924a5f7a2e7ea4181e24020b76833aac357bb2b98f"
+        }
+      ],
+      "exclusions": [],
+      "issues": []
+    },
+    "payload_sha256": "1f500deb52e3de482f591527e633d0f118a43e02835ba94fd28f59c94b4d3925"
+  },
+  "work_binding_sha256": "911ce57411f55f7f766200311693c82636bc7174ecbdff8ecd4d076c0cae40d2"
+}

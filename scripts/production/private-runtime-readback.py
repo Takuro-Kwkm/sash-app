@@ -24,11 +24,20 @@ def verify_capture(shared,record,expected,product_id,formal_product_id,work_id,f
   values[kind]=payload;out[kind]=dict(path=fixed['package_path'],file_id=row['file_id'],bytes=len(payload),sha256=sha(payload))
  check(len({x['file_id']for x in rows})==3,'Duplicate native file IDs')
  index=json.loads(values['index']);module=json.loads(values['module'])
- check(index['schema']=='FORMAL_COMPOSED_RUNTIME_INDEX_V1'and len(index['products'])==1 and index['products'][0]['id']==formal_product_id,'Wrong runtime product')
- check(index['products'][0]['sha256']==sha(values['module'])and module['product_module']['product']['id']==formal_product_id,'Index/module target mismatch')
+ if index.get('schema')=='ROW_TABLE_RUNTIME_INDEX_V1':
+  check(index['product']['id']==formal_product_id and index['product']['adapterType']=='ROW_TABLE_RUNTIME_V1','Wrong row-table runtime product')
+  check(index['document']['sha256']==sha(values['module'])and module['projection_policy']['native_product_id']==formal_product_id,'Row-table index/module target mismatch')
+ else:
+  check(index['schema']=='FORMAL_COMPOSED_RUNTIME_INDEX_V1'and len(index['products'])==1 and index['products'][0]['id']==formal_product_id,'Wrong runtime product')
+  check(index['products'][0]['sha256']==sha(values['module'])and module['product_module']['product']['id']==formal_product_id,'Index/module target mismatch')
  wanted=expected['members'];check(isinstance(wanted,dict)and bool(wanted),'Exact package member set required')
  with zipfile.ZipFile(io.BytesIO(values['package']))as archive:
   names=archive.namelist();check(len(names)==len(set(names))and set(names)==set(wanted),'Archive member set differs')
+  if index.get('schema')=='ROW_TABLE_RUNTIME_INDEX_V1':
+   declared=index.get('files');check(isinstance(declared,dict)and bool(declared),'Row-table package dependency manifest required')
+   required=set(declared)|{expected['index']['package_path']}
+   check(set(names)==required and expected['module']['package_path']==index['document']['path']and declared.get(index['document']['path'])==sha(values['module']),'Row-table archive must contain every declared dependency, exactly once')
+   for name,digest in declared.items():check(sha(archive.read(name))==digest,'Row-table index dependency digest differs: '+name)
   for name in names:
    check(not Path(name).is_absolute()and '..'not in Path(name).parts,'Unsafe archive member')
    value=archive.read(name);fixed=wanted[name];check(len(value)==fixed['bytes']and sha(value)==fixed['sha256'],'Archive member bytes differ: '+name)

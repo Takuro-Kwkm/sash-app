@@ -1,0 +1,16 @@
+{
+  "schema": "NATIVE_ROW_TABLE_UI_CANDIDATE_PROFILE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "status": "LOCAL_UI_CANDIDATE",
+  "target_gate": "NATIVE_UI_CANDIDATE",
+  "native_validator": "scripts/production/validate-row-table-ui.py",
+  "native_prepare": "scripts/production/prepare-row-table-ui-work.py",
+  "shared_engine": "harness/workflow.py",
+  "permissions": {
+    "formal_mutation": false,
+    "human_decision_creation": false,
+    "ui_adoption": false,
+    "publication": false
+  }
+}

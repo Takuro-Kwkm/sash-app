@@ -1,0 +1,1671 @@
+{
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "master_sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e",
+  "flow_sha256": "4da0de403ef4aaccf948abba4f9ae149778adcc4a8a13940cfc522446b8164bf",
+  "origin": "REVIEWED_FLOW_AND_OFFICIAL_SOURCE",
+  "review_ref": "SOURCE_DERIVED_INVENTORY_AND_INDEPENDENT_LOCAL_QA_REVIEW",
+  "source_refs": [
+    {
+      "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+      "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+    },
+    {
+      "path": "/private/tmp/samosa-option-ux-r7-20261103-consumer/changes/samosa-ui-v0.7-candidate/flow.json",
+      "sha256": "4da0de403ef4aaccf948abba4f9ae149778adcc4a8a13940cfc522446b8164bf"
+    },
+    {
+      "path": "/private/tmp/samosa-option-ux-r7-20261103-consumer/changes/samosa-ui-v0.7-candidate/ui-policy.json",
+      "sha256": "0115f432ee95a199b2dea567a7f3943f165e08f412f3a81f74706c7596130c59"
+    },
+    {
+      "path": "/private/tmp/samosa-option-ux-r7-20261103-central/docs/architecture-v2/screen-presentation-policy.v1.json",
+      "sha256": "fe460fd4a6fcf37425cbfc8138878494a89a2db98ea2eda36243eb7adcd72a0e"
+    }
+  ],
+  "fields": [
+    {
+      "field_id": "manufacturer",
+      "master_field_id": "manufacturer",
+      "stage": "PRODUCT",
+      "semantic_slot": "manufacturer",
+      "role": "NON_UI",
+      "label": "メーカー",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "固定の商品識別。上段の商品選択とSnapshotの識別情報で保持。"
+    },
+    {
+      "field_id": "product_class",
+      "master_field_id": "product_class",
+      "stage": "PRODUCT",
+      "semantic_slot": "product",
+      "role": "NON_UI",
+      "label": "商品区分",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "固定の商品識別。上段の商品選択とSnapshotの識別情報で保持。"
+    },
+    {
+      "field_id": "product_series",
+      "master_field_id": "product_series",
+      "stage": "PRODUCT",
+      "semantic_slot": "product",
+      "role": "NON_UI",
+      "label": "シリーズ",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "固定の商品識別。上段の商品選択とSnapshotの識別情報で保持。"
+    },
+    {
+      "field_id": "window_type",
+      "master_field_id": "window_type",
+      "stage": "OPENING",
+      "semantic_slot": "window_type",
+      "role": "SELECTOR",
+      "label": "窓種類",
+      "visible": true,
+      "required": false,
+      "control": "select",
+      "candidate_values": [
+        "WT-SA-HIKICHIGAI",
+        "WT-SA-SHUTTER-HIKI",
+        "WT-SA-AMADO-HIKI",
+        "WT-SA-MENKOSHI-HIKI",
+        "WT-SA-TATE-SUBERI",
+        "WT-SA-YOKO-SUBERI",
+        "WT-SA-KOSHO-YOKO",
+        "WT-SA-FIX-IN",
+        "WT-SA-UCHIDAOSHI",
+        "WT-SA-SOTODAOSHI"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "image_required": true,
+      "image_cases": [
+        {
+          "state_id": "PRIMARY",
+          "candidate_values": [
+            "WT-SA-HIKICHIGAI",
+            "WT-SA-SHUTTER-HIKI",
+            "WT-SA-AMADO-HIKI",
+            "WT-SA-MENKOSHI-HIKI",
+            "WT-SA-TATE-SUBERI",
+            "WT-SA-YOKO-SUBERI",
+            "WT-SA-KOSHO-YOKO",
+            "WT-SA-FIX-IN",
+            "WT-SA-UCHIDAOSHI",
+            "WT-SA-SOTODAOSHI"
+          ]
+        }
+      ]
+    },
+    {
+      "field_id": "construction_module",
+      "master_field_id": "construction_module",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "工法モジュール",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "zairai",
+        "two_by_four"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "opening_class",
+      "master_field_id": "opening_class",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "NON_UI",
+      "label": "開口区分",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "原本値を保持し、資料に基づく営業向け選択項目から解決。"
+    },
+    {
+      "field_id": "configuration_type",
+      "master_field_id": "configuration_type",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "NON_UI",
+      "label": "構成タイプ",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "原本bundleとpresentation規則により自動設定・非表示。"
+    },
+    {
+      "field_id": "opening_angle",
+      "master_field_id": "opening_angle",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "開放角度",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "60_degree",
+        "75_degree"
+      ],
+      "state_id": "OUTER",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "handle_type",
+      "master_field_id": "handle_type",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "NON_UI",
+      "label": "ハンドル種",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "原本bundleとpresentation規則により自動設定・非表示。"
+    },
+    {
+      "field_id": "handle_option",
+      "master_field_id": "handle_option",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "HANDOFF_ONLY",
+      "label": "ハンドルオプション",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "operation_method",
+      "master_field_id": "operation_method",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "操作方式",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "chain_operator",
+        "electric_unit"
+      ],
+      "state_id": "HIGH",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "chain_type",
+      "master_field_id": "chain_type",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "チェーン種",
+      "visible": true,
+      "required": false,
+      "control": "select",
+      "candidate_values": [
+        "single_loop",
+        "double_loop"
+      ],
+      "state_id": "HIGH",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "shutter_operation",
+      "master_field_id": "shutter_operation",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "シャッター操作",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "electric",
+        "manual"
+      ],
+      "state_id": "SHUTTER",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "shutter_type",
+      "master_field_id": "shutter_type",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "シャッター種類",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "standard",
+        "ventilation",
+        "wind_resistant"
+      ],
+      "state_id": "SHUTTER",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "shutter_control",
+      "master_field_id": "shutter_control",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "HANDOFF_ONLY",
+      "label": "シャッター操作部",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "storm_shutter_type",
+      "master_field_id": "storm_shutter_type",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "雨戸種類",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "general",
+        "insulated",
+        "ventilating_daylighting"
+      ],
+      "state_id": "AMADO",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "storm_shutter_panel",
+      "master_field_id": "storm_shutter_panel",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "DERIVED",
+      "label": "雨戸パネル",
+      "visible": true,
+      "required": false,
+      "control": "output",
+      "candidate_values": [
+        "louver_shutter"
+      ],
+      "state_id": "AMADO",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "storm_shutter_storage_type",
+      "master_field_id": "storm_shutter_storage_type",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "戸袋種類",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "single"
+      ],
+      "state_id": "AMADO",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "storm_shutter_mirror_panel",
+      "master_field_id": "storm_shutter_mirror_panel",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "鏡板有無",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "with_mirror_panel",
+        "without_mirror_panel"
+      ],
+      "state_id": "AMADO",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "mirror_panel_type",
+      "master_field_id": "mirror_panel_type",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "鏡板種類",
+      "visible": true,
+      "required": false,
+      "control": "select",
+      "candidate_values": [
+        "louver_mirror_panel_type_1",
+        "royal_mirror_panel_type_1",
+        "aluminum_mirror_panel_horizontal_rib"
+      ],
+      "state_id": "AMADO",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "grille_type",
+      "master_field_id": "grille_type",
+      "stage": "CONFIGURATION",
+      "semantic_slot": "window_spec",
+      "role": "SELECTOR",
+      "label": "面格子種類",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "vertical_grille",
+        "diamond_cross_grille",
+        "privacy_louver"
+      ],
+      "state_id": "GRILLE",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "panel_count",
+      "master_field_id": null,
+      "stage": "SIZE",
+      "semantic_slot": "size",
+      "role": "SELECTOR",
+      "label": "建数",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "2",
+        "4"
+      ],
+      "state_id": "PANELS",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ]
+    },
+    {
+      "field_id": "size_mode",
+      "master_field_id": null,
+      "stage": "SIZE",
+      "semantic_slot": "size",
+      "role": "SELECTOR",
+      "label": "サイズ区分",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ]
+    },
+    {
+      "field_id": "standard_size",
+      "master_field_id": null,
+      "stage": "SIZE",
+      "semantic_slot": "size",
+      "role": "SELECTOR",
+      "label": "規格サイズ",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "06003:640:370:window",
+        "06005:640:570:window",
+        "06007:640:770:window",
+        "06009:640:970:window",
+        "06903:730:370:window",
+        "06905:730:570:window",
+        "06907:730:770:window",
+        "06909:730:970:window",
+        "07403:780:370:window",
+        "07405:780:570:window",
+        "07407:780:770:window",
+        "07409:780:970:window",
+        "07411:780:1170:window",
+        "07805:820:570:window",
+        "07807:820:770:window",
+        "07809:820:970:window",
+        "08005:845:570:window",
+        "08007:845:770:window",
+        "08009:845:970:window",
+        "08305:870:570:window",
+        "08307:870:770:window",
+        "08309:870:970:window",
+        "08311:870:1170:window",
+        "11405:1185:570:window",
+        "11407:1185:770:window",
+        "11409:1185:970:window",
+        "11411:1185:1170:window",
+        "11413:1185:1370:window",
+        "11903:1235:370:window",
+        "11905:1235:570:window",
+        "11907:1235:770:window",
+        "11909:1235:970:window",
+        "11911:1235:1170:window",
+        "11913:1235:1370:window",
+        "11918:1235:1830:terrace",
+        "11920:1235:2030:terrace",
+        "12805:1320:570:window",
+        "12807:1320:770:window",
+        "12809:1320:970:window",
+        "12811:1320:1170:window",
+        "12813:1320:1370:window",
+        "13305:1370:570:window",
+        "13307:1370:770:window",
+        "13309:1370:970:window",
+        "13311:1370:1170:window",
+        "13313:1370:1370:window",
+        "13318:1370:1830:terrace",
+        "13320:1370:2030:terrace",
+        "15005:1540:570:window",
+        "15007:1540:770:window",
+        "15009:1540:970:window",
+        "15011:1540:1170:window",
+        "15013:1540:1370:window",
+        "15015:1540:1570:window",
+        "15018:1540:1830:terrace",
+        "15020:1540:2030:terrace",
+        "15022:1540:2230:terrace",
+        "16005:1640:570:window",
+        "16007:1640:770:window",
+        "16009:1640:970:window",
+        "16011:1640:1170:window",
+        "16013:1640:1370:window",
+        "16015:1640:1570:window",
+        "16018:1640:1830:terrace",
+        "16020:1640:2030:terrace",
+        "16022:1640:2230:terrace",
+        "16503:1690:370:window",
+        "16505:1690:570:window",
+        "16507:1690:770:window",
+        "16509:1690:970:window",
+        "16511:1690:1170:window",
+        "16513:1690:1370:window",
+        "16515:1690:1570:window",
+        "16518:1690:1830:terrace",
+        "16520:1690:2030:terrace",
+        "16522:1690:2230:terrace",
+        "17405:1780:570:window",
+        "17407:1780:770:window",
+        "17409:1780:970:window",
+        "17411:1780:1170:window",
+        "17413:1780:1370:window",
+        "17418:1780:1830:terrace",
+        "17420:1780:2030:terrace",
+        "17422:1780:2230:terrace",
+        "17605:1800:570:window",
+        "17607:1800:770:window",
+        "17609:1800:970:window",
+        "17611:1800:1170:window",
+        "17613:1800:1370:window",
+        "17618:1800:1830:terrace",
+        "17620:1800:2030:terrace",
+        "17622:1800:2230:terrace",
+        "17805:1820:570:window",
+        "17807:1820:770:window",
+        "17809:1820:970:window",
+        "17811:1820:1170:window",
+        "17813:1820:1370:window",
+        "17818:1820:1830:terrace",
+        "17820:1820:2030:terrace",
+        "17822:1820:2230:terrace",
+        "18005:1845:570:window",
+        "18007:1845:770:window",
+        "18009:1845:970:window",
+        "18011:1845:1170:window",
+        "18013:1845:1370:window",
+        "18018:1845:1830:terrace",
+        "18020:1845:2030:terrace",
+        "18022:1845:2230:terrace",
+        "18305:1870:570:window",
+        "18307:1870:770:window",
+        "18309:1870:970:window",
+        "18311:1870:1170:window",
+        "18313:1870:1370:window",
+        "18318:1870:1830:terrace",
+        "18320:1870:2030:terrace",
+        "18322:1870:2230:terrace",
+        "18605:1900:570:window",
+        "18607:1900:770:window",
+        "18609:1900:970:window",
+        "18611:1900:1170:window",
+        "18613:1900:1370:window",
+        "18618:1900:1830:terrace",
+        "18620:1900:2030:terrace",
+        "18622:1900:2230:terrace",
+        "25109:2550:970:window",
+        "25111:2550:1170:window",
+        "25113:2550:1370:window",
+        "25118:2550:1830:terrace",
+        "25120:2550:2030:terrace",
+        "25122:2550:2230:terrace",
+        "25609:2600:970:window",
+        "25611:2600:1170:window",
+        "25613:2600:1370:window",
+        "25618:2600:1830:terrace",
+        "25620:2600:2030:terrace",
+        "25622:2600:2230:terrace"
+      ],
+      "state_id": "PANELS",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ]
+    },
+    {
+      "field_id": "width",
+      "master_field_id": "width",
+      "stage": "SIZE",
+      "semantic_slot": "size",
+      "role": "SELECTOR",
+      "label": "幅（W）",
+      "visible": true,
+      "required": true,
+      "control": "number",
+      "candidate_values": [],
+      "state_id": "CUSTOM",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "height",
+      "master_field_id": "height",
+      "stage": "SIZE",
+      "semantic_slot": "size",
+      "role": "SELECTOR",
+      "label": "高さ（H）",
+      "visible": true,
+      "required": true,
+      "control": "number",
+      "candidate_values": [],
+      "state_id": "CUSTOM",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "size_code",
+      "master_field_id": "size_code",
+      "stage": "SIZE",
+      "semantic_slot": "size",
+      "role": "NON_UI",
+      "label": "規格サイズ",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "原本値を保持し、資料に基づく営業向け選択項目から解決。"
+    },
+    {
+      "field_id": "color_combination",
+      "master_field_id": "color_combination",
+      "stage": "FINISH",
+      "semantic_slot": "finish_color",
+      "role": "SELECTOR",
+      "label": "カラー組合せ",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "SA-COLOR-BLACK",
+        "SA-COLOR-AUTUMN-BROWN",
+        "SA-COLOR-SHINE-GRAY",
+        "SA-COLOR-NATURAL-SILVER",
+        "SA-COLOR-WHITE"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "image_cases": [
+        {
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "candidate_values": [
+            "SA-COLOR-BLACK",
+            "SA-COLOR-AUTUMN-BROWN",
+            "SA-COLOR-SHINE-GRAY",
+            "SA-COLOR-NATURAL-SILVER",
+            "SA-COLOR-WHITE"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "candidate_values": [
+            "SA-COLOR-BLACK",
+            "SA-COLOR-AUTUMN-BROWN",
+            "SA-COLOR-SHINE-GRAY",
+            "SA-COLOR-NATURAL-SILVER",
+            "SA-COLOR-WHITE"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "candidate_values": [
+            "SA-COLOR-BLACK",
+            "SA-COLOR-AUTUMN-BROWN",
+            "SA-COLOR-SHINE-GRAY",
+            "SA-COLOR-NATURAL-SILVER",
+            "SA-COLOR-WHITE"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "candidate_values": [
+            "SA-COLOR-BLACK",
+            "SA-COLOR-AUTUMN-BROWN",
+            "SA-COLOR-SHINE-GRAY",
+            "SA-COLOR-NATURAL-SILVER",
+            "SA-COLOR-WHITE"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "candidate_values": [
+            "SA-COLOR-BLACK",
+            "SA-COLOR-AUTUMN-BROWN",
+            "SA-COLOR-SHINE-GRAY",
+            "SA-COLOR-NATURAL-SILVER",
+            "SA-COLOR-WHITE"
+          ]
+        }
+      ]
+    },
+    {
+      "field_id": "exterior_color",
+      "master_field_id": "exterior_color",
+      "stage": "FINISH",
+      "semantic_slot": "exterior_color",
+      "role": "DERIVED",
+      "label": "外観色",
+      "visible": true,
+      "required": false,
+      "control": "output",
+      "candidate_values": [
+        "black"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "image_cases": [
+        {
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "candidate_values": [
+            "black"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "candidate_values": [
+            "autumn_brown"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "candidate_values": [
+            "shine_gray"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "candidate_values": [
+            "natural_silver"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "candidate_values": [
+            "white"
+          ]
+        }
+      ]
+    },
+    {
+      "field_id": "interior_color",
+      "master_field_id": "interior_color",
+      "stage": "FINISH",
+      "semantic_slot": "interior_color",
+      "role": "DERIVED",
+      "label": "内観色",
+      "visible": true,
+      "required": false,
+      "control": "output",
+      "candidate_values": [
+        "black"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "image_cases": [
+        {
+          "state_id": "COLOR_SA-COLOR-BLACK",
+          "candidate_values": [
+            "black"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-AUTUMN-BROWN",
+          "candidate_values": [
+            "autumn_brown"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-SHINE-GRAY",
+          "candidate_values": [
+            "shine_gray"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-NATURAL-SILVER",
+          "candidate_values": [
+            "natural_silver"
+          ]
+        },
+        {
+          "state_id": "COLOR_SA-COLOR-WHITE",
+          "candidate_values": [
+            "white"
+          ]
+        }
+      ]
+    },
+    {
+      "field_id": "screen_type",
+      "master_field_id": "screen_type",
+      "stage": "SCREEN",
+      "semantic_slot": "screen_form",
+      "role": "SELECTOR",
+      "label": "網戸形式",
+      "visible": true,
+      "required": false,
+      "control": "select",
+      "candidate_values": [
+        "sliding_screen"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "screen_size_class",
+      "master_field_id": "screen_size_class",
+      "stage": "SCREEN",
+      "semantic_slot": "screen_form",
+      "role": "HANDOFF_ONLY",
+      "label": "網戸形式",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "screen_middle_bar",
+      "master_field_id": "screen_middle_bar",
+      "stage": "SCREEN",
+      "semantic_slot": "screen_midrail",
+      "role": "SELECTOR",
+      "label": "網戸中桟",
+      "visible": true,
+      "required": false,
+      "control": "select",
+      "candidate_values": [
+        "without_middle_bar",
+        "with_middle_bar"
+      ],
+      "state_id": "TERRACE",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "screen_mesh_type",
+      "master_field_id": "screen_mesh_type",
+      "stage": "SCREEN",
+      "semantic_slot": "screen_net",
+      "role": "SELECTOR",
+      "label": "網戸ネット",
+      "visible": true,
+      "required": false,
+      "control": "select",
+      "candidate_values": [
+        "standard_mesh",
+        "kirei_net",
+        "mushiya_net",
+        "pet_net"
+      ],
+      "state_id": "INNER",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "glass_system",
+      "master_field_id": "glass_system",
+      "stage": "GLAZING",
+      "semantic_slot": "glass_base",
+      "role": "HANDOFF_ONLY",
+      "label": "ガラス",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "glass_category",
+      "master_field_id": "glass_category",
+      "stage": "GLAZING",
+      "semantic_slot": "glass_base",
+      "role": "NON_UI",
+      "label": "ガラス",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "原本値を保持し、資料に基づく営業向け選択項目から解決。"
+    },
+    {
+      "field_id": "glazing_base",
+      "master_field_id": null,
+      "stage": "GLAZING",
+      "semantic_slot": "glass_base",
+      "role": "SELECTOR",
+      "label": "ガラス",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "LOW_E",
+        "GENERAL"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ]
+    },
+    {
+      "field_id": "glazing_appearance",
+      "master_field_id": null,
+      "stage": "GLAZING",
+      "semantic_slot": "glass_type",
+      "role": "SELECTOR",
+      "label": "ガラス種",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "TRANSPARENT",
+        "PATTERNED",
+        "FROSTED",
+        "MILKY"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ],
+      "image_required": true,
+      "image_cases": [
+        {
+          "state_id": "PRIMARY",
+          "candidate_values": [
+            "TRANSPARENT",
+            "PATTERNED",
+            "FROSTED",
+            "MILKY"
+          ]
+        }
+      ]
+    },
+    {
+      "field_id": "glass_type",
+      "master_field_id": "glass_type",
+      "stage": "GLAZING",
+      "semantic_slot": "glass_detail",
+      "role": "NON_UI",
+      "label": "ガラスの種類",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "原本値を保持し、資料に基づく営業向け選択項目から解決。"
+    },
+    {
+      "field_id": "glazing_performance",
+      "master_field_id": null,
+      "stage": "GLAZING",
+      "semantic_slot": "glass_detail",
+      "role": "SELECTOR",
+      "label": "Low-Eガラス色・遮熱仕様",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "CLEAR",
+        "GREEN",
+        "HIGH_SOLAR"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ],
+      "image_required": true,
+      "image_cases": [
+        {
+          "state_id": "PRIMARY",
+          "candidate_values": [
+            "CLEAR",
+            "GREEN",
+            "HIGH_SOLAR"
+          ]
+        }
+      ]
+    },
+    {
+      "field_id": "glass_detail",
+      "master_field_id": "glass_detail",
+      "stage": "GLAZING",
+      "semantic_slot": "glass_function",
+      "role": "HANDOFF_ONLY",
+      "label": "ガラス詳細",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "glass_appearance",
+      "master_field_id": "glass_appearance",
+      "stage": "GLAZING",
+      "semantic_slot": "glass_function",
+      "role": "HANDOFF_ONLY",
+      "label": "ガラス見え方",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "glass_grid_type",
+      "master_field_id": "glass_grid_type",
+      "stage": "GLAZING",
+      "semantic_slot": "glass_function",
+      "role": "HANDOFF_ONLY",
+      "label": "格子入りガラス格子種",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "glass_grid_color",
+      "master_field_id": "glass_grid_color",
+      "stage": "GLAZING",
+      "semantic_slot": "glass_function",
+      "role": "HANDOFF_ONLY",
+      "label": "格子入りガラス格子色",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "glazing_functions",
+      "master_field_id": null,
+      "stage": "GLAZING",
+      "semantic_slot": "glass_function",
+      "role": "SELECTOR",
+      "label": "ガラスの追加機能",
+      "visible": true,
+      "required": false,
+      "control": "select-add-remove",
+      "candidate_values": [
+        "SAFETY",
+        "DISASTER",
+        "GRID",
+        "BLIND"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ],
+      "image_required": true,
+      "image_cases": [
+        {
+          "state_id": "PRIMARY",
+          "candidate_values": [
+            "SAFETY",
+            "DISASTER",
+            "GRID",
+            "BLIND"
+          ]
+        }
+      ]
+    },
+    {
+      "field_id": "glass_spacer",
+      "master_field_id": "glass_spacer",
+      "stage": "GLAZING",
+      "semantic_slot": "glass_spacer",
+      "role": "DERIVED",
+      "label": "スペーサー",
+      "visible": true,
+      "required": false,
+      "control": "output",
+      "candidate_values": [
+        "aluminum"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "glass_gas",
+      "master_field_id": "glass_gas",
+      "stage": "GLAZING",
+      "semantic_slot": "glass_air_layer",
+      "role": "HANDOFF_ONLY",
+      "label": "中空層",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "glazing_gas",
+      "master_field_id": null,
+      "stage": "GLAZING",
+      "semantic_slot": "glass_air_layer",
+      "role": "SELECTOR",
+      "label": "中空層",
+      "visible": true,
+      "required": true,
+      "control": "select",
+      "candidate_values": [
+        "AIR",
+        "ARGON"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ]
+    },
+    {
+      "field_id": "remote_control_option",
+      "master_field_id": "remote_control_option",
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "HANDOFF_ONLY",
+      "label": "リモコンオプション",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "home_device_option",
+      "master_field_id": "home_device_option",
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "HANDOFF_ONLY",
+      "label": "ホームデバイス",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "smart_control_option",
+      "master_field_id": "smart_control_option",
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "HANDOFF_ONLY",
+      "label": "スマート操作",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "paid_option",
+      "master_field_id": "paid_option",
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "SELECTOR",
+      "label": "有償品",
+      "visible": true,
+      "required": false,
+      "control": "checkbox-group",
+      "candidate_values": [
+        "small_opening_arm"
+      ],
+      "state_id": "TATE",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ]
+    },
+    {
+      "field_id": "custom_option",
+      "master_field_id": "custom_option",
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "HANDOFF_ONLY",
+      "label": "特注オプション",
+      "visible": false,
+      "required": false,
+      "control": "none",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-native-connection-20261102T0402/native-work/saved/formal-preserved.json",
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        }
+      ],
+      "reason": "元マスターに表示・適用条件が未定義のため、必要時は積算へ確認。"
+    },
+    {
+      "field_id": "catalogue_options",
+      "master_field_id": null,
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "SELECTOR",
+      "label": "追加オプション・部材",
+      "visible": true,
+      "required": false,
+      "control": "checkbox-group",
+      "candidate_values": [
+        "CAT-SA-161-11",
+        "CAT-SA-161-12",
+        "CAT-SA-161-13",
+        "CAT-SA-161-18",
+        "CAT-SA-161-21",
+        "CAT-SA-161-22",
+        "CAT-SA-161-23",
+        "CAT-SA-161-24",
+        "CAT-SA-161-25",
+        "CAT-SA-162-06",
+        "CAT-SA-162-08",
+        "CAT-SA-162-10",
+        "CAT-SA-162-11",
+        "CAT-SA-162-12",
+        "CAT-SA-162-14",
+        "CAT-SA-162-16",
+        "CAT-SA-162-17",
+        "CAT-SA-162-18",
+        "CAT-SA-162-19",
+        "CAT-SA-162-20",
+        "CAT-SA-163-01",
+        "CAT-SA-163-04",
+        "CAT-SA-163-05",
+        "CAT-SA-163-06",
+        "CAT-SA-163-07",
+        "CAT-SA-163-08",
+        "CAT-SA-163-09",
+        "CAT-SA-163-10",
+        "CAT-SA-163-11",
+        "CAT-SA-163-12",
+        "CAT-SA-163-13",
+        "CAT-SA-163-14",
+        "CAT-SA-163-15",
+        "CAT-SA-163-16",
+        "CAT-SA-163-24",
+        "CAT-SA-163-25"
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ]
+    },
+    {
+      "field_id": "request_remote_control",
+      "master_field_id": null,
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "SELECTOR",
+      "label": "リモコン",
+      "visible": true,
+      "required": false,
+      "control": "select",
+      "candidate_values": [
+        "single_function_remote",
+        "high_function_remote"
+      ],
+      "state_id": "SHUTTER",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ]
+    },
+    {
+      "field_id": "request_smart_app",
+      "master_field_id": null,
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "SELECTOR",
+      "label": "スマートフォン操作",
+      "visible": true,
+      "required": false,
+      "control": "select",
+      "candidate_values": [
+        "my_window",
+        "life_assist2"
+      ],
+      "state_id": "SHUTTER",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ]
+    },
+    {
+      "field_id": "request_home_device",
+      "master_field_id": null,
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "SELECTOR",
+      "label": "ホームデバイス",
+      "visible": true,
+      "required": false,
+      "control": "select",
+      "candidate_values": [
+        "life_assist2_home_device"
+      ],
+      "state_id": "SHUTTER",
+      "source_refs": [
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-20261102T0559/acquisition/SN2500.pdf",
+          "sha256": "4728401bde42208507ebd45b0b71e86c255c395db0c77592adfe3ac40272d407"
+        },
+        {
+          "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-ui-human-r2-20261102/source-review/IS6900.pdf",
+          "sha256": "ced13af6725b33253d68bdcca3ebabb62955686a673475a8866b8ddcc25b217c"
+        }
+      ]
+    },
+    {
+      "field_id": "__workflow.special_specification_requested",
+      "master_field_id": null,
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "SELECTOR",
+      "label": "特別仕様の相談",
+      "visible": true,
+      "required": false,
+      "control": "checkbox-group",
+      "candidate_values": [
+        true
+      ],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/private/tmp/samosa-option-ux-r7-20261103-central/docs/architecture-v2/screen-presentation-policy.v1.json",
+          "sha256": "fe460fd4a6fcf37425cbfc8138878494a89a2db98ea2eda36243eb7adcd72a0e"
+        }
+      ]
+    },
+    {
+      "field_id": "__workflow.user_requirements",
+      "master_field_id": null,
+      "stage": "OPTION",
+      "semantic_slot": "option",
+      "role": "SELECTOR",
+      "label": "ユーザーの要望",
+      "visible": true,
+      "required": false,
+      "control": "textarea",
+      "candidate_values": [],
+      "state_id": "PRIMARY",
+      "source_refs": [
+        {
+          "path": "/private/tmp/samosa-option-ux-r7-20261103-central/docs/architecture-v2/screen-presentation-policy.v1.json",
+          "sha256": "fe460fd4a6fcf37425cbfc8138878494a89a2db98ea2eda36243eb7adcd72a0e"
+        }
+      ]
+    }
+  ]
+}

@@ -14,7 +14,8 @@
     "contracts/production/release-profiles/apw511-r3.v1.json": "contracts/production/release-profiles/local/apw511-r3.v1.json",
     "contracts/production/release-profiles/giesta2-r14.v1.json": "contracts/production/release-profiles/local/giesta2-r14.v1.json",
     "contracts/production/release-profiles/apw330-r13-ui1.v1.json": "contracts/production/release-profiles/local/apw330-r13-ui1.v1.json",
-    "contracts/production/release-profiles/select-pg-r7.v1.json": "contracts/production/release-profiles/local/select-pg-r7.v1.json"
+    "contracts/production/release-profiles/select-pg-r7.v1.json": "contracts/production/release-profiles/local/select-pg-r7.v1.json",
+    "contracts/production/release-profiles/samosa-r7.v1.json": "contracts/production/release-profiles/local/samosa-r7.v1.json"
   },
   "new_work_aliases": {},
   "profile_identities": {
@@ -57,6 +58,10 @@
     "contracts/production/release-profiles/select-pg-r7.v1.json": {
       "product_id": "SER-LIX-SELECT-PG",
       "scope": "SELECT_PG_R7_HUMAN_ADOPTED_SALES_UI_PUBLICATION_20261031"
+    },
+    "contracts/production/release-profiles/samosa-r7.v1.json": {
+      "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+      "scope": "SAMOSA_V07_R7_APPROVED_UI_NORMAL_RUNTIME_PUBLICATION"
     }
   },
   "shared_contract": {
@@ -95,10 +100,10 @@
     }
   },
   "native_file_overrides": {
-    "contracts/production/release-profiles.v1.json": "15826b95c5a58928c007e03f1cf5c6c0d4ac1db6cdcf9507c70099dbb7815034",
+    "contracts/production/release-profiles.v1.json": "2ed9fbb24195ec1650383a76b86c671b0c1ad0b79ccd2292b54137eb1d777705",
     "contracts/production/current-architecture.json": "3aed09d66610e1476a79ef6f65252c0787376b26ecc02209d4aec8ef81179af4",
-    "contracts/production/validator-registry.v2.json": "4374b7f948ca51ed3fee4acfa889aa4367248b1cdf1929c585d1e93fb4cc6c63",
-    "contracts/production/work-connections.v2.json": "f3297cab845694ceedb983223e8f23bdd426d5b8c77506124a3ad6087e685017",
+    "contracts/production/validator-registry.v2.json": "5acacc07f244aee4b0f5e361889e96cfd8aee4ee2af9ebbf74883c5f1080491e",
+    "contracts/production/work-connections.v2.json": "bde8f767a7858680eeed6b7add0c21da03cc1feda23b4df0683f3f5f48f9459b",
     "scripts/production/compile-domain-projection.py": "47ecfc17e57fb1ec88a7eabc4ad338c352d520e3279b4d2eeddd6695ce3b357e",
     "scripts/production/domain-runtime-candidate.py": "05fe616d432bd2838cd211e2725b62b52ceed6d4c52c7cf3807068d97fc93b18",
     "scripts/production/instruction-scope.py": "0f9dba3d5ee8f5b4e3c6fd276b79639745e33a5225b9243a7f26b05e53f579c8",
@@ -112,19 +117,23 @@
     "scripts/production/validate-domain-runtime-connection.py": "91df5fa8c42af5dd50fbbc6d1d0be58b1b5457eeb4d59430e925127e274ca241",
     "scripts/production/validate-domain-runtime-projection.mjs": "ee5ae39ac71d210cc1ddc0685cda60a99a91da657be7df0c8dce58df6de8ea01",
     "scripts/vercel-rest-deploy.mjs": "6db9d2b95186ce3fb76cc701c32b6fcaf52edd0f78dbe54c9255ffa5dfb90783",
+    "src/catalog/runtime-master/app-runtime-integration-registry.mjs": "6174897aca7e6560695b512e0787d7e00b147b712abcfb3e1369ae49da5807c9",
+    "src/catalog/runtime-master/candidate-runtime-registry.mjs": "6977776677ded397321ff7cc6f99bc45d15eb18e676453f3069c620597d45372",
     "src/catalog/runtime-master/composed-product-runtime-adapter.mjs": "8712fff6bbffd9c23cb8c86fb2feb83407f202861332da53ddfe734388737a84",
     "src/catalog/runtime-master/declared-selection-views.mjs": "a6440d1f1904d0a3d3894af722efafd6606020e3d8e223da0468e64866d9bbe0",
     "src/catalog/runtime-master/declared-window-flow.mjs": "68166e3844e00a0655bac9959b0feab33ee5466b2412a2110110cb7782fe1816",
     "src/catalog/runtime-master/formal-composed-runtime-registry.json": "59e272473f27cece4ff107bda56be634e2f9480734eff3f6f56eb3a8a5ca359f",
     "src/catalog/runtime-master/formal-composed-runtime-registry.mjs": "3fa03677ada4faa6b3fb5944942fe5b7799b1068466ca1f6b8fad04f1282c642",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "744edfe6c95173968b9a8d0cd290c7abd7882eba80efeba0f84e9b77091d8804",
-    "src/catalog/runtime-master/runtime-app-bridge.mjs": "3710f94dc60e29f9f2e8c45c5637d3321ce75a41b29378ad1cdbf57111826b61",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "b8663cf1d00e8afa40b005ce59d922ec3fbbe361cf767c04e7f874935fe01a12",
+    "src/catalog/runtime-master/runtime-master-registry.mjs": "02ce25a46fac733d184b35834d427321ff56cbd1118017bad68f638070f9c56d",
     "src/estimate-output/model.mjs": "c4acd8b4732e79270f4e10d7226b40216070a74b10a7d23f9d4ca28bf71ff0cd",
-    "src/server/candidate-runtime-preview.mjs": "42bd455723a7657ce747efb63c8502fccfcd370728d1b46769c8a812328a49fd",
+    "src/server/candidate-runtime-preview.mjs": "0f478ecfa453591cc781cd3775aadd94ebf3e6c441a7a8740ee7a1212876bb42",
     "src/server/recovery-app.mjs": "ec622027183eef34988e184c78c3c0229aed26ecfb3adea70c49f792df5e7481",
-    "src/ui/web/product-configuration-editor.mjs": "118dd5a40cfd6b6b6226723a9b315d8c7316d740a0f8864c37bf954b8c1b9fd9",
+    "src/ui/web/product-configuration-editor.mjs": "eac991e202a717f202b16fd12a475759258ddc2281573ee07c81ba66c91a19fa",
+    "src/ui/web/styles.css": "85e9506efa22fa16537f20bbebb038945cacfb6188884632affee41e933b5a97",
     "src/ui/web/work-management.css": "486cb00b2862739e365381e53835a0667bb9f324dff617f7893da71790ac123e",
-    "src/work-management/domain.mjs": "ac4219e7b52844e3852e2ca7094748efed98597f76b1a078f258b6b01f18d4aa",
+    "src/work-management/domain.mjs": "31d3d7f23584fc173a1e5ffac7c7f63eb7e533a5da2237f62ef9befcaabc7ff1",
     "test/101-native-sheets-connection.test.mjs": "e7a0d15aaa0b0126db67134a41093681435ff623709a8dee6a6bd633ca2faa8c",
     "test/browser/declared-sales-runtime-browser-qa.mjs": "1089e39c7dff55bbc9121ad9886a1e7e58fcd6e38c0212e6cebce073be636467",
     "test/formal-composed-runtime-integration.test.mjs": "134df8956f04fa3643bb3b0ed8470cb896e0eaac0527c14d5608404193d4755b",
@@ -141,6 +150,7 @@
     "vercel.json": "ea5690d685934d1866062e2419fc8fdf9ff300f7171ef625ca4f2fc9e2ecfd02",
     "contracts/production/product-master-build-profile.native-v16.json": "1eb366f977ea6eb1d17e2ee8e980cf5d1b08b74ecf804c25de7b793225640e7c",
     "scripts/production/product-conditions-scope.py": "1f0747574738df24dd94c76aeb25ca4b6b09ff197b391de670ddaa6906caab1b",
+    "scripts/production/private-runtime-readback.py": "c75161848ec62f41b691e7e992042e5c43ea59f2742beb93dfbd09bf053106a7",
     "contracts/production/select-pg-publication-lifecycle.v1.json": "a40d82ca326f9c362ecfdfccc068e2bac7e1064f72bdc5c59497615be7fdb75e"
   }
 }

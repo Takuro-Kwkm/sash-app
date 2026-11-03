@@ -142,9 +142,20 @@
       "no_fallback": true
     },
     "NATIVE_REGISTRY:LIXIL::サーモスA": {
-      "state": "FAIL_CLOSED",
-      "validators": [],
-      "no_fallback": true
+      "state": "READY",
+      "validators": [
+        "scripts/production/validate-row-table-ui.py"
+      ],
+      "no_fallback": true,
+      "scope": "LOCAL_UI_CANDIDATE_ONLY",
+      "runtime_ui_profile": {
+        "path": "contracts/production/native-row-table-connection/samosa.v0.7.ui-candidate.json",
+        "sha256": "1a75435ac49d43b78a48f176703aa152ed50e0014d2b96464a1dd271a34f64a5"
+      },
+      "runtime_ui_adoption_profile": {
+        "path": "contracts/production/runtime-adoptions/samosa-r7.profile.json",
+        "sha256": "3a60b4a3b2445519a7bd4b19d60121a01ea305378bf7520bc9c93d0b2c754bae"
+      }
     },
     "NATIVE_REGISTRY:LIXIL::玄関ドアXE": {
       "state": "FAIL_CLOSED",

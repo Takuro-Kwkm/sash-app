@@ -1,0 +1,45 @@
+{
+  "schema": "NATIVE_RUNTIME_UI_ADOPTION_PROFILE_V1",
+  "profile_id": "samosa-v07-approved-r7-normal-runtime",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "formal_product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "operation": "RUNTIME_UI_ADOPTION",
+  "format": "ROW_TABLE_RUNTIME_V1",
+  "shared_engine": "scripts/production-work.py",
+  "target_gate": "RUNTIME_UI_ADOPTED",
+  "product_fact_mutation_allowed": false,
+  "release": false,
+  "native_preparer": "scripts/production/private-runtime-ui-adoption-work.py",
+  "native_validator": "scripts/production/validate-row-table-runtime.mjs",
+  "native_worker": "scripts/production/row-table-runtime-adoption.py",
+  "runtime_package": "src/catalog/runtime-master-packages/samosa-ui-r7/runtime_index.json",
+  "candidate": {
+    "module_sha256": "e99f8a84c9603482e74444f8900a10a5b2efd476185f46a152839e29a18d094a",
+    "index_sha256": "039e1255bd1b0d06930af12958b959e4fd9013809594a2e4bc6f8efe424f68e3"
+  },
+  "formal_master": {
+    "version": "v0.7",
+    "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e",
+    "carried_qa_failed": 0
+  },
+  "approved_presentation": {
+    "src/ui/web/product-configuration-editor.mjs": "eac991e202a717f202b16fd12a475759258ddc2281573ee07c81ba66c91a19fa",
+    "src/ui/web/styles.css": "85e9506efa22fa16537f20bbebb038945cacfb6188884632affee41e933b5a97",
+    "src/catalog/runtime-master/row-table-sales-views.mjs": "a06f9fde096535fcf0d89ba602650f94f57466459d74ead0ba4a83e4337f2b4a",
+    "changes/samosa-ui-v0.7-candidate/candidate.json": "e99f8a84c9603482e74444f8900a10a5b2efd476185f46a152839e29a18d094a",
+    "changes/samosa-ui-v0.7-candidate/ui-policy.json": "0115f432ee95a199b2dea567a7f3943f165e08f412f3a81f74706c7596130c59",
+    "changes/samosa-ui-v0.7-candidate/flow.json": "4da0de403ef4aaccf948abba4f9ae149778adcc4a8a13940cfc522446b8164bf"
+  },
+  "required_stages": [
+    "PREVIEW_IDENTITY",
+    "PACKAGE_TRANSFORM",
+    "STORAGE_READBACK",
+    "FORMAL_RUNTIME_QA",
+    "NATIVE_FORMAL_LOCATION_READBACK",
+    "RUNTIME_UI_ADOPTION"
+  ],
+  "terminal_policy": "IMPLEMENTATION_IS_NOT_ADOPTION; NATIVE_MAIN_AND_DRIVE_READBACK_REQUIRED",
+  "human_gate": "REUSE_ORIGINAL_EXPLICIT_UI_APPROVAL; ACTUAL_NATIVE_ADOPTION_SCOPE_REQUIRED",
+  "runtime_index_sha256": "e141e4f188f13e5495a0339c9116a81cea4885d685b34ea572d72e157920a4dc"
+}

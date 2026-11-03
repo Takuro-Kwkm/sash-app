@@ -1,0 +1,10 @@
+{
+  "actor_kind": "HUMAN",
+  "actor": "USER_OF_THIS_CONVERSATION",
+  "decision": "APPROVED",
+  "gate": "HUMAN_UI_REVIEW",
+  "payload_sha256": "52f5f39f9e5967576243b2e66cfd3eaa8cbeb7a306f3a3f095a1da69f7f43faa",
+  "decision_ref": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app/.local/samosa-option-ux-r7-20261103/user-ui-approval.json",
+  "scope": "UI_FLOW_ONLY",
+  "recorded_by": "Codex; transcription of explicit user approval"
+}
