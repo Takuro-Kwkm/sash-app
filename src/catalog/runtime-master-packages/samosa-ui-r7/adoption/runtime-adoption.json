@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "state": "RUNTIME_UI_ADOPTED",
+  "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+  "work_id": "SAMOSA_NATIVE_RUNTIME_ADOPTION_R9_20261103",
+  "package_index_sha256": "e141e4f188f13e5495a0339c9116a81cea4885d685b34ea572d72e157920a4dc",
+  "product_master_mutations": 0,
+  "release": false,
+  "main_readback": {
+    "path": "adoption/native-main.json",
+    "sha256": "b68d4c625a215f7aa8bd000db2243daaf30b1ff3d733d41ae56de6b4f4c0bf32"
+  },
+  "formal_readback": {
+    "path": "adoption/formal-readback.json",
+    "sha256": "62ec8de42b0a85dea3151a5b5059e7e966f3f465db8e3b8629992ce51c60447b"
+  }
+}
