@@ -1,0 +1,18 @@
+{
+  "schema": "NATIVE_LOCAL_RELEASE_REFERENCE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "94858ea172ef9bf23322f1f5f3c5b5a31a457700"
+  },
+  "local_qa_release_policy": {
+    "schema": "COMMON_NATIVE_LOCAL_RELEASE_V1",
+    "actions_dispatch_authority": false,
+    "retained_profile": {
+      "path": "contracts/production/release-profiles/doorremo-r5-g12.v1.json",
+      "sha256": "40fa8b50c730694dfd064d278c9c5b6f9f56ad470a28b3723ba469606ab32550"
+    },
+    "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
+    "scope": "DOORREMO_R5_G12_ADOPTED_RUNTIME_UI_PUBLICATION_20261103"
+  }
+}

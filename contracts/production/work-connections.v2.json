@@ -825,28 +825,25 @@
       ],
       "repository": "Takuro-Kwkm/sash-app",
       "connection_state": "CONNECTED",
-      "connection_scope": "EXISTING_WORKING_SALES_QA",
+      "connection_scope": "EXISTING_FORMAL_SHARED_DOMAIN_CHANGE",
       "current_working_version": "v1.0-LEGACY-RECOVERY",
       "formal_registry_selector": "YKK AP::ドアリモ玄関ドア 非防火",
-      "default_gate": "QA_READY",
+      "default_gate": "FORMAL_CHANGE_ADOPTION",
       "baseline_selector": {
         "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
         "manufacturer": "YKK AP",
         "series": "ドアリモ玄関ドア 非防火",
-        "state": "WORKING_RECOVERY"
+        "state": "FORMAL_PASS"
       },
       "source_selector": {
-        "from": "LIVE_NATIVE_WORKING + REVIEWED_OFFICIAL_BYTES",
-        "role": "REVIEWED_CURRENT_NONFIRE_SALES_SCOPE",
-        "scope": "Working candidate only; no automatic price/Source promotion"
+        "from": "LIVE_FORMAL_F1 + RETAINED_G12_VERIFIED_OFFICIAL_DELTA",
+        "role": "BOUNDED_REVIEWED_NONFIRE_SHARED_DOMAIN_CHANGE",
+        "scope": "K09H correction only; preserve existing Source, Evidence, confirmation sidecar and commercial boundaries"
       },
-      "native_adapter": "scripts/production/working-master-business-qa.py",
-      "prepare_adapter": "scripts/production/prepare-working-master-business-qa.py",
+      "native_adapter": "scripts/production/sheet-package-formal.py",
+      "prepare_adapter": "scripts/production/prepare-sheet-package-formal.py",
       "validators": [
-        "native-working-identity",
-        "official-source-byte-review",
-        "shared-domain-qa",
-        "sales-request-handoff"
+        "scripts/production/shared-domain-formal-change.py"
       ],
       "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed recovery is INSPECT_ONLY",
       "build_profile": {
@@ -855,17 +852,26 @@
         "sha256": "3cf620e58ecdf8543831c71bbdf800da5d14c595ef2e00ed016f2cb5a979959b"
       },
       "unsupported_gates": {
-        "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
         "INTEGRATION": "NATIVE_RUNTIME_ADAPTER_UNAVAILABLE"
       },
       "formal_profile": {
-        "path": "contracts/production/working-master-recovery/doorremo-nonfire.formal.v1.json",
-        "sha256": "d53d88a618a8048af94574398c24fb85c081c5e0eef6cc167f5b33431d913934"
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.r5-formal.v1.json",
+        "sha256": "83bf7784ff0825e7192d6866114c0df4c1cb0279c74a992dea7c09cfb5903f4b"
       },
       "runtime_candidate_profile": {
         "path": "contracts/production/runtime-candidates/doorremo-nonfire-r1.profile.json",
         "sha256": "a2c607ed02aec830d64ad6c7b879dac78116d4f0d533a2533aefa5056ca1b18c"
-      }
+      },
+      "current_formal_version": "v1.1-R5-F1-20261103",
+      "adapters": {
+        "ProductMaster": "scripts/production/sheet-package-formal.py",
+        "Validator": "scripts/production/shared-domain-formal-change.py"
+      },
+      "runtime_ui_adoption_profile": {
+        "path": "contracts/production/runtime-adoptions/doorremo-r5-g12.profile.json",
+        "sha256": "75919c9f154ed6d99563f6800ebdd2e6570236d387c4f22916b2917bf3c887af"
+      },
+      "release_profile": "contracts/production/release-profiles/local/doorremo-r5-g12.v1.json"
     },
     {
       "product_id": "NATIVE_REGISTRY:YKK AP::ヴェナートD30",

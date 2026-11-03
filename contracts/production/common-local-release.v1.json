@@ -16,7 +16,8 @@
     "contracts/production/release-profiles/apw330-r13-ui1.v1.json": "contracts/production/release-profiles/local/apw330-r13-ui1.v1.json",
     "contracts/production/release-profiles/select-pg-r7.v1.json": "contracts/production/release-profiles/local/select-pg-r7.v1.json",
     "contracts/production/release-profiles/samosa-r7.v1.json": "contracts/production/release-profiles/local/samosa-r7.v1.json",
-    "contracts/production/release-profiles/samosa-r9-adopted.v1.json": "contracts/production/release-profiles/local/samosa-r9-adopted.v1.json"
+    "contracts/production/release-profiles/samosa-r9-adopted.v1.json": "contracts/production/release-profiles/local/samosa-r9-adopted.v1.json",
+    "contracts/production/release-profiles/doorremo-r5-g12.v1.json": "contracts/production/release-profiles/local/doorremo-r5-g12.v1.json"
   },
   "new_work_aliases": {},
   "profile_identities": {
@@ -67,6 +68,10 @@
     "contracts/production/release-profiles/samosa-r9-adopted.v1.json": {
       "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
       "scope": "SAMOSA_V07_R9_ADOPTED_RUNTIME_PUBLICATION_20261103"
+    },
+    "contracts/production/release-profiles/doorremo-r5-g12.v1.json": {
+      "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
+      "scope": "DOORREMO_R5_G12_ADOPTED_RUNTIME_UI_PUBLICATION_20261103"
     }
   },
   "shared_contract": {
@@ -109,43 +114,46 @@
     }
   },
   "native_file_overrides": {
-    "contracts/production/release-profiles.v1.json": "323f1b4e7f9f13c8fae0b6df222722090b6b2e0a111a0b3b7af7c5a1e446155d",
+    "contracts/production/release-profiles.v1.json": "c0038357fa68cb68bc83c03e272681fee68178580cdf75b1d92a12d1760e3f4c",
     "contracts/production/current-architecture.json": "3aed09d66610e1476a79ef6f65252c0787376b26ecc02209d4aec8ef81179af4",
-    "contracts/production/validator-registry.v2.json": "5acacc07f244aee4b0f5e361889e96cfd8aee4ee2af9ebbf74883c5f1080491e",
-    "contracts/production/work-connections.v2.json": "bde8f767a7858680eeed6b7add0c21da03cc1feda23b4df0683f3f5f48f9459b",
+    "contracts/production/validator-registry.v2.json": "262caf5862c4542ff4a42deac0a45d26809b3effa34ddd1be2c0ce5a19ecaa32",
+    "contracts/production/work-connections.v2.json": "6843756e7a41785e421047bfced54c22df455ac9b89a86e05614aa271b2dc233",
+    "scripts/check-runtime-ui-sources.mjs": "99c8a61db421daac1c7494a986797abc1400a7b4434ea224b00cb09e1429173e",
+    "scripts/prepare-deployment-static.mjs": "b4139849ea1d96baa1ae8f5311efda38d07c350a0de2a06bac370cbcc53a0376",
     "scripts/production/compile-domain-projection.py": "47ecfc17e57fb1ec88a7eabc4ad338c352d520e3279b4d2eeddd6695ce3b357e",
     "scripts/production/domain-runtime-candidate.py": "05fe616d432bd2838cd211e2725b62b52ceed6d4c52c7cf3807068d97fc93b18",
     "scripts/production/instruction-scope.py": "0f9dba3d5ee8f5b4e3c6fd276b79639745e33a5225b9243a7f26b05e53f579c8",
     "scripts/production/new-product-environment-scope.py": "aa000d352054d869241d29457ba41df62fe47dbb395da9d6d52573d763206e18",
     "scripts/production/prepare-domain-runtime-candidate.py": "c18334d356a60f2ea06cdd9c1fd5b6ffcf9f48915051495c01db30ed039043c3",
     "scripts/production/prepare-sheet-package-change.py": "0c2576ca79271c91f81c1423894a0690c21c0a2865f1020bb9c3e99682ffc0dd",
-    "scripts/production/prepare-sheet-package-formal.py": "db816a4597830b51255fd5bac89c06a419ba3ad36fe6c9dece0629de7da1f5d8",
+    "scripts/production/prepare-sheet-package-formal.py": "38fae95a08c1e2c3aa81ba004cbf318dcd02732eb2a1beef6f5f30faf8959bc6",
     "scripts/production/sheet-package-change.py": "4498924fa0bedcea3efe2e24ce23c57e2bd70d1c45eec35bdd582cb1685387f5",
-    "scripts/production/sheet-package-formal.py": "295183b3efe79e243be51749a696af949c8970be815b5e24a936d014005309c4",
+    "scripts/production/sheet-package-formal.py": "6b77de06b96dc405837d759ae9bc9c6d846954f6ba6734437a95e9f6a9ac081b",
     "scripts/production/unpack-build-authority.py": "3eb0ea31b05bb06cfa1f320aa87209a74b80287b4d184db7711614dd07a77a62",
     "scripts/production/validate-domain-runtime-connection.py": "91df5fa8c42af5dd50fbbc6d1d0be58b1b5457eeb4d59430e925127e274ca241",
     "scripts/production/validate-domain-runtime-projection.mjs": "ee5ae39ac71d210cc1ddc0685cda60a99a91da657be7df0c8dce58df6de8ea01",
-    "scripts/vercel-rest-deploy.mjs": "746063d7e11737106704f2848f791cc5d1bfd4c548759107688d2c5d55bca741",
+    "scripts/production/validate-sheet-package-connection.py": "4956d9e864263b0bf181c54a65f1190f5df5495ab15d8ef189a225e361cd512e",
+    "scripts/vercel-rest-deploy.mjs": "ea0c1febeef5a6c80501988628886ea762cff8163bfd199d3cf8584949af9c7a",
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs": "6174897aca7e6560695b512e0787d7e00b147b712abcfb3e1369ae49da5807c9",
     "src/catalog/runtime-master/candidate-runtime-registry.mjs": "6977776677ded397321ff7cc6f99bc45d15eb18e676453f3069c620597d45372",
-    "src/catalog/runtime-master/composed-product-runtime-adapter.mjs": "8712fff6bbffd9c23cb8c86fb2feb83407f202861332da53ddfe734388737a84",
+    "src/catalog/runtime-master/composed-product-runtime-adapter.mjs": "6b1ab4b7ff79089943991011834db9969da6722deff077f16d40f78e004b9786",
     "src/catalog/runtime-master/declared-selection-views.mjs": "a6440d1f1904d0a3d3894af722efafd6606020e3d8e223da0468e64866d9bbe0",
     "src/catalog/runtime-master/declared-window-flow.mjs": "68166e3844e00a0655bac9959b0feab33ee5466b2412a2110110cb7782fe1816",
     "src/catalog/runtime-master/formal-composed-runtime-registry.json": "59e272473f27cece4ff107bda56be634e2f9480734eff3f6f56eb3a8a5ca359f",
     "src/catalog/runtime-master/formal-composed-runtime-registry.mjs": "3fa03677ada4faa6b3fb5944942fe5b7799b1068466ca1f6b8fad04f1282c642",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "744edfe6c95173968b9a8d0cd290c7abd7882eba80efeba0f84e9b77091d8804",
-    "src/catalog/runtime-master/runtime-app-bridge.mjs": "b8663cf1d00e8afa40b005ce59d922ec3fbbe361cf767c04e7f874935fe01a12",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "24ad88ea92bd529f271821ec9bda1a6513609650b8d39ad25f529a95358929ab",
     "src/catalog/runtime-master/runtime-master-registry.mjs": "02ce25a46fac733d184b35834d427321ff56cbd1118017bad68f638070f9c56d",
     "src/estimate-output/model.mjs": "c4acd8b4732e79270f4e10d7226b40216070a74b10a7d23f9d4ca28bf71ff0cd",
     "src/server/candidate-runtime-preview.mjs": "0f478ecfa453591cc781cd3775aadd94ebf3e6c441a7a8740ee7a1212876bb42",
-    "src/server/recovery-app.mjs": "ec622027183eef34988e184c78c3c0229aed26ecfb3adea70c49f792df5e7481",
-    "src/ui/web/product-configuration-editor.mjs": "eac991e202a717f202b16fd12a475759258ddc2281573ee07c81ba66c91a19fa",
-    "src/ui/web/styles.css": "85e9506efa22fa16537f20bbebb038945cacfb6188884632affee41e933b5a97",
+    "src/server/recovery-app.mjs": "b5be78b62b8a42139b70b6b55556f73a18fbe453808989767d70e1221b70cde1",
+    "src/ui/web/product-configuration-editor.mjs": "eebec104a2144db88ea346fa5fe97f1d5b8f83468451e9a3c553908190e9829c",
+    "src/ui/web/styles.css": "34ba97dcdd256966911169716a56dfbc750e0287dff7e7cef80a3409c1c2d080",
     "src/ui/web/work-management.css": "486cb00b2862739e365381e53835a0667bb9f324dff617f7893da71790ac123e",
     "src/work-management/domain.mjs": "31d3d7f23584fc173a1e5ffac7c7f63eb7e533a5da2237f62ef9befcaabc7ff1",
     "test/101-native-sheets-connection.test.mjs": "e7a0d15aaa0b0126db67134a41093681435ff623709a8dee6a6bd633ca2faa8c",
     "test/browser/declared-sales-runtime-browser-qa.mjs": "1089e39c7dff55bbc9121ad9886a1e7e58fcd6e38c0212e6cebce073be636467",
-    "test/formal-composed-runtime-integration.test.mjs": "134df8956f04fa3643bb3b0ed8470cb896e0eaac0527c14d5608404193d4755b",
+    "test/formal-composed-runtime-integration.test.mjs": "d34f7b21440040e25e10e693fe76eacd036e772dfc72cf5f7319abc555451578",
     ".gitignore": "9b816242310e827009a431f1c7059d18ef7e8aeb0c422bbb179fc5c803d73d2b",
     ".vercelignore": "dccdca865b68f0b857cae820424b98362d938b691160a5bb91fc1f0bcd4d9314",
     "AGENTS.md": "efdcaaa776ef634f38518d8e9122e9c830a1ab0b582928bc1fe441c530d227a1",
@@ -160,10 +168,13 @@
     "contracts/production/product-master-build-profile.native-v16.json": "1eb366f977ea6eb1d17e2ee8e980cf5d1b08b74ecf804c25de7b793225640e7c",
     "scripts/production/product-conditions-scope.py": "1f0747574738df24dd94c76aeb25ca4b6b09ff197b391de670ddaa6906caab1b",
     "scripts/production/private-runtime-readback.py": "c75161848ec62f41b691e7e992042e5c43ea59f2742beb93dfbd09bf053106a7",
+    "scripts/production/private-runtime-ui-adoption.py": "5a28e5e1a553a2179155a4b3a5305187e595d6cd2d01ae8cf09135f89cdfd1e6",
+    "scripts/production/validate-private-runtime-ui-adoption.mjs": "6db1a35454c002aca43aba623347796e1ad52eaa5f10e385e007f1f7649f6864",
     "contracts/production/select-pg-publication-lifecycle.v1.json": "a40d82ca326f9c362ecfdfccc068e2bac7e1064f72bdc5c59497615be7fdb75e",
     "src/catalog/runtime-master/row-table-runtime-registry.json": "f54da9924ca216c44d7adad72987c7c8f61c4ae967f75624b334fdfcb1a22ed5",
     "test/108-row-table-normal-runtime.test.mjs": "b8064be229686f0b1d9565ad06bbd70ada5437825d0ebf73563b0cf1a28b699b",
     "test/109-row-table-release-connection.test.mjs": "8a48cca88cef87352b3861b85229c9fdc215bc46a286d055da54662cee37c252",
-    "test/browser/row-table-business-browser-qa.mjs": "b98dabc53407a5ffa4fc424e5ae7550186edea1494fcf23238556aa70ec4015e"
+    "test/browser/row-table-business-browser-qa.mjs": "b98dabc53407a5ffa4fc424e5ae7550186edea1494fcf23238556aa70ec4015e",
+    "scripts/production/release-private-runtime-files.mjs": "63895608db159bc1aeb0125c2d061f42465e8fed59da65b181179eb638db0150"
   }
 }

@@ -5,13 +5,17 @@ import json
 from pathlib import Path
 
 
-def validate(root):
+def validate(root, product_id=None):
     root=Path(root)
     read=lambda name:json.loads((root/name).read_text())
     config=read('contracts/production/work-connections.v2.json')
     validators=read('contracts/production/validator-registry.v2.json')
-    matches=[p for p in config['products'] if p.get('native_adapter')=='scripts/production/sheet-package-change.py']
-    assert matches, 'Native Sheets connection missing'
+    products=config['products']
+    if product_id is not None:
+        products=[p for p in products if p['product_id']==product_id]
+        assert len(products)==1 and products[0]['connection_state']=='CONNECTED', 'One connected native product required'
+    matches=[p for p in products if p.get('native_adapter')=='scripts/production/sheet-package-change.py']
+    assert matches or (product_id is not None and products[0].get('formal_profile')), 'Native Sheets connection missing'
     for product in matches:
         entry=product['change_profile'];path=root/entry['path']
         assert hashlib.sha256(path.read_bytes()).hexdigest()==entry['sha256'], 'Native profile hash drift'
@@ -33,19 +37,27 @@ def validate(root):
             assert declared['formal_writes_before_human'] == declared['runtime_ui_mutations'] == 0
             assert declared['automatic_orderability'] is False and declared['shared_engine'] == 'scripts/production-work.py'
             assert all((root/declared[k]).is_file() for k in ('native_preparer','native_worker'))
-    for product in config['products']:
+    for product in products:
         if not product.get('formal_profile'): continue
         entry=product['formal_profile'];path=root/entry['path'];profile=json.loads(path.read_text())
         assert hashlib.sha256(path.read_bytes()).hexdigest()==entry['sha256']
         assert profile['product_id']==product['product_id'] and profile['status']=='ADOPTED'
         declared=validators['products'][product['product_id']]['formal_profile']
         assert {k:declared[k] for k in ('path','sha256')}==entry
-        if profile.get('baseline_kind')=='EXISTING_WORKING_DOMAIN':
+        if profile.get('baseline_kind')=='EXISTING_WORKING_DOMAIN' or profile.get('domain_schema')=='SHARED_DOMAIN_V1':
             adapter=profile['domain_adapter'];file=(root/adapter['path']).resolve()
             assert file.is_relative_to(root.resolve()) and hashlib.sha256(file.read_bytes()).hexdigest()==adapter['sha256']
             assert profile['human_gate']=='HUMAN_ADOPTION' and profile['formal_writes_before_human']==0
-    return {'status':'PASS','connections':len(matches),'business_qa':'NOT_EXECUTED_BY_CONNECTION_VALIDATOR','shared_engine_mutations':0}
+        if profile.get('domain_schema')=='SHARED_DOMAIN_V1':
+            assert profile['baseline_kind']=='EXISTING_FORMAL_JSON' and profile['formal_content_qa'] is True
+            assert profile['confirmation_source']=='CONTROLLED_UNRESOLVED_SIDECAR'
+            assert profile['transaction_owned_observations']==['native_registry']
+            assert profile['runtime_ui_mutations']==0 and profile['automatic_orderability'] is False
+    return {'status':'PASS','connections':len(matches),'selected_product':product_id,
+            'business_qa':'NOT_EXECUTED_BY_CONNECTION_VALIDATOR','shared_engine_mutations':0}
 
 
 if __name__=='__main__':
-    print(json.dumps(validate(Path(__file__).resolve().parents[2])))
+    import argparse
+    parser=argparse.ArgumentParser();parser.add_argument('--product')
+    print(json.dumps(validate(Path(__file__).resolve().parents[2],parser.parse_args().product)))

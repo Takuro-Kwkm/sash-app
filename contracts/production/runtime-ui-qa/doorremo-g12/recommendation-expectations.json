@@ -1,0 +1,4566 @@
+{
+  "schema": "INDEPENDENT_K09_RESOLUTION_EXPECTATIONS_V1",
+  "status": "SOURCE_REVIEW_PASS_AWAITING_CANDIDATE_QA",
+  "reviewer": "independent-k09-resolution-reviewer",
+  "scope": "Bounded candidate correction to manufacturer-explicit K09H and direct standard-child mapping. Not an N/H alias assertion, not a baseline-wide catalog adoption or Formal mutation.",
+  "records": [
+    {
+      "grade": "D50",
+      "main_design": "N40N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K62N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:N40N",
+      "gap": [],
+      "source_main_design": "N40N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K62N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            587.2169189453125,
+            164.60739135742188,
+            596.06103515625
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K62N",
+          "bbox": [
+            193.5208282470703,
+            587.2169189453125,
+            210.52871704101562,
+            596.06103515625
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "F64N",
+      "standard_values": [
+        "K64N"
+      ],
+      "recommended_values": [
+        "K60N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:F64N",
+      "gap": [],
+      "source_main_design": "F64N",
+      "source_standard_values": [
+        "K64N"
+      ],
+      "source_recommended_values": [
+        "K60N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K60N",
+          "bbox": [
+            153.268798828125,
+            661.6264038085938,
+            170.2766876220703,
+            670.4705200195312
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K64N",
+          "bbox": [
+            279.6941833496094,
+            661.6264038085938,
+            285.3634948730469,
+            670.4705200195312
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "N41N",
+      "standard_values": [
+        "K62N"
+      ],
+      "recommended_values": [
+        "K60N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:N41N",
+      "gap": [],
+      "source_main_design": "N41N",
+      "source_standard_values": [
+        "K62N"
+      ],
+      "source_recommended_values": [
+        "K60N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K60N",
+          "bbox": [
+            153.268798828125,
+            597.846923828125,
+            170.2766876220703,
+            606.6910400390625
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K62N",
+          "bbox": [
+            199.19012451171875,
+            597.846923828125,
+            204.8594207763672,
+            606.6910400390625
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "N42N",
+      "standard_values": [
+        "K62N"
+      ],
+      "recommended_values": [
+        "K60N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:N42N",
+      "gap": [],
+      "source_main_design": "N42N",
+      "source_standard_values": [
+        "K62N"
+      ],
+      "source_recommended_values": [
+        "K60N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K60N",
+          "bbox": [
+            153.268798828125,
+            608.4768676757812,
+            170.2766876220703,
+            617.3209838867188
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K62N",
+          "bbox": [
+            199.19012451171875,
+            608.4768676757812,
+            204.8594207763672,
+            617.3209838867188
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "N43N",
+      "standard_values": [
+        "K62N"
+      ],
+      "recommended_values": [
+        "K60N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:N43N",
+      "gap": [],
+      "source_main_design": "N43N",
+      "source_standard_values": [
+        "K62N"
+      ],
+      "source_recommended_values": [
+        "K60N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K60N",
+          "bbox": [
+            153.268798828125,
+            619.1067504882812,
+            170.2766876220703,
+            627.9508666992188
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K62N",
+          "bbox": [
+            199.19012451171875,
+            619.1067504882812,
+            204.8594207763672,
+            627.9508666992188
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "F61N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K64N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:F61N",
+      "gap": [],
+      "source_main_design": "F61N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K64N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            629.7366333007812,
+            164.60739135742188,
+            638.5807495117188
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K64N",
+          "bbox": [
+            274.0248718261719,
+            629.7366333007812,
+            291.0328063964844,
+            638.5807495117188
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "F62N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K64N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:F62N",
+      "gap": [],
+      "source_main_design": "F62N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K64N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            640.3665161132812,
+            164.60739135742188,
+            649.2106323242188
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K64N",
+          "bbox": [
+            274.0248718261719,
+            640.3665161132812,
+            291.0328063964844,
+            649.2106323242188
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "F63N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K64N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:F63N",
+      "gap": [],
+      "source_main_design": "F63N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K64N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            650.9965209960938,
+            164.60739135742188,
+            659.8406372070312
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K64N",
+          "bbox": [
+            274.0248718261719,
+            650.9965209960938,
+            291.0328063964844,
+            659.8406372070312
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "C60N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K63N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:C60N",
+      "gap": [],
+      "source_main_design": "C60N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K63N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            672.25634765625,
+            164.60739135742188,
+            681.1004638671875
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K63N",
+          "bbox": [
+            233.77285766601562,
+            672.25634765625,
+            250.78074645996094,
+            681.1004638671875
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "C62N",
+      "standard_values": [
+        "K63N"
+      ],
+      "recommended_values": [
+        "K60N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:C62N",
+      "gap": [],
+      "source_main_design": "C62N",
+      "source_standard_values": [
+        "K63N"
+      ],
+      "source_recommended_values": [
+        "K60N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K60N",
+          "bbox": [
+            153.268798828125,
+            682.8863525390625,
+            170.2766876220703,
+            691.73046875
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K63N",
+          "bbox": [
+            239.44216918945312,
+            682.8863525390625,
+            245.11146545410156,
+            691.73046875
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "C63N",
+      "standard_values": [
+        "K62N"
+      ],
+      "recommended_values": [
+        "K60N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:C63N",
+      "gap": [],
+      "source_main_design": "C63N",
+      "source_standard_values": [
+        "K62N"
+      ],
+      "source_recommended_values": [
+        "K60N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K60N",
+          "bbox": [
+            153.268798828125,
+            693.5162353515625,
+            170.2766876220703,
+            702.3603515625
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K62N",
+          "bbox": [
+            199.19012451171875,
+            693.5162353515625,
+            204.8594207763672,
+            702.3603515625
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "C64N",
+      "standard_values": [
+        "K62N"
+      ],
+      "recommended_values": [
+        "K60N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:C64N",
+      "gap": [],
+      "source_main_design": "C64N",
+      "source_standard_values": [
+        "K62N"
+      ],
+      "source_recommended_values": [
+        "K60N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K60N",
+          "bbox": [
+            153.268798828125,
+            704.1461181640625,
+            170.2766876220703,
+            712.990234375
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K62N",
+          "bbox": [
+            199.19012451171875,
+            704.1461181640625,
+            204.8594207763672,
+            712.990234375
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "C66N",
+      "standard_values": [
+        "K62N"
+      ],
+      "recommended_values": [
+        "K60N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:C66N",
+      "gap": [],
+      "source_main_design": "C66N",
+      "source_standard_values": [
+        "K62N"
+      ],
+      "source_recommended_values": [
+        "K60N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K60N",
+          "bbox": [
+            153.268798828125,
+            714.7760620117188,
+            170.2766876220703,
+            723.6201782226562
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K62N",
+          "bbox": [
+            199.19012451171875,
+            714.7760620117188,
+            204.8594207763672,
+            723.6201782226562
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "C40N",
+      "standard_values": [
+        "K62N"
+      ],
+      "recommended_values": [
+        "K60N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:C40N",
+      "gap": [],
+      "source_main_design": "C40N",
+      "source_standard_values": [
+        "K62N"
+      ],
+      "source_recommended_values": [
+        "K60N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K60N",
+          "bbox": [
+            153.268798828125,
+            725.4059448242188,
+            170.2766876220703,
+            734.2500610351562
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K62N",
+          "bbox": [
+            199.19012451171875,
+            725.4059448242188,
+            204.8594207763672,
+            734.2500610351562
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "E62N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K62N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:E62N",
+      "gap": [],
+      "source_main_design": "E62N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K62N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            736.0359497070312,
+            164.60739135742188,
+            744.8800659179688
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K62N",
+          "bbox": [
+            193.5208282470703,
+            736.0359497070312,
+            210.52871704101562,
+            744.8800659179688
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "E63N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K62N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:E63N",
+      "gap": [],
+      "source_main_design": "E63N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K62N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            746.6658325195312,
+            164.60739135742188,
+            755.5099487304688
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K62N",
+          "bbox": [
+            193.5208282470703,
+            746.6658325195312,
+            210.52871704101562,
+            755.5099487304688
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "E64N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K62N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:E64N",
+      "gap": [],
+      "source_main_design": "E64N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K62N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            757.2957153320312,
+            164.60739135742188,
+            766.1398315429688
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K62N",
+          "bbox": [
+            193.5208282470703,
+            757.2957153320312,
+            210.52871704101562,
+            766.1398315429688
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "E65N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K62N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:E65N",
+      "gap": [],
+      "source_main_design": "E65N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K62N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            767.9255981445312,
+            164.60739135742188,
+            776.7697143554688
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K62N",
+          "bbox": [
+            193.5208282470703,
+            767.9255981445312,
+            210.52871704101562,
+            776.7697143554688
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "E66N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K62N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:E66N",
+      "gap": [],
+      "source_main_design": "E66N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K62N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            778.5556030273438,
+            164.60739135742188,
+            787.3997192382812
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K62N",
+          "bbox": [
+            193.5208282470703,
+            778.5556030273438,
+            210.52871704101562,
+            787.3997192382812
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D50",
+      "main_design": "E67N",
+      "standard_values": [
+        "K60N"
+      ],
+      "recommended_values": [
+        "K62N"
+      ],
+      "source_ref": "BUSINESS:PDF72:親子・子扉推奨対応表:E67N",
+      "gap": [],
+      "source_main_design": "E67N",
+      "source_standard_values": [
+        "K60N"
+      ],
+      "source_recommended_values": [
+        "K62N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K60N",
+          "bbox": [
+            158.93809509277344,
+            789.185546875,
+            164.60739135742188,
+            798.0296630859375
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K62N",
+          "bbox": [
+            193.5208282470703,
+            789.185546875,
+            210.52871704101562,
+            798.0296630859375
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C03N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C03N",
+      "gap": [],
+      "source_main_design": "C03N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            441.79931640625,
+            139.18109130859375,
+            450.6434020996094
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            441.79931640625,
+            415.27606201171875,
+            450.6434020996094
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C10M",
+      "standard_values": [
+        "K08M"
+      ],
+      "recommended_values": [
+        "K01M"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C10M",
+      "gap": [],
+      "source_main_design": "C10M",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            739.4371337890625,
+            139.18109130859375,
+            748.28125
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            739.4371337890625,
+            415.27606201171875,
+            748.28125
+          ]
+        }
+      ],
+      "mapping_note": "Explicit high-size M(S) row expands to native M and S; N(M) child columns use M values in high-size section and N in standard section. Existing native high-size child sets checked; no other code alias.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N04H",
+      "standard_values": [
+        "K09H"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:exact-N04H-row;ORDER:PDF66:対応標準子扉デザインNo.-N04H-column",
+      "gap": [],
+      "source_main_design": "N04H",
+      "source_standard_values": [
+        "K09H"
+      ],
+      "source_recommended_values": [
+        "K01N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            207.9410858154297,
+            139.18109130859375,
+            216.7852020263672
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K09H",
+          "bbox": [
+            449.8587646484375,
+            207.9410858154297,
+            455.528076171875,
+            216.7852020263672
+          ]
+        }
+      ],
+      "mapping_note": "Exact current candidate K09H is independently supported as standard; no alias or automatic conversion from K09N. K01N alternative is the exact grey(●) cell in BUSINESS208.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N05T",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K03N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:N05T",
+      "gap": [],
+      "source_main_design": "N05T",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K03N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K03N",
+          "bbox": [
+            202.67709350585938,
+            218.57102966308594,
+            219.6849822998047,
+            227.41514587402344
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.6065673828125,
+            218.57102966308594,
+            415.27587890625,
+            227.41514587402344
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N05N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K03N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:N05N",
+      "gap": [],
+      "source_main_design": "N05N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K03N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K03N",
+          "bbox": [
+            202.67709350585938,
+            229.20091247558594,
+            219.6849822998047,
+            238.04502868652344
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.6065673828125,
+            229.20091247558594,
+            415.27587890625,
+            238.04502868652344
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N06K",
+      "standard_values": [
+        "K09H"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:exact-N06K-row;ORDER:PDF66:対応標準子扉デザインNo.-N06K-column",
+      "gap": [],
+      "source_main_design": "N06K",
+      "source_standard_values": [
+        "K09H"
+      ],
+      "source_recommended_values": [
+        "K01N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            239.83079528808594,
+            139.18109130859375,
+            248.67491149902344
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K09H",
+          "bbox": [
+            449.8587646484375,
+            239.83079528808594,
+            455.528076171875,
+            248.67491149902344
+          ]
+        }
+      ],
+      "mapping_note": "Exact current candidate K09H is independently supported as standard; no alias or automatic conversion from K09N. K01N alternative is the exact grey(●) cell in BUSINESS208.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N06H",
+      "standard_values": [
+        "K09H"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:exact-N06H-row;ORDER:PDF66:対応標準子扉デザインNo.-N06H-column",
+      "gap": [],
+      "source_main_design": "N06H",
+      "source_standard_values": [
+        "K09H"
+      ],
+      "source_recommended_values": [
+        "K01N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            250.4607391357422,
+            139.18109130859375,
+            259.3048400878906
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K09H",
+          "bbox": [
+            449.8587646484375,
+            250.4607391357422,
+            455.528076171875,
+            259.3048400878906
+          ]
+        }
+      ],
+      "mapping_note": "Exact current candidate K09H is independently supported as standard; no alias or automatic conversion from K09N. K01N alternative is the exact grey(●) cell in BUSINESS208.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N07T",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:N07T",
+      "gap": [],
+      "source_main_design": "N07T",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            261.09075927734375,
+            139.18109130859375,
+            269.9348449707031
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            261.09075927734375,
+            415.27606201171875,
+            269.9348449707031
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N07N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:N07N",
+      "gap": [],
+      "source_main_design": "N07N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            271.72064208984375,
+            139.18109130859375,
+            280.5647277832031
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            271.72064208984375,
+            415.27606201171875,
+            280.5647277832031
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N08N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:N08N",
+      "gap": [],
+      "source_main_design": "N08N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            282.35052490234375,
+            139.18109130859375,
+            291.1946105957031
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            282.35052490234375,
+            415.27606201171875,
+            291.1946105957031
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N09N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:N09N",
+      "gap": [],
+      "source_main_design": "N09N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            292.98040771484375,
+            139.18109130859375,
+            301.8244934082031
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            292.98040771484375,
+            415.27606201171875,
+            301.8244934082031
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N10N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:N10N",
+      "gap": [],
+      "source_main_design": "N10N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            303.61041259765625,
+            139.18109130859375,
+            312.4544982910156
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            303.61041259765625,
+            415.27606201171875,
+            312.4544982910156
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N12N",
+      "standard_values": [
+        "K06N"
+      ],
+      "recommended_values": [
+        "K03N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:N12N",
+      "gap": [],
+      "source_main_design": "N12N",
+      "source_standard_values": [
+        "K06N"
+      ],
+      "source_recommended_values": [
+        "K03N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K03N",
+          "bbox": [
+            202.67709350585938,
+            314.2403564453125,
+            219.6849822998047,
+            323.0844421386719
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K06N",
+          "bbox": [
+            329.10247802734375,
+            314.2403564453125,
+            334.77178955078125,
+            323.0844421386719
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N13N",
+      "standard_values": [
+        "K06N"
+      ],
+      "recommended_values": [
+        "K03N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:N13N",
+      "gap": [],
+      "source_main_design": "N13N",
+      "source_standard_values": [
+        "K06N"
+      ],
+      "source_recommended_values": [
+        "K03N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K03N",
+          "bbox": [
+            202.67709350585938,
+            324.8702392578125,
+            219.6849822998047,
+            333.7143249511719
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K06N",
+          "bbox": [
+            329.10247802734375,
+            324.8702392578125,
+            334.77178955078125,
+            333.7143249511719
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "N14N",
+      "standard_values": [
+        "K06N"
+      ],
+      "recommended_values": [
+        "K04N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:N14N",
+      "gap": [],
+      "source_main_design": "N14N",
+      "source_standard_values": [
+        "K06N"
+      ],
+      "source_recommended_values": [
+        "K04N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K04N",
+          "bbox": [
+            242.92909240722656,
+            335.5001220703125,
+            259.9369812011719,
+            344.3442077636719
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K06N",
+          "bbox": [
+            329.1024475097656,
+            335.5001220703125,
+            334.7717590332031,
+            344.3442077636719
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F03T",
+      "standard_values": [
+        "K01N"
+      ],
+      "recommended_values": [
+        "K08N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F03T",
+      "gap": [],
+      "source_main_design": "F03T",
+      "source_standard_values": [
+        "K01N（M）"
+      ],
+      "source_recommended_values": [
+        "K08N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K01N（M）",
+          "bbox": [
+            127.84249877929688,
+            346.1300354003906,
+            133.5117950439453,
+            354.97412109375
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K08N（M）",
+          "bbox": [
+            403.9374084472656,
+            346.1300354003906,
+            420.9453430175781,
+            354.97412109375
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F03N",
+      "standard_values": [
+        "K01N"
+      ],
+      "recommended_values": [
+        "K08N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F03N",
+      "gap": [],
+      "source_main_design": "F03N",
+      "source_standard_values": [
+        "K01N（M）"
+      ],
+      "source_recommended_values": [
+        "K08N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K01N（M）",
+          "bbox": [
+            127.84249877929688,
+            356.7599182128906,
+            133.5117950439453,
+            365.60400390625
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K08N（M）",
+          "bbox": [
+            403.9374084472656,
+            356.7599182128906,
+            420.9453430175781,
+            365.60400390625
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F04H",
+      "standard_values": [
+        "K11N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F04H",
+      "gap": [],
+      "source_main_design": "F04H",
+      "source_standard_values": [
+        "K11N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            367.38983154296875,
+            139.18109130859375,
+            376.2339172363281
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K11N（M）",
+          "bbox": [
+            530.36279296875,
+            367.38983154296875,
+            536.0321044921875,
+            376.2339172363281
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F05K",
+      "standard_values": [
+        "K11N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F05K",
+      "gap": [],
+      "source_main_design": "F05K",
+      "source_standard_values": [
+        "K11N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            378.01983642578125,
+            139.18109130859375,
+            386.8639221191406
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K11N（M）",
+          "bbox": [
+            530.36279296875,
+            378.01983642578125,
+            536.0321044921875,
+            386.8639221191406
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F05H",
+      "standard_values": [
+        "K11N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F05H",
+      "gap": [],
+      "source_main_design": "F05H",
+      "source_standard_values": [
+        "K11N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            388.64971923828125,
+            139.18109130859375,
+            397.4938049316406
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K11N（M）",
+          "bbox": [
+            530.36279296875,
+            388.64971923828125,
+            536.0321044921875,
+            397.4938049316406
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F06K",
+      "standard_values": [
+        "K11N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F06K",
+      "gap": [],
+      "source_main_design": "F06K",
+      "source_standard_values": [
+        "K11N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            399.2796325683594,
+            139.18109130859375,
+            408.12371826171875
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K11N（M）",
+          "bbox": [
+            530.36279296875,
+            399.2796325683594,
+            536.0321044921875,
+            408.12371826171875
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F06H",
+      "standard_values": [
+        "K11N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F06H",
+      "gap": [],
+      "source_main_design": "F06H",
+      "source_standard_values": [
+        "K11N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            409.9095458984375,
+            139.18109130859375,
+            418.7536315917969
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K11N（M）",
+          "bbox": [
+            530.36279296875,
+            409.9095458984375,
+            536.0321044921875,
+            418.7536315917969
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F08H",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F08H",
+      "gap": [],
+      "source_main_design": "F08H",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            420.5395202636719,
+            139.18109130859375,
+            429.38360595703125
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            420.5395202636719,
+            415.27606201171875,
+            429.38360595703125
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C02N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C02N",
+      "gap": [],
+      "source_main_design": "C02N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            431.16943359375,
+            139.18109130859375,
+            440.0135192871094
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            431.16943359375,
+            415.27606201171875,
+            440.0135192871094
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C04T",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C04T",
+      "gap": [],
+      "source_main_design": "C04T",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            452.4292297363281,
+            139.18109130859375,
+            461.2733154296875
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            452.4292297363281,
+            415.27606201171875,
+            461.2733154296875
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C04N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C04N",
+      "gap": [],
+      "source_main_design": "C04N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            463.05914306640625,
+            139.18109130859375,
+            471.9032287597656
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            463.05914306640625,
+            415.27606201171875,
+            471.9032287597656
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C05N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C05N",
+      "gap": [],
+      "source_main_design": "C05N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            473.6891174316406,
+            139.18109130859375,
+            482.533203125
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            473.6891174316406,
+            415.27606201171875,
+            482.533203125
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C07T",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C07T",
+      "gap": [],
+      "source_main_design": "C07T",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            484.31903076171875,
+            139.18109130859375,
+            493.1631164550781
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            484.31903076171875,
+            415.27606201171875,
+            493.1631164550781
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C07N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C07N",
+      "gap": [],
+      "source_main_design": "C07N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            494.9489440917969,
+            139.18109130859375,
+            503.79302978515625
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            494.9489440917969,
+            415.27606201171875,
+            503.79302978515625
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C08K",
+      "standard_values": [
+        "K09H"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:exact-C08K-row;ORDER:PDF70:対応標準子扉デザインNo.-C08K-column",
+      "gap": [],
+      "source_main_design": "C08K",
+      "source_standard_values": [
+        "K09H"
+      ],
+      "source_recommended_values": [
+        "K01N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            505.57879638671875,
+            139.18109130859375,
+            514.4229125976562
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K09H",
+          "bbox": [
+            449.8587646484375,
+            505.57879638671875,
+            455.528076171875,
+            514.4229125976562
+          ]
+        }
+      ],
+      "mapping_note": "Exact current candidate K09H is independently supported as standard; no alias or automatic conversion from K09N. K01N alternative is the exact grey(●) cell in BUSINESS208.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C08H",
+      "standard_values": [
+        "K09H"
+      ],
+      "recommended_values": [],
+      "source_ref": "ORDER:PDF70:対応標準子扉デザインNo.-exact-C08H-column",
+      "gap": [],
+      "source_main_design": "C08H",
+      "source_standard_values": [
+        "K09H"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Exact current candidate K09H is independently supported as standard; no alias or automatic conversion from K09N. C08H standard comes from direct ORDER70 heading, not C08N alias. K01N compatibility in ORDER78 does not prove alternative recommendation, so recommended_values remains empty.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C09T",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C09T",
+      "gap": [],
+      "source_main_design": "C09T",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            526.8387451171875,
+            139.18109130859375,
+            535.682861328125
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            526.8387451171875,
+            415.27606201171875,
+            535.682861328125
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C09N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C09N",
+      "gap": [],
+      "source_main_design": "C09N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            537.4686279296875,
+            139.18109130859375,
+            546.312744140625
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            537.4686279296875,
+            415.27606201171875,
+            546.312744140625
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C10N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C10N",
+      "gap": [],
+      "source_main_design": "C10N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            548.0985717773438,
+            139.18109130859375,
+            556.9426879882812
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            548.0985717773438,
+            415.27606201171875,
+            556.9426879882812
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C11T",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C11T",
+      "gap": [],
+      "source_main_design": "C11T",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            558.7284545898438,
+            139.18109130859375,
+            567.5725708007812
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            558.7284545898438,
+            415.27606201171875,
+            567.5725708007812
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C11N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K01N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C11N",
+      "gap": [],
+      "source_main_design": "C11N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            569.3583374023438,
+            139.18109130859375,
+            578.2024536132812
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            569.3583374023438,
+            415.27606201171875,
+            578.2024536132812
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E01N",
+      "standard_values": [
+        "K06N"
+      ],
+      "recommended_values": [
+        "K04N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E01N",
+      "gap": [],
+      "source_main_design": "E01N",
+      "source_standard_values": [
+        "K06N"
+      ],
+      "source_recommended_values": [
+        "K04N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K04N",
+          "bbox": [
+            242.92909240722656,
+            579.9883422851562,
+            259.9369812011719,
+            588.8324584960938
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K06N",
+          "bbox": [
+            329.1024475097656,
+            579.9883422851562,
+            334.7717590332031,
+            588.8324584960938
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E02N",
+      "standard_values": [
+        "K06N"
+      ],
+      "recommended_values": [
+        "K04N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E02N",
+      "gap": [],
+      "source_main_design": "E02N",
+      "source_standard_values": [
+        "K06N"
+      ],
+      "source_recommended_values": [
+        "K04N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K04N",
+          "bbox": [
+            242.92909240722656,
+            590.6182250976562,
+            259.9369812011719,
+            599.4623413085938
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K06N",
+          "bbox": [
+            329.1024475097656,
+            590.6182250976562,
+            334.7717590332031,
+            599.4623413085938
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E03N",
+      "standard_values": [
+        "K07N"
+      ],
+      "recommended_values": [
+        "K05N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E03N",
+      "gap": [],
+      "source_main_design": "E03N",
+      "source_standard_values": [
+        "K07N"
+      ],
+      "source_recommended_values": [
+        "K05N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K05N",
+          "bbox": [
+            283.1809997558594,
+            601.2481079101562,
+            300.1889343261719,
+            610.0922241210938
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K07N",
+          "bbox": [
+            369.3543701171875,
+            601.2481079101562,
+            375.023681640625,
+            610.0922241210938
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E04N",
+      "standard_values": [
+        "K07N"
+      ],
+      "recommended_values": [
+        "K05N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E04N",
+      "gap": [],
+      "source_main_design": "E04N",
+      "source_standard_values": [
+        "K07N"
+      ],
+      "source_recommended_values": [
+        "K05N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K05N",
+          "bbox": [
+            283.1809997558594,
+            611.8781127929688,
+            300.1889343261719,
+            620.7222290039062
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K07N",
+          "bbox": [
+            369.3543701171875,
+            611.8781127929688,
+            375.023681640625,
+            620.7222290039062
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E07N",
+      "standard_values": [
+        "K07N"
+      ],
+      "recommended_values": [
+        "K05N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E07N",
+      "gap": [],
+      "source_main_design": "E07N",
+      "source_standard_values": [
+        "K07N"
+      ],
+      "source_recommended_values": [
+        "K05N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K05N",
+          "bbox": [
+            283.1809997558594,
+            622.5079956054688,
+            300.1889343261719,
+            631.3521118164062
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K07N",
+          "bbox": [
+            369.3543701171875,
+            622.5079956054688,
+            375.023681640625,
+            631.3521118164062
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E08N",
+      "standard_values": [
+        "K07N"
+      ],
+      "recommended_values": [
+        "K05N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E08N",
+      "gap": [],
+      "source_main_design": "E08N",
+      "source_standard_values": [
+        "K07N"
+      ],
+      "source_recommended_values": [
+        "K05N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K05N",
+          "bbox": [
+            283.1809997558594,
+            633.137939453125,
+            300.1889343261719,
+            641.9820556640625
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K07N",
+          "bbox": [
+            369.3543701171875,
+            633.137939453125,
+            375.023681640625,
+            641.9820556640625
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E09T",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K03N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E09T",
+      "gap": [],
+      "source_main_design": "E09T",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K03N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K03N",
+          "bbox": [
+            202.67709350585938,
+            643.7679443359375,
+            219.6849822998047,
+            652.612060546875
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.6065673828125,
+            643.7679443359375,
+            415.27587890625,
+            652.612060546875
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E09N",
+      "standard_values": [
+        "K08N"
+      ],
+      "recommended_values": [
+        "K03N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E09N",
+      "gap": [],
+      "source_main_design": "E09N",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K03N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K03N",
+          "bbox": [
+            202.67709350585938,
+            654.3977661132812,
+            219.6849822998047,
+            663.2418823242188
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.6065673828125,
+            654.3977661132812,
+            415.27587890625,
+            663.2418823242188
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E10N",
+      "standard_values": [
+        "K06N"
+      ],
+      "recommended_values": [
+        "K04N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E10N",
+      "gap": [],
+      "source_main_design": "E10N",
+      "source_standard_values": [
+        "K06N"
+      ],
+      "source_recommended_values": [
+        "K04N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K04N",
+          "bbox": [
+            242.92909240722656,
+            665.0277099609375,
+            259.9369812011719,
+            673.871826171875
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K06N",
+          "bbox": [
+            329.1024475097656,
+            665.0277099609375,
+            334.7717590332031,
+            673.871826171875
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E11N",
+      "standard_values": [
+        "K06N"
+      ],
+      "recommended_values": [
+        "K04N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E11N",
+      "gap": [],
+      "source_main_design": "E11N",
+      "source_standard_values": [
+        "K06N"
+      ],
+      "source_recommended_values": [
+        "K04N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K04N",
+          "bbox": [
+            242.92909240722656,
+            675.6576538085938,
+            259.9369812011719,
+            684.5017700195312
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K06N",
+          "bbox": [
+            329.1024475097656,
+            675.6576538085938,
+            334.7717590332031,
+            684.5017700195312
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "E12N",
+      "standard_values": [
+        "K06N"
+      ],
+      "recommended_values": [
+        "K04N"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:E12N",
+      "gap": [],
+      "source_main_design": "E12N",
+      "source_standard_values": [
+        "K06N"
+      ],
+      "source_recommended_values": [
+        "K04N"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K04N",
+          "bbox": [
+            242.92909240722656,
+            686.2875366210938,
+            259.9369812011719,
+            695.1316528320312
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K06N",
+          "bbox": [
+            329.1024475097656,
+            686.2875366210938,
+            334.7717590332031,
+            695.1316528320312
+          ]
+        }
+      ],
+      "mapping_note": "Exact parent code; parenthesized N(M) column denotes N for ordinary-height native parent.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F03S",
+      "standard_values": [
+        "K01M"
+      ],
+      "recommended_values": [
+        "K08M"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F03M（S）",
+      "gap": [],
+      "source_main_design": "F03M（S）",
+      "source_standard_values": [
+        "K01N（M）"
+      ],
+      "source_recommended_values": [
+        "K08N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K01N（M）",
+          "bbox": [
+            127.84249877929688,
+            696.9174194335938,
+            133.5117950439453,
+            705.7615356445312
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K08N（M）",
+          "bbox": [
+            403.9374084472656,
+            696.9174194335938,
+            420.9453430175781,
+            705.7615356445312
+          ]
+        }
+      ],
+      "mapping_note": "Explicit high-size M(S) row expands to native M and S; N(M) child columns use M values in high-size section and N in standard section. Existing native high-size child sets checked; no other code alias.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F03M",
+      "standard_values": [
+        "K01M"
+      ],
+      "recommended_values": [
+        "K08M"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F03M（S）",
+      "gap": [],
+      "source_main_design": "F03M（S）",
+      "source_standard_values": [
+        "K01N（M）"
+      ],
+      "source_recommended_values": [
+        "K08N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "●",
+          "source_column": "K01N（M）",
+          "bbox": [
+            127.84249877929688,
+            696.9174194335938,
+            133.5117950439453,
+            705.7615356445312
+          ]
+        },
+        {
+          "symbol": "（●）",
+          "source_column": "K08N（M）",
+          "bbox": [
+            403.9374084472656,
+            696.9174194335938,
+            420.9453430175781,
+            705.7615356445312
+          ]
+        }
+      ],
+      "mapping_note": "Explicit high-size M(S) row expands to native M and S; N(M) child columns use M values in high-size section and N in standard section. Existing native high-size child sets checked; no other code alias.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "F04M",
+      "standard_values": [
+        "K11M"
+      ],
+      "recommended_values": [
+        "K01M"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:F04M",
+      "gap": [],
+      "source_main_design": "F04M",
+      "source_standard_values": [
+        "K11N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            707.5473022460938,
+            139.18109130859375,
+            716.3914184570312
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K11N（M）",
+          "bbox": [
+            530.36279296875,
+            707.5473022460938,
+            536.0321044921875,
+            716.3914184570312
+          ]
+        }
+      ],
+      "mapping_note": "Explicit high-size M(S) row expands to native M and S; N(M) child columns use M values in high-size section and N in standard section. Existing native high-size child sets checked; no other code alias.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C07S",
+      "standard_values": [
+        "K08M"
+      ],
+      "recommended_values": [
+        "K01M"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C07M（S）",
+      "gap": [],
+      "source_main_design": "C07M（S）",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            718.1773071289062,
+            139.18109130859375,
+            727.0214233398438
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            718.1773071289062,
+            415.27606201171875,
+            727.0214233398438
+          ]
+        }
+      ],
+      "mapping_note": "Explicit high-size M(S) row expands to native M and S; N(M) child columns use M values in high-size section and N in standard section. Existing native high-size child sets checked; no other code alias.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C07M",
+      "standard_values": [
+        "K08M"
+      ],
+      "recommended_values": [
+        "K01M"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C07M（S）",
+      "gap": [],
+      "source_main_design": "C07M（S）",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            718.1773071289062,
+            139.18109130859375,
+            727.0214233398438
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            718.1773071289062,
+            415.27606201171875,
+            727.0214233398438
+          ]
+        }
+      ],
+      "mapping_note": "Explicit high-size M(S) row expands to native M and S; N(M) child columns use M values in high-size section and N in standard section. Existing native high-size child sets checked; no other code alias.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C09S",
+      "standard_values": [
+        "K08M"
+      ],
+      "recommended_values": [
+        "K01M"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C09M（S）",
+      "gap": [],
+      "source_main_design": "C09M（S）",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            728.8072509765625,
+            139.18109130859375,
+            737.6513671875
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            728.8072509765625,
+            415.27606201171875,
+            737.6513671875
+          ]
+        }
+      ],
+      "mapping_note": "Explicit high-size M(S) row expands to native M and S; N(M) child columns use M values in high-size section and N in standard section. Existing native high-size child sets checked; no other code alias.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "D30",
+      "main_design": "C09M",
+      "standard_values": [
+        "K08M"
+      ],
+      "recommended_values": [
+        "K01M"
+      ],
+      "source_ref": "BUSINESS:PDF208:親子・子扉推奨対応表:C09M（S）",
+      "gap": [],
+      "source_main_design": "C09M（S）",
+      "source_standard_values": [
+        "K08N（M）"
+      ],
+      "source_recommended_values": [
+        "K01N（M）"
+      ],
+      "source_cells": [
+        {
+          "symbol": "（●）",
+          "source_column": "K01N（M）",
+          "bbox": [
+            122.17320251464844,
+            728.8072509765625,
+            139.18109130859375,
+            737.6513671875
+          ]
+        },
+        {
+          "symbol": "●",
+          "source_column": "K08N（M）",
+          "bbox": [
+            409.60675048828125,
+            728.8072509765625,
+            415.27606201171875,
+            737.6513671875
+          ]
+        }
+      ],
+      "mapping_note": "Explicit high-size M(S) row expands to native M and S; N(M) child columns use M values in high-size section and N in standard section. Existing native high-size child sets checked; no other code alias.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S03",
+      "standard_values": [
+        "06"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S03",
+      "gap": [],
+      "source_main_design": "S03",
+      "source_standard_values": [
+        "06"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S50",
+      "standard_values": [
+        "50"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S50",
+      "gap": [],
+      "source_main_design": "S50",
+      "source_standard_values": [
+        "50"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S01",
+      "standard_values": [
+        "05"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S01",
+      "gap": [],
+      "source_main_design": "S01",
+      "source_standard_values": [
+        "05"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S02",
+      "standard_values": [
+        "06"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S02",
+      "gap": [],
+      "source_main_design": "S02",
+      "source_standard_values": [
+        "06"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S05",
+      "standard_values": [
+        "06"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S05",
+      "gap": [],
+      "source_main_design": "S05",
+      "source_standard_values": [
+        "06"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S06",
+      "standard_values": [
+        "07"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S06",
+      "gap": [],
+      "source_main_design": "S06",
+      "source_standard_values": [
+        "07"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S08",
+      "standard_values": [
+        "08"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S08",
+      "gap": [],
+      "source_main_design": "S08",
+      "source_standard_values": [
+        "08"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S11",
+      "standard_values": [
+        "06"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S11",
+      "gap": [],
+      "source_main_design": "S11",
+      "source_standard_values": [
+        "06"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S12",
+      "standard_values": [
+        "06"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S12",
+      "gap": [],
+      "source_main_design": "S12",
+      "source_standard_values": [
+        "06"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S51",
+      "standard_values": [
+        "50"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S51",
+      "gap": [],
+      "source_main_design": "S51",
+      "source_standard_values": [
+        "50"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "S52",
+      "standard_values": [
+        "50"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:S52",
+      "gap": [],
+      "source_main_design": "S52",
+      "source_standard_values": [
+        "50"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "G50",
+      "standard_values": [
+        "50"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:G50",
+      "gap": [],
+      "source_main_design": "G50",
+      "source_standard_values": [
+        "50"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    },
+    {
+      "grade": "ALUMINUM",
+      "main_design": "G51",
+      "standard_values": [
+        "50"
+      ],
+      "recommended_values": [],
+      "source_ref": "BUSINESS:PDF245:親扉・子扉推奨対応表:G51",
+      "gap": [],
+      "source_main_design": "G51",
+      "source_standard_values": [
+        "50"
+      ],
+      "source_recommended_values": [],
+      "mapping_note": "Explicit S/G group plus numeric parent row; standard black-dot only. 50 child belongs to DH≤2000 design section; existing native applicability preserved.",
+      "initial_scope": "standard_or_recommended"
+    }
+  ],
+  "candidate_expectations": {
+    "active_value": "K09H",
+    "old_value_not_active": "K09N",
+    "active_secondary_choice_count": 42,
+    "daylighting": "yes",
+    "mail_slot": "no",
+    "new_image_source": "BUSINESS:PDF205:exact-K09H-caption-and-complete-photo",
+    "recommendation_rows_updated": [
+      "C08H",
+      "C08K",
+      "N04H",
+      "N06H",
+      "N06K"
+    ],
+    "legacy_snapshot_policy": {
+      "old_snapshot_bytes": "retain frozen original K09N",
+      "explicit_revalidation": "clear obsolete K09N via existing generic migration and require child re-selection",
+      "automatic_assign_K09H": false
+    },
+    "formal_master_mutation": false
+  },
+  "source_conclusions": [
+    {
+      "id": "H_UNIT_DEFINITION",
+      "confidence": "DIRECT_OFFICIAL_EVIDENCE",
+      "claim": "May ORDER78 names child09H, with D2 order3GR-S-2K09H and D4 order3GR-S-3K09H, DSW200-501/DSH1770-2400; BUSINESS205 names and photographs K09H. These directly support K09H as selectable candidate code."
+    },
+    {
+      "id": "STANDARD_CHILD_EXACT_PARENT",
+      "confidence": "DIRECT_OFFICIAL_EVIDENCE",
+      "claim": "May ORDER66 exact N04H/N06K/N06H columns and ORDER70 exact C08K/C08H columns explicitly list3GR-S-▲K09H under対応標準子扉デザインNo. No parent-code alias needed."
+    },
+    {
+      "id": "N_LABEL_CONFLICT",
+      "confidence": "DIRECT_OBSERVED_DOCUMENT_CONFLICT",
+      "claim": "Same May ORDER uses K09N in special-range diagram90 and3GR-S-3K09N in D4glass list97, while D2glass list96 uses3GR-S-2K09H. Glass lists are technical tables, not price tables. No separate09N unit entry or manufacturer alias declaration found in inspected official files."
+    },
+    {
+      "id": "STRUCTURE_SAME_VISIBLE_BUT_NOT_ALIAS_PROOF",
+      "confidence": "BOUNDED_VISUAL_COMPARISON",
+      "claim": "BUSINESS328 K09H and ORDER90 K09N diagrams show matching visible composition and stated DSW200-501/DSH1770-2400 plus the same218mm/9mm daylight-position note. Raster bytes differ. Similar drawing/dimensions alone do not prove manufacturer identity or interchangeability."
+    },
+    {
+      "id": "NOV_OCT_COMPARISON",
+      "confidence": "DIRECT_SCOPED_NEWER_SOURCE_EVIDENCE",
+      "claim": "November BUSINESS split files keep K09H at relevant photograph/matrix/technical entries. October ORDER72 keeps09H and both D2/D4 H unit codes; technicalglass80usesD2H and81stillusesD4N. Newer documents do not provide an explicit alias/correction statement. No full baseline switch made."
+    },
+    {
+      "id": "C08H_ALTERNATIVE_NOT_PROVED",
+      "confidence": "DIRECT_SCOPE_DISTINCTION",
+      "claim": "ORDER78 listsC08H among K01N compatible main doors; that compatibility does not itself establish a grey(●) recommended alternative. Candidate C08H uses direct standardH only; K01N remains available among native full candidates."
+    }
+  ],
+  "remaining_documentary_uncertainty": {
+    "manufacturer_alias_N_equals_H": "NOT_PROVEN",
+    "different_physical_variant": "NOT_PROVEN",
+    "official_erratum_or_label_typo_declaration": "NOT_FOUND_IN_INSPECTED_FILES",
+    "why_ui_standard_pending_can_end": "K09H is independently and directly defined in unit/standard-child entries; candidate can select that supported code while refusing to auto-map legacyN. The source-document inconsistency itself remains recorded, not declared resolved."
+  },
+  "classification": "PRODUCT_FACT_RUNTIME_CANDIDATE_DELTA; not merely presentation",
+  "source_catalogs": [
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/02_YKK AP/02_ドア/ドアリモ玄関ドア/202605_YKKAP_ドアリモ玄関ドア_業務用資料集.pdf",
+      "sha256": "14b440a787559b12ac9442e86652b3c0c37af673fc0c751ed7b5385499ffd684",
+      "pages": 408,
+      "metadata": {
+        "format": "PDF 1.4",
+        "title": "",
+        "author": "",
+        "subject": "",
+        "keywords": "",
+        "creator": "",
+        "producer": "GAMEDIOS PDF Library 5.20.0 build11",
+        "creationDate": "D:20260806153400+09'00'",
+        "modDate": "D:20260806153400+09'00'",
+        "trapped": "",
+        "encryption": "Standard V2 R3 128-bit RC4"
+      },
+      "matches": [
+        {
+          "pdf_page": 80,
+          "hits": [
+            {
+              "line": 125,
+              "text": "K09H",
+              "context": [
+                "枠",
+                "子扉デザイン",
+                "K09H",
+                "K08N",
+                "K08N"
+              ]
+            },
+            {
+              "line": 128,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N"
+              ]
+            },
+            {
+              "line": 129,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N",
+                "K08N"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 84,
+          "hits": [
+            {
+              "line": 144,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N"
+              ]
+            },
+            {
+              "line": 145,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N",
+                "ラ"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 88,
+          "hits": [
+            {
+              "line": 125,
+              "text": "K09H",
+              "context": [
+                "枠",
+                "子扉デザイン",
+                "K09H",
+                "K08N",
+                "K08N"
+              ]
+            },
+            {
+              "line": 128,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N"
+              ]
+            },
+            {
+              "line": 129,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N",
+                "K08N"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 92,
+          "hits": [
+            {
+              "line": 144,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N"
+              ]
+            },
+            {
+              "line": 145,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N",
+                "ラ"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 96,
+          "hits": [
+            {
+              "line": 14,
+              "text": "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+              "context": [
+                "［錠・ハンドル］スマートコントロールキー　ピタットキー／ストレート",
+                "［枠色］BE：マキアートパイン　［パネル色］BE：マキアートパイン",
+                "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+                "N04H",
+                "横板とスリット採光で構成した"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 102,
+          "hits": [
+            {
+              "line": 5,
+              "text": "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+              "context": [
+                "［錠・ハンドル］スマートコントロールキー　ピタットキー／ストレート",
+                "［枠色］PR：ドライチーク　［パネル色］PR：ドライチーク",
+                "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+                "■内観",
+                "通風部( 内開き)"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 104,
+          "hits": [
+            {
+              "line": 5,
+              "text": "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+              "context": [
+                "［錠・ハンドル］スマートコントロールキー　ピタットキー／ストレート",
+                "［枠色］PR：ドライチーク　［パネル色］PR：ドライチーク",
+                "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+                "■内観",
+                "N06H"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 152,
+          "hits": [
+            {
+              "line": 5,
+              "text": "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+              "context": [
+                "［錠・ハンドル］スマートコントロールキー　ピタットキー／ストレート",
+                "［枠色］YA：ステインウォールナット　［パネル色］YA：ステインウォールナット",
+                "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+                "■内観",
+                "通風部( 内開き)"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 154,
+          "hits": [
+            {
+              "line": 5,
+              "text": "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+              "context": [
+                "［錠・ハンドル］スマートコントロールキー　ピタットキー／ストレート",
+                "［枠色］YA：ステインウォールナット　［パネル色］YA：ステインウォールナット",
+                "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+                "■内観",
+                "C08H"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 205,
+          "hits": [
+            {
+              "line": 25,
+              "text": "K09H",
+              "context": [
+                "XP",
+                "K5",
+                "K09H",
+                "KG",
+                "BE"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 208,
+          "hits": [
+            {
+              "line": 20,
+              "text": "K09H",
+              "context": [
+                "K07N",
+                "K08N（M）",
+                "K09H",
+                "K10N",
+                "K11N（M）"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 328,
+          "hits": [
+            {
+              "line": 48,
+              "text": "K09H",
+              "context": [
+                "DSW 200≦DSW≦501",
+                "DSH 1,770≦DSH≦2,400",
+                "K09H",
+                "DSW 200≦DSW≦501",
+                "DSH 1,770≦DSH≦2,400"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/02_YKK AP/02_ドア/ドアリモ玄関ドア/202605_YKKAP_ドアリモ玄関・勝手口_受発注用.pdf",
+      "sha256": "37b4d07cca5da8699bb7796690a703cf123a440c8d8b15f3c44ccbd753dca1bc",
+      "pages": 352,
+      "metadata": {
+        "format": "PDF 1.4",
+        "title": "",
+        "author": "",
+        "subject": "",
+        "keywords": "",
+        "creator": "",
+        "producer": "GAMEDIOS PDF Library 5.20.0 build11",
+        "creationDate": "D:20260701134354+09'00'",
+        "modDate": "D:20260701134355+09'00'",
+        "trapped": "",
+        "encryption": "Standard V2 R3 128-bit RC4"
+      },
+      "matches": [
+        {
+          "pdf_page": 66,
+          "hits": [
+            {
+              "line": 106,
+              "text": "3GR-S-▲K09H",
+              "context": [
+                "子",
+                "扉",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K08N",
+                "3GR-S-▲K08N"
+              ]
+            },
+            {
+              "line": 191,
+              "text": "3GR-S-▲K09H",
+              "context": [
+                "子",
+                "扉",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K08N"
+              ]
+            },
+            {
+              "line": 192,
+              "text": "3GR-S-▲K09H",
+              "context": [
+                "扉",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K08N",
+                "3GR-S-▲K08N"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 70,
+          "hits": [
+            {
+              "line": 279,
+              "text": "3GR-S-▲K09H",
+              "context": [
+                "子",
+                "扉",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K08N"
+              ]
+            },
+            {
+              "line": 280,
+              "text": "3GR-S-▲K09H",
+              "context": [
+                "扉",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K08N",
+                "3GR-S-▲K08N"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 78,
+          "hits": [
+            {
+              "line": 174,
+              "text": "3GR-S-2K09H■-R(L)☆3GR-S-2K10N■-R(L)☆3GR-S-2K11N■-R(L)☆",
+              "context": [
+                "記",
+                "号",
+                "3GR-S-2K09H■-R(L)☆3GR-S-2K10N■-R(L)☆3GR-S-2K11N■-R(L)☆",
+                "ピタット･ポケット･顔認証",
+                "￥159,000"
+              ]
+            },
+            {
+              "line": 186,
+              "text": "3GR-S-3K09H■-R(L)☆3GR-S-3K10N■-R(L)☆3GR-S-3K11N■-R(L)☆",
+              "context": [
+                "記",
+                "号",
+                "3GR-S-3K09H■-R(L)☆3GR-S-3K10N■-R(L)☆3GR-S-3K11N■-R(L)☆",
+                "ピタット･ポケット･顔認証",
+                "￥147,000"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 90,
+          "hits": [
+            {
+              "line": 69,
+              "text": "K09N",
+              "context": [
+                "DSW 200≦DSW≦501",
+                "DSH 1,770≦DSH≦2,400",
+                "K09N",
+                "DSW 200≦DSW≦501",
+                "DSH 1,770≦DSH≦2,400"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 96,
+          "hits": [
+            {
+              "line": 343,
+              "text": "3GR-S-2K09H",
+              "context": [
+                "1",
+                "Low-E複層ガラス",
+                "3GR-S-2K09H",
+                "3K-46399",
+                "80"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 97,
+          "hits": [
+            {
+              "line": 344,
+              "text": "3GR-S-3K09N",
+              "context": [
+                "1",
+                "複層ガラス",
+                "3GR-S-3K09N",
+                "3K-46398",
+                "80"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 156,
+          "hits": [
+            {
+              "line": 114,
+              "text": "3VR-S-▲K09H",
+              "context": [
+                "網入複層ガラス入",
+                "対応標準子扉デザインNo.",
+                "3VR-S-▲K09H",
+                "3VR-S-▲K08N",
+                "デザインNo."
+              ]
+            },
+            {
+              "line": 180,
+              "text": "3VR-S-▲K09H",
+              "context": [
+                "網入複層ガラス入",
+                "対応標準子扉デザインNo.",
+                "3VR-S-▲K09H",
+                "3VR-S-▲K08N",
+                "デザインNo."
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 160,
+          "hits": [
+            {
+              "line": 231,
+              "text": "3VR-S-▲K09H",
+              "context": [
+                "網入複層ガラス入",
+                "対応標準子扉デザインNo.",
+                "3VR-S-▲K09H",
+                "3VR-S-▲K08N",
+                "※Low-EガラスのLow-E膜の色はニュートラルです。"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 164,
+          "hits": [
+            {
+              "line": 174,
+              "text": "3VR-S-2K09H■-R(L)☆3VR-S-2K10N■-R(L)☆3VR-S-2K11N■-R(L)☆",
+              "context": [
+                "記",
+                "号",
+                "3VR-S-2K09H■-R(L)☆3VR-S-2K10N■-R(L)☆3VR-S-2K11N■-R(L)☆",
+                "ピタット･ポケット",
+                "￥227,000"
+              ]
+            },
+            {
+              "line": 186,
+              "text": "3VR-S-3K09H■-R(L)☆3VR-S-3K10N■-R(L)☆3VR-S-3K11N■-R(L)☆",
+              "context": [
+                "記",
+                "号",
+                "3VR-S-3K09H■-R(L)☆3VR-S-3K10N■-R(L)☆3VR-S-3K11N■-R(L)☆",
+                "ピタット･ポケット",
+                "￥215,000"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 172,
+          "hits": [
+            {
+              "line": 131,
+              "text": "K09H",
+              "context": [
+                "DSW 204≦DSW≦501",
+                "DSH 1,770≦DSH≦2,400",
+                "K09H",
+                "DSW 204≦DSW≦501",
+                "DSH 1,770≦DSH≦2,400"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 176,
+          "hits": [
+            {
+              "line": 218,
+              "text": "3VR-S-▲K09H",
+              "context": [
+                "1",
+                "Low-E網入複層ガラス",
+                "3VR-S-▲K09H",
+                "56×DH－400",
+                "1"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/02_YKK AP/02_ドア/ドアリモ玄関ドア/先行版_202611/202611_YKKAP_ドアリモ玄関ドア 業務用_H26-008-2_p1-146.pdf",
+      "sha256": "2332ee58612ace23d44c8e9afaa74523f3d4d1d30cc11d6ea71674b5370fb591",
+      "pages": 146,
+      "metadata": {
+        "format": "PDF 1.7",
+        "title": "",
+        "author": "",
+        "subject": "",
+        "keywords": "",
+        "creator": "",
+        "producer": "",
+        "creationDate": "",
+        "modDate": "",
+        "trapped": "",
+        "encryption": null
+      },
+      "matches": [
+        {
+          "pdf_page": 80,
+          "hits": [
+            {
+              "line": 125,
+              "text": "K09H",
+              "context": [
+                "枠",
+                "子扉デザイン",
+                "K09H",
+                "K08N",
+                "K08N"
+              ]
+            },
+            {
+              "line": 128,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N"
+              ]
+            },
+            {
+              "line": 129,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N",
+                "K08N"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 84,
+          "hits": [
+            {
+              "line": 144,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N"
+              ]
+            },
+            {
+              "line": 145,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N",
+                "ラ"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 88,
+          "hits": [
+            {
+              "line": 125,
+              "text": "K09H",
+              "context": [
+                "枠",
+                "子扉デザイン",
+                "K09H",
+                "K08N",
+                "K08N"
+              ]
+            },
+            {
+              "line": 128,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N"
+              ]
+            },
+            {
+              "line": 129,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N",
+                "K08N"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 92,
+          "hits": [
+            {
+              "line": 144,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N"
+              ]
+            },
+            {
+              "line": 145,
+              "text": "K09H",
+              "context": [
+                "K08N",
+                "K09H",
+                "K09H",
+                "K08N",
+                "ラ"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 96,
+          "hits": [
+            {
+              "line": 14,
+              "text": "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+              "context": [
+                "［錠・ハンドル］スマートコントロールキー　ピタットキー／ストレート",
+                "［枠色］BE：マキアートパイン　［パネル色］BE：マキアートパイン",
+                "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+                "N04H",
+                "横板とスリット採光で構成した"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 102,
+          "hits": [
+            {
+              "line": 5,
+              "text": "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+              "context": [
+                "［錠・ハンドル］スマートコントロールキー　ピタットキー／ストレート",
+                "［枠色］PR：ドライチーク　［パネル色］PR：ドライチーク",
+                "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+                "■内観",
+                "通風部( 内開き)"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 104,
+          "hits": [
+            {
+              "line": 5,
+              "text": "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+              "context": [
+                "［錠・ハンドル］スマートコントロールキー　ピタットキー／ストレート",
+                "［枠色］PR：ドライチーク　［パネル色］PR：ドライチーク",
+                "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+                "■内観",
+                "N06H"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/02_YKK AP/02_ドア/ドアリモ玄関ドア/先行版_202611/202611_YKKAP_ドアリモ玄関ドア 業務用_H26-008-2_p293-412.pdf",
+      "sha256": "b81996602becaa067807459ba7334d58f339399ee378bd0ed94f1fcf39d16a2b",
+      "pages": 120,
+      "metadata": {
+        "format": "PDF 1.7",
+        "title": "",
+        "author": "",
+        "subject": "",
+        "keywords": "",
+        "creator": "",
+        "producer": "",
+        "creationDate": "",
+        "modDate": "",
+        "trapped": "",
+        "encryption": null
+      },
+      "matches": [
+        {
+          "pdf_page": 36,
+          "hits": [
+            {
+              "line": 48,
+              "text": "K09H",
+              "context": [
+                "DSW 200≦DSW≦501",
+                "DSH 1,770≦DSH≦2,400",
+                "K09H",
+                "DSW 200≦DSW≦501",
+                "DSH 1,770≦DSH≦2,400"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/02_YKK AP/02_ドア/ドアリモ玄関ドア/先行版_202611/202611_YKKAP_ドアリモ玄関ドア 業務用_H26-008-2_p147-292.pdf",
+      "sha256": "f5f50b3e4da2ea3c3f0f38620deedd4ae8786251c602868e29eaad1a4b2d4c47",
+      "pages": 146,
+      "metadata": {
+        "format": "PDF 1.7",
+        "title": "",
+        "author": "",
+        "subject": "",
+        "keywords": "",
+        "creator": "",
+        "producer": "",
+        "creationDate": "",
+        "modDate": "",
+        "trapped": "",
+        "encryption": null
+      },
+      "matches": [
+        {
+          "pdf_page": 6,
+          "hits": [
+            {
+              "line": 5,
+              "text": "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+              "context": [
+                "［錠・ハンドル］スマートコントロールキー　ピタットキー／ストレート",
+                "［枠色］YA：ステインウォールナット　［パネル色］YA：ステインウォールナット",
+                "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+                "■内観",
+                "通風部( 内開き)"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 8,
+          "hits": [
+            {
+              "line": 5,
+              "text": "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+              "context": [
+                "［錠・ハンドル］スマートコントロールキー　ピタットキー／ストレート",
+                "［枠色］YA：ステインウォールナット　［パネル色］YA：ステインウォールナット",
+                "［子扉］K09H　［外額縁］上：80B（厚見込）／たて左右：80B（厚見込）　［内額縁］上：40 ／たて左右：40",
+                "■内観",
+                "C08H"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 59,
+          "hits": [
+            {
+              "line": 25,
+              "text": "K09H",
+              "context": [
+                "XP",
+                "K5",
+                "K09H",
+                "KG",
+                "BE"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 62,
+          "hits": [
+            {
+              "line": 20,
+              "text": "K09H",
+              "context": [
+                "K07N",
+                "K08N（M）",
+                "K09H",
+                "K10N",
+                "K11N（M）"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/02_YKK AP/02_ドア/ドアリモ玄関ドア/先行版_202611/202610_YKKAP_ドアリモ玄関・勝手口 受発注用_H26-193-2.pdf",
+      "sha256": "dbfa1e7b71f5e8e167b6666ca845cc0294587b80abef5f4930b7723ce56bcfef",
+      "pages": 296,
+      "metadata": {
+        "format": "PDF 1.4",
+        "title": "",
+        "author": "noga",
+        "subject": "",
+        "keywords": "",
+        "creator": "Adobe Acrobat 26.2.21931",
+        "producer": "GAMEDIOS PDF Library 5.20.0 build11",
+        "creationDate": "D:20260928084549+09'00'",
+        "modDate": "D:20260930170053+09'00'",
+        "trapped": "",
+        "encryption": "Standard V2 R3 128-bit RC4"
+      },
+      "matches": [
+        {
+          "pdf_page": 60,
+          "hits": [
+            {
+              "line": 104,
+              "text": "3GR-S-▲K09H",
+              "context": [
+                "子",
+                "扉",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K08N",
+                "3GR-S-▲K08N"
+              ]
+            },
+            {
+              "line": 189,
+              "text": "3GR-S-▲K09H",
+              "context": [
+                "子",
+                "扉",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K08N"
+              ]
+            },
+            {
+              "line": 190,
+              "text": "3GR-S-▲K09H",
+              "context": [
+                "扉",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K08N",
+                "3GR-S-▲K08N"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 64,
+          "hits": [
+            {
+              "line": 277,
+              "text": "3GR-S-▲K09H",
+              "context": [
+                "子",
+                "扉",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K08N"
+              ]
+            },
+            {
+              "line": 278,
+              "text": "3GR-S-▲K09H",
+              "context": [
+                "扉",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K09H",
+                "3GR-S-▲K08N",
+                "3GR-S-▲K08N"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 72,
+          "hits": [
+            {
+              "line": 172,
+              "text": "3GR-S-2K09H■-R(L)☆3GR-S-2K10N■-R(L)☆3GR-S-2K11N■-R(L)☆",
+              "context": [
+                "記",
+                "号",
+                "3GR-S-2K09H■-R(L)☆3GR-S-2K10N■-R(L)☆3GR-S-2K11N■-R(L)☆",
+                "ピタット･ポケット･顔認証",
+                "￥184,000"
+              ]
+            },
+            {
+              "line": 184,
+              "text": "3GR-S-3K09H■-R(L)☆3GR-S-3K10N■-R(L)☆3GR-S-3K11N■-R(L)☆",
+              "context": [
+                "記",
+                "号",
+                "3GR-S-3K09H■-R(L)☆3GR-S-3K10N■-R(L)☆3GR-S-3K11N■-R(L)☆",
+                "ピタット･ポケット･顔認証",
+                "￥170,000"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 80,
+          "hits": [
+            {
+              "line": 341,
+              "text": "3GR-S-2K09H",
+              "context": [
+                "1",
+                "Low-E複層ガラス",
+                "3GR-S-2K09H",
+                "3K-46399",
+                "80"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 81,
+          "hits": [
+            {
+              "line": 342,
+              "text": "3GR-S-3K09N",
+              "context": [
+                "1",
+                "複層ガラス",
+                "3GR-S-3K09N",
+                "3K-46398",
+                "80"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 132,
+          "hits": [
+            {
+              "line": 112,
+              "text": "3VR-S-▲K09H",
+              "context": [
+                "網入複層ガラス入",
+                "対応標準子扉デザインNo.",
+                "3VR-S-▲K09H",
+                "3VR-S-▲K08N",
+                "デザインNo."
+              ]
+            },
+            {
+              "line": 178,
+              "text": "3VR-S-▲K09H",
+              "context": [
+                "網入複層ガラス入",
+                "対応標準子扉デザインNo.",
+                "3VR-S-▲K09H",
+                "3VR-S-▲K08N",
+                "デザインNo."
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 136,
+          "hits": [
+            {
+              "line": 229,
+              "text": "3VR-S-▲K09H",
+              "context": [
+                "網入複層ガラス入",
+                "対応標準子扉デザインNo.",
+                "3VR-S-▲K09H",
+                "3VR-S-▲K08N",
+                "※Low-EガラスのLow-E膜の色はニュートラルです。"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 140,
+          "hits": [
+            {
+              "line": 172,
+              "text": "3VR-S-2K09H■-R(L)☆3VR-S-2K10N■-R(L)☆3VR-S-2K11N■-R(L)☆",
+              "context": [
+                "記",
+                "号",
+                "3VR-S-2K09H■-R(L)☆3VR-S-2K10N■-R(L)☆3VR-S-2K11N■-R(L)☆",
+                "ピタット･ポケット",
+                "￥263,000"
+              ]
+            },
+            {
+              "line": 184,
+              "text": "3VR-S-3K09H■-R(L)☆3VR-S-3K10N■-R(L)☆3VR-S-3K11N■-R(L)☆",
+              "context": [
+                "記",
+                "号",
+                "3VR-S-3K09H■-R(L)☆3VR-S-3K10N■-R(L)☆3VR-S-3K11N■-R(L)☆",
+                "ピタット･ポケット",
+                "￥249,000"
+              ]
+            }
+          ]
+        },
+        {
+          "pdf_page": 146,
+          "hits": [
+            {
+              "line": 216,
+              "text": "3VR-S-▲K09H",
+              "context": [
+                "1",
+                "Low-E網入複層ガラス",
+                "3VR-S-▲K09H",
+                "56×DH－400",
+                "1"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source_evidence_hashes": {
+    "D2-glass-H.png": "af1125f80a538b36a934c59fc1c13b58f29cc7b82899e722f0557c2917ed3ae9",
+    "order-may-90-full.png": "788dcf951e108155577efbdba15aaca5f79e57331ae0c77370ff313bb72d0919",
+    "H-size-diagram.png": "e96018b9054ca9301656af048f05bda8458a07bcb0c7cf45798974e29b65d1cc",
+    "business-may-328-full.png": "6d8f0d2c8eee93f8a2bf5a75ecd89c92bf1a16913836ab6936bae94857c4178c",
+    "order-78-3GR-S-3K09H.png": "a5bb03e193641aafd996d2d349f855f3a9e874e2c129d6c733ed181f8a257b00",
+    "business-may-208-full.png": "3a5550e672ac95008e1bee9f64186dd0cf9ce00c13407c37cae0725eff806ba4",
+    "order-78-3GR-S-2K09H.png": "6cdc7956b1ca8147d0d26759afe15fc82eb8e0c47fda713081ebd2f86e9f4e78",
+    "order-96-3GR-S-2K09H.png": "ef06f838dd6b603ff09a94de48bca7a4c0aaa6ffdaa564dad823376d100ad343",
+    "order-97-3GR-S-3K09N.png": "fbba93efe8d81656c75c67db41d717a30a2d22d89a555b40f534a5844d3b1c39",
+    "business-may-205-full.png": "596490036a43baecddc881d7bb891824d4da75c9b0933027100b1f4128a6b17a",
+    "order-may-96-full.png": "6edb319f1530bd6943cd812545f6d9a9f1dd94b73c84559ca18b8c02f64bf278",
+    "order-may-97-full.png": "25ca523cd66717e1cf4fa3e3b83bbe1014b4557e58fc6dabdaf12aa9fb345dc2",
+    "D4-glass-N.png": "230292132a3c672e671eefa7872d3fb700c676f45fc01f3afe07db91b089fea5",
+    "order-may-78-full.png": "619e4f205ef733913a3b973164237e6f61ced48fb85c5e7d9db9787cb2446413",
+    "H-unit-definition.png": "6ee7b4fe3ccbeff6fe368bb7763c3a28194c53f9688e85112ac9e9599fab7e72",
+    "N-size-diagram.png": "6df527da76183384462bf64939550558dc323d9135f358ee4dbfda0ac3e0fea9",
+    "order-oct-72-full.png": "ff85b149e934f4dd5768f9cc00498d6489518882065acbe9d7c39c879bed99f5",
+    "order-may-70-full.png": "b682c9857c1faa94454d15ee0d747d4993902316de5754f8a3c1a37c6c8a116e",
+    "C08H-standard-child.png": "ea98aa6f73bec524a55deed576d2de1111614cb1541b7af56f25a600671eedf2",
+    "order-oct-81-full.png": "d887ce3733d4a09bfd5e7fe0a957183a19cd0378b7981146eeef501705bdb67e",
+    "order-oct-80-full.png": "ef595cd0137c79de37fc7262cc0765a0ede69f0df8c2d382cd0ccbb8f6a8588a",
+    "order-may-66-full.png": "6b72f9f789714aec8bf267bf61717eb84b3c09523317f8a74359ed5975fdd18d"
+  },
+  "prior_G11_expectations_sha256": "127621afe3bbd308a6e62bc1ec5bdbbfcef51c6e9d43e6763cdeadbe999ab302",
+  "totals": {
+    "parent_records": 87,
+    "fully_supported_candidate_standard_mappings": 87,
+    "unproved_C08H_alternative_values_adopted": 0
+  },
+  "source_mutations_by_reviewer": 0
+}

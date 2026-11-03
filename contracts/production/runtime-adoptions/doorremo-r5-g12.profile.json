@@ -1,0 +1,61 @@
+{
+  "schema": "NATIVE_RUNTIME_UI_ADOPTION_PROFILE_V1",
+  "profile_id": "doorremo-r5-g12-adoption",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
+  "formal_product_id": "CANDIDATE:DOORREMO_NONFIRE",
+  "operation": "RUNTIME_UI_ADOPTION",
+  "shared_engine": "scripts/production-work.py",
+  "target_gate": "RUNTIME_UI_ADOPTED",
+  "product_fact_mutation_allowed": false,
+  "release": false,
+  "native_preparer": "scripts/production/private-runtime-ui-adoption-work.py",
+  "native_validator": "scripts/production/validate-private-runtime-ui-adoption.mjs",
+  "candidate_files": {
+    "index.json": "c3ada6297cdea4f5b57a41782842b3c90f8976ff220e7579c55df9bee16d32d7",
+    "candidates/module.json": "3cc48880ed06c3669631dd6bb1f1f25f9d7f137947a0fcfdcb183693339aaa1b",
+    "sources/PRODUCT_MASTER.json": "f4149b78d6f1d83e8a72c325b49362638e49b72d45efa4fce8795afb846f0187",
+    "sources/UI_STANDARD_v2.1.docx": "e14b802dd96c1b90ea39809137ea03824878db2b7c07aa058657f3603a928e9a"
+  },
+  "candidate": {
+    "index_sha256": "c3ada6297cdea4f5b57a41782842b3c90f8976ff220e7579c55df9bee16d32d7",
+    "module_sha256": "3cc48880ed06c3669631dd6bb1f1f25f9d7f137947a0fcfdcb183693339aaa1b"
+  },
+  "approved_presentation": {
+    "src/ui/web/choice-visuals.mjs": "e3c2e1baa4094df7e7008af3d4ef6f08698a84d0ec3a39ebb2d4e6b36b80cc10",
+    "src/ui/web/product-configuration-editor.mjs": "eebec104a2144db88ea346fa5fe97f1d5b8f83468451e9a3c553908190e9829c",
+    "src/catalog/runtime-master/declared-choice-visuals.mjs": "434d4256774b90af8e8afd3bdc6338d2457a124ca185b07e4471aef3c0c83b79",
+    "src/catalog/runtime-master/composed-product-runtime-adapter.mjs": "6b1ab4b7ff79089943991011834db9969da6722deff077f16d40f78e004b9786",
+    "src/server/runtime-choice-images.mjs": "413ce68bdfee929e0bc91d8f5ae5886e4dce12231202fd29bd6629dcf3cf6f70"
+  },
+  "formal_master": {
+    "version": "v1.1-R5-F1-20261103",
+    "sha256": "285bb07926ed073391e731fd610a773b3523c78e42efc86a3fc6bc3eb3adc700",
+    "unresolved_count": 0,
+    "carried_qa_passed": 607,
+    "carried_qa_failed": 0
+  },
+  "runtime_package": "PRIVATE_CAPTURE_REQUIRED",
+  "human_gate": "EXACT_USER_RUNTIME_UI_ADOPTION",
+  "storage": "SHARED_V2_STORAGE_AND_NATIVE_DRIVE_READBACK",
+  "terminal_policy": "PRODUCT_MASTER_FORMAL_INSPECT_ONLY; RUNTIME_UI_ADOPTION_SEPARATE; RELEASE_SEPARATE",
+  "native_worker": "scripts/production/private-runtime-ui-adoption.py",
+  "required_stages": [
+    "PREVIEW_IDENTITY",
+    "PACKAGE_TRANSFORM",
+    "STORAGE_READBACK",
+    "FORMAL_RUNTIME_QA",
+    "NATIVE_FORMAL_LOCATION_READBACK",
+    "RUNTIME_UI_ADOPTION"
+  ],
+  "formal_source_rebind": {
+    "previous_sha256": "f4149b78d6f1d83e8a72c325b49362638e49b72d45efa4fce8795afb846f0187",
+    "sha256": "285bb07926ed073391e731fd610a773b3523c78e42efc86a3fc6bc3eb3adc700",
+    "policy": "RECEIPT_VERIFIED_EXISTING_FORMAL_SUCCESSOR_PROVENANCE_ONLY"
+  },
+  "confirmation_source": "CONTROLLED_UNRESOLVED_SIDECAR",
+  "controlled_unresolved_count": 6,
+  "preview_evidence_kind": "RETAINED_IN_COMPLETED_FORMAL_WORK",
+  "formal_runtime_qa_script": "scripts/production/verify-declared-formal-runtime.mjs",
+  "controlled_unresolved_sha256": "b866093c264980cb913c9d19ee048cc31ff7e842eb21137eb314eddfa1be4d15"
+}

@@ -1,3 +1,4 @@
+import {attachDeclaredChoiceVisuals} from './declared-choice-visuals.mjs';
 import {adaptProductModuleRuntimeV1} from './product-module-runtime-adapter.mjs';
 import {applyDeclaredSelectionLinks} from './declared-selection-policy.mjs';
 import {resolveDeclaredSelectionViews, declaredSelectionErrors, attachDeclaredSalesHandoff,parseSelectionContext} from './declared-selection-views.mjs';
@@ -49,6 +50,19 @@ export function resolveMigratedCandidateSelection(reader,input,migrations=[],con
   const prepared=reader.uiResolver(migrated,context).selection;
   return reader.uiResolver({...prepared,...migrated},context);
 }
+export function resolveVersionedCandidateSelection(reader,input,document,configurationVersion,packageVersion,context={changedFields:[]}){
+  const legacy=Boolean(configurationVersion&&configurationVersion!==packageVersion);
+  if(!legacy||!document.selection_migrations?.length)return reader.uiResolver(input,context);
+  const migrated=migrateCandidateSelection(input,document.selection_migrations);
+  const result=resolveMigratedCandidateSelection(reader,input,document.selection_migrations,context);
+  if(JSON.stringify(migrated)!==JSON.stringify(input)){
+    result.configurationMigration={from:configurationVersion,to:packageVersion,originalSelection:input};
+    result.manualWarnings??=[];
+    result.manualWarnings.push(typeof document.selection_migration_notice==='string'?document.selection_migration_notice:'保存済みの選択を現在の項目に整理しました。変更した項目を確認してください。');
+  }
+  return result;
+}
+
 export async function adaptComposedProductRuntime(document,entry,loadReference){
   const formal=document.schema==='FORMAL_COMPOSED_PRODUCT_MODULE_V1'&&document.formal_adoption===true&&entry.packageType==='FORMAL_COMPOSED_PRODUCT_RUNTIME';
   const candidate=document.schema==='PRODUCT_MODULE_CANDIDATE_V1'&&document.formal_adoption===false;
@@ -68,7 +82,7 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
   const {applyRuntimeUiCategoryOrder}=await import('./new-construction-sash-runtime-ui-contract.mjs');
   const dimensionReview=declaredDimensionReview(document);
   const primary=adaptProductModuleRuntimeV1({documents:{RUNTIME_JSON_PACKAGE:document}},entry);
-  return {...primary,uiResolver:(input,context={changedFields:[]})=>{
+  const reader={...primary,uiResolver:(input,context={changedFields:[]})=>{
     const {changedFields}=parseSelectionContext(context);
     const contract=document.composition,prefix=contract?.prefix;
     const localInput=Object.fromEntries(Object.entries(input??{}).filter(([key])=>!prefix||!key.startsWith(prefix)));
@@ -140,6 +154,10 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
     attachDeclaredSalesHandoff(result,document);
     result.runtimeMaster={masterVersion:entry.masterVersion,packageVersion:entry.packageVersion,schemaVersion:entry.schemaVersion,adapterType:entry.adapterType,sourceHash:entry.sha256,canonicalRuntimeReference:entry.canonicalRuntimeReference,candidateOnly:!formal,candidateRuntimeReference:entry.candidateRuntimeReference,sourcePackageIntegrity:{expected:entry.sha256,actual:entry.sha256,match:true}};
     result.runtimeCapabilities={candidateOnly:!formal,automaticManufacturing:false,automaticPricing:false,sourceAdoption:false,formalAdoption:formal};
-    return result;
+    return attachDeclaredChoiceVisuals(result,document.presentation);
+  }};
+  return {...reader,uiResolver:(input,context={changedFields:[]})=>{
+    const {configurationVersion,...selectionContext}=context;
+    return resolveVersionedCandidateSelection(reader,input,document,configurationVersion,entry.packageVersion,selectionContext);
   }};
 }

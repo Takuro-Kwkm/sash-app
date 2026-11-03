@@ -51,28 +51,24 @@ test('changed formal module bytes and escaping paths are refused',()=>{
     assert.throws(()=>readFormalComposedModule({...entry,path:'../outside.json'}),/FORMAL_COMPOSITION_PATH_INVALID/);
   }finally{rmSync(root,{recursive:true,force:true});}
 });
-test('pre-existing runtime behavior and original hashes stay intact except approved shared labels',async()=>{
+test('pre-existing runtime responses equal acquired Current Main while historical response hashes remain inspectable',async()=>{
   const baseline=JSON.parse(readFileSync('contracts/production/runtime-baselines/preexisting-products.v1.json'));
-  const root=mkdtempSync(join(tmpdir(),'retained-runtime-label-baseline-'));
+  const root=mkdtempSync(join(tmpdir(),'retained-runtime-current-baseline-'));
   try{
-    const archive=join(root,'retained-source.tar');
-    execFileSync('git',['archive','--output='+archive,'f02ddba2e818373c965fd7ff78580ff6f9a25ca0']);
-    execFileSync('tar',['-xf',archive,'-C',root]);
-    const {resolveRuntimeAppProduct:prior}=await import(pathToFileURL(join(root,'src/catalog/runtime-master/runtime-app-bridge.mjs')).href);
-    const withoutLabels=value=>({...value,fields:value.fields.map(({displayLabel,...field})=>field)});
+    const readers=[];
+    for(const revision of ['f02ddba2e818373c965fd7ff78580ff6f9a25ca0','2331cd878ff7888e853168029afee5d3ace2e7d0']){
+      const dir=join(root,revision),archive=join(root,revision+'.tar');
+      execFileSync('mkdir',['-p',dir]);execFileSync('git',['archive','--output='+archive,revision]);execFileSync('tar',['-xf',archive,'-C',dir]);
+      readers.push((await import(pathToFileURL(join(dir,'src/catalog/runtime-master/runtime-app-bridge.mjs')).href)).resolveRuntimeAppProduct);
+    }
+    const [historical,current]=readers;
     for(const c of baseline.cases){
-      const before=await prior(c.id,c.selection),actual=await resolveRuntimeAppProduct(c.id,c.selection);
-      assert.equal(createHash('sha256').update(JSON.stringify(before)).digest('hex'),c.responseSha256,c.id+': original baseline');
-      const expected=withoutLabels(before);
-      // The retained Main changes only the display separator for exact 3+2 call codes.
-      // Preserve the original response hash above and compare actual values/metadata in full.
-      expected.fields=expected.fields.map(field=>field.key!=='size'?field:{...field,values:field.values.map(choice=>{
-        const metadata=choice.sizeMetadata,code=String(metadata?.callCode??'');
-        const oldLabel=`${code} ｜ W ${metadata?.actualW} × H ${metadata?.actualH}`;
-        return /^\d{3}-\d{2}$/.test(code)&&choice.displayLabel===oldLabel
-          ?{...choice,displayLabel:`${code.replace('-','')} ｜ W ${metadata.actualW} × H ${metadata.actualH}`}:choice;
-      })});
-      assert.deepEqual(withoutLabels(actual),expected,c.id+': approved common labels and exact nominal display separator only');
+      const before=await historical(c.id,c.selection);
+      assert.equal(createHash('sha256').update(JSON.stringify(before)).digest('hex'),c.responseSha256,c.id+': original frozen baseline');
+      // Current Main already contains approved display changes after f02ddba.
+      // Compare the complete current response, including labels, with no whitelist.
+      const expected=await current(c.id,c.selection),actual=await resolveRuntimeAppProduct(c.id,c.selection);
+      assert.deepEqual(actual,expected,c.id+': exact acquired Current Main response');
     }
   }finally{rmSync(root,{recursive:true,force:true});}
 });
