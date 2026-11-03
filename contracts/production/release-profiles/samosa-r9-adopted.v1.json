@@ -3320,7 +3320,7 @@
       "/product-configuration-editor.mjs": "eac991e202a717f202b16fd12a475759258ddc2281573ee07c81ba66c91a19fa",
       "/estimate-output-integration.mjs": "0088dca6579f734ffc8b9b09373bbdd39b0b7f63c489ccef05d615996add8c24",
       "/work-management/service.mjs": "79e1451ea52a3bf66dfca4184b70e3ed21526ac21cf20c8c9008a2cfff3d7cf9",
-      "/estimate-output/model.mjs": "5c8f2869524464ee821536207bf7b1fbcc741ebc7b6eb3ab57323b9fcfecea22",
+      "/estimate-output/model.mjs": "c4acd8b4732e79270f4e10d7226b40216070a74b10a7d23f9d4ca28bf71ff0cd",
       "/estimate-output/xlsx-renderer.mjs": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508"
     },
     "build_identity": {
