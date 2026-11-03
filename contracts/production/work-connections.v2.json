@@ -836,9 +836,9 @@
         "state": "FORMAL_PASS"
       },
       "source_selector": {
-        "from": "LIVE_NATIVE_WORKING + REVIEWED_OFFICIAL_BYTES",
-        "role": "REVIEWED_CURRENT_NONFIRE_SALES_SCOPE",
-        "scope": "Working candidate only; no automatic price/Source promotion"
+        "from": "LIVE_FORMAL_F1 + RETAINED_G12_VERIFIED_OFFICIAL_DELTA",
+        "role": "BOUNDED_REVIEWED_NONFIRE_SHARED_DOMAIN_CHANGE",
+        "scope": "K09H correction only; preserve existing Source, Evidence, confirmation sidecar and commercial boundaries"
       },
       "native_adapter": "scripts/production/sheet-package-formal.py",
       "prepare_adapter": "scripts/production/prepare-sheet-package-formal.py",

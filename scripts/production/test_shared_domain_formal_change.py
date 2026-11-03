@@ -105,6 +105,23 @@ class SharedDomainFormalChangeTests(unittest.TestCase):
         with self.assertRaises(Blocked):
             self.adapter.confirmations(self.contract)
 
+    def test_legacy_working_projection_stays_lifecycle_only(self):
+        path = Path(__file__).with_name('working-domain-formal.py')
+        spec = importlib.util.spec_from_file_location('legacy_projection', path)
+        legacy = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(legacy)
+        legacy.setup(Path(harness.__file__).resolve().parents[1])
+        before = {'lifecycle_status': 'DRAFT', 'fields': [{'field_id': 'F', 'lifecycle_status': 'DRAFT', 'values': ['A']}],
+                  'product': {'revision': 'R1'}, 'provenance': {'policy_ref': 'OLD'}}
+        after = copy.deepcopy(before)
+        after['lifecycle_status'] = after['fields'][0]['lifecycle_status'] = 'FORMAL'
+        after['product']['revision'] = 'F1'
+        after['provenance']['policy_ref'] = 'HUMAN_REQUIRED'
+        legacy.normalize_formal(before, after)
+        after['fields'][0]['values'].append('B')
+        with self.assertRaises(Blocked):
+            legacy.normalize_formal(before, after)
+
 
 if __name__ == '__main__':
     unittest.main()
