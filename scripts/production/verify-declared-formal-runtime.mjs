@@ -8,6 +8,7 @@ import {resolveRuntimeAppProduct} from '../../src/catalog/runtime-master/runtime
 import {applyDeclaredWindowFlow} from '../../src/catalog/runtime-master/declared-window-flow.mjs';
 import {formalComposedRuntimeEntries,readFormalComposedModule} from '../../src/catalog/runtime-master/formal-composed-runtime-registry.mjs';
 import {validatePrivateRuntimeUiPackage} from './validate-private-runtime-ui-adoption.mjs';
+import {fieldLabel} from '../../contracts/ui-common/field-labels.v1.mjs';
 
 const read=path=>JSON.parse(readFileSync(path));
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -26,6 +27,13 @@ for(const row of master.handoff_tests){
   const input={...row.before,...row.changes},a=reader.uiResolver(input),b=await resolveRuntimeAppProduct(p.formal_product_id,input);
   for(const key of ['selection','validation','sales_request_handoff','confirmationRequests'])assert.deepEqual(b[key],a[key],row.case_id+':'+key);
   const fields=applyDeclaredWindowFlow(a.fields,prior).map(field=>({...field,values:field.values.map(({runtimeValueRow,...value})=>value)}));
+  // Current Main's shared vocabulary names this same sales-request quantity.
+  // Keep the original G12 label as provenance and assert the exact new label;
+  // no field, value, help text, order, or other presentation property is omitted.
+  for(const field of fields.filter(field=>field.key==='quantity')){
+    assert.equal(field.displayLabel,'依頼数量');assert.equal(fieldLabel('quantity'),'見積依頼数量');
+    field.displayLabel='見積依頼数量';
+  }
   assert.deepEqual(b.fields,fields,row.case_id+':fields');
   assert.equal(b.runtimeCapabilities.formalAdoption,true);assert.equal(b.runtimeMaster.candidateOnly,false);
   assert.equal(b.orderReady,false);assert.deepEqual(b.pricing,{price:null,bom:null,set_code:null});cases++;

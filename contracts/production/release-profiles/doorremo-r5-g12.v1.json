@@ -1102,7 +1102,7 @@
     "scripts/production/validate-working-master-recovery.py": "0a2aa4f6cccbe2aa8d3138dc6eefc5521dceb81177fcc1b277636c0fdf0614ec",
     "scripts/production/validate-working-master-xlsx-profile.py": "f5fd1c16b74a2d0dca16ccadcc44c544cccfbadc901ef21eaff973880ee0a3ef",
     "scripts/production/verify-app-release.mjs": "d48d138e7717738ac9cc9eb8ea3eb6ea2acd47fd1c85fe2c2e16147bede457ac",
-    "scripts/production/verify-declared-formal-runtime.mjs": "5d7439b86c0142564528cde8938b24dc23fc801fb070901e827f4bbff11d4e50",
+    "scripts/production/verify-declared-formal-runtime.mjs": "e53dc6be119a4b7d831b4f83589ae318560a1c598134fe2546c323efabcd5994",
     "scripts/production/verify-private-formal-runtime.mjs": "4c0d89c8b8cbe9b1729b38661b5af1a8ce899e4a53a275283017fffa350b454d",
     "scripts/production/verify-product-flow-registration.mjs": "3190fbab48986922bed65854b6527e7babbe3f6d469e32e0428f40df5626f231",
     "scripts/production/working-domain-formal.py": "eba0c601c6a6ed420a2636abffb830b0ddd7c3a8251e5146b7ec9f9e718b112c",
