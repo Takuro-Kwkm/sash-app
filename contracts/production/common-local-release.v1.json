@@ -164,6 +164,6 @@
     "src/catalog/runtime-master/row-table-runtime-registry.json": "f54da9924ca216c44d7adad72987c7c8f61c4ae967f75624b334fdfcb1a22ed5",
     "test/108-row-table-normal-runtime.test.mjs": "b8064be229686f0b1d9565ad06bbd70ada5437825d0ebf73563b0cf1a28b699b",
     "test/109-row-table-release-connection.test.mjs": "8a48cca88cef87352b3861b85229c9fdc215bc46a286d055da54662cee37c252",
-    "test/browser/row-table-business-browser-qa.mjs": "a74892f22a0242d74623890896509f76c1706581e2fee2177c556e3422f459f6"
+    "test/browser/row-table-business-browser-qa.mjs": "b98dabc53407a5ffa4fc424e5ae7550186edea1494fcf23238556aa70ec4015e"
   }
 }
