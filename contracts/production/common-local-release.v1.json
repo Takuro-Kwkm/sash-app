@@ -71,7 +71,7 @@
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "2a9d1dfda62cfbbac93665d3f08abce2b7cb1448",
+    "ref": "3150be2767b850db451a8476a26843e0909c1661",
     "entry": "scripts/release-contract.py",
     "files": {
       "scripts/release-contract.py": "847989b310fbfde6e6ff92bf22ebf46b35154ba1649e98d195b0a65556e63df1",
@@ -83,20 +83,23 @@
       "scripts/release-lifecycle-cli.mjs": "ad17a9893b77796a1f0075035a2506bbfddef341614601d39438b781bc8f47a4",
       "scripts/release-connected-host.mjs": "16a405814a116001b827b51cabaae98c8818a57bd076026f22c35f4a2f22009e",
       "scripts/release-connected-io.mjs": "4004f67e53fc1b25fe509d8a1cd93cf2a0aaf98554f919e7d0318ea8143c2c76",
-      "harness/release.py": "d9ccbb4935f7e65dc3a3d821b867f351888477b1569e064bc9d0577d8a69933d",
-      "harness/release_admission.py": "fe1460c17cc22d46289c25ea5319acd7e7e9e37e32552ecd910ceae402647848",
-      "harness/release_publication.py": "9acd143eebde301d66159f0ad2cb3ea26b730ad39b2fd4d0dd535a3ee5d1ee72",
+      "harness/release.py": "4e3bc9e89656ac36d12d3c189abb2f512b1464445f18c073af1c56c1e4abb162",
+      "harness/release_admission.py": "469ace839d83ef37d7fc4301b70ab5eb102545803c0629a3a432cf1f5f6defd7",
+      "harness/release_publication.py": "259bdb451ce8ef6a8bbcdfdd8956379a4c744a0f0bdfa27e5c59d8f0329d7a76",
       "harness/common_local_release.py": "b6688f32e76a300984f191f432bc648ab2b9a393fa2ca9cf1ddb22fcd592cb78",
-      "harness/common_local_adoption.py": "3066fc631f2f3afd12473bdbed6cdb3b3bf3b79393dc11589c5ecd3aba551f99",
+      "harness/common_local_adoption.py": "d1bd91d4d19d5ac638e704521b56142597f59bfbeea2255639f0fce272ef22e9",
       "harness/common_adoption.py": "0d254439aefa965848bc0d412f1926d8bb97244e10c57c1e15f9826f44ef2acc",
-      "harness/common_development.py": "5ad815f5eed3e436a0fa5c2dbd485203fb19ef52f265d4c178c92d7d8a4c859b",
+      "harness/common_development.py": "e7f9622a6140ba06269c200cac5c2c3d03727fed0b428609d6ce80b7677e65ee",
       "harness/native_format_release.py": "9162e97a141cca02ac6ddba838d37f9b0ef27d161e0048a138e3ea3f89df2ed7",
       "harness/common_preparation.py": "be269c01abba5dd8a36db1c44b1d082a53b0ec493921a96cc7379bf7f8520c57",
+      "harness/application_ui_release.py": "758268f0fb908a2b6c9bec0dd767deb2d8087a49bfc11665a718c83ac163cf0b",
       "harness/ui_image_coverage.py": "123bc4f1696449c713109ce36d4b79407bc3b314aca8b579daa1aec648adab9a",
       "scripts/ui-image-observer.mjs": "1d466ce38404e096358ac89aa0e0047682145cb7711d892c042547abc26f3ef8",
       "scripts/release-development.mjs": "bab8cf17929f0fde229c309b828fea1592f6a0f9c2247662649a4509ca491943",
       "scripts/materialize-release-runtime.py": "9e4306015b8446ac0cacc90d787f1555ab22d6ffea0c2c814e9f2ccc68442e58",
       "harness/current_authority.py": "a342e565123b63f05b3ab26f90668acacca19cdaaf5118322465d225ba9c0cb4",
+      "harness/resolvers.py": "9925e0f10a41305fc57247875a9b5c1aa4f800c19a394429a215a0213a2c86d9",
+      "harness/architecture.py": "16a2c873bba559aa7fd8799328800507ce8d475975887da130e1bbf26b369faf",
       "harness/local_qa.py": "e00f2eb9031f9dd2ab8873579ad050373ff921671e03636c41ebf6937d20c5b6",
       "harness/local_qa_preparation.py": "2d78140d45ea2b8c699be585b91d1dd6986f2c5d271fae34f907e657b083c3e2",
       "harness/local_qa_adoption.py": "0fbdd7cf311ca33f8ade5721367cabf5d4df40a0efc779839760c3052722646d",
@@ -160,6 +163,7 @@
     "contracts/production/select-pg-publication-lifecycle.v1.json": "a40d82ca326f9c362ecfdfccc068e2bac7e1064f72bdc5c59497615be7fdb75e",
     "src/catalog/runtime-master/row-table-runtime-registry.json": "f54da9924ca216c44d7adad72987c7c8f61c4ae967f75624b334fdfcb1a22ed5",
     "test/108-row-table-normal-runtime.test.mjs": "b8064be229686f0b1d9565ad06bbd70ada5437825d0ebf73563b0cf1a28b699b",
-    "test/109-row-table-release-connection.test.mjs": "8a48cca88cef87352b3861b85229c9fdc215bc46a286d055da54662cee37c252"
+    "test/109-row-table-release-connection.test.mjs": "8a48cca88cef87352b3861b85229c9fdc215bc46a286d055da54662cee37c252",
+    "test/browser/row-table-business-browser-qa.mjs": "a74892f22a0242d74623890896509f76c1706581e2fee2177c556e3422f459f6"
   }
 }
