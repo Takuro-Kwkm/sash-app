@@ -71,7 +71,7 @@
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "be8750e8ec04821c08034bfdd47b1c2d7b6b1a6f",
+    "ref": "a97c40ddd38a802050e4c6e86d6ab7d1cf411f82",
     "entry": "scripts/release-contract.py",
     "files": {
       "scripts/release-contract.py": "847989b310fbfde6e6ff92bf22ebf46b35154ba1649e98d195b0a65556e63df1",
@@ -80,7 +80,7 @@
       "scripts/release-native-profile.mjs": "285b58041e3353a343fd262a2936f79b6418644ae1e8161e97826c1ae57403e6",
       "scripts/release-local-publication.mjs": "cbf4448632cb0a96fada6689aefaf30329bac85ee4341c825aa515bff8424c6b",
       "scripts/release-provider-host.mjs": "bd3bd712679de2777a27f92558c161d0d2eedab97d59a8ba6ab463fb5f54c712",
-      "scripts/release-lifecycle-cli.mjs": "ad17a9893b77796a1f0075035a2506bbfddef341614601d39438b781bc8f47a4",
+      "scripts/release-lifecycle-cli.mjs": "0c6c3158c853432a93c1b98b02e2b612b3029d7644a3475d75d0a452bd06688f",
       "scripts/release-connected-host.mjs": "16a405814a116001b827b51cabaae98c8818a57bd076026f22c35f4a2f22009e",
       "scripts/release-connected-io.mjs": "4004f67e53fc1b25fe509d8a1cd93cf2a0aaf98554f919e7d0318ea8143c2c76",
       "harness/release.py": "4e3bc9e89656ac36d12d3c189abb2f512b1464445f18c073af1c56c1e4abb162",
