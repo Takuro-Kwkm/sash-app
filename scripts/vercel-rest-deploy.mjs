@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFile, mkdir, writeFile,rm }  from 'node:fs/promises';
 import { execFileSync,spawn } from 'node:child_process';
 import path from 'node:path';
-import {stagePrivateRuntimeFiles} from './production/release-private-runtime-files.mjs';
+import {stagePrivateRuntimeFiles,readPrivateRuntimeFile} from './production/release-private-runtime-files.mjs';
 
 const mode = process.argv[2] ?? 'preview';
 const outputPath = process.argv[3] ?? 'artifacts/vercel-deployment.json';
@@ -104,8 +104,7 @@ if(!previous){
    if(!pkg.root.startsWith('src/catalog/runtime-release-data/')||pkg.root.split('/').includes('..'))throw new Error('RELEASE_RUNTIME_PATH');
    for(const[name,expected]of Object.entries(pkg.files)){
     if(path.isAbsolute(name)||name.split('/').includes('..')||name.includes('\\'))throw new Error('RELEASE_RUNTIME_PATH');
-    const source=path.resolve(root,name);const{lstat}=await import('node:fs/promises');for(let p=source;p!==path.resolve(root);p=path.dirname(p))if((await lstat(p)).isSymbolicLink())throw new Error('RELEASE_RUNTIME_PATH');
-    const data=await readFile(source);if(data.length!==expected.bytes||createHash('sha256').update(data).digest('hex')!==expected.sha256)throw new Error('RELEASE_RUNTIME_BYTES_CHANGED');
+    const data=await readPrivateRuntimeFile(root,pkg,name,registry.packages.length);if(data.length!==expected.bytes||createHash('sha256').update(data).digest('hex')!==expected.sha256)throw new Error('RELEASE_RUNTIME_BYTES_CHANGED');
     const file=pkg.root+'/'+name;if(fileBuffers.some(x=>x.file===file))throw new Error('RELEASE_RUNTIME_DUPLICATE');fileBuffers.push({file,data});
    }
   }

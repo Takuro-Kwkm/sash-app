@@ -133,7 +133,7 @@
     "scripts/production/validate-domain-runtime-connection.py": "91df5fa8c42af5dd50fbbc6d1d0be58b1b5457eeb4d59430e925127e274ca241",
     "scripts/production/validate-domain-runtime-projection.mjs": "ee5ae39ac71d210cc1ddc0685cda60a99a91da657be7df0c8dce58df6de8ea01",
     "scripts/production/validate-sheet-package-connection.py": "4956d9e864263b0bf181c54a65f1190f5df5495ab15d8ef189a225e361cd512e",
-    "scripts/vercel-rest-deploy.mjs": "746063d7e11737106704f2848f791cc5d1bfd4c548759107688d2c5d55bca741",
+    "scripts/vercel-rest-deploy.mjs": "ea0c1febeef5a6c80501988628886ea762cff8163bfd199d3cf8584949af9c7a",
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs": "6174897aca7e6560695b512e0787d7e00b147b712abcfb3e1369ae49da5807c9",
     "src/catalog/runtime-master/candidate-runtime-registry.mjs": "6977776677ded397321ff7cc6f99bc45d15eb18e676453f3069c620597d45372",
     "src/catalog/runtime-master/composed-product-runtime-adapter.mjs": "6b1ab4b7ff79089943991011834db9969da6722deff077f16d40f78e004b9786",
@@ -174,6 +174,7 @@
     "src/catalog/runtime-master/row-table-runtime-registry.json": "f54da9924ca216c44d7adad72987c7c8f61c4ae967f75624b334fdfcb1a22ed5",
     "test/108-row-table-normal-runtime.test.mjs": "b8064be229686f0b1d9565ad06bbd70ada5437825d0ebf73563b0cf1a28b699b",
     "test/109-row-table-release-connection.test.mjs": "8a48cca88cef87352b3861b85229c9fdc215bc46a286d055da54662cee37c252",
-    "test/browser/row-table-business-browser-qa.mjs": "b98dabc53407a5ffa4fc424e5ae7550186edea1494fcf23238556aa70ec4015e"
+    "test/browser/row-table-business-browser-qa.mjs": "b98dabc53407a5ffa4fc424e5ae7550186edea1494fcf23238556aa70ec4015e",
+    "scripts/production/release-private-runtime-files.mjs": "63895608db159bc1aeb0125c2d061f42465e8fed59da65b181179eb638db0150"
   }
 }
