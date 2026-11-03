@@ -15,7 +15,8 @@
     "contracts/production/release-profiles/giesta2-r14.v1.json": "contracts/production/release-profiles/local/giesta2-r14.v1.json",
     "contracts/production/release-profiles/apw330-r13-ui1.v1.json": "contracts/production/release-profiles/local/apw330-r13-ui1.v1.json",
     "contracts/production/release-profiles/select-pg-r7.v1.json": "contracts/production/release-profiles/local/select-pg-r7.v1.json",
-    "contracts/production/release-profiles/samosa-r7.v1.json": "contracts/production/release-profiles/local/samosa-r7.v1.json"
+    "contracts/production/release-profiles/samosa-r7.v1.json": "contracts/production/release-profiles/local/samosa-r7.v1.json",
+    "contracts/production/release-profiles/samosa-r9-adopted.v1.json": "contracts/production/release-profiles/local/samosa-r9-adopted.v1.json"
   },
   "new_work_aliases": {},
   "profile_identities": {
@@ -62,11 +63,15 @@
     "contracts/production/release-profiles/samosa-r7.v1.json": {
       "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
       "scope": "SAMOSA_V07_R7_APPROVED_UI_NORMAL_RUNTIME_PUBLICATION"
+    },
+    "contracts/production/release-profiles/samosa-r9-adopted.v1.json": {
+      "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+      "scope": "SAMOSA_V07_R9_ADOPTED_RUNTIME_PUBLICATION_20261103"
     }
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "2098ec3b090560aaa4619a1645abb02d4f1f261e",
+    "ref": "a97c40ddd38a802050e4c6e86d6ab7d1cf411f82",
     "entry": "scripts/release-contract.py",
     "files": {
       "scripts/release-contract.py": "847989b310fbfde6e6ff92bf22ebf46b35154ba1649e98d195b0a65556e63df1",
@@ -75,22 +80,26 @@
       "scripts/release-native-profile.mjs": "285b58041e3353a343fd262a2936f79b6418644ae1e8161e97826c1ae57403e6",
       "scripts/release-local-publication.mjs": "cbf4448632cb0a96fada6689aefaf30329bac85ee4341c825aa515bff8424c6b",
       "scripts/release-provider-host.mjs": "bd3bd712679de2777a27f92558c161d0d2eedab97d59a8ba6ab463fb5f54c712",
-      "scripts/release-lifecycle-cli.mjs": "ad17a9893b77796a1f0075035a2506bbfddef341614601d39438b781bc8f47a4",
+      "scripts/release-lifecycle-cli.mjs": "0c6c3158c853432a93c1b98b02e2b612b3029d7644a3475d75d0a452bd06688f",
       "scripts/release-connected-host.mjs": "16a405814a116001b827b51cabaae98c8818a57bd076026f22c35f4a2f22009e",
       "scripts/release-connected-io.mjs": "4004f67e53fc1b25fe509d8a1cd93cf2a0aaf98554f919e7d0318ea8143c2c76",
-      "harness/release.py": "d9ccbb4935f7e65dc3a3d821b867f351888477b1569e064bc9d0577d8a69933d",
-      "harness/release_admission.py": "fe1460c17cc22d46289c25ea5319acd7e7e9e37e32552ecd910ceae402647848",
-      "harness/release_publication.py": "9acd143eebde301d66159f0ad2cb3ea26b730ad39b2fd4d0dd535a3ee5d1ee72",
+      "harness/release.py": "4e3bc9e89656ac36d12d3c189abb2f512b1464445f18c073af1c56c1e4abb162",
+      "harness/release_admission.py": "469ace839d83ef37d7fc4301b70ab5eb102545803c0629a3a432cf1f5f6defd7",
+      "harness/release_publication.py": "259bdb451ce8ef6a8bbcdfdd8956379a4c744a0f0bdfa27e5c59d8f0329d7a76",
       "harness/common_local_release.py": "b6688f32e76a300984f191f432bc648ab2b9a393fa2ca9cf1ddb22fcd592cb78",
-      "harness/common_local_adoption.py": "3066fc631f2f3afd12473bdbed6cdb3b3bf3b79393dc11589c5ecd3aba551f99",
+      "harness/common_local_adoption.py": "d1bd91d4d19d5ac638e704521b56142597f59bfbeea2255639f0fce272ef22e9",
       "harness/common_adoption.py": "0d254439aefa965848bc0d412f1926d8bb97244e10c57c1e15f9826f44ef2acc",
-      "harness/common_development.py": "04736464d556d278905ebdea983fd391c39572eea6170661ab3305d71e64b783",
+      "harness/common_development.py": "e7f9622a6140ba06269c200cac5c2c3d03727fed0b428609d6ce80b7677e65ee",
+      "harness/native_format_release.py": "9162e97a141cca02ac6ddba838d37f9b0ef27d161e0048a138e3ea3f89df2ed7",
       "harness/common_preparation.py": "be269c01abba5dd8a36db1c44b1d082a53b0ec493921a96cc7379bf7f8520c57",
+      "harness/application_ui_release.py": "758268f0fb908a2b6c9bec0dd767deb2d8087a49bfc11665a718c83ac163cf0b",
       "harness/ui_image_coverage.py": "123bc4f1696449c713109ce36d4b79407bc3b314aca8b579daa1aec648adab9a",
       "scripts/ui-image-observer.mjs": "1d466ce38404e096358ac89aa0e0047682145cb7711d892c042547abc26f3ef8",
       "scripts/release-development.mjs": "bab8cf17929f0fde229c309b828fea1592f6a0f9c2247662649a4509ca491943",
       "scripts/materialize-release-runtime.py": "9e4306015b8446ac0cacc90d787f1555ab22d6ffea0c2c814e9f2ccc68442e58",
       "harness/current_authority.py": "a342e565123b63f05b3ab26f90668acacca19cdaaf5118322465d225ba9c0cb4",
+      "harness/resolvers.py": "9925e0f10a41305fc57247875a9b5c1aa4f800c19a394429a215a0213a2c86d9",
+      "harness/architecture.py": "16a2c873bba559aa7fd8799328800507ce8d475975887da130e1bbf26b369faf",
       "harness/local_qa.py": "e00f2eb9031f9dd2ab8873579ad050373ff921671e03636c41ebf6937d20c5b6",
       "harness/local_qa_preparation.py": "2d78140d45ea2b8c699be585b91d1dd6986f2c5d271fae34f907e657b083c3e2",
       "harness/local_qa_adoption.py": "0fbdd7cf311ca33f8ade5721367cabf5d4df40a0efc779839760c3052722646d",
@@ -100,7 +109,7 @@
     }
   },
   "native_file_overrides": {
-    "contracts/production/release-profiles.v1.json": "2ed9fbb24195ec1650383a76b86c671b0c1ad0b79ccd2292b54137eb1d777705",
+    "contracts/production/release-profiles.v1.json": "323f1b4e7f9f13c8fae0b6df222722090b6b2e0a111a0b3b7af7c5a1e446155d",
     "contracts/production/current-architecture.json": "3aed09d66610e1476a79ef6f65252c0787376b26ecc02209d4aec8ef81179af4",
     "contracts/production/validator-registry.v2.json": "5acacc07f244aee4b0f5e361889e96cfd8aee4ee2af9ebbf74883c5f1080491e",
     "contracts/production/work-connections.v2.json": "bde8f767a7858680eeed6b7add0c21da03cc1feda23b4df0683f3f5f48f9459b",
@@ -116,7 +125,7 @@
     "scripts/production/unpack-build-authority.py": "3eb0ea31b05bb06cfa1f320aa87209a74b80287b4d184db7711614dd07a77a62",
     "scripts/production/validate-domain-runtime-connection.py": "91df5fa8c42af5dd50fbbc6d1d0be58b1b5457eeb4d59430e925127e274ca241",
     "scripts/production/validate-domain-runtime-projection.mjs": "ee5ae39ac71d210cc1ddc0685cda60a99a91da657be7df0c8dce58df6de8ea01",
-    "scripts/vercel-rest-deploy.mjs": "6db9d2b95186ce3fb76cc701c32b6fcaf52edd0f78dbe54c9255ffa5dfb90783",
+    "scripts/vercel-rest-deploy.mjs": "746063d7e11737106704f2848f791cc5d1bfd4c548759107688d2c5d55bca741",
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs": "6174897aca7e6560695b512e0787d7e00b147b712abcfb3e1369ae49da5807c9",
     "src/catalog/runtime-master/candidate-runtime-registry.mjs": "6977776677ded397321ff7cc6f99bc45d15eb18e676453f3069c620597d45372",
     "src/catalog/runtime-master/composed-product-runtime-adapter.mjs": "8712fff6bbffd9c23cb8c86fb2feb83407f202861332da53ddfe734388737a84",
@@ -151,6 +160,10 @@
     "contracts/production/product-master-build-profile.native-v16.json": "1eb366f977ea6eb1d17e2ee8e980cf5d1b08b74ecf804c25de7b793225640e7c",
     "scripts/production/product-conditions-scope.py": "1f0747574738df24dd94c76aeb25ca4b6b09ff197b391de670ddaa6906caab1b",
     "scripts/production/private-runtime-readback.py": "c75161848ec62f41b691e7e992042e5c43ea59f2742beb93dfbd09bf053106a7",
-    "contracts/production/select-pg-publication-lifecycle.v1.json": "a40d82ca326f9c362ecfdfccc068e2bac7e1064f72bdc5c59497615be7fdb75e"
+    "contracts/production/select-pg-publication-lifecycle.v1.json": "a40d82ca326f9c362ecfdfccc068e2bac7e1064f72bdc5c59497615be7fdb75e",
+    "src/catalog/runtime-master/row-table-runtime-registry.json": "f54da9924ca216c44d7adad72987c7c8f61c4ae967f75624b334fdfcb1a22ed5",
+    "test/108-row-table-normal-runtime.test.mjs": "b8064be229686f0b1d9565ad06bbd70ada5437825d0ebf73563b0cf1a28b699b",
+    "test/109-row-table-release-connection.test.mjs": "8a48cca88cef87352b3861b85229c9fdc215bc46a286d055da54662cee37c252",
+    "test/browser/row-table-business-browser-qa.mjs": "b98dabc53407a5ffa4fc424e5ae7550186edea1494fcf23238556aa70ec4015e"
   }
 }

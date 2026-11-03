@@ -3,7 +3,12 @@
   "packages": [
     {
       "path": "runtime-master-packages/samosa-ui-r7/runtime_index.json",
-      "sha256": "e141e4f188f13e5495a0339c9116a81cea4885d685b34ea572d72e157920a4dc"
+      "sha256": "e141e4f188f13e5495a0339c9116a81cea4885d685b34ea572d72e157920a4dc",
+      "adoption": {
+        "path": "adoption/runtime-adoption.json",
+        "sha256": "785d6d4ae7cc5c79f073d0cf6ac2ff97996300712adab98cc5c3ba4d1365ca4f",
+        "work_id": "SAMOSA_NATIVE_RUNTIME_ADOPTION_R9_20261103"
+      }
     }
   ]
 }

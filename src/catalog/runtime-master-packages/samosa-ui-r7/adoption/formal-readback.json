@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "gate": "NATIVE_FORMAL_LOCATION_READBACK",
+  "actual_readback": {
+    "schema": "NATIVE_PRIVATE_RUNTIME_READBACK_V1",
+    "status": "FORMAL_RUNTIME_BYTES_READBACK_PASS",
+    "source": "CONNECTED_GOOGLE_DRIVE_TOOL",
+    "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+    "formal_product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+    "work_id": "SAMOSA_NATIVE_RUNTIME_ADOPTION_R9_20261103",
+    "folder_id": "10eHobQhx343aUkUeOHmV8KwD7K5OktuW",
+    "index": {
+      "path": "runtime_index.json",
+      "file_id": "118Hqc0wp1wxyDsQiAMudZYnJ4V5YC5I9",
+      "bytes": 10453,
+      "sha256": "e141e4f188f13e5495a0339c9116a81cea4885d685b34ea572d72e157920a4dc"
+    },
+    "module": {
+      "path": "reviewed-ui.json",
+      "file_id": "1UdZfWETz0i2SdVh-qlC2IEqSVrXZEEjU",
+      "bytes": 2836949,
+      "sha256": "e99f8a84c9603482e74444f8900a10a5b2efd476185f46a152839e29a18d094a"
+    },
+    "package": {
+      "path": "SAMOSA_v07_R7_R9_RuntimePackage.zip",
+      "file_id": "1lcJwp5r_XEVGOErPu2UmltbIFeiTQbj5",
+      "bytes": 1414209,
+      "sha256": "24a06377c07b8b8224bb2379cccd0d576d1f78416fc659160faeb59150e44df1",
+      "files": [
+        {
+          "path": "adoption/formal-master-receipt.json",
+          "bytes": 2084,
+          "sha256": "05b26dd84904142616f37a31147bf5922c012859425e6b0e3eff3ef1a3e35659"
+        },
+        {
+          "path": "adoption/ui-decision.json",
+          "bytes": 469,
+          "sha256": "e4ca6f4cec05761154b239f8098672be0a9e0f142ee798a59273e50e55b7d629"
+        },
+        {
+          "path": "adoption/ui-packet.json",
+          "bytes": 38439,
+          "sha256": "09099e71708a7849fa025e9972212892292a9bc7ffdd5ea74dd7eaa0bee815fe"
+        },
+        {
+          "path": "adoption/user-source.json",
+          "bytes": 423,
+          "sha256": "f4fc74044beb622cec96c21b5ef7975db2b962534236e412166049c2f4c1d832"
+        },
+        {
+          "path": "master.json",
+          "bytes": 870830,
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        },
+        {
+          "path": "reviewed-ui.json",
+          "bytes": 2836949,
+          "sha256": "e99f8a84c9603482e74444f8900a10a5b2efd476185f46a152839e29a18d094a"
+        },
+        {
+          "path": "runtime_index.json",
+          "bytes": 10453,
+          "sha256": "e141e4f188f13e5495a0339c9116a81cea4885d685b34ea572d72e157920a4dc"
+        },
+        {
+          "path": "source-digests.json",
+          "bytes": 907,
+          "sha256": "a90b4c0507b622e940cdb0ed5c10ab55febd3cead6419519e07e262dfb15cf22"
+        }
+      ]
+    },
+    "product_master_mutations": 0,
+    "release": false,
+    "full_bytes_verified": true
+  }
+}

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {configureProtectedQaBrowser,protectedQaGet,safeQaError} from '../../scripts/production/protected-qa-access.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
@@ -6,12 +7,12 @@ const {chromium}=await import(process.env.QA_PLAYWRIGHT_MODULE??'playwright');
 const base=process.env.QA_BASE_URL??'http://127.0.0.1:4276',out=process.env.QA_OUTPUT_DIR,contract=JSON.parse(fs.readFileSync(process.env.QA_RUNTIME_QA_CONTRACT??'contracts/production/runtime-ui-qa/samosa-r7.json'));
 assert.ok(out);fs.mkdirSync(out,{recursive:true});
 const cases=JSON.parse(fs.readFileSync(contract.cases)).cases,expected=JSON.parse(fs.readFileSync(contract.expected_inventory));
-const report={status:'RUNNING',product_id:contract.product_id,url:base,normal_runtime:true,candidate_environment_variables:Object.keys(process.env).filter(k=>/^SASH_CANDIDATE_|^SASH_PRIVATE_FORMAL_/.test(k)),observedCommit:null,viewports:[],errors:[],consoleErrors:[],failedResponses:[]};assert.deepEqual(report.candidate_environment_variables,[]);
+const report={status:'RUNNING',product_id:contract.product_id,url:base,normal_runtime:true,execution:'INDEPENDENT_VIEWPORT_CONTEXTS_CONCURRENT',candidate_environment_variables:Object.keys(process.env).filter(k=>/^SASH_CANDIDATE_|^SASH_PRIVATE_FORMAL_/.test(k)),observedCommit:null,viewports:[],errors:[],consoleErrors:[],failedResponses:[]};assert.deepEqual(report.candidate_environment_variables,[]);
 const browser=await chromium.launch({headless:true});
 try{
- for(const width of contract.viewports){
-  const context=await browser.newContext({viewport:{width,height:1000}}),page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.consoleErrors.push(m.text());});page.on('response',r=>{if(r.status()>=400)report.failedResponses.push({url:r.url(),status:r.status()});});
-  await page.goto(base,{waitUntil:'networkidle'});report.observedCommit=(await(await context.request.get(base+'/api/health')).json()).releaseCommitSha;if(process.env.QA_EXPECTED_COMMIT)assert.equal(report.observedCommit,process.env.QA_EXPECTED_COMMIT);
+ const viewportRuns=await Promise.allSettled(contract.viewports.map(async width=>{
+  const context=await browser.newContext({viewport:{width,height:1000}}),page=await context.newPage();await configureProtectedQaBrowser(context,new URL(base).origin);page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.consoleErrors.push(m.text());});page.on('response',r=>{if(r.status()>=400)report.failedResponses.push({url:r.url(),status:r.status()});});
+  await page.goto(base,{waitUntil:'networkidle'});report.observedCommit=(await(await protectedQaGet(context.request,base+'/api/health',new URL(base).origin)).json()).releaseCommitSha;if(process.env.QA_EXPECTED_COMMIT)assert.equal(report.observedCommit,process.env.QA_EXPECTED_COMMIT);
   const products=[],snapshots=[];
   for(const row of cases){
    const saved=await page.evaluate(async({id,input})=>{
@@ -39,6 +40,8 @@ try{
   const output=await page.evaluate(async snapshots=>{const {createEstimateOutputModel}=await import('/estimate-output/model.mjs');const {createEstimatePdfBytes}=await import('/estimate-output/pdf-renderer.mjs');const {createEstimateXlsxBytes}=await import('/estimate-output/xlsx-renderer.mjs');const model=createEstimateOutputModel({project:{project_id:'qa',project_name:'Normal Runtime'},estimate:{estimate_id:'qa',project_id:'qa'},openings:snapshots.map((s,i)=>({opening_id:String(i),opening_no:i+1,status:'COMPLETE',room_name:'QA',product_configuration_snapshot:s}))});return {model,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};},snapshots);
   assert.equal(output.model.rows.length,cases.length);for(const [i,s]of snapshots.entries()){for(const dim of ['width','height'])if(s.configuration[dim])assert.ok(output.model.rows[i].size.includes(String(s.configuration[dim])));assert.equal(output.model.rows[i].price,null);}
   fs.writeFileSync(path.join(out,`output-${width}.pdf`),new Uint8Array(output.pdf));fs.writeFileSync(path.join(out,`output-${width}.xlsx`),new Uint8Array(output.xlsx));fs.writeFileSync(path.join(out,`output-model-${width}.json`),JSON.stringify(output.model,null,2)+'\n');report.viewports.push({width,products,output:'GENERATED_AND_MODEL_VERIFIED',print:'NOT_VISUALLY_VERIFIED'});await context.close();
- }
+ }));
+ const failedViewport=viewportRuns.find(run=>run.status==='rejected');if(failedViewport)throw failedViewport.reason;
+ report.viewports.sort((a,b)=>contract.viewports.indexOf(a.width)-contract.viewports.indexOf(b.width));
  assert.deepEqual(report.errors,[]);assert.deepEqual(report.consoleErrors,[]);assert.deepEqual(report.failedResponses,[]);report.status='PASS';
-}catch(e){report.status='FAIL';report.failure={message:e.message,stack:e.stack};throw e;}finally{await browser.close();const bytes=JSON.stringify(report,null,2)+'\n';fs.writeFileSync(path.join(out,'report.json'),bytes);console.log(JSON.stringify({status:report.status,browser_report_sha256:createHash('sha256').update(bytes).digest('hex')}));}
+}catch(e){report.status='FAIL';report.failure={message:safeQaError(e)};throw new Error(safeQaError(e));}finally{await browser.close();const bytes=JSON.stringify(report,null,2)+'\n';fs.writeFileSync(path.join(out,'report.json'),bytes);console.log(JSON.stringify({status:report.status,browser_report_sha256:createHash('sha256').update(bytes).digest('hex')}));}

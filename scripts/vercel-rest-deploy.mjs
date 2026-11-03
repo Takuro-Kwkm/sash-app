@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFile, mkdir, writeFile,rm }  from 'node:fs/promises';
 import { execFileSync,spawn } from 'node:child_process';
 import path from 'node:path';
+import {stagePrivateRuntimeFiles} from './production/release-private-runtime-files.mjs';
 
 const mode = process.argv[2] ?? 'preview';
 const outputPath = process.argv[3] ?? 'artifacts/vercel-deployment.json';
@@ -242,7 +243,7 @@ if(!created) {
     if(linked&&(linked.projectId!==projectId||linked.orgId!==teamId))throw new Error('EXISTING_CLI_PROJECT_MISMATCH');
     if(!linked)await writeFile(localProject,JSON.stringify({projectId,orgId:teamId,projectName})+'\n');
     const privateRows=fileBuffers.filter(x=>x.file.startsWith('src/catalog/runtime-release-data/'));
-    for(const row of privateRows){await mkdir(path.dirname(row.file),{recursive:true});await writeFile(row.file,row.data);}
+    const stagedPrivate=await stagePrivateRuntimeFiles(process.cwd(),privateRows);
     const cliArgs=['deploy','--yes','--json','--scope',teamId,'--meta','releaseCommitSha='+githubSha,'--meta','releaseSeries='+(process.env.RELEASE_SERIES??'Adopted runtime'),'--env','SASH_RELEASE_COMMIT_SHA='+githubSha,'--build-env','SASH_RELEASE_COMMIT_SHA='+githubSha];
     if(mode==='production')cliArgs.push('--prod','--skip-domain');
     await writeFile(operationPath,JSON.stringify({...intent,cli_command:{executable:authenticatedCli,argv:cliArgs},logical_files:fileBuffers.map(x=>({file:x.file,bytes:x.data.length,sha256:createHash('sha256').update(x.data).digest('hex')}))},null,2)+'\n');
@@ -256,7 +257,7 @@ if(!created) {
     }finally{
       // These bytes originate only from the reviewed external payload; never
       // remove arbitrary source/user files or alter the original private source.
-      for(const row of privateRows){const actual=await readFile(row.file);if(!actual.equals(row.data))throw new Error('CLI_PRIVATE_MATERIALIZATION_CHANGED');await rm(row.file);}
+      await stagedPrivate.cleanup();
     }
   }else{
   const forceNew=mode==='production'?'forceNew=1&':'';
