@@ -153,7 +153,7 @@
     "src/work-management/domain.mjs": "31d3d7f23584fc173a1e5ffac7c7f63eb7e533a5da2237f62ef9befcaabc7ff1",
     "test/101-native-sheets-connection.test.mjs": "e7a0d15aaa0b0126db67134a41093681435ff623709a8dee6a6bd633ca2faa8c",
     "test/browser/declared-sales-runtime-browser-qa.mjs": "1089e39c7dff55bbc9121ad9886a1e7e58fcd6e38c0212e6cebce073be636467",
-    "test/formal-composed-runtime-integration.test.mjs": "134df8956f04fa3643bb3b0ed8470cb896e0eaac0527c14d5608404193d4755b",
+    "test/formal-composed-runtime-integration.test.mjs": "d34f7b21440040e25e10e693fe76eacd036e772dfc72cf5f7319abc555451578",
     ".gitignore": "9b816242310e827009a431f1c7059d18ef7e8aeb0c422bbb179fc5c803d73d2b",
     ".vercelignore": "dccdca865b68f0b857cae820424b98362d938b691160a5bb91fc1f0bcd4d9314",
     "AGENTS.md": "efdcaaa776ef634f38518d8e9122e9c830a1ab0b582928bc1fe441c530d227a1",
