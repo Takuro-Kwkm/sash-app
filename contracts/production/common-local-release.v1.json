@@ -71,7 +71,7 @@
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "3150be2767b850db451a8476a26843e0909c1661",
+    "ref": "be8750e8ec04821c08034bfdd47b1c2d7b6b1a6f",
     "entry": "scripts/release-contract.py",
     "files": {
       "scripts/release-contract.py": "847989b310fbfde6e6ff92bf22ebf46b35154ba1649e98d195b0a65556e63df1",
