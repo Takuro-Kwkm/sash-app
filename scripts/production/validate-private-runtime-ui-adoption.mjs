@@ -14,8 +14,24 @@ export function validatePrivateRuntimeUiPackage(indexPath,candidateIndexPath,pro
   const prior=candidate.products.find(x=>x.manufacturer===entry.manufacturer&&x.series===entry.series);assert.ok(prior);assert.equal(entry.id,profile.formal_product_id);assert.equal(entry.candidate,false);
   const bytes=readFileSync(owned(candidateRoot,prior.path));assert.equal(hash(bytes),profile.candidate.module_sha256);
   const transformed=JSON.parse(bytes.toString().replaceAll(prior.id,entry.id));Object.assign(transformed,{schema:'FORMAL_COMPOSED_PRODUCT_MODULE_V1',formal_adoption:true,source_adoption:false});
-  const finalBytes=readFileSync(owned(base,entry.path));assert.equal(hash(finalBytes),entry.sha256);assert.deepEqual(JSON.parse(finalBytes),transformed);assert.deepEqual(entry.uiFlowContract,prior.uiFlowContract);
+  const expectedFlow=structuredClone(prior.uiFlowContract);
+  if(profile.formal_source_rebind){
+   const rebind=profile.formal_source_rebind;
+   assert.equal(transformed.baseline.sha256,rebind.previous_sha256);
+   assert.equal(prior.uiFlowContract.sourceFlow.sha256,rebind.previous_sha256);
+   assert.equal(rebind.sha256,profile.formal_master.sha256);
+   assert.equal(transformed.baseline.product_id,profile.product_id);
+   transformed.baseline={...transformed.baseline,sha256:rebind.sha256,revision:profile.formal_master.version};
+   expectedFlow.sourceFlow={...expectedFlow.sourceFlow,sha256:rebind.sha256};
+  }
+  const finalBytes=readFileSync(owned(base,entry.path));assert.equal(hash(finalBytes),entry.sha256);assert.deepEqual(JSON.parse(finalBytes),transformed);assert.deepEqual(entry.uiFlowContract,expectedFlow);
   const master=read(owned(base,'sources/PRODUCT_MASTER.json'));assert.equal(hash(readFileSync(owned(base,'sources/PRODUCT_MASTER.json'))),profile.formal_master.sha256);assert.equal(master.gaps.length,profile.formal_master.unresolved_count);assert.deepEqual(transformed.pricing,{price:null,bom:null,set_code:null});
+  if(profile.confirmation_source==='CONTROLLED_UNRESOLVED_SIDECAR'){
+   assert.equal(hash(readFileSync(owned(base,'sources/CONTROLLED_UNRESOLVED.json'))),profile.controlled_unresolved_sha256);
+   const rows=read(owned(base,'sources/CONTROLLED_UNRESOLVED.json'));
+   assert.equal(rows.length,profile.controlled_unresolved_count);assert.ok(rows.every(row=>row.automatic_resolution===false));
+   assert.equal(new Set(rows.map(row=>row.id)).size,rows.length);
+  }
  }
  const refs=index.runtimeOnlyAdoption;for(const r of [refs.candidateIndex,refs.authorization,refs.review,refs.humanSource])assert.equal(hash(readFileSync(owned(base,r.path))),r.sha256);
  const auth=read(owned(base,refs.authorization.path)),human=read(owned(base,refs.humanSource.path)),review=read(owned(base,refs.review.path));assert.equal(auth.decision,'APPROVED');assert.equal(auth.authorization_kind,'EXPLICIT_USER_SCOPE');assert.equal(auth.decision_ref,human.reference);assert.equal(human.ai_decision,false);assert.equal(auth.imported_user_statement,human.statement);assert.equal(review.authorization_scope.expected.module_sha256,profile.candidate.module_sha256);assert.equal(review.authorization_scope.expected.index_sha256,profile.candidate.index_sha256);

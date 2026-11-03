@@ -1,6 +1,12 @@
 import { spawnSync } from 'node:child_process';
 
 const files = [
+  'src/server/runtime-choice-images.mjs',
+  'src/ui/web/choice-visuals.mjs',
+  'src/catalog/runtime-master/declared-choice-visuals.mjs',
+  'src/catalog/runtime-master/composed-product-runtime-adapter.mjs',
+  'scripts/production/verify-declared-formal-runtime.mjs',
+  'test/browser/doorremo-formal-runtime.browser.mjs',
   'src/server/recovery-app.mjs',
   'scripts/production/verify-app-release.mjs',
   'scripts/vercel-rest-deploy.mjs',

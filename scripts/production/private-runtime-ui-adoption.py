@@ -16,10 +16,28 @@ def execute(shared,contract,stage,work):
  if stage=='PREVIEW_IDENTITY':
   for name,h in p['candidate_files'].items():require(sha((candidate/name).read_bytes())==h,'PREVIEW_CHANGED',name,stage)
   for name,h in p['approved_presentation'].items():require(sha((n/name).read_bytes())==h,'APPROVED_PRESENTATION_CHANGED',name,stage)
-  prior=read_json(c['inputs']['preview_completion']['path']);review=read_json(c['inputs']['preview_review']['path'])
-  require(prior['state']=='COMPLETED'and review['status']=='PASS'and review['unverified']==[],'PREVIEW_QA_REQUIRED','Keep completed and independently reviewed preview',stage)
-  master=read_json(candidate/'sources/PRODUCT_MASTER.json');require(sha((candidate/'sources/PRODUCT_MASTER.json').read_bytes())==p['formal_master']['sha256']and len(master['gaps'])==p['formal_master']['unresolved_count'],'MASTER_CHANGED','Retain current Formal and every unresolved field',stage)
-  result={'status':'PASS','gate':stage,'controlled_unresolved':len(master['gaps']),'product_master_mutations':0}
+  review=read_json(c['inputs']['preview_review']['path'])
+  if p.get('preview_evidence_kind')=='RETAINED_IN_COMPLETED_FORMAL_WORK':
+   from harness.common_development import inspected_work,artifact_hashes
+   original=c['formal_work'];spec,state,definition,rows=inspected_work(original,p['product_id'])
+   completion=read_json(c['inputs']['formal_completion']['path'])
+   require(completion['role']=='PRODUCT_MASTER'and completion['formal']=='FORMAL_PASS'and completion['master_sha256']==p['formal_master']['sha256']and c['inputs']['formal_completion']['sha256']in artifact_hashes(rows),'FORMAL_MASTER_RECEIPT_REQUIRED','Use the actual completed native master producer',stage)
+   require(c['inputs']['formal_input']==spec['input'],'FORMAL_INPUT_CHANGED','Retained QA must come from actual completed Work input',stage)
+   retained=read_json(c['inputs']['formal_input']['path'])['retained_candidate_qa']
+   require(c['inputs']['preview_verified']==retained['verified']and retained['review']==c['inputs']['preview_review']and 'CARRY_FORWARD_QA'in state['completed_gates'],'PREVIEW_QA_REQUIRED','Original verified QA must be carried by actual completed Formal',stage)
+   master_path=root/'sources/PRODUCT_MASTER.json'
+   require(sha((candidate/'sources/PRODUCT_MASTER.json').read_bytes())==p['formal_source_rebind']['previous_sha256'],'PREVIEW_CHANGED','Keep original baseline bytes',stage)
+  else:
+   prior=read_json(c['inputs']['preview_completion']['path']);require(prior['state']=='COMPLETED','PREVIEW_QA_REQUIRED','Keep completed preview',stage)
+   master_path=candidate/'sources/PRODUCT_MASTER.json'
+  require(review['status']=='PASS'and review['unverified']==[],'PREVIEW_QA_REQUIRED','Keep independent original review',stage)
+  master=read_json(master_path);require(sha(master_path.read_bytes())==p['formal_master']['sha256']and len(master['gaps'])==p['formal_master']['unresolved_count'],'MASTER_CHANGED','Retain current Formal and every unresolved field',stage)
+  count=len(master['gaps'])
+  if p.get('confirmation_source')=='CONTROLLED_UNRESOLVED_SIDECAR':
+   require(sha((root/'sources/CONTROLLED_UNRESOLVED.json').read_bytes())==p['controlled_unresolved_sha256'],'MASTER_CHANGED','Exact formally preserved confirmation bytes required',stage)
+   confirmations=read_json(root/'sources/CONTROLLED_UNRESOLVED.json');count=len(confirmations)
+   require(count==p['controlled_unresolved_count']and len({r['id']for r in confirmations})==count and all(r['automatic_resolution']is False for r in confirmations),'MASTER_CHANGED','Retain every manual confirmation',stage)
+  result={'status':'PASS','gate':stage,'controlled_unresolved':count,'product_master_mutations':0}
  elif stage=='PACKAGE_TRANSFORM':
   run=subprocess.run([c['node'],str(n/p['native_validator']),str(root/'runtime_index.json'),str(candidate/'index.json'),c['profile']['path']],capture_output=True,text=True,check=True);result=json.loads(run.stdout)
  elif stage in ('STORAGE_READBACK','NATIVE_FORMAL_LOCATION_READBACK'):
@@ -42,7 +60,9 @@ def execute(shared,contract,stage,work):
   ref=read_json(Path(work)/'STORAGE_READBACK.json')['formal_binding'];capture(Path('/'),ref)
   env=dict(__import__('os').environ,SASH_PRIVATE_FORMAL_RUNTIME_MANIFEST=ref['path'],SASH_PRIVATE_FORMAL_RUNTIME_SHA256=ref['sha256'],QA_ADOPTION_CONTRACT=str(contract),QA_OUTPUT_DIR=str(Path(work)/'formal-browser'))
   require(not any(env.get(x)for x in ['VERCEL','SASH_CANDIDATE_MODE','SASH_CANDIDATE_RUNTIME_INDEX','SASH_WORKING_PREVIEW_MANIFEST']),'NORMAL_FORMAL_RUNTIME_REQUIRED','Normal application only',stage)
-  run=subprocess.run([c['node'],str(n/'scripts/production/verify-private-formal-runtime.mjs')],cwd=n,env=env,capture_output=True,text=True,check=True,timeout=600);result=json.loads(run.stdout.strip().splitlines()[-1]);require(result['status']=='PASS','FORMAL_RUNTIME_QA_FAILED','Normal runtime parity and Browser/storage/output QA required',stage)
+  qa=p.get('formal_runtime_qa_script','scripts/production/verify-private-formal-runtime.mjs');qa_path=(n/qa).resolve()
+  require(qa_path.is_relative_to(n)and qa_path.is_file()and not qa_path.is_symlink(),'NATIVE_QA_PATH','Use registered native QA',stage)
+  run=subprocess.run([c['node'],str(qa_path)],cwd=n,env=env,capture_output=True,text=True,check=True,timeout=600);result=json.loads(run.stdout.strip().splitlines()[-1]);require(result['status']=='PASS','FORMAL_RUNTIME_QA_FAILED','Normal runtime parity and Browser/storage/output QA required',stage)
 
  elif stage=='RUNTIME_UI_ADOPTION':
   for name in ('PREVIEW_IDENTITY','PACKAGE_TRANSFORM','STORAGE_READBACK','FORMAL_RUNTIME_QA','NATIVE_FORMAL_LOCATION_READBACK'):

@@ -1,9 +1,10 @@
+import {renderChoiceVisuals,handleChoiceVisualDialog,handleChoiceVisualFilter,renderChoiceRecommendationScope,recommendationOptionAttributes} from '/choice-visuals.mjs';
 import { createProductConfigurationSnapshot, applyDeclaredInputClears } from '/work-management/domain.mjs';
 import { productChoices, choiceForMember, memberForChoice } from '/product-choice-model.mjs';
 import { withConfigurationMigrationAudit } from '/work-management/configuration-migration.mjs';
 
 const esc=(value)=>String(value??'').replace(/[&<>'\"]/g,(character)=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"})[character]);
-const reviewChoiceLabel=(value)=>`${esc(value.displayLabel)}${value.manualCheck&&!String(value.displayLabel).includes('要確認')?'（要確認）':''}`;
+const reviewChoiceLabel=(value)=>`${esc(value.displayLabel)}${value.visualRecommendationLabel?'【'+esc(value.visualRecommendationLabel)+'】':''}${value.presentationBadge?'【'+esc(value.presentationBadge)+'】':''}${value.manualCheck&&!String(value.displayLabel).includes('要確認')?'（要確認）':''}`;
 const TECHNICAL_TOKEN=/\b(?:CUSTOM_DIMENSION|RUNTIME|ORDER_READY|[A-Z][A-Z0-9]+(?:_[A-Z0-9]+){1,})\b/;
 const STATUS_LABELS=Object.freeze({
   BLOCK:'製作範囲外',BLOCKED:'選択できません',REVIEW_REQUIRED:'要確認',MANUAL_CHECK:'要確認',
@@ -207,6 +208,18 @@ export class ProductConfigurationEditor {
   }
 
   async handleClick(event){
+    if(handleChoiceVisualDialog(this.root,event))return;
+    const choice=event.target.closest('[data-visual-choice-key]');
+    if(choice&&!choice.disabled){
+      const control=[...this.root.querySelectorAll('select[data-spec-key]')].find(node=>node.dataset.specKey===choice.dataset.visualChoiceKey);
+      if(control&&!control.disabled){
+        const key=choice.dataset.visualChoiceKey;
+        control.value=choice.dataset.value;await this.handleChange({target:control});
+        const selectedControl=[...this.root.querySelectorAll('select[data-spec-key]')].find(node=>node.dataset.specKey===key);
+        selectedControl?.focus();
+      }
+      return;
+    }
     const preview=event.target.closest('[data-image-preview-field]');
     if(preview){this.openImagePreview(preview.dataset.imagePreviewField,preview);return;}
     if(event.target.closest('[data-image-preview-close]')){this.closeImagePreview();return;}
@@ -240,6 +253,7 @@ export class ProductConfigurationEditor {
   }
 
   async handleChange(event){
+    if(handleChoiceVisualFilter(this.root,event))return;
     const target=event.target;
     if(target.matches?.('[data-special-specification-request],textarea[data-workflow-control="user_requirements"]')){
       if(!this.state.snapshot||!this.state.resolved)return;
@@ -381,8 +395,8 @@ export class ProductConfigurationEditor {
       const nativeOptions=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}</option>`).join('');
       return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select class="multi-enum-native-control" data-spec-key="${esc(field.key)}" ${attributes} multiple aria-hidden="true" tabindex="-1">${nativeOptions}</select><div class="multi-enum-group" role="group" aria-label="${esc(field.displayLabel)}" data-multi-enum="true" data-multi-key="${esc(field.key)}">${choices}</div>${this.state.resolved?.presentation?.choiceImages?.mode==='MODAL_ON_DEMAND'?this.renderChoiceImages(field):''}<small class="field-help">${esc(field.helpText??'複数選択できます')}</small></div>`;
     }
-    const options=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${reviewChoiceLabel(value)}</option>`).join('');
-    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}" ${attributes}><option value="">選択してください</option>${options}</select>${this.renderChoiceImages(field)}${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
+    const options=field.values.map((value)=>`<option value="${esc(value.value)}"${recommendationOptionAttributes(field,value,selected)}${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${reviewChoiceLabel(value)}</option>`).join('');
+    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label>${renderChoiceRecommendationScope(field,selected)}<select data-spec-key="${esc(field.key)}" ${attributes}><option value="">選択してください</option>${options}</select>${this.renderChoiceImages(field)}${renderChoiceVisuals(field,selected)}${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
   }
 
   renderChoiceImages(field,readOnly=false){

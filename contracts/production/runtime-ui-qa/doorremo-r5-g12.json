@@ -1,0 +1,20 @@
+{
+  "schema": "DECLARED_FORMAL_RUNTIME_BROWSER_QA_V1",
+  "product_id": "CANDIDATE:DOORREMO_NONFIRE",
+  "native_product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
+  "manifest_file_id": "1QcOb7Ind_qONJKoVX9ObXjtLFsrISWjd",
+  "viewports": [
+    1280,
+    768,
+    390
+  ],
+  "browser_data_root": "contracts/production/runtime-ui-qa/doorremo-g12",
+  "facet_expectations": {
+    "path": "contracts/production/runtime-ui-qa/doorremo-g12/facet-expectations.json"
+  },
+  "recommendation_expectations": {
+    "path": "contracts/production/runtime-ui-qa/doorremo-g12/recommendation-expectations.json"
+  },
+  "original_human_ref": "codex://threads/01a19745-9f7b-7651-a064-0183fee6db81?turn=01a19f36-239b-70a2-9d66-a1eeee6ee7d4&message=01a19f36-23c9-77b1-9980-55ec1f773379",
+  "scope": "Same G12 exact assets, five direct standard parents D2/D4, filters, one click, nonpreferred save, legacy no alias, output"
+}

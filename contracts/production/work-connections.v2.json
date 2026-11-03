@@ -862,11 +862,16 @@
         "path": "contracts/production/runtime-candidates/doorremo-nonfire-r1.profile.json",
         "sha256": "a2c607ed02aec830d64ad6c7b879dac78116d4f0d533a2533aefa5056ca1b18c"
       },
-      "current_formal_version": "v1.1-R4-F1-20261015",
+      "current_formal_version": "v1.1-R5-F1-20261103",
       "adapters": {
         "ProductMaster": "scripts/production/sheet-package-formal.py",
         "Validator": "scripts/production/shared-domain-formal-change.py"
-      }
+      },
+      "runtime_ui_adoption_profile": {
+        "path": "contracts/production/runtime-adoptions/doorremo-r5-g12.profile.json",
+        "sha256": "bf2530b8fae86d12cd3090efd88d6915e0c25b3cbfa4273b4078d5a8d835ae39"
+      },
+      "release_profile": "contracts/production/release-profiles/local/doorremo-r5-g12.v1.json"
     },
     {
       "product_id": "NATIVE_REGISTRY:YKK AP::ヴェナートD30",

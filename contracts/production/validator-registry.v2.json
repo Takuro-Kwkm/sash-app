@@ -301,6 +301,10 @@
       "runtime_candidate_profile": {
         "path": "contracts/production/runtime-candidates/doorremo-nonfire-r1.profile.json",
         "sha256": "a2c607ed02aec830d64ad6c7b879dac78116d4f0d533a2533aefa5056ca1b18c"
+      },
+      "runtime_ui_adoption_profile": {
+        "path": "contracts/production/runtime-adoptions/doorremo-r5-g12.profile.json",
+        "sha256": "bf2530b8fae86d12cd3090efd88d6915e0c25b3cbfa4273b4078d5a8d835ae39"
       }
     },
     "NATIVE_REGISTRY:YKK AP::ヴェナートD30": {

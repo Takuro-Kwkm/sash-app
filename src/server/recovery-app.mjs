@@ -7,6 +7,7 @@ import { stabilizeSelection } from "../catalog/catalog-resolver.mjs";
 import { CURRENT_WINDOW_SERIES_MODULES } from "../catalog/modules/current-window-series.mjs";
 import { resolveRuntimeAppProduct, runtimeAppIntegrationInventory } from "../catalog/runtime-master/runtime-app-bridge.mjs";
 import {parseSelectionContext} from '../catalog/runtime-master/declared-selection-views.mjs';
+import {projectRuntimeChoiceImages,runtimeChoiceImage} from './runtime-choice-images.mjs';
 import { WORK_SCHEMA_VERSION } from "../work-management/domain.mjs";
 
 const HERE=dirname(fileURLToPath(import.meta.url));
@@ -66,9 +67,16 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
       return json(res,200,stabilizeSelection(catalog,productId,parseSelection(url)));
     }
     if(url.pathname==="/api/runtime-master/integrations") return json(res,200,runtimeIntegrationDeclarations);
+    if(url.pathname.startsWith('/api/runtime-master/choice-image/')){
+      try{
+        const image=runtimeChoiceImage(url.searchParams.get('productId'),url.pathname.slice('/api/runtime-master/choice-image/'.length));
+        if(image){res.writeHead(200,{'content-type':image.mime,'cache-control':'public, max-age=31536000, immutable','etag':'"'+image.sha256+'"','x-content-type-options':'nosniff'});return res.end(image.bytes);}
+        return json(res,404,{error:'Image not found'});
+      }catch(error){return json(res,400,{error:error?.code??'CHOICE_IMAGE_UNAVAILABLE'});}
+    }
     if(url.pathname==="/api/runtime-master/resolve"){
       const productId=url.searchParams.get("productId");if(!productId)return json(res,400,{error:"productId required"});
-      try{return json(res,200,await resolveRuntimeAppProduct(productId,parseSelection(url),parseSelectionContext(url.searchParams.get('selectionContext'))));}
+      try{return json(res,200,projectRuntimeChoiceImages(await resolveRuntimeAppProduct(productId,parseSelection(url),{...parseSelectionContext(url.searchParams.get('selectionContext')),configurationVersion:url.searchParams.get('configurationVersion')??undefined})));}
       catch(error){return json(res,400,{error:error?.message??String(error),code:error?.code??"RUNTIME_RESOLVE_FAILED"});}
     }
     if(url.pathname==="/api/catalog") return json(res,200,catalog);
@@ -76,6 +84,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     if(url.pathname==="/theme.js") return staticFile(res,"theme.js","text/javascript; charset=utf-8");
     if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/product-choice-model.mjs") return staticFile(res,"product-choice-model.mjs","text/javascript; charset=utf-8");
+    if(url.pathname==="/choice-visuals.mjs") return staticFile(res,"choice-visuals.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/estimate-output-integration.mjs") return staticFile(res,"estimate-output-integration.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/styles.css") return staticFile(res,"styles.css","text/css; charset=utf-8");
     if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");

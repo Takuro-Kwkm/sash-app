@@ -1,0 +1,514 @@
+{
+  "schema": "INDEPENDENT_CHILD_IMAGE_FACET_EXPECTATIONS_V1",
+  "status": "SOURCE_CLASSIFICATION_PASS_AWAITING_IMPLEMENTATION_QA",
+  "reviewer": "independent-child-filter-reviewer",
+  "scope": "Exact42 native secondary_leaf_design_id values:28 child leaves+14 dedicated double-opening secondary leaves. Classification supports gallery-only facets, no new manufacturer allowance/orderability rule.",
+  "totals": {
+    "values": 42,
+    "daylight_yes": 33,
+    "daylight_no": 9,
+    "post_yes": 2,
+    "post_no": 40
+  },
+  "rows": [
+    {
+      "value": "K60N",
+      "group": "D50_CHILD",
+      "has_daylight": false,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF72:親子子扉推奨対応表の無採光/採光付列と全写真"
+      ],
+      "basis": "K60N無採光、K62N/K63N/K64N採光付が明示。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K62N",
+      "group": "D50_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF72:親子子扉推奨対応表の無採光/採光付列と全写真"
+      ],
+      "basis": "K60N無採光、K62N/K63N/K64N採光付が明示。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K63N",
+      "group": "D50_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF72:親子子扉推奨対応表の無採光/採光付列と全写真"
+      ],
+      "basis": "K60N無採光、K62N/K63N/K64N採光付が明示。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K64N",
+      "group": "D50_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF72:親子子扉推奨対応表の無採光/採光付列と全写真"
+      ],
+      "basis": "K60N無採光、K62N/K63N/K64N採光付が明示。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K01N",
+      "group": "D30_CHILD",
+      "has_daylight": false,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:無採光見出しの列境界",
+        "ORDER:PDF78:対応design列のガラス欄-"
+      ],
+      "basis": "無採光見出しの範囲はK05Nまで。K01NはK01N(M)共通列。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K01M",
+      "group": "D30_CHILD_HIGH",
+      "has_daylight": false,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:K01N(M)無採光列",
+        "ORDER:PDF79:01Mガラス欄-"
+      ],
+      "basis": "ハイサイズ01Mのガラス欄も明示的に-。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K02N",
+      "group": "D30_CHILD",
+      "has_daylight": false,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:無採光見出しの列境界",
+        "ORDER:PDF78:対応design列のガラス欄-"
+      ],
+      "basis": "無採光見出しの範囲はK05Nまで。K01NはK01N(M)共通列。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K03N",
+      "group": "D30_CHILD",
+      "has_daylight": false,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:無採光見出しの列境界",
+        "ORDER:PDF78:対応design列のガラス欄-"
+      ],
+      "basis": "無採光見出しの範囲はK05Nまで。K01NはK01N(M)共通列。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K04N",
+      "group": "D30_CHILD",
+      "has_daylight": false,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:無採光見出しの列境界",
+        "ORDER:PDF78:対応design列のガラス欄-"
+      ],
+      "basis": "無採光見出しの範囲はK05Nまで。K01NはK01N(M)共通列。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K05N",
+      "group": "D30_CHILD",
+      "has_daylight": false,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:無採光見出しの列境界",
+        "ORDER:PDF78:対応design列のガラス欄-"
+      ],
+      "basis": "無採光見出しの範囲はK05Nまで。K01NはK01N(M)共通列。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K06N",
+      "group": "D30_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:採光付見出しの列境界",
+        "ORDER:PDF78:対応design列の複層ガラス入欄"
+      ],
+      "basis": "K06Nから採光付。K06NはK05Nの無採光列に含めない。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K07N",
+      "group": "D30_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:採光付見出しの列境界",
+        "ORDER:PDF78:対応design列の複層ガラス入欄"
+      ],
+      "basis": "K06Nから採光付。K06NはK05Nの無採光列に含めない。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K08N",
+      "group": "D30_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:採光付見出しの列境界",
+        "ORDER:PDF78:対応design列の複層ガラス入欄"
+      ],
+      "basis": "K06Nから採光付。K06NはK05Nの無採光列に含めない。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K08M",
+      "group": "D30_CHILD_HIGH",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF205:共通caption完全写真",
+        "ORDER:PDF79:08M/11Mの複層ガラス入欄"
+      ],
+      "basis": "該当ハイサイズ列のガラス記載を確認。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K10N",
+      "group": "D30_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:採光付見出しの列境界",
+        "ORDER:PDF78:対応design列の複層ガラス入欄"
+      ],
+      "basis": "K06Nから採光付。K06NはK05Nの無採光列に含めない。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K11N",
+      "group": "D30_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF208:採光付見出しの列境界",
+        "ORDER:PDF78:対応design列の複層ガラス入欄"
+      ],
+      "basis": "K06Nから採光付。K06NはK05Nの無採光列に含めない。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K11M",
+      "group": "D30_CHILD_HIGH",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF205:共通caption完全写真",
+        "ORDER:PDF79:08M/11Mの複層ガラス入欄"
+      ],
+      "basis": "該当ハイサイズ列のガラス記載を確認。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K51T",
+      "group": "D30_CHILD_VENT",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF206:通風子扉全写真・個別caption",
+        "ORDER:PDF91:通風子扉該当行の全図版"
+      ],
+      "basis": "通風機構だけで推定せず各全写真の採光ガラスを確認。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K52K",
+      "group": "D30_CHILD_VENT",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF206:通風子扉全写真・個別caption",
+        "ORDER:PDF91:通風子扉該当行の全図版"
+      ],
+      "basis": "通風機構だけで推定せず各全写真の採光ガラスを確認。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K53T",
+      "group": "D30_CHILD_VENT",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF206:通風子扉全写真・個別caption",
+        "ORDER:PDF91:通風子扉該当行の全図版"
+      ],
+      "basis": "通風機構だけで推定せず各全写真の採光ガラスを確認。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "P01N",
+      "group": "D30_CHILD_POST",
+      "has_daylight": true,
+      "has_post": true,
+      "source_refs": [
+        "BUSINESS:PDF207:ポスト付子扉全写真とP01N/P02Ncaption",
+        "ORDER:PDF91:ポスト付子扉該当行"
+      ],
+      "basis": "明示的なポスト付区分かつ上/下の採光ガラス。ポスト有はこの2値のみ。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "P02N",
+      "group": "D30_CHILD_POST",
+      "has_daylight": true,
+      "has_post": true,
+      "source_refs": [
+        "BUSINESS:PDF207:ポスト付子扉全写真とP01N/P02Ncaption",
+        "ORDER:PDF91:ポスト付子扉該当行"
+      ],
+      "basis": "明示的なポスト付区分かつ上/下の採光ガラス。ポスト有はこの2値のみ。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "05",
+      "group": "ALUMINUM_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF244:アルミ子扉各captionと全写真"
+      ],
+      "basis": "5種類すべて採光ガラスあり、ポスト無し。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "06",
+      "group": "ALUMINUM_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF244:アルミ子扉各captionと全写真"
+      ],
+      "basis": "5種類すべて採光ガラスあり、ポスト無し。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "07",
+      "group": "ALUMINUM_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF244:アルミ子扉各captionと全写真"
+      ],
+      "basis": "5種類すべて採光ガラスあり、ポスト無し。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "08",
+      "group": "ALUMINUM_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF244:アルミ子扉各captionと全写真"
+      ],
+      "basis": "5種類すべて採光ガラスあり、ポスト無し。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "50",
+      "group": "ALUMINUM_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "BUSINESS:PDF244:アルミ子扉各captionと全写真"
+      ],
+      "basis": "5種類すべて採光ガラスあり、ポスト無し。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "K09N",
+      "group": "D30_CHILD",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF90:exactK09N行の全図版と採光部位置注記"
+      ],
+      "basis": "K09N行に採光部位置の注記。BUSINESSのK09HまたはORDER78の09Hをalias根拠に使わない。ガラス種類は分類外。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "N41N",
+      "group": "D50_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF22:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "両開き専用ユニットのガラス欄にトリプルガラス入。親扉画像から推定しない。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "F64N",
+      "group": "D50_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF22:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "両開き専用ユニットのガラス欄にトリプルガラス入。親扉画像から推定しない。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "C60N",
+      "group": "D50_DOUBLE_SECONDARY",
+      "has_daylight": false,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF23:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "C60N/E63Nはガラス-、C63Nはトリプルガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "C63N",
+      "group": "D50_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF23:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "C60N/E63Nはガラス-、C63Nはトリプルガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "E63N",
+      "group": "D50_DOUBLE_SECONDARY",
+      "has_daylight": false,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF23:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "C60N/E63Nはガラス-、C63Nはトリプルガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "N06H",
+      "group": "D30_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF76:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "各対応列に複層ガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "F06H",
+      "group": "D30_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF76:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "各対応列に複層ガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "C03N",
+      "group": "D30_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF77:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "全5対応列に複層ガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "C04N",
+      "group": "D30_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF77:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "全5対応列に複層ガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "E01N",
+      "group": "D30_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF77:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "全5対応列に複層ガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "E10N",
+      "group": "D30_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF77:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "全5対応列に複層ガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "E11N",
+      "group": "D30_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF77:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "全5対応列に複層ガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "S03",
+      "group": "ALUMINUM_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF124:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "S03/S08各列に合わせガラス入。",
+      "independent_visual_source_review": "PASS"
+    },
+    {
+      "value": "S08",
+      "group": "ALUMINUM_DOUBLE_SECONDARY",
+      "has_daylight": true,
+      "has_post": false,
+      "source_refs": [
+        "ORDER:PDF124:両開き用子扉ユニット該当列ガラス欄"
+      ],
+      "basis": "S03/S08各列に合わせガラス入。",
+      "independent_visual_source_review": "PASS"
+    }
+  ],
+  "source_identity": {
+    "BUSINESS_SHA256": "14b440a787559b12ac9442e86652b3c0c37af673fc0c751ed7b5385499ffd684",
+    "ORDER_SUPPLEMENTAL_SHA256": "37b4d07cca5da8699bb7796690a703cf123a440c8d8b15f3c44ccbd753dca1bc",
+    "note": "Existing G4 supplemental ORDER source identity retained; not asserted byte-identical to Formal ORDER baseline."
+  },
+  "critical_boundaries": [
+    "BUSINESS208 無採光 header ends afterK05N; K06N belongs to採光付. ORDER78 confirmsK05Nガラス- versusK06N複層ガラス入.",
+    "K09N uses its exact ORDER90 row and採光部注記; K09H is not aliased.",
+    "D50 double-opening dedicated secondaryC60N/E63N are unglazed; N41N/F64N/C63N glazed.",
+    "P01N/P02N only are explicitly categorizedポスト付."
+  ],
+  "method": "Directly inspected all relevant fullpage PNGs and original-PDF enlarged header/table/note clips; combined column alignment, explicit glass rows, complete photographs and source headings.",
+  "corrections_required": [],
+  "pending": [
+    "Implementation metadata/filter behavior and no native allowed-value mutation",
+    "Actual browser facet choices, counts, reset and saved selection behavior",
+    "Final immutable QA result+binding independent review"
+  ],
+  "source_mutations_by_reviewer": 0
+}
