@@ -52,6 +52,22 @@ def execute(shared, contract):
           'Original registered profile differs')
     check(runtime['completed_gates'] == profile['required_stages'] + ['SAVE_ADOPTION_RESULT'],
           'Keep every mandatory native adoption gate')
+    production = doc(rs['production_binding'])
+    original_head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=origin, text=True).strip()
+    canonical = subprocess.check_output(['git', 'remote', 'get-url', 'origin'], cwd=origin, text=True).strip()
+    check(canonical.removesuffix('.git') == 'https://github.com/' + c['repository']
+          and production['repository'] == c['repository']
+          and production['checkout'] == str(origin)
+          and production['head_sha'] == original_head, 'Original native repository/HEAD differs')
+    check(subprocess.run(['git', 'merge-base', '--is-ancestor', original_head, c['source_commit']],
+                        cwd=n, capture_output=True).returncode == 0, 'Original Main not in current native history')
+    names = ['contracts/production/validator-registry.v2.json', declared['path'],
+             profile['native_preparer'], profile['native_worker']]
+    for name in names:
+        value = (origin / name).read_bytes()
+        committed = subprocess.check_output(['git', 'show', original_head + ':' + name], cwd=origin)
+        check(value == committed and production['files'][name]['sha256'] == sha(value),
+              'Original registered code differs from actual Main Git bytes')
     preparer = origin / profile['native_preparer']
     check({'path': str(preparer), 'sha256': sha(preparer.read_bytes())} in rs['runtime_refs'],
           'Original admission implementation is not pinned')
@@ -106,6 +122,16 @@ def execute(shared, contract):
           'Actual DOM belongs to another native source')
     for view in dom['observations']:
         check(view['errors'] == [] and view['fields'] == dom['observations'][0]['fields'], 'Actual DOM differs by width')
+    source_fields = {field['field_id']: field for field in doc(c['expected_inventory'])['fields']}
+    for view in dom['observations']:
+        check(len(browser['fields']) == len(view['fields']), 'Normalized DOM field count differs')
+        for normalized, observed in zip(browser['fields'], view['fields']):
+            check(all(normalized.get(key) == value for key, value in observed.items()),
+                  'Normalized field differs from the actual DOM observation')
+            declared_field = source_fields[observed['field_id']]
+            check(all(normalized.get(key) == declared_field.get(key)
+                      for key in ('stage', 'role', 'interaction')),
+                  'Normalized field semantics differ from the reviewed source')
     assets = doc(c['image_assets'])
     module = read_json(Path(rc['package_root']) / 'candidates/module.json')
     check(assets['source_module_sha256'] == proof['module']['sha256'], 'Image source differs')
