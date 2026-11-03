@@ -996,7 +996,8 @@
     "contracts/production/samosa-adopted-publication-lifecycle.v1.json",
     "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/native-main.json",
     "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/runtime-adoption.json",
-    "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/formal-readback.json"
+    "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/formal-readback.json",
+    "scripts/production/prepare-adopted-runtime-release.py"
   ],
   "deployment_executor": "Existing Vercel REST/files executor; explicit autoAssignCustomDomains=false; Shared gate -> existing fixed-ID provider promotion",
   "identity_command": "npm run verify:app-release -- --url URL --expect-commit SHA --require-release-commit --output EVIDENCE_JSON",
@@ -1924,7 +1925,8 @@
     "contracts/production/samosa-adopted-publication-lifecycle.v1.json": "47024c41483d62b02491bebd972edb9c317e7de441c7c6795166916d6ffddb00",
     "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/native-main.json": "b68d4c625a215f7aa8bd000db2243daaf30b1ff3d733d41ae56de6b4f4c0bf32",
     "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/runtime-adoption.json": "785d6d4ae7cc5c79f073d0cf6ac2ff97996300712adab98cc5c3ba4d1365ca4f",
-    "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/formal-readback.json": "62ec8de42b0a85dea3151a5b5059e7e966f3f465db8e3b8629992ce51c60447b"
+    "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/formal-readback.json": "62ec8de42b0a85dea3151a5b5059e7e966f3f465db8e3b8629992ce51c60447b",
+    "scripts/production/prepare-adopted-runtime-release.py": "83efe98fb4835f9329f06dac2277a3fd6c5d898757e82ad6a74b215aa4527d70"
   },
   "publication_policy": {
     "mode": "VERCEL_STAGED_PROMOTE_V1",
@@ -3305,7 +3307,8 @@
       "contracts/production/samosa-adopted-publication-lifecycle.v1.json": "47024c41483d62b02491bebd972edb9c317e7de441c7c6795166916d6ffddb00",
       "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/native-main.json": "b68d4c625a215f7aa8bd000db2243daaf30b1ff3d733d41ae56de6b4f4c0bf32",
       "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/runtime-adoption.json": "785d6d4ae7cc5c79f073d0cf6ac2ff97996300712adab98cc5c3ba4d1365ca4f",
-      "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/formal-readback.json": "62ec8de42b0a85dea3151a5b5059e7e966f3f465db8e3b8629992ce51c60447b"
+      "src/catalog/runtime-master-packages/samosa-ui-r7/adoption/formal-readback.json": "62ec8de42b0a85dea3151a5b5059e7e966f3f465db8e3b8629992ce51c60447b",
+      "scripts/production/prepare-adopted-runtime-release.py": "83efe98fb4835f9329f06dac2277a3fd6c5d898757e82ad6a74b215aa4527d70"
     },
     "http_artifacts": {
       "/": "3ddd021c6b9019c51e4becc7afc5e615637c96df1e9775910e9c5c9d3e981e49",
