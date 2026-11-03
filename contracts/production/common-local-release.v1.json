@@ -122,7 +122,7 @@
     "scripts/production/unpack-build-authority.py": "3eb0ea31b05bb06cfa1f320aa87209a74b80287b4d184db7711614dd07a77a62",
     "scripts/production/validate-domain-runtime-connection.py": "91df5fa8c42af5dd50fbbc6d1d0be58b1b5457eeb4d59430e925127e274ca241",
     "scripts/production/validate-domain-runtime-projection.mjs": "ee5ae39ac71d210cc1ddc0685cda60a99a91da657be7df0c8dce58df6de8ea01",
-    "scripts/vercel-rest-deploy.mjs": "6db9d2b95186ce3fb76cc701c32b6fcaf52edd0f78dbe54c9255ffa5dfb90783",
+    "scripts/vercel-rest-deploy.mjs": "746063d7e11737106704f2848f791cc5d1bfd4c548759107688d2c5d55bca741",
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs": "6174897aca7e6560695b512e0787d7e00b147b712abcfb3e1369ae49da5807c9",
     "src/catalog/runtime-master/candidate-runtime-registry.mjs": "6977776677ded397321ff7cc6f99bc45d15eb18e676453f3069c620597d45372",
     "src/catalog/runtime-master/composed-product-runtime-adapter.mjs": "8712fff6bbffd9c23cb8c86fb2feb83407f202861332da53ddfe734388737a84",
