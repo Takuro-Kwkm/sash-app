@@ -56,7 +56,7 @@ def prepare(shared, checkout, captures, destination, instruction):
     # These are planned native transaction targets, not immutable live authorities.
     # Their exact before/after identities stay pinned in input/plan and native receipts.
     owned = {'formal_authoring_metadata', 'canonical_listing'}
-    if p.get('scoped_working_formal'):
+    if p.get('scoped_working_formal') or p.get('transaction_owned_observations'):
         require(p.get('transaction_owned_observations') == ['native_registry'],
                 'NATIVE_TRANSACTION_OWNERSHIP', 'Only the exact native Registry CAS is transaction-owned', 'PREPARE')
         owned.add('native_registry')
@@ -79,7 +79,7 @@ def prepare(shared, checkout, captures, destination, instruction):
     steps.append({'id': 'HUMAN_ADOPTION', 'kind': 'human', 'needs': ['FORMAL_REVIEW'],
                   'packet': '{work}/FORMAL_REVIEW.json', 'packet_destination': '{workflow_id}/HUMAN_ADOPTION.json'})
     prior = 'HUMAN_ADOPTION'
-    if p.get('baseline_kind') == 'EXISTING_WORKING_DOMAIN':
+    if p.get('baseline_kind') == 'EXISTING_WORKING_DOMAIN' or p.get('formal_content_qa') is True:
         steps.append(validator('FORMAL_CONTENT_QA', prior)); prior = 'FORMAL_CONTENT_QA'
     steps.append(validator('NATIVE_SAVE_REQUESTS', prior))
     steps.append(validator('NATIVE_REGISTRY_REQUEST', 'NATIVE_SAVE_REQUESTS'))
@@ -88,6 +88,8 @@ def prepare(shared, checkout, captures, destination, instruction):
     steps.append({'id': 'FORMAL_SAVE', 'kind': 'formal-save', 'needs': ['NATIVE_FORMAL_READBACK'],
                   'plan': contract['formal_plan']})
     steps.append(validator('FORMAL_COMPLETION', 'FORMAL_SAVE'))
+    if p.get('common_output_receipt') is True:
+        steps[-1]['side_outputs'] = ['{work}/formal-product-master.json']
     write_json(root/'workflow.json', {'workflow_id': c['work_id'], 'version': '1.0', 'status': 'CURRENT',
                'work_skill': 'product-change-work', 'steps': steps,
                'targets': {'FORMAL_CHANGE_ADOPTION': ['FORMAL_COMPLETION']},

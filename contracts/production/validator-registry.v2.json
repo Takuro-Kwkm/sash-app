@@ -286,10 +286,7 @@
       "state": "READY",
       "scope": "EXISTING_WORKING_SALES_QA",
       "validators": [
-        "native-working-identity",
-        "official-source-byte-review",
-        "shared-domain-qa",
-        "sales-request-handoff"
+        "scripts/production/shared-domain-formal-change.py"
       ],
       "no_fallback": true,
       "native_profile": {
@@ -298,8 +295,8 @@
         "sha256": "3cf620e58ecdf8543831c71bbdf800da5d14c595ef2e00ed016f2cb5a979959b"
       },
       "formal_profile": {
-        "path": "contracts/production/working-master-recovery/doorremo-nonfire.formal.v1.json",
-        "sha256": "d53d88a618a8048af94574398c24fb85c081c5e0eef6cc167f5b33431d913934"
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.r5-formal.v1.json",
+        "sha256": "bfbf65b89982ef844e552c80b0e18a9c6461c8f0567e6427afc705c5ca624523"
       },
       "runtime_candidate_profile": {
         "path": "contracts/production/runtime-candidates/doorremo-nonfire-r1.profile.json",

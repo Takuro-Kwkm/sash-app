@@ -43,6 +43,11 @@ def selected_native_row(c, raw, after=False):
 
 
 def confirmations(c):
+    profile = document(c['profile'])
+    if profile.get('confirmation_source') == 'CONTROLLED_UNRESOLVED_SIDECAR':
+        require(profile.get('domain_schema') == 'SHARED_DOMAIN_V1' and domain_adapter(c) is not None,
+                'NATIVE_PROFILE_CHANGED', 'Declared shared-domain confirmation adapter required', 'FORMAL_REVIEW')
+        return domain_adapter(c).confirmations(c)
     if domain_adapter(c) and document(c['profile']).get('baseline_kind') == 'EXISTING_WORKING_DOMAIN':
         return document(c['review'])['confirmation_requests']
     return document(c['master'])['confirmations']
@@ -221,7 +226,8 @@ def review(c, work):
               'qa': proof, 'scope': document(c['scope']), 'controlled_unresolved': confirmations(c),
               'predecessor_packet_sha256': c['predecessor_packet_sha256'],
               'formal_adoption': False, 'runtime_ui_mutations': 0, 'human_decision': 'NOT_ACCEPTED'}
-    if domain_adapter(c) and document(c['profile']).get('baseline_kind') == 'EXISTING_WORKING_DOMAIN':
+    if domain_adapter(c) and (document(c['profile']).get('baseline_kind') == 'EXISTING_WORKING_DOMAIN'
+                              or document(c['profile']).get('formal_content_qa') is True):
         from product_master.identity import digest
         result.update(proposed_master_sha256=c['master']['sha256'], proposed_domain_digest=digest(document(c['master'])))
     result['payload_sha256'] = fingerprint(result)
@@ -389,8 +395,13 @@ def run(c, stage, work):
         saved = read_json(Path(work)/'FORMAL_SAVE.json')
         require(saved['status'] == 'PASS' and saved['current']['revision'] == c['revision'],
                 'FORMAL_SAVE_REQUIRED', 'Existing Shared Formal save must complete', stage)
-        return {'status': 'PASS', 'formal': 'FORMAL_PASS', 'revision': c['revision'],
-                'controlled_unresolved': len(confirmations(c)), 'runtime_ui_release': 'NOT_EXECUTED'}
+        result = {'status': 'PASS', 'formal': 'FORMAL_PASS', 'revision': c['revision'],
+                  'controlled_unresolved': len(confirmations(c)), 'runtime_ui_release': 'NOT_EXECUTED'}
+        if document(c['profile']).get('common_output_receipt') is True:
+            (Path(work)/'formal-product-master.json').write_bytes(checked_bytes(c['master']))
+            result.update(role='PRODUCT_MASTER', repository=document(c['profile'])['repository'],
+                          product_id=c['product_id'], master_sha256=c['master']['sha256'])
+        return result
     raise ValueError('Unsupported native Formal stage '+stage)
 
 

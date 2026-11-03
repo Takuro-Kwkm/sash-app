@@ -1,0 +1,47 @@
+{
+  "schema": "NATIVE_SHARED_DOMAIN_FORMAL_CHANGE_PROFILE_V1",
+  "profile_id": "sash-shared-domain-reviewed-formal-change-v1",
+  "status": "ADOPTED",
+  "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
+  "canonical_product_id": "YKKAP_DOORREMO_NON_FIRE",
+  "repository": "Takuro-Kwkm/sash-app",
+  "manufacturer": "YKK AP",
+  "series": "ドアリモ玄関ドア 非防火",
+  "baseline_revision": "v1.1-R4-F1-20261015",
+  "candidate_revision": "v1.1-R5-F1-20261103",
+  "target_gate": "FORMAL_CHANGE_ADOPTION",
+  "native_preparer": "scripts/production/prepare-sheet-package-formal.py",
+  "native_worker": "scripts/production/sheet-package-formal.py",
+  "shared_engine": "scripts/production-work.py",
+  "human_gate": "HUMAN_ADOPTION",
+  "formal_save": "EXISTING_SHARED_FORMAL_SAVE_AFTER_AUTHENTICATED_NATIVE_READBACK",
+  "runtime_scope": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+  "formal_primary": "MACHINE_READABLE_PRODUCT_MASTER_JSON",
+  "native_sheets": "PRESERVE_HISTORICAL_WORKING_SEPARATELY",
+  "automatic_orderability": false,
+  "runtime_ui_mutations": 0,
+  "formal_writes_before_human": 0,
+  "canonical_folder_id": "1YWz2-ICkcOyM71j3NhojlS46gnI8rwnN",
+  "old_folder_id": "1Hlg0m1yytq5rDFSttdWco0y-V6xqnt8L",
+  "working_folder_id": "1BMEgyMXkB3Enn2C3PCedMsBN-Y1iWVtd",
+  "baseline_kind": "EXISTING_FORMAL_JSON",
+  "domain_adapter": {
+    "path": "scripts/production/shared-domain-formal-change.py",
+    "sha256": "5b8fde1db0cab3d3b95e00cef974991ea8723c25db9050d151bc7b7df2a3de16"
+  },
+  "domain_schema": "SHARED_DOMAIN_V1",
+  "confirmation_source": "CONTROLLED_UNRESOLVED_SIDECAR",
+  "formal_content_qa": true,
+  "transaction_owned_observations": [
+    "native_registry"
+  ],
+  "baseline_master_sha256": "f4149b78d6f1d83e8a72c325b49362638e49b72d45efa4fce8795afb846f0187",
+  "reviewed_candidate_sha256": "a8d83b2424c281f21e3fadb6d6a7cfd23f05be8c9627791e6109e90ac9035725",
+  "reviewed_candidate_qa_sha256": "3e0fff83888b5ac9ad3cfd720ee17c8db649527e41dff1dac0515b3981ce1143",
+  "changed_fields": [
+    "secondary_leaf_design_id",
+    "frame_w"
+  ],
+  "controlled_unresolved_count": 6,
+  "common_output_receipt": true
+}
