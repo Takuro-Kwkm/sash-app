@@ -2,7 +2,7 @@
 
 No Human decision, new adoption, QA execution, journal or provider operation.
 """
-import argparse,json,sys
+import argparse,json,sys,subprocess
 from pathlib import Path
 
 def prepare(shared,reference_path,output):
@@ -10,7 +10,11 @@ def prepare(shared,reference_path,output):
  from harness.core import read_json,write_json,require
  from harness.common_development import inspected_work,document,ref,master_input,validate_original_decision
  reference=read_json(reference_path);spec,state,_,_=inspected_work(reference,document(reference['evidence']['adoption_result'])['product_id'])
- result=document(reference['evidence']['adoption_result']);contract=document(spec['input']);review=contract['review_work'];ui_spec,_,_,_=inspected_work(review,result['product_id']);packet,decision=validate_original_decision(review,ui_spec,'HUMAN_UI_REVIEW');plan=document(ui_spec['input']);master=master_input(plan)
+ result=document(reference['evidence']['adoption_result']);contract=document(spec['input']);review=contract['review_work'];ui_spec,_,_,_=inspected_work(review,result['product_id']);packet,decision=validate_original_decision(review,ui_spec,'HUMAN_UI_REVIEW');plan=document(ui_spec['input'])
+ # Inspect the retained Master with its ORIGINAL fixed Shared implementation.
+ original=Path(review['root']).resolve();code='import json,sys;sys.path.insert(0,sys.argv[1]);from harness.common_development import master_input;print(json.dumps(master_input(json.load(sys.stdin))))'
+ observed=subprocess.run([sys.executable,'-B','-c',code,str(original)],input=json.dumps(plan),capture_output=True,text=True,check=True,cwd=original)
+ master=json.loads(observed.stdout)
  require(spec['execution_mode']=='REAL'and spec['target_gate']=='RUNTIME_UI_ADOPTED'and state['state']=='COMPLETED'and result['state']=='RUNTIME_UI_ADOPTED'and result['release']is False and result['product_master_mutations']==0,'NATIVE_RELEASE_UPSTREAM','Completed actual native adoption required')
  require(master['status']=='PASS'and plan['master']['sha256']==document(contract['profile'])['formal_master']['sha256'],'NATIVE_RELEASE_UPSTREAM','Same inspected Formal Master required')
  p=Path(output).resolve();require(not p.exists(),'PRESERVE_NATIVE_UPSTREAM','Use a new immutable output')
