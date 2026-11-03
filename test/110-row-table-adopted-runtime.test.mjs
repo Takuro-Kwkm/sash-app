@@ -21,3 +21,11 @@ test('deployment staging preserves pre-existing native Runtime files and removes
 test('deployment staging rejects changed existing bytes before creating any new file',async()=>{
  const {stagePrivateRuntimeFiles}=await import('../scripts/production/release-private-runtime-files.mjs');const root=fs.mkdtempSync(path.join(os.tmpdir(),'release-private-mismatch-'));try{const base='src/catalog/runtime-release-data/retained/';fs.mkdirSync(path.join(root,base),{recursive:true});fs.writeFileSync(path.join(root,base,'old.json'),'different');await assert.rejects(stagePrivateRuntimeFiles(root,[{file:base+'new.json',data:Buffer.from('new')},{file:base+'old.json',data:Buffer.from('expected')}]),/PRIVATE_RUNTIME_EXISTING_BYTES_CHANGED/);assert.equal(fs.existsSync(path.join(root,base,'new.json')),false);}finally{fs.rmSync(root,{recursive:true,force:true});}
 });
+
+test('native publication QA identity matches the registered product and release scope',()=>{
+ const file='contracts/production/release-profiles/samosa-r9-adopted.v1.json',p=JSON.parse(fs.readFileSync(file));
+ const claims=p.publication_policy.native_qa_bindings.runtime_ui_product.claims;
+ for(const key of ['product_id','scope'])assert.equal(claims.find(row=>row.pointer.length===1&&row.pointer[0]===key).value,p.product_scope[key],key);
+ const row=JSON.parse(fs.readFileSync('contracts/production/release-profiles.v1.json')).profiles.find(row=>row.path===file);
+ assert.equal(row.scope,p.product_scope.scope);assert.equal(row.product_id,p.product_scope.product_id);
+});

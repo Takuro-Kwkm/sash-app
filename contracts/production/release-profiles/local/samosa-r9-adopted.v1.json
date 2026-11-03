@@ -10,7 +10,7 @@
     "actions_dispatch_authority": false,
     "retained_profile": {
       "path": "contracts/production/release-profiles/samosa-r9-adopted.v1.json",
-      "sha256": "ad499c59443919ae21cda22e0603f7832d3b8d6c26b1b54684ee7550d68790e1"
+      "sha256": "0f5860afd7626f4c5bca21c1c9c2829d29f28fcfb591f4578c95947f9f1c1960"
     },
     "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
     "scope": "SAMOSA_V07_R9_ADOPTED_RUNTIME_PUBLICATION_20261103"
