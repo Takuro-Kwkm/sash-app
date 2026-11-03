@@ -304,7 +304,7 @@
       },
       "runtime_ui_adoption_profile": {
         "path": "contracts/production/runtime-adoptions/doorremo-r5-g12.profile.json",
-        "sha256": "bf2530b8fae86d12cd3090efd88d6915e0c25b3cbfa4273b4078d5a8d835ae39"
+        "sha256": "75919c9f154ed6d99563f6800ebdd2e6570236d387c4f22916b2917bf3c887af"
       }
     },
     "NATIVE_REGISTRY:YKK AP::ヴェナートD30": {

@@ -209,12 +209,12 @@ export class ProductConfigurationEditor {
 
   async handleClick(event){
     if(handleChoiceVisualDialog(this.root,event))return;
-    const choice=event.target.closest('[data-visual-choice-key]');
-    if(choice&&!choice.disabled){
-      const control=[...this.root.querySelectorAll('select[data-spec-key]')].find(node=>node.dataset.specKey===choice.dataset.visualChoiceKey);
+    const visualChoice=event.target.closest('[data-visual-choice-key]');
+    if(visualChoice&&!visualChoice.disabled){
+      const control=[...this.root.querySelectorAll('select[data-spec-key]')].find(node=>node.dataset.specKey===visualChoice.dataset.visualChoiceKey);
       if(control&&!control.disabled){
-        const key=choice.dataset.visualChoiceKey;
-        control.value=choice.dataset.value;await this.handleChange({target:control});
+        const key=visualChoice.dataset.visualChoiceKey;
+        control.value=visualChoice.dataset.value;await this.handleChange({target:control});
         const selectedControl=[...this.root.querySelectorAll('select[data-spec-key]')].find(node=>node.dataset.specKey===key);
         selectedControl?.focus();
       }

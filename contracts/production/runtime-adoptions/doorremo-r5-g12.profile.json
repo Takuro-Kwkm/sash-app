@@ -23,7 +23,7 @@
   },
   "approved_presentation": {
     "src/ui/web/choice-visuals.mjs": "e3c2e1baa4094df7e7008af3d4ef6f08698a84d0ec3a39ebb2d4e6b36b80cc10",
-    "src/ui/web/product-configuration-editor.mjs": "a66de855aaa46809149ee286915999f7fa52c129477f05f583163d8bb17639bb",
+    "src/ui/web/product-configuration-editor.mjs": "eebec104a2144db88ea346fa5fe97f1d5b8f83468451e9a3c553908190e9829c",
     "src/catalog/runtime-master/declared-choice-visuals.mjs": "434d4256774b90af8e8afd3bdc6338d2457a124ca185b07e4471aef3c0c83b79",
     "src/catalog/runtime-master/composed-product-runtime-adapter.mjs": "6b1ab4b7ff79089943991011834db9969da6722deff077f16d40f78e004b9786",
     "src/server/runtime-choice-images.mjs": "413ce68bdfee929e0bc91d8f5ae5886e4dce12231202fd29bd6629dcf3cf6f70"
