@@ -856,7 +856,7 @@
       },
       "formal_profile": {
         "path": "contracts/production/working-master-recovery/doorremo-nonfire.r5-formal.v1.json",
-        "sha256": "bfbf65b89982ef844e552c80b0e18a9c6461c8f0567e6427afc705c5ca624523"
+        "sha256": "83bf7784ff0825e7192d6866114c0df4c1cb0279c74a992dea7c09cfb5903f4b"
       },
       "runtime_candidate_profile": {
         "path": "contracts/production/runtime-candidates/doorremo-nonfire-r1.profile.json",

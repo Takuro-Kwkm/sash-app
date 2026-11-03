@@ -29,6 +29,7 @@ class SharedDomainFormalChangeTests(unittest.TestCase):
         self.candidate['fields'][0]['value'] = 'NEW'
         self.candidate['sources'].append({'source_id': 'NEW'})
         self.candidate['evidence'].append({'evidence_id': 'NEW'})
+        self.candidate['handoff_tests'][1]['expected'] = 'NEW'
         self.review = {'baseline_sha256': 'baseline', 'candidate_sha256': '', 'changed_fields': ['child'],
                        'unchanged_cases': 1, 'changed_expected_cases': 1}
         self.profile = {'baseline_kind': 'EXISTING_FORMAL_JSON', 'domain_schema': 'SHARED_DOMAIN_V1',
@@ -85,6 +86,12 @@ class SharedDomainFormalChangeTests(unittest.TestCase):
 
     def test_fixture_deletion_rejected(self):
         self.candidate['handoff_tests'].pop()
+        self.bind()
+        with self.assertRaises(Blocked):
+            self.adapter.reviewed_delta(self.contract)
+
+    def test_case_accounting_must_match_actual_fixtures(self):
+        self.review.update(unchanged_cases=2, changed_expected_cases=0)
         self.bind()
         with self.assertRaises(Blocked):
             self.adapter.reviewed_delta(self.contract)

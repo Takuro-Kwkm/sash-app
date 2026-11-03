@@ -94,6 +94,10 @@ def reviewed_delta(c):
             and scope['unchanged_cases'] + scope['changed_expected_cases'] == len(before['handoff_tests'])
             and len(candidate['handoff_tests']) == len(before['handoff_tests']),
             'DOMAIN_DELTA_BINDING', 'Retain the exact reviewed fields and case accounting', 'CARRY_FORWARD_QA')
+    unchanged = sum(a == b for a, b in zip(before['handoff_tests'], candidate['handoff_tests']))
+    require(scope['unchanged_cases'] == unchanged
+            and scope['changed_expected_cases'] == len(before['handoff_tests']) - unchanged,
+            'DOMAIN_DELTA_BINDING', 'Case accounting must match the actual retained fixtures', 'CARRY_FORWARD_QA')
     require(candidate['constraints'] == before['constraints'] and candidate['scope'] == before['scope']
             and candidate['gaps'] == before['gaps'] and candidate['schema_version'] == before['schema_version']
             and len(candidate['fields']) == len(before['fields'])
@@ -117,6 +121,17 @@ def retained_qa(c):
     artifacts = {a['path']: a['sha256'] for a in evidence['artifacts']}
     require(all(artifacts.get(retained[key]['path']) == retained[key]['sha256'] for key in ('result', 'review')),
             'CARRY_FORWARD_QA', 'Original execution and independent review must match the verified evidence', 'CARRY_FORWARD_QA')
+    engine = profile(c)['retained_qa_engine']
+    original_root = Path(retained['root']).resolve()
+    head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=original_root, text=True).strip()
+    origin = subprocess.check_output(['git', 'remote', 'get-url', 'origin'], cwd=original_root, text=True).strip().removesuffix('.git')
+    require(head == engine['head'] and origin == engine['origin'] and engine['files'],
+            'CARRY_FORWARD_ENGINE_CHANGED', 'Use the fixed original QA implementation', 'CARRY_FORWARD_QA')
+    for name, expected in engine['files'].items():
+        path = original_root/name
+        require(not Path(name).is_absolute() and '..' not in Path(name).parts
+                and path.is_file() and not path.is_symlink() and sha(path.read_bytes()) == expected,
+                'CARRY_FORWARD_ENGINE_CHANGED', name, 'CARRY_FORWARD_QA')
     script = """import json,sys
 from harness.local_qa import verified_result,revalidate
 from harness.core import read_json
