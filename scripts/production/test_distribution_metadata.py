@@ -39,10 +39,20 @@ class DistributionMetadata(unittest.TestCase):
         name = self.input['source_profile']
         old = json.loads(subprocess.check_output(['git', 'show', self.input['base'] + ':' + name], cwd=ROOT))
         current = json.loads((ROOT / name).read_bytes())
+        for route in ('/styles.css', '/product-configuration-editor.mjs'):
+            old['publication_policy']['http_artifacts'][route] = hashlib.sha256((ROOT / 'src/ui/web' / route[1:]).read_bytes()).hexdigest()
         self.assertEqual({k:v for k,v in old.items() if k != 'native_files'},
                          {k:v for k,v in current.items() if k != 'native_files'})
         name = 'contracts/production/app-release.v1.json'
         self.assertEqual((ROOT / name).read_bytes(), subprocess.check_output(['git', 'show', self.input['base'] + ':' + name], cwd=ROOT))
+
+    def test_http_artifacts_match_served_source(self):
+        for route, digest in self.profile['publication_policy']['http_artifacts'].items():
+            if route.startswith('/work-management/') or route.startswith('/estimate-output/'):
+                path = ROOT / 'src' / route[1:]
+            else:
+                path = ROOT / 'src/ui/web' / ('index.html' if route == '/' else route[1:])
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), digest, route)
 
     def test_existing_profile_admission(self):
         from harness.release_admission import adopted_profile

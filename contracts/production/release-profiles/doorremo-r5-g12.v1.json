@@ -2392,8 +2392,8 @@
     "http_artifacts": {
       "/": "3ddd021c6b9019c51e4becc7afc5e615637c96df1e9775910e9c5c9d3e981e49",
       "/app.js": "8767f968393bd0dd3df15da9906525939002ca58ff5dca0560b744e1a85b39eb",
-      "/styles.css": "bc9a0deb737842b8af12fc0f376a53edc418558160c81c328b1539cc05f37a1a",
-      "/product-configuration-editor.mjs": "118dd5a40cfd6b6b6226723a9b315d8c7316d740a0f8864c37bf954b8c1b9fd9",
+      "/styles.css": "34ba97dcdd256966911169716a56dfbc750e0287dff7e7cef80a3409c1c2d080",
+      "/product-configuration-editor.mjs": "eebec104a2144db88ea346fa5fe97f1d5b8f83468451e9a3c553908190e9829c",
       "/estimate-output-integration.mjs": "0088dca6579f734ffc8b9b09373bbdd39b0b7f63c489ccef05d615996add8c24",
       "/work-management/service.mjs": "79e1451ea52a3bf66dfca4184b70e3ed21526ac21cf20c8c9008a2cfff3d7cf9",
       "/estimate-output/model.mjs": "c4acd8b4732e79270f4e10d7226b40216070a74b10a7d23f9d4ca28bf71ff0cd",
