@@ -41,10 +41,23 @@ class DistributionMetadata(unittest.TestCase):
         current = json.loads((ROOT / name).read_bytes())
         for route in ('/styles.css', '/product-configuration-editor.mjs'):
             old['publication_policy']['http_artifacts'][route] = hashlib.sha256((ROOT / 'src/ui/web' / route[1:]).read_bytes()).hexdigest()
+        for claim in old['publication_policy']['native_qa_bindings']['runtime_ui_product']['claims']:
+            key = tuple(claim['pointer'])
+            if key in (('product_id',), ('scope',)):
+                claim['value'] = old['product_scope'][key[0]]
         self.assertEqual({k:v for k,v in old.items() if k != 'native_files'},
                          {k:v for k,v in current.items() if k != 'native_files'})
         name = 'contracts/production/app-release.v1.json'
         self.assertEqual((ROOT / name).read_bytes(), subprocess.check_output(['git', 'show', self.input['base'] + ':' + name], cwd=ROOT))
+
+    def test_native_qa_target_matches_declared_product_scope(self):
+        binding = self.profile['publication_policy']['native_qa_bindings']['runtime_ui_product']
+        claims = {tuple(claim['pointer']): claim['value'] for claim in binding['claims']}
+        for key in ('product_id', 'scope'):
+            self.assertEqual(claims[(key,)], self.profile['product_scope'][key])
+        self.assertEqual(claims[('viewports',)], [1280, 768, 390])
+        self.assertEqual(claims[('runtime_errors',)], 0)
+        self.assertEqual(binding['minimums'], [{'pointer': ['case_count'], 'value': 30}])
 
     def test_http_artifacts_match_served_source(self):
         for route, digest in self.profile['publication_policy']['http_artifacts'].items():

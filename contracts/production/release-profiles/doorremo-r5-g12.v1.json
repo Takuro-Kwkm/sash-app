@@ -2468,13 +2468,13 @@
             "pointer": [
               "product_id"
             ],
-            "value": "SER-LIX-SELECT-PG"
+            "value": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火"
           },
           {
             "pointer": [
               "scope"
             ],
-            "value": "SELECT_PG_R7_HUMAN_ADOPTED_SALES_UI_PUBLICATION_20261031"
+            "value": "DOORREMO_R5_G12_ADOPTED_RUNTIME_UI_PUBLICATION_20261103"
           },
           {
             "pointer": [

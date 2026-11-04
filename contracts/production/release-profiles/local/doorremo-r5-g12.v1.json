@@ -10,7 +10,7 @@
     "actions_dispatch_authority": false,
     "retained_profile": {
       "path": "contracts/production/release-profiles/doorremo-r5-g12.v1.json",
-      "sha256": "29d65fb30edd8d3ab0863f885c2c7a32b71cbb67867bb2aa5071ffc9121de259"
+      "sha256": "fd83b9206ddf96133f7d439037f086b4097f4b3dd254660b9d9f95165868c175"
     },
     "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
     "scope": "DOORREMO_R5_G12_ADOPTED_RUNTIME_UI_PUBLICATION_20261103"
