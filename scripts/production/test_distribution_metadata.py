@@ -78,7 +78,7 @@ class DistributionMetadata(unittest.TestCase):
         self.assertEqual(review['binding_sha256'], fingerprint({'spec': spec, 'step': step}))
         self.assertEqual(review['result_sha256'], hashlib.sha256((root / 'local-qa-result.json').read_bytes()).hexdigest())
         ref = review['review_ref']
-        self.assertEqual(hashlib.sha256(Path(ref['path']).read_bytes()).hexdigest(), ref['sha256'])
+        self.assertEqual(hashlib.sha256(Path(ref).read_bytes()).hexdigest(), review['review_ref_sha256'])
         self.assertEqual(snapshot(spec['local_qa']['repositories']), result['identity']['repositories'])
         self.assertTrue(result['commands'])
         for row in result['commands']:
