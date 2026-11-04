@@ -116,8 +116,8 @@
   "native_file_overrides": {
     "contracts/production/release-profiles.v1.json": "c0038357fa68cb68bc83c03e272681fee68178580cdf75b1d92a12d1760e3f4c",
     "contracts/production/current-architecture.json": "3aed09d66610e1476a79ef6f65252c0787376b26ecc02209d4aec8ef81179af4",
-    "contracts/production/validator-registry.v2.json": "262caf5862c4542ff4a42deac0a45d26809b3effa34ddd1be2c0ce5a19ecaa32",
-    "contracts/production/work-connections.v2.json": "6843756e7a41785e421047bfced54c22df455ac9b89a86e05614aa271b2dc233",
+    "contracts/production/validator-registry.v2.json": "e8d7cfd89d9c5f66f423b33fcbc77a3b4bca5f490cb52d33acd06ee8b7b41fe9",
+    "contracts/production/work-connections.v2.json": "10f5093b30ac5116803910787150201c879d819947001560038d74df995e16c0",
     "scripts/check-runtime-ui-sources.mjs": "99c8a61db421daac1c7494a986797abc1400a7b4434ea224b00cb09e1429173e",
     "scripts/prepare-deployment-static.mjs": "b4139849ea1d96baa1ae8f5311efda38d07c350a0de2a06bac370cbcc53a0376",
     "scripts/production/compile-domain-projection.py": "47ecfc17e57fb1ec88a7eabc4ad338c352d520e3279b4d2eeddd6695ce3b357e",
@@ -167,6 +167,7 @@
     "vercel.json": "ea5690d685934d1866062e2419fc8fdf9ff300f7171ef625ca4f2fc9e2ecfd02",
     "contracts/production/product-master-build-profile.native-v16.json": "1eb366f977ea6eb1d17e2ee8e980cf5d1b08b74ecf804c25de7b793225640e7c",
     "scripts/production/product-conditions-scope.py": "1f0747574738df24dd94c76aeb25ca4b6b09ff197b391de670ddaa6906caab1b",
+    "contracts/production/released-runtime-packages.v1.json": "e02c1c7d4b0e4d132f557dc601a46734b16a041ad4399d6aefe19214b689b3cc",
     "scripts/production/private-runtime-readback.py": "c75161848ec62f41b691e7e992042e5c43ea59f2742beb93dfbd09bf053106a7",
     "scripts/production/private-runtime-ui-adoption.py": "5a28e5e1a553a2179155a4b3a5305187e595d6cd2d01ae8cf09135f89cdfd1e6",
     "scripts/production/validate-private-runtime-ui-adoption.mjs": "6db1a35454c002aca43aba623347796e1ad52eaa5f10e385e007f1f7649f6864",
