@@ -86,15 +86,18 @@ class DistributionMetadata(unittest.TestCase):
             self.assertEqual(hashlib.sha256(Path(row['log']).read_bytes()).hexdigest(), row['log_sha256'])
         self.assertEqual(ledger['attempts'][-1]['status'], 'TESTS_PASSED')
         runtime = str(Path(result['identity']['executable']).resolve())
+        updates = self.input['historical_runtime_updates']
+        self.assertEqual(set(updates), {runtime, str(Path(spec['local_qa']['commands'][0]['argv'][0]).resolve())})
         changed = []
         for name, digest in result['identity']['environment_inputs'].items():
             actual = hashlib.sha256(Path(name).read_bytes()).hexdigest()
             if actual != digest:
-                # Only the captured interpreter binary may differ. Every source,
+                # Only the two exactly declared captured host runtime binaries may differ. Every source,
                 # ignored data input, lock and executed log remains exact.
-                self.assertEqual(name, runtime, name)
+                self.assertIn(name, updates, name)
+                self.assertEqual(updates[name], {'original_sha256': digest, 'current_sha256': actual})
                 changed.append({'path': name, 'original_sha256': digest, 'current_sha256': actual})
-        self.assertLessEqual(len(changed), 1)
+        self.assertEqual({row['path'] for row in changed}, set(updates))
         print('Retained completed QA: original verified receipt/logs/source exact; historical interpreter differences=' + json.dumps(changed))
 
     def test_shared_implementation_is_unchanged(self):
