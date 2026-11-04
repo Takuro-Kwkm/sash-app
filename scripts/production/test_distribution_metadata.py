@@ -61,12 +61,41 @@ class DistributionMetadata(unittest.TestCase):
              'scope':self.profile['product_scope']['scope'], 'execution_mode':'REAL'})
 
     def test_retained_verified_qa_without_reexecution(self):
-        from harness.application_ui_release import inspect_original_qa
+        # Historical completion is checked against its original files and Git.
+        # A host interpreter update does not replay or recertify those tests.
+        from harness.core import fingerprint
+        from harness.local_qa import snapshot, load_control
         root = Path(self.input['retained_qa_work'])
-        spec = json.loads((root / 'spec.json').read_bytes())
-        result = json.loads((root / 'local-qa-result.json').read_bytes())
-        inspect_original_qa(root, spec['local_qa'], result)
-        self.assertEqual(json.loads((root / 'record.json').read_bytes())['cycle_state'], 'VERIFIED')
+        read = lambda name: json.loads((root / name).read_bytes())
+        spec, step, result, review = (read(name) for name in (
+            'spec.json', 'step.json', 'local-qa-result.json', 'local-qa-review.json'))
+        record, ledger = load_control(root, spec, step)
+        self.assertEqual(record['cycle_state'], 'VERIFIED')
+        self.assertEqual(result['status'], 'TESTS_PASSED')
+        self.assertEqual(review['status'], 'PASS')
+        self.assertEqual(review['unverified'], [])
+        self.assertNotEqual(review['reviewer'], spec['local_qa']['implementer'])
+        self.assertEqual(review['binding_sha256'], fingerprint({'spec': spec, 'step': step}))
+        self.assertEqual(review['result_sha256'], hashlib.sha256((root / 'local-qa-result.json').read_bytes()).hexdigest())
+        ref = review['review_ref']
+        self.assertEqual(hashlib.sha256(Path(ref['path']).read_bytes()).hexdigest(), ref['sha256'])
+        self.assertEqual(snapshot(spec['local_qa']['repositories']), result['identity']['repositories'])
+        self.assertTrue(result['commands'])
+        for row in result['commands']:
+            self.assertEqual(row['exit_code'], 0)
+            self.assertEqual(hashlib.sha256(Path(row['log']).read_bytes()).hexdigest(), row['log_sha256'])
+        self.assertEqual(ledger['attempts'][-1]['status'], 'TESTS_PASSED')
+        runtime = str(Path(result['identity']['executable']).resolve())
+        changed = []
+        for name, digest in result['identity']['environment_inputs'].items():
+            actual = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+            if actual != digest:
+                # Only the captured interpreter binary may differ. Every source,
+                # ignored data input, lock and executed log remains exact.
+                self.assertEqual(name, runtime, name)
+                changed.append({'path': name, 'original_sha256': digest, 'current_sha256': actual})
+        self.assertLessEqual(len(changed), 1)
+        print('Retained completed QA: original verified receipt/logs/source exact; historical interpreter differences=' + json.dumps(changed))
 
     def test_shared_implementation_is_unchanged(self):
         self.assertEqual(subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=self.shared, text=True).strip(), self.input['shared_head'])
