@@ -810,8 +810,11 @@
       ],
       "unsupported_gates": {
         "RUNTIME_UI": "NATIVE_ADAPTER_UNAVAILABLE",
-        "RELEASE": "NATIVE_RELEASE_PROFILE_REQUIRED",
-        "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED"
+        "RELEASE": "NATIVE_RELEASE_PROFILE_REQUIRED"
+      },
+      "formal_profile": {
+        "path": "contracts/production/working-master-recovery/grandel2-nonfire.formal.v1.json",
+        "sha256": "a9b4f765ead391f9ba4c993917b4362dfda8e27926c82a0f2b46c01f390cef7c"
       }
     },
     {
