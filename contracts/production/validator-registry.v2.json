@@ -273,9 +273,17 @@
       "no_fallback": true
     },
     "NATIVE_REGISTRY:LIXIL::グランデル2": {
-      "state": "FAIL_CLOSED",
-      "validators": [],
-      "no_fallback": true
+      "state": "READY",
+      "validators": [
+        "scripts/production/validate-native-workbook-profile.py"
+      ],
+      "no_fallback": true,
+      "native_profile": {
+        "profile_id": "sash-existing-working-workbook-qa-v1",
+        "path": "contracts/production/working-master-recovery/grandel2-nonfire.v1.json",
+        "sha256": "a6d7b70619bd9385c51267533eb364864916e20fc246420d67dd2e83b20fa970"
+      },
+      "scope": "EXISTING_AUTHORING_WORKBOOK_SALES_QA"
     },
     "NATIVE_REGISTRY:LIXIL::店舗・汎用ドア・引戸": {
       "state": "FAIL_CLOSED",

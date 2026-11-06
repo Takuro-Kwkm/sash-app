@@ -790,15 +790,28 @@
         "グランデル2"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
+      "connection_state": "CONNECTED",
       "current_formal_version": "v0.4-WORKING",
       "formal_registry_selector": "LIXIL::グランデル2",
-      "safe_failure": {
-        "state": "FAIL_CLOSED",
-        "code": "NATIVE_ADAPTER_UNAVAILABLE",
-        "writes": 0,
-        "fallback": false,
-        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      "connection_scope": "EXISTING_AUTHORING_WORKBOOK_SALES_QA",
+      "default_gate": "QA_READY",
+      "native_adapter": "scripts/production/working-master-business-qa.py",
+      "prepare_adapter": "scripts/production/prepare-native-workbook-qa.py",
+      "build_profile": {
+        "profile_id": "sash-existing-working-workbook-qa-v1",
+        "path": "contracts/production/working-master-recovery/grandel2-nonfire.v1.json",
+        "sha256": "a6d7b70619bd9385c51267533eb364864916e20fc246420d67dd2e83b20fa970"
+      },
+      "baseline_selector": "LIVE_NATIVE_REGISTRY:LIXIL::グランデル2:v0.4-WORKING:WORKING_PHASE4_PASS",
+      "source_selector": "LIVE_REVIEWED_OFFICIAL_BYTES_AND_ORIGINAL_WORKING_XLSX",
+      "resume_selector": "contracts/production/current-work.json",
+      "validators": [
+        "scripts/production/validate-native-workbook-profile.py"
+      ],
+      "unsupported_gates": {
+        "RUNTIME_UI": "NATIVE_ADAPTER_UNAVAILABLE",
+        "RELEASE": "NATIVE_RELEASE_PROFILE_REQUIRED",
+        "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED"
       }
     },
     {
