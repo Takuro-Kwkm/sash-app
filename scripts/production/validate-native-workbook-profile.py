@@ -7,14 +7,25 @@ def validate(root):
     config=read('contracts/production/work-connections.v2.json')
     validators=read('contracts/production/validator-registry.v2.json')
     entries=[p for p in config['products'] if p.get('connection_scope')=='EXISTING_AUTHORING_WORKBOOK_SALES_QA']
-    assert len(entries)==1
+    assert entries
+    assert len({row['product_id'] for row in entries}) == len(entries)
     for row in entries:
         ref=row['build_profile'];p=read(ref['path'])
         assert hashlib.sha256((root/ref['path']).read_bytes()).hexdigest()==ref['sha256']
         assert p['operation']=='EXISTING_AUTHORING_QA' and p['status']=='ADOPTED'
         assert p['product_id']==row['product_id'] and p['repository']==row['repository']=='Takuro-Kwkm/sash-app'
         assert p['scope']=='EXISTING_WORKING_SALES_QA' and p['target_gate']==row['default_gate']=='QA_READY'
-        assert p['baseline_states']==['PACKAGE_BLOCKED'] and p['baseline_revision']=='v1.0'
+        assert p['baseline_states'] and all(isinstance(s,str) and s for s in p['baseline_states'])
+        assert isinstance(p['baseline_revision'],str) and p['baseline_revision']
+        assert len(p['authoring_sha256'])==64 and all(c in '0123456789abcdef' for c in p['authoring_sha256'])
+        location=p.get('authoring_location','CANONICAL')
+        assert location in ('CANONICAL','WORKING')
+        if location=='WORKING':
+            assert p['intake_adapter']=='scripts/production/native-working-workbook-intake.py'
+            assert all('WORKING' in state for state in p['baseline_states'])
+        else:
+            assert p['intake_adapter']=='scripts/production/native-workbook-intake.py'
+            assert p['baseline_states']==['PACKAGE_BLOCKED']
         assert p['native_adapter']==row['native_adapter']=='scripts/production/working-master-business-qa.py'
         assert p['native_prepare']==row['prepare_adapter']=='scripts/production/prepare-native-workbook-qa.py'
         assert row['connection_state']=='CONNECTED' and p['automatic_orderability'] is False
