@@ -155,6 +155,20 @@ def compile_profile(profile, root):
                 specificationKey=key, value=o['value'], displayLabel=presentation.get('value_labels', {}).get(str(o['value']), o['label']), displayOrder=i,
                 selector=value_selector, status='ACTIVE', evidenceIds=o['evidence_ids']))
     rules = []
+    for field in master['fields']:
+        if field['data_type'] != 'number' or field['selectable_values'] or 'value_condition' not in field:
+            continue
+        key = field['field_id']
+        rules.append(dict(
+            id=pid + ':numeric-value-condition:' + key,
+            when=selector({'all': [
+                {'field': key, 'op': 'exists', 'value': True},
+                {'not': field['value_condition']},
+            ]}),
+            fields=[key],
+            message='入力した寸法は適用範囲外です。仕様と寸法を見直してください。',
+            evidenceIds=field['evidence_id'],
+        ))
     for c in master['constraints']:
         assert c['kind'] == 'FORBID', 'UNSUPPORTED_CONSTRAINT'
         rules.append(dict(id=c['rule_id'], when=selector(c['when']), fields=c['field_ids'],
