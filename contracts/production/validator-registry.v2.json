@@ -277,12 +277,12 @@
       "validators": [],
       "no_fallback": true,
       "runtime_ui_profile": {
-        "path": "contracts/production/runtime-candidates/grandel2-nonfire-r4.profile.json",
-        "sha256": "b882fd23eb23f1356885066b1760a6dd7a14d2736b050177d3f56451f82caa0c"
+        "path": "contracts/production/runtime-candidates/grandel2-nonfire-r5.profile.json",
+        "sha256": "b6fe0d449f7108960d58e7c2e2443f9dec67280d585203fb5a64b02757c309cf"
       },
       "runtime_candidate_profile": {
-        "path": "contracts/production/runtime-candidates/grandel2-nonfire-r4.profile.json",
-        "sha256": "b882fd23eb23f1356885066b1760a6dd7a14d2736b050177d3f56451f82caa0c"
+        "path": "contracts/production/runtime-candidates/grandel2-nonfire-r5.profile.json",
+        "sha256": "b6fe0d449f7108960d58e7c2e2443f9dec67280d585203fb5a64b02757c309cf"
       }
     },
     "NATIVE_REGISTRY:LIXIL::店舗・汎用ドア・引戸": {

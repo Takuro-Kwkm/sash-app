@@ -118,6 +118,22 @@ def compile_profile(profile, root):
     for declared in profile.get('selection_views', []):
         view = dict(declared)
         if 'applicability' in view: view['selector'] = selector(view['applicability'])
+        if view.get('source_choice_table'):
+            ref = view['source_choice_table']
+            table_path = (root / ref['path']).resolve()
+            assert table_path.is_relative_to(root.resolve()), 'VIEW_TABLE_OUTSIDE_CAPTURE'
+            table_bytes = table_path.read_bytes()
+            assert hashlib.sha256(table_bytes).hexdigest() == ref['sha256'], 'VIEW_TABLE_BYTES_CHANGED'
+            table = json.loads(table_bytes)
+            assert table['product_id'] == master['product']['product_id'] and table['source'] in master['sources'], 'VIEW_TABLE_SOURCE_MISMATCH'
+            assert table['source_fields'] == view['source_fields'] and not view.get('source_constraint'), 'VIEW_TABLE_SCOPE_MISMATCH'
+            view['choices'] = table['choices']
+            view['enforce_source_fields'] = True
+            evidence_ids = {e['evidence_id'] for e in table['evidence']}
+            assert len(evidence_ids) == len(table['evidence']) and not evidence_ids.intersection(e['evidence_id'] for e in master['evidence']), 'VIEW_EVIDENCE_DUPLICATE'
+            assert view['choices'] and len({c['value'] for c in view['choices']}) == len(view['choices']), 'VIEW_TABLE_CHOICE_IDENTITY'
+            assert all(c['evidence_ids'] and set(c['evidence_ids']) <= evidence_ids for c in view['choices']), 'VIEW_TABLE_EVIDENCE_REQUIRED'
+            module['evidence'].extend(table['evidence'])
         if view.get('source_constraint'):
             constraint = next(c for c in master['constraints'] if c['rule_id'] == view['source_constraint'])
             # Enumerate only the finite tuples explicitly admitted by this source rule.
@@ -249,12 +265,12 @@ def compile_profile(profile, root):
             specificationKey=key, required=True, selector=selector(view.get('applicability', True))))
         for i, choice in enumerate(view['choices']):
             assigned = choice['assign']; assert set(assigned) == set(view['source_fields']), 'INCOMPLETE_VIEW'
-            conditions = []
-            evidence = set()
+            conditions = [selector(choice['when'])] if view.get('source_choice_table') else []
+            evidence = set(choice.get('evidence_ids', []))
             for source_key, value in assigned.items():
                 f = fields[source_key]
                 matches = [o for o in f['selectable_values'] if type(o['value']) is type(value) and o['value'] == value]
-                if view.get('source_constraint'):
+                if view.get('source_constraint') or view.get('source_choice_table'):
                     assert f['data_type'] == 'number' and type(value) in (int, float), 'VIEW_NUMERIC_SOURCE_REQUIRED'
                 else:
                     assert matches, 'VIEW_VALUE_NOT_IN_MASTER'
@@ -272,7 +288,7 @@ def compile_profile(profile, root):
         assert r['automatic_resolution'] is False, 'AUTOMATIC_CONFIRMATION_REFUSED'
         module['dependencies'].append(dict(id=pid + ':' + r['id'], productId=pid, mode='MANUAL_CHECK',
             when=selector(r['condition']), message=r['question'], metadata=r))
-    module['evidence'] = [{**e, 'id': pid + ':' + e['evidence_id'], 'productId': pid} for e in master['evidence']]
+    module['evidence'] = [{**e, 'id': pid + ':' + e['evidence_id'], 'productId': pid} for e in [*master['evidence'], *module['evidence']]]
     return dict(schema='PRODUCT_MODULE_CANDIDATE_V1', candidate_revision=profile['candidate_revision'],
         baseline=profile['source'], scope=profile['scope'], product_module=module,
         selection_views=views, **({'request_selectors': profile['request_selectors']} if profile.get('request_selectors') else {}), formal_adoption=False, source_adoption=False,

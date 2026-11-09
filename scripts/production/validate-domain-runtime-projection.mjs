@@ -5,6 +5,7 @@ import {createHash} from 'node:crypto';
 import {adaptComposedProductRuntime} from '../../src/catalog/runtime-master/composed-product-runtime-adapter.mjs';
 import {applyDeclaredWindowFlow} from '../../src/catalog/runtime-master/declared-window-flow.mjs';
 import {formalComposedRuntimeEntries} from '../../src/catalog/runtime-master/formal-composed-runtime-registry.mjs';
+import {getAllowedValues} from '../../src/catalog/resolver-values.mjs';
 import {applyDeclaredInputClears} from '../../src/work-management/domain.mjs';
 
 const [indexPath,outputPath]=process.argv.slice(2), root=dirname(resolve(indexPath));
@@ -19,7 +20,9 @@ for(const entry of index.products){
   assert.ok(registered,'FORMAL_RUNTIME_NOT_REGISTERED');
   const reader=await adaptComposedProductRuntime(document,registered,()=>{throw new Error('UNEXPECTED_REFERENCE');});
   const normalize=selection=>Object.fromEntries(Object.entries(selection).filter(([key,value])=>keys.has(key)&&value!==null&&value!==undefined));
-  let valid=0,invalid=0;
+  const sourceTables=(document.selection_views??[]).filter(view=>view.source_choice_table);
+  const module=document.product_module;
+  let valid=0,invalid=0,sizeReview=0;
   for(const row of master.handoff_tests){
     const changed=Object.keys(row.changes).filter(key=>JSON.stringify(row.before[key])!==JSON.stringify(row.changes[key]));
     // New sales-intent controls have no manufacturer-fact counterpart. Supply
@@ -27,9 +30,27 @@ for(const entry of index.products){
     const sourceInput={...row.before,...row.changes};
     const requestContext=Object.fromEntries((document.request_selectors??[]).filter(r=>r.parity_context).map(r=>
       [r.key,sourceInput[r.parity_context.source_presence_field]!==undefined&&sourceInput[r.parity_context.source_presence_field]!==null]));
-    const input=applyDeclaredInputClears({...sourceInput,...requestContext,...(document.sales_handoff?{[document.sales_handoff.quantity_field]:1}:{})},changed,document.product_module.specificationDefinitions), result=reader.uiResolver(input,{changedFields:changed});
+    const input=applyDeclaredInputClears({...sourceInput,...requestContext,...(document.sales_handoff?{[document.sales_handoff.quantity_field]:1}:{})},changed,module.specificationDefinitions);
+    // A source test can supply both a mode and dimensions in one request.
+    // Preserve its explicit inputs after replaying UI-only clearing.
+    for(const {source_fields} of sourceTables){
+      for(const key of source_fields)if(Object.hasOwn(row.changes,key))input[key]=row.changes[key];
+    }
+    const result=reader.uiResolver(input,{changedFields:changed});
     try{
-      if(row.expected_valid){
+      const reviewView=sourceTables.find(view=>row.expected_valid&&
+        view.applicability?.op==='eq'&&row.expected_output[view.applicability.field]===view.applicability.value&&
+        !getAllowedValues(module,module.product.id,view.key,row.expected_output).some(allowed=>
+          view.choices.some(choice=>choice.value===allowed.value&&Object.entries(choice.assign).every(([key,value])=>input[key]===value))));
+      if(reviewView){
+        assert.equal(result.validation.status,'INCOMPLETE');
+        assert.ok(result.validation.missingRequiredFields.includes(reviewView.key));
+        for(const key of reviewView.source_fields)assert.equal(result.selection[key],undefined);
+        const expected={...row.expected_output};
+        for(const key of reviewView.source_fields)delete expected[key];
+        assert.deepEqual(normalize(result.selection),normalize(expected));
+        sizeReview++;
+      }else if(row.expected_valid){
         assert.equal(result.validation.status,'MANUAL_CHECK');
         assert.deepEqual(normalize(result.selection),normalize(row.expected_output));
         valid++;
@@ -43,7 +64,7 @@ for(const entry of index.products){
       assert.deepEqual(result.pricing,{price:null,bom:null,set_code:null});
     }catch(error){report.results.push({case_id:row.case_id,status:'FAIL',reason:error.message});}
   }
-  report.products??=[];report.products.push({id:entry.id,cases:master.handoff_tests.length,positive:valid,negative:invalid});
+  report.products??=[];report.products.push({id:entry.id,cases:master.handoff_tests.length,positive:valid,negative:invalid,...(sourceTables.length?{standard_size_reselection:sizeReview}:{})});
 }
 report.status=report.results.length?'FAIL':'PASS';
 writeFileSync(outputPath,JSON.stringify(report,null,2)+'\n');
