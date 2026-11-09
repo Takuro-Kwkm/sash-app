@@ -791,7 +791,7 @@
       ],
       "repository": "Takuro-Kwkm/sash-app",
       "connection_state": "ADAPTER_PENDING",
-      "current_formal_version": "v0.4-WORKING",
+      "current_formal_version": "v0.5-R1-F1-20261106",
       "formal_registry_selector": "LIXIL::グランデル2",
       "safe_failure": {
         "state": "FAIL_CLOSED",
@@ -799,6 +799,21 @@
         "writes": 0,
         "fallback": false,
         "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      },
+      "native_adapter": "scripts/production/formal-reconnect.py",
+      "adapters": {
+        "ProductMaster": "scripts/production/formal-reconnect.py"
+      },
+      "baseline_selector": "LIVE_NATIVE_REGISTRY:LIXIL::グランデル2:v0.5-R1-F1-20261106:FORMAL_PASS",
+      "source_selector": "NATIVE_FORMAL_READBACK",
+      "resume_selector": "contracts/production/current-work.json",
+      "runtime_ui_profile": {
+        "path": "contracts/production/runtime-candidates/grandel2-nonfire-r3.profile.json",
+        "sha256": "23b27a03b857ed4c64dc0892bb25904114e0bbdc3b996a96a990ed64dde76873"
+      },
+      "runtime_candidate_profile": {
+        "path": "contracts/production/runtime-candidates/grandel2-nonfire-r3.profile.json",
+        "sha256": "23b27a03b857ed4c64dc0892bb25904114e0bbdc3b996a96a990ed64dde76873"
       }
     },
     {

@@ -275,7 +275,15 @@
     "NATIVE_REGISTRY:LIXIL::グランデル2": {
       "state": "FAIL_CLOSED",
       "validators": [],
-      "no_fallback": true
+      "no_fallback": true,
+      "runtime_ui_profile": {
+        "path": "contracts/production/runtime-candidates/grandel2-nonfire-r3.profile.json",
+        "sha256": "23b27a03b857ed4c64dc0892bb25904114e0bbdc3b996a96a990ed64dde76873"
+      },
+      "runtime_candidate_profile": {
+        "path": "contracts/production/runtime-candidates/grandel2-nonfire-r3.profile.json",
+        "sha256": "23b27a03b857ed4c64dc0892bb25904114e0bbdc3b996a96a990ed64dde76873"
+      }
     },
     "NATIVE_REGISTRY:LIXIL::店舗・汎用ドア・引戸": {
       "state": "FAIL_CLOSED",
