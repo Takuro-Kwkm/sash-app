@@ -67,6 +67,42 @@ def load_adopted_master(profile, root):
     return master
 
 
+def reorder_enum_pair(module, fields, order):
+    """Transpose a finite source relation for an opening-first presentation."""
+    first, second = order
+    first_field, second_field = fields[first], fields[second]
+    assert first_field['dependency'] == [second], 'ENUM_PAIR_SOURCE_DEPENDENCY'
+    assert first not in second_field['dependency'], 'ENUM_PAIR_CIRCULAR_DEPENDENCY'
+    assert all(field['data_type'] == 'enum' and field['visibility_condition'] is True
+               and 'value_condition' not in field and field['selectable_values']
+               for field in (first_field, second_field)), 'ENUM_PAIR_SOURCE_DOMAIN'
+    for option in first_field['selectable_values']:
+        condition = option['when']
+        assert set(condition) == {'field', 'op', 'value'} and condition['field'] == second and condition['op'] in ('eq', 'in'), 'ENUM_PAIR_SOURCE_RELATION'
+    definitions = {row['key']: row for row in module['specificationDefinitions']}
+    definitions[first]['parentFields'] = second_field['dependency']
+    definitions[second]['parentFields'] = [*second_field['dependency'], first]
+    definitions[first]['displayOrder'], definitions[second]['displayOrder'] = (
+        definitions[second]['displayOrder'], definitions[first]['displayOrder'])
+    rows = {key: [row for row in module['allowedValues'] if row['specificationKey'] == key]
+            for key in order}
+    sources = {option['value']: option for option in first_field['selectable_values']}
+    for first_value in rows[first]:
+        source = sources[first_value['value']]
+        candidates = source['when']['value'] if source['when']['op'] == 'in' else [source['when']['value']]
+        matches = [row for row in rows[second] if row['value'] in candidates]
+        assert len(matches) == len(set(candidates)) and matches, 'ENUM_PAIR_UNRECOGNIZED_VALUES'
+        first_value['selector'] = {'any': [row['selector'] for row in matches]}
+        first_value['evidenceIds'] = sorted(set(first_value['evidenceIds']).union(
+            *(row['evidenceIds'] for row in matches)))
+    for second_value in rows[second]:
+        first_values = [option['value'] for option in first_field['selectable_values']
+                        if selector(option['when'], {second: second_value['value']}) == {}]
+        second_value['selector'] = {'all': [second_value['selector'], {first: {'$in': first_values}}]}
+        second_value['evidenceIds'] = sorted(set(second_value['evidenceIds']).union(
+            *(sources[value]['evidence_ids'] for value in first_values)))
+
+
 def compile_profile(profile, root):
     master = load_adopted_master(profile, root)
     fields = {f['field_id']: f for f in master['fields']}
@@ -119,6 +155,9 @@ def compile_profile(profile, root):
                           parentFields=f['dependency'], autoSelectSingle=False,
                           evidenceIds=f['evidence_id'], helpText=f['notes'], uiHidden=key in hidden or confirmation or evidence_only)
         if presentation.get('user_selectable') is True: definition['userSelectable'] = True
+        if presentation.get('control') == 'CHECKBOX':
+            assert f['data_type'] == 'boolean' and not f['required'], 'CHECKBOX_OPTION_REQUIRED'
+            definition['control'] = 'CHECKBOX'
         if 'presentation_when' in presentation: definition['presentationWhen'] = selector(presentation['presentation_when'])
         if 'input_when' in presentation:
             definition['selector'] = {'all': [definition['selector'], selector(presentation['input_when'])]}
@@ -154,6 +193,8 @@ def compile_profile(profile, root):
             module['allowedValues'].append(dict(id=pid + ':value:' + key + ':' + str(i), productId=pid,
                 specificationKey=key, value=o['value'], displayLabel=presentation.get('value_labels', {}).get(str(o['value']), o['label']), displayOrder=i,
                 selector=value_selector, status='ACTIVE', evidenceIds=o['evidence_ids']))
+    if profile.get('enum_presentation_order'):
+        reorder_enum_pair(module, fields, profile['enum_presentation_order'])
     rules = []
     for field in master['fields']:
         if field['data_type'] != 'number' or field['selectable_values'] or 'value_condition' not in field:
@@ -236,6 +277,7 @@ def compile_profile(profile, root):
         baseline=profile['source'], scope=profile['scope'], product_module=module,
         selection_views=views, **({'request_selectors': profile['request_selectors']} if profile.get('request_selectors') else {}), formal_adoption=False, source_adoption=False,
         sales_handoff=profile.get('sales_handoff'), fixed_handoff_facts=profile.get('fixed_handoff_facts', []),
+        **({'presentation': profile['presentation']} if profile.get('presentation') else {}),
         pricing={'price': None, 'bom': None, 'set_code': None})
 
 

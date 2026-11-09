@@ -38,7 +38,8 @@ export function resolveDeclaredSelectionViews(primary, document, input = {}) {
     return !hidden.has(field.key) && (!definition.presentationWhen || selectorMatches(definition.presentationWhen, result.selection, context));
   }).map(field => {
     const view = views.find(row => row.key === field.key);
-    return view?.clear_on_change ? {...field, clearLinkedFields:view.source_fields} : field;
+    const control = document.product_module.specificationDefinitions.find(row => row.key === field.key)?.control;
+    return {...field, ...(control ? {control} : {}), ...(view?.clear_on_change ? {clearLinkedFields:view.source_fields} : {})};
   });
   result.validation.missingRequiredFields = [...new Set(result.validation.missingRequiredFields.map(key =>
     views.find(view => active(view) && view.source_fields.includes(key))?.key ?? key))];
