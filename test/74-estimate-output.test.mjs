@@ -149,10 +149,14 @@ test('XLSX keeps full long specifications, runtime identity and confirmation col
   assert.ok(text.includes('メーカー見積確認\n正式品番は未確定'));
   assert.ok(text.includes('autoFilter ref="A1:O3"'));
   assert.ok(text.includes('min="15" max="15"'));
-  assert.ok(text.includes('wrapText="1"'));
+  const styles=text.match(/<cellXfs count="3">([\s\S]*?)<\/cellXfs>/)[1].split(/(?=<xf )/);
+  assert.match(styles[2],/<alignment vertical="top" wrapText="1"\/>/);
+  for(const column of ['G','O']){
+    assert.match(text,new RegExp(`<c r="${column}2" t="s" s="2">`));
+  }
   assert.ok(Number(text.match(/<row r="2" ht="([\d.]+)"/)[1])>24);
   assert.equal(/<c r="J2"/.test(text),false);
-  assert.match(text,/<c r="J3"><v>123000<\/v><\/c>/);
+  assert.match(text,/<c r="J3" s="2"><v>123000<\/v><\/c>/);
 });
 
 test('PDF layout retains long specifications and confirmation text without page overflow',async()=>{
