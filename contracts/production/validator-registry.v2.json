@@ -283,6 +283,10 @@
       "runtime_candidate_profile": {
         "path": "contracts/production/runtime-candidates/grandel2-nonfire-r5.profile.json",
         "sha256": "b6fe0d449f7108960d58e7c2e2443f9dec67280d585203fb5a64b02757c309cf"
+      },
+      "runtime_ui_adoption_profile": {
+        "path": "contracts/production/runtime-adoptions/grandel2-nonfire-r5.profile.json",
+        "sha256": "be726fd11def518a47661537ce502c2667d6de0ed14eb93e6a502a639994666c"
       }
     },
     "NATIVE_REGISTRY:LIXIL::店舗・汎用ドア・引戸": {
