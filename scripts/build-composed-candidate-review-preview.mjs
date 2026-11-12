@@ -3,12 +3,16 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {dirname,join,resolve,relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
-import {candidateRuntimeEntries,readCandidateModule} from '../src/catalog/runtime-master/candidate-runtime-registry.mjs';
+import {candidateRuntimeEntries,readCandidateModule,readPortableCandidateDraft} from '../src/catalog/runtime-master/candidate-runtime-registry.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),web=join(root,'src/ui/web');
-const output=resolve(process.argv[2]),entry=candidateRuntimeEntries[0];
-if(candidateRuntimeEntries.length!==1)throw Error('ONE_FIXED_CANDIDATE_REQUIRED');
-const runtimeDocument=readCandidateModule(entry);
+const output=resolve(process.argv[2]);
+const [mode,draftIndex,draftSha]=process.argv.slice(3);
+if(mode&&mode!=='--local-draft')throw Error('UNKNOWN_PREVIEW_MODE');
+const entries=mode?readPortableCandidateDraft(draftIndex,draftSha):candidateRuntimeEntries;
+if(entries.length!==1)throw Error('ONE_FIXED_CANDIDATE_REQUIRED');
+const [entry]=entries;
+const runtimeDocument=readCandidateModule(entry,draftIndex);
 if(runtimeDocument.composition?.bindings?.some(row=>row.executable))throw Error('REFERENCE_PREVIEW_BUNDLE_NOT_ADMITTED');
 const json=value=>JSON.stringify(value).replaceAll('<','\\u003c');
 const modules={},overrides={
@@ -33,7 +37,8 @@ async function collect(id){
 for(const id of ['src/catalog/runtime-master/composed-product-runtime-adapter.mjs','src/catalog/runtime-master/declared-window-flow.mjs','src/ui/web/app.js','src/ui/web/estimate-output-integration.mjs'])await collect(id);
 const generatedAt=new Date().toISOString(),codeSha256={};
 for(const id of Object.keys(modules))if(!overrides[id])codeSha256[id]=createHash('sha256').update(await readFile(join(root,id))).digest('hex');
-const buildId='CANDIDATE-HTML-'+createHash('sha256').update(json({modules,indexSha:entry.candidateRuntimeReference.indexSha256})).digest('hex').slice(0,16);
+const builderSha256=createHash('sha256').update(await readFile(fileURLToPath(import.meta.url))).digest('hex');
+const buildId='CANDIDATE-HTML-'+createHash('sha256').update(json({modules,builderSha256,indexSha:entry.candidateRuntimeReference.indexSha256})).digest('hex').slice(0,16);
 const bundledEntry={...entry};delete bundledEntry.modulePath;
 const bootstrap=`
 const modules=${json(modules)},entry=${json(bundledEntry)},runtimeDocument=${json(runtimeDocument)};
@@ -42,11 +47,13 @@ function moduleUrl(id){if(urls.has(id))return urls.get(id);if(building.has(id))t
 for(const name of ['pushState','replaceState']){const original=history[name].bind(history);history[name]=(state,title,path)=>{const isUrl=path instanceof URL||/^https?:/.test(String(path));const url=isUrl?new URL(String(path),location.href):new URL(location.href);if(!isUrl){url.searchParams.set('route',String(path));url.searchParams.delete('estimateOutput');}return original(state,title,url.href);};}
 const {adaptComposedProductRuntime}=await import(moduleUrl('src/catalog/runtime-master/composed-product-runtime-adapter.mjs'));
 const {applyDeclaredWindowFlow}=await import(moduleUrl('src/catalog/runtime-master/declared-window-flow.mjs'));
+const {parseSelectionContext}=await import(moduleUrl('src/catalog/runtime-master/declared-selection-views.mjs'));
 const reader=await adaptComposedProductRuntime(runtimeDocument,entry,()=>{throw Error('UNBOUND_PREVIEW_REFERENCE');});
 const product={...entry,status:'CANDIDATE_LOCAL_READY',selectable:true,source:'RUNTIME_MASTER',candidateOnly:true};
-function resolveSelection(input){const result=reader.uiResolver(input);return {...result,productId:entry.id,manufacturer:entry.manufacturer,series:entry.series,source:'RUNTIME_MASTER',status:'CANDIDATE_LOCAL_READY',fields:applyDeclaredWindowFlow(result.fields,entry)};}
+function resolveSelection(input,context){const result=reader.uiResolver(input,context);return {...result,productId:entry.id,manufacturer:entry.manufacturer,series:entry.series,source:'RUNTIME_MASTER',status:'CANDIDATE_LOCAL_READY',fields:applyDeclaredWindowFlow(result.fields,entry)};}
 const reply=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json; charset=utf-8'}});
-window.fetch=async input=>{const url=new URL(typeof input==='string'?input:input.url,location.href);if(url.pathname==='/api/health')return reply({ok:true,buildId:${json(buildId)},buildTimestamp:${json(generatedAt)},catalogVersion:'営業見積依頼 フロー確認候補',inventory:[],runtimeMasterIntegrations:[product]});if(url.pathname==='/api/catalog/products')return reply([]);if(url.pathname==='/api/runtime-master/integrations')return reply([product]);if(url.pathname==='/api/runtime-master/resolve'){try{if(url.searchParams.get('productId')!==entry.id)throw Error('UNBOUND_PREVIEW_PRODUCT');return reply(resolveSelection(JSON.parse(url.searchParams.get('selection')??'{}')));}catch(error){return reply({error:error.message},400);}}return reply({error:'Unavailable preview endpoint'},404);};
+const browserFetch=window.fetch.bind(window);
+window.fetch=async (input,options)=>{const url=new URL(typeof input==='string'?input:input.url,location.href);if(url.protocol==='data:')return browserFetch(input,options);if(url.pathname==='/api/health')return reply({ok:true,buildId:${json(buildId)},buildTimestamp:${json(generatedAt)},catalogVersion:'営業見積依頼 フロー確認候補',inventory:[],runtimeMasterIntegrations:[product]});if(url.pathname==='/api/catalog/products')return reply([]);if(url.pathname==='/api/runtime-master/integrations')return reply([product]);if(url.pathname==='/api/runtime-master/resolve'){try{if(url.searchParams.get('productId')!==entry.id)throw Error('UNBOUND_PREVIEW_PRODUCT');return reply(resolveSelection(JSON.parse(url.searchParams.get('selection')??'{}'),parseSelectionContext(url.searchParams.get('selectionContext'))));}catch(error){return reply({error:error.message},400);}}return reply({error:'Unavailable preview endpoint'},404);};
 window.__ComposedCandidatePreview={buildId:${json(buildId)},indexSha256:entry.candidateRuntimeReference.indexSha256,resolve:resolveSelection,moduleUrl,product};
 await import(moduleUrl('src/ui/web/app.js'));await import(moduleUrl('src/ui/web/estimate-output-integration.mjs'));
 `;
@@ -58,7 +65,7 @@ const theme=await readFile(join(web,'theme.js'),'utf8');
 html=html.replace('<script src="/theme.js"></script>',()=>`<script>${theme}</script>`).replace('<script type="module" src="/app.js"></script>',()=>`<script type="module">${bootstrap}</script>`).replace('<script type="module" src="/estimate-output-integration.mjs"></script>','');
 html=html.replace('<body>','<body><aside style="padding:12px 20px;background:#fff4cf;color:#624b16;font-size:13px">営業見積依頼のフロー確認候補です。商品仕様・判定・保存・帳票は現在の実装と共通です。入力はこのブラウザ内に保存されます。正式採用・公開は後続の承認後に行います。</aside>');
 await mkdir(dirname(output),{recursive:true});await writeFile(output,html);
-const result={output,buildId,generatedAt,bytes:Buffer.byteLength(html),actualSourceModules:Object.keys(modules).length,
+const result={output,builderSha256,storageState:mode?'LOCAL_DRAFT':'NATIVE_SAVED_CANDIDATE',buildId,generatedAt,bytes:Buffer.byteLength(html),actualSourceModules:Object.keys(modules).length,
   sourceCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),
   indexSha256:entry.candidateRuntimeReference.indexSha256,moduleSha256:entry.sha256,codeSha256,
   fidelity:'SAME_RUNTIME_MASTER_ADAPTER_FLOW_UI_SNAPSHOT_STORAGE_OUTPUT; API_TRANSPORT_IN_FILE; SINGLE_NONREFERENCING_CANDIDATE_ONLY',formal_adoption:false,release:false};

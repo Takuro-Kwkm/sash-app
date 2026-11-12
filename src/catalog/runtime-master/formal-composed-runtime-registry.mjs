@@ -26,19 +26,23 @@ const seen=new Set();
 export const formalComposedRuntimeEntries=Object.freeze([...registry.indexes,...privateFormalRuntimeIndexes(),...releasedFormalRuntimeIndexes()].flatMap(ref=>{
   const {path,bytes}=checked(ref.releasedRoot??ref.privateRoot??resolve(HERE,'..'),ref),root=dirname(path),index=JSON.parse(bytes);
   if(index.schema!=='FORMAL_COMPOSED_RUNTIME_INDEX_V1'||(!index.runtimeOnlyAdoption&&index.authoring.packageVersion!==index.packageVersion)||!index.authoring.manifestFileId)fail('FORMAL_COMPOSITION_INDEX_INVALID');
+  let approvedPresentationBuild=null;
   if(index.runtimeOnlyAdoption){
     const adoption=index.runtimeOnlyAdoption;
     if(adoption.schema!=='HUMAN_ADOPTED_RUNTIME_ONLY_V1'||adoption.productMasterMutations!==0||adoption.release!==false)fail('FORMAL_RUNTIME_ADOPTION_INVALID');
     for(const ref of [adoption.candidateIndex,adoption.authorization,adoption.review,adoption.humanSource])checked(root,ref);
     const approval=JSON.parse(checked(root,adoption.authorization).bytes);
     if(approval.decision!=='APPROVED'||approval.authorization_kind!=='EXPLICIT_USER_SCOPE'||!approval.decision_ref)fail('FORMAL_RUNTIME_APPROVAL_REQUIRED');
+    const expected=JSON.parse(checked(root,adoption.review).bytes).authorization_scope?.expected;
+    if(expected?.build_id&&expected.preview_sha256&&expected.index_sha256===adoption.candidateIndex.sha256
+      &&expected.module_sha256===adoption.candidateModuleSha256)approvedPresentationBuild=expected.build_id;
   }
   return index.products.map(row=>{
     if(seen.has(row.id)||row.candidate||row.adapterType!=='COMPOSED_PRODUCT_MODULE_V1')fail('FORMAL_COMPOSITION_ENTRY_INVALID');
     seen.add(row.id);checked(root,row);
     for(const source of [row.uiFlowContract?.sourceFlow,...(row.uiFlowContract?.reviewSources??[])].filter(Boolean))checkedSource(root,source,ref.sourceReferences);
     return Object.freeze({...row,productId:row.id,masterVersion:index.packageVersion,packageVersion:index.packageVersion,packageRoot:root,
-      privateBinding:Boolean(ref.privateRoot),releasedBinding:Boolean(ref.releasedRoot),releaseSourceReferences:ref.sourceReferences,runtimeManifestPath:path,packageType:'FORMAL_COMPOSED_PRODUCT_RUNTIME',runtimeManifestSha256:ref.sha256,runtimeManifestDriveFileId:ref.manifestFileId,
+      approvedPresentationBuild,privateBinding:Boolean(ref.privateRoot),releasedBinding:Boolean(ref.releasedRoot),releaseSourceReferences:ref.sourceReferences,runtimeManifestPath:path,packageType:'FORMAL_COMPOSED_PRODUCT_RUNTIME',runtimeManifestSha256:ref.sha256,runtimeManifestDriveFileId:ref.manifestFileId,
       canonicalRuntimeReference:{runtimeManifestDriveFileId:ref.manifestFileId,packageVersion:index.packageVersion,runtimeIndexSha256:ref.sha256},
       productMasterFormalReference:index.authoring,sourceHash:row.sha256});
   });

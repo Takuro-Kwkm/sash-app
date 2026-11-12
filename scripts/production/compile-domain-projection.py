@@ -67,6 +67,42 @@ def load_adopted_master(profile, root):
     return master
 
 
+def reorder_enum_pair(module, fields, order):
+    """Transpose a finite source relation for an opening-first presentation."""
+    first, second = order
+    first_field, second_field = fields[first], fields[second]
+    assert first_field['dependency'] == [second], 'ENUM_PAIR_SOURCE_DEPENDENCY'
+    assert first not in second_field['dependency'], 'ENUM_PAIR_CIRCULAR_DEPENDENCY'
+    assert all(field['data_type'] == 'enum' and field['visibility_condition'] is True
+               and 'value_condition' not in field and field['selectable_values']
+               for field in (first_field, second_field)), 'ENUM_PAIR_SOURCE_DOMAIN'
+    for option in first_field['selectable_values']:
+        condition = option['when']
+        assert set(condition) == {'field', 'op', 'value'} and condition['field'] == second and condition['op'] in ('eq', 'in'), 'ENUM_PAIR_SOURCE_RELATION'
+    definitions = {row['key']: row for row in module['specificationDefinitions']}
+    definitions[first]['parentFields'] = second_field['dependency']
+    definitions[second]['parentFields'] = [*second_field['dependency'], first]
+    definitions[first]['displayOrder'], definitions[second]['displayOrder'] = (
+        definitions[second]['displayOrder'], definitions[first]['displayOrder'])
+    rows = {key: [row for row in module['allowedValues'] if row['specificationKey'] == key]
+            for key in order}
+    sources = {option['value']: option for option in first_field['selectable_values']}
+    for first_value in rows[first]:
+        source = sources[first_value['value']]
+        candidates = source['when']['value'] if source['when']['op'] == 'in' else [source['when']['value']]
+        matches = [row for row in rows[second] if row['value'] in candidates]
+        assert len(matches) == len(set(candidates)) and matches, 'ENUM_PAIR_UNRECOGNIZED_VALUES'
+        first_value['selector'] = {'any': [row['selector'] for row in matches]}
+        first_value['evidenceIds'] = sorted(set(first_value['evidenceIds']).union(
+            *(row['evidenceIds'] for row in matches)))
+    for second_value in rows[second]:
+        first_values = [option['value'] for option in first_field['selectable_values']
+                        if selector(option['when'], {second: second_value['value']}) == {}]
+        second_value['selector'] = {'all': [second_value['selector'], {first: {'$in': first_values}}]}
+        second_value['evidenceIds'] = sorted(set(second_value['evidenceIds']).union(
+            *(sources[value]['evidence_ids'] for value in first_values)))
+
+
 def compile_profile(profile, root):
     master = load_adopted_master(profile, root)
     fields = {f['field_id']: f for f in master['fields']}
@@ -82,6 +118,22 @@ def compile_profile(profile, root):
     for declared in profile.get('selection_views', []):
         view = dict(declared)
         if 'applicability' in view: view['selector'] = selector(view['applicability'])
+        if view.get('source_choice_table'):
+            ref = view['source_choice_table']
+            table_path = (root / ref['path']).resolve()
+            assert table_path.is_relative_to(root.resolve()), 'VIEW_TABLE_OUTSIDE_CAPTURE'
+            table_bytes = table_path.read_bytes()
+            assert hashlib.sha256(table_bytes).hexdigest() == ref['sha256'], 'VIEW_TABLE_BYTES_CHANGED'
+            table = json.loads(table_bytes)
+            assert table['product_id'] == master['product']['product_id'] and table['source'] in master['sources'], 'VIEW_TABLE_SOURCE_MISMATCH'
+            assert table['source_fields'] == view['source_fields'] and not view.get('source_constraint'), 'VIEW_TABLE_SCOPE_MISMATCH'
+            view['choices'] = table['choices']
+            view['enforce_source_fields'] = True
+            evidence_ids = {e['evidence_id'] for e in table['evidence']}
+            assert len(evidence_ids) == len(table['evidence']) and not evidence_ids.intersection(e['evidence_id'] for e in master['evidence']), 'VIEW_EVIDENCE_DUPLICATE'
+            assert view['choices'] and len({c['value'] for c in view['choices']}) == len(view['choices']), 'VIEW_TABLE_CHOICE_IDENTITY'
+            assert all(c['evidence_ids'] and set(c['evidence_ids']) <= evidence_ids for c in view['choices']), 'VIEW_TABLE_EVIDENCE_REQUIRED'
+            module['evidence'].extend(table['evidence'])
         if view.get('source_constraint'):
             constraint = next(c for c in master['constraints'] if c['rule_id'] == view['source_constraint'])
             # Enumerate only the finite tuples explicitly admitted by this source rule.
@@ -119,6 +171,9 @@ def compile_profile(profile, root):
                           parentFields=f['dependency'], autoSelectSingle=False,
                           evidenceIds=f['evidence_id'], helpText=f['notes'], uiHidden=key in hidden or confirmation or evidence_only)
         if presentation.get('user_selectable') is True: definition['userSelectable'] = True
+        if presentation.get('control') == 'CHECKBOX':
+            assert f['data_type'] == 'boolean' and not f['required'], 'CHECKBOX_OPTION_REQUIRED'
+            definition['control'] = 'CHECKBOX'
         if 'presentation_when' in presentation: definition['presentationWhen'] = selector(presentation['presentation_when'])
         if 'input_when' in presentation:
             definition['selector'] = {'all': [definition['selector'], selector(presentation['input_when'])]}
@@ -154,7 +209,23 @@ def compile_profile(profile, root):
             module['allowedValues'].append(dict(id=pid + ':value:' + key + ':' + str(i), productId=pid,
                 specificationKey=key, value=o['value'], displayLabel=presentation.get('value_labels', {}).get(str(o['value']), o['label']), displayOrder=i,
                 selector=value_selector, status='ACTIVE', evidenceIds=o['evidence_ids']))
+    if profile.get('enum_presentation_order'):
+        reorder_enum_pair(module, fields, profile['enum_presentation_order'])
     rules = []
+    for field in master['fields']:
+        if field['data_type'] != 'number' or field['selectable_values'] or 'value_condition' not in field:
+            continue
+        key = field['field_id']
+        rules.append(dict(
+            id=pid + ':numeric-value-condition:' + key,
+            when=selector({'all': [
+                {'field': key, 'op': 'exists', 'value': True},
+                {'not': field['value_condition']},
+            ]}),
+            fields=[key],
+            message='入力した寸法は適用範囲外です。仕様と寸法を見直してください。',
+            evidenceIds=field['evidence_id'],
+        ))
     for c in master['constraints']:
         assert c['kind'] == 'FORBID', 'UNSUPPORTED_CONSTRAINT'
         rules.append(dict(id=c['rule_id'], when=selector(c['when']), fields=c['field_ids'],
@@ -194,12 +265,12 @@ def compile_profile(profile, root):
             specificationKey=key, required=True, selector=selector(view.get('applicability', True))))
         for i, choice in enumerate(view['choices']):
             assigned = choice['assign']; assert set(assigned) == set(view['source_fields']), 'INCOMPLETE_VIEW'
-            conditions = []
-            evidence = set()
+            conditions = [selector(choice['when'])] if view.get('source_choice_table') else []
+            evidence = set(choice.get('evidence_ids', []))
             for source_key, value in assigned.items():
                 f = fields[source_key]
                 matches = [o for o in f['selectable_values'] if type(o['value']) is type(value) and o['value'] == value]
-                if view.get('source_constraint'):
+                if view.get('source_constraint') or view.get('source_choice_table'):
                     assert f['data_type'] == 'number' and type(value) in (int, float), 'VIEW_NUMERIC_SOURCE_REQUIRED'
                 else:
                     assert matches, 'VIEW_VALUE_NOT_IN_MASTER'
@@ -217,11 +288,12 @@ def compile_profile(profile, root):
         assert r['automatic_resolution'] is False, 'AUTOMATIC_CONFIRMATION_REFUSED'
         module['dependencies'].append(dict(id=pid + ':' + r['id'], productId=pid, mode='MANUAL_CHECK',
             when=selector(r['condition']), message=r['question'], metadata=r))
-    module['evidence'] = [{**e, 'id': pid + ':' + e['evidence_id'], 'productId': pid} for e in master['evidence']]
+    module['evidence'] = [{**e, 'id': pid + ':' + e['evidence_id'], 'productId': pid} for e in [*master['evidence'], *module['evidence']]]
     return dict(schema='PRODUCT_MODULE_CANDIDATE_V1', candidate_revision=profile['candidate_revision'],
         baseline=profile['source'], scope=profile['scope'], product_module=module,
         selection_views=views, **({'request_selectors': profile['request_selectors']} if profile.get('request_selectors') else {}), formal_adoption=False, source_adoption=False,
         sales_handoff=profile.get('sales_handoff'), fixed_handoff_facts=profile.get('fixed_handoff_facts', []),
+        **({'presentation': profile['presentation']} if profile.get('presentation') else {}),
         pricing={'price': None, 'bom': None, 'set_code': None})
 
 

@@ -316,6 +316,8 @@ export class ProductConfigurationEditor {
       if(values.length)this.state.selection[key]=values;else delete this.state.selection[key];
       const native=multiGroup.closest('.field')?.querySelector('select[data-spec-key]');
       if(native)for(const option of native.options)option.selected=values.some(value=>String(value)===String(option.value));
+    }else if(field?.control==='CHECKBOX'&&target.type==='checkbox'){
+      if(target.checked)this.state.selection[key]=canonicalChoice(target.value);else delete this.state.selection[key];
     }else if(target.type==='number'){
       if(target.value!=='')this.state.selection[key]=Number(target.value);else delete this.state.selection[key];
     }else if(target.type==='text'){
@@ -382,6 +384,10 @@ export class ProductConfigurationEditor {
     }
     if(field.dataType==='NUMBER')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="decimal" step="${esc(field.step??'any')}" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="数値を入力">${field.unit?`<span>${esc(field.unit)}</span>`:''}</div>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
     if(field.dataType==='TEXT')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="入力してください">${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
+    if(field.control==='CHECKBOX'){
+      const choice=field.values.find(row=>row.value===true);
+      return `<div class="field" data-key="${esc(field.key)}"><label class="multi-enum-option"><input type="checkbox" data-spec-key="${esc(field.key)}" value="true" ${attributes}${choice&&!choice.disabled&&!field.readOnly?'':' disabled'}${this.state.selection[field.key]===true?' checked':''}><span>${esc(field.displayLabel)}</span></label></div>`;
+    }
     const selected=Array.isArray(this.state.selection[field.key])?this.state.selection[field.key]:[this.state.selection[field.key]];
     const multi=field.dataType==='MULTI_ENUM';
     if(multi&&field.control==='DROPDOWN_MULTI'){

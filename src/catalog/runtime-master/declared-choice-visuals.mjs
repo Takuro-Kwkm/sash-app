@@ -35,6 +35,9 @@ export function resolveVisualRecommendations(field, selection, declaration){
 
 export function attachDeclaredChoiceVisuals(result, presentation) {
   if (!presentation) return result;
+  if (presentation.independent_user_requirements === true) {
+    result.presentation = {...result.presentation, independentUserRequirements: true};
+  }
   result.fields = result.fields.map(field => {
     const visualFilters=safeVisualFilters(presentation.choice_visual_filters?.[field.key]);
     const visualRecommendation=resolveVisualRecommendations(field,result.selection??{},presentation.choice_visual_recommendations?.[field.key]);

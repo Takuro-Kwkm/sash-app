@@ -5,7 +5,7 @@ const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
 
 // A presentation choice may represent an exact tuple of adopted source values.
 // Candidate validity still belongs to the existing Catalog selector/resolver.
-export function resolveDeclaredSelectionViews(primary, document, input = {}) {
+export function resolveDeclaredSelectionViews(primary, document, input = {}, changedFields = []) {
   const views = document.selection_views ?? [];
   const selection = {...input};
   const context = buildCatalogContext(document.product_module, document.product_module.product.id);
@@ -13,14 +13,21 @@ export function resolveDeclaredSelectionViews(primary, document, input = {}) {
   for (const view of views) {
     if (!active(view)) { delete selection[view.key]; continue; }
     let choice = view.choices.find(row => row.value === selection[view.key]);
-    if (!own(selection, view.key)) {
-      const matches = view.choices.filter(row => Object.entries(row.assign).every(([key, value]) => own(selection, key) && selection[key] === value));
+    const explicitlyCleared = view.enforce_source_fields && changedFields.includes(view.key);
+    if (!own(selection, view.key) && !explicitlyCleared) {
+      const allowed = view.enforce_source_fields
+        ? new Set(getAllowedValues(document.product_module, document.product_module.product.id, view.key, selection, context).map(row => row.value))
+        : null;
+      const matches = view.choices.filter(row => (!allowed || allowed.has(row.value)) && Object.entries(row.assign).every(([key, value]) => own(selection, key) && selection[key] === value));
       if (matches.length === 1) {
         [choice] = matches;
         selection[view.key] = choice.value;
       }
     }
     if (choice) Object.assign(selection, choice.assign);
+    else if (view.enforce_source_fields) {
+      for (const key of view.source_fields) delete selection[key];
+    }
   }
   let result = primary.uiResolver(selection);
   let changed = false;
@@ -38,7 +45,8 @@ export function resolveDeclaredSelectionViews(primary, document, input = {}) {
     return !hidden.has(field.key) && (!definition.presentationWhen || selectorMatches(definition.presentationWhen, result.selection, context));
   }).map(field => {
     const view = views.find(row => row.key === field.key);
-    return view?.clear_on_change ? {...field, clearLinkedFields:view.source_fields} : field;
+    const control = document.product_module.specificationDefinitions.find(row => row.key === field.key)?.control;
+    return {...field, ...(control ? {control} : {}), ...(view?.clear_on_change ? {clearLinkedFields:view.source_fields} : {})};
   });
   result.validation.missingRequiredFields = [...new Set(result.validation.missingRequiredFields.map(key =>
     views.find(view => active(view) && view.source_fields.includes(key))?.key ?? key))];

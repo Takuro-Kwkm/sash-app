@@ -86,7 +86,7 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
     const {changedFields}=parseSelectionContext(context);
     const contract=document.composition,prefix=contract?.prefix;
     const localInput=Object.fromEntries(Object.entries(input??{}).filter(([key])=>!prefix||!key.startsWith(prefix)));
-    const result=resolveDeclaredSelectionViews(primary,document,localInput);
+    const result=resolveDeclaredSelectionViews(primary,document,localInput,changedFields);
     applyDeclaredDimensionReview(result,dimensionReview);
     result.dependencyFields=result.fields.map(field=>({key:field.key,parentFields:document.product_module.specificationDefinitions.find(d=>d.key===field.key)?.parentFields??[]}));
     for(const field of result.fields)field.parentFields=result.dependencyFields.find(d=>d.key===field.key).parentFields;
