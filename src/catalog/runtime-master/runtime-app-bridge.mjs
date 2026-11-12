@@ -131,6 +131,9 @@ async function resolveNativeRuntimeAppProduct(productId,selection={}, {workflowS
 export async function resolveRuntimeAppProduct(...args){
   const result=await resolveNativeRuntimeAppProduct(...args);
   const integration=getRuntimeAppIntegration(result.productId);
+  const metadata=metadataByKey.get(integrationKey(result.manufacturer,result.series));
+  // Preserve the declared labels for a composition bound to a reviewed UI build.
+  if(metadata?.approvedPresentationBuild&&integration?.uiFlowContract)return result;
   // Stage slots group several concepts. Resolve common names by field identity,
   // then preserve the existing window contract's more precise native meanings.
   return {...result,fields:result.presentation?.labelsReviewed?result.fields:(result.fields??[]).map(field=>({...field,displayLabel:standardWindowFieldLabel({uiCategory:integration?.uiCategory,semanticSlot:field.semanticSlot,key:field.key,fallback:fieldLabel(field.key,field.displayLabel)})}))};
