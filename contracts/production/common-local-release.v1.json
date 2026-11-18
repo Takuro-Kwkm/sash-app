@@ -76,7 +76,7 @@
   },
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "94858ea172ef9bf23322f1f5f3c5b5a31a457700",
+    "ref": "1f5fcc0a799d9cfc6e11023b5ca2a2e2a34cd827",
     "entry": "scripts/release-contract.py",
     "files": {
       "scripts/release-contract.py": "847989b310fbfde6e6ff92bf22ebf46b35154ba1649e98d195b0a65556e63df1",
@@ -98,7 +98,7 @@
       "harness/native_format_release.py": "9162e97a141cca02ac6ddba838d37f9b0ef27d161e0048a138e3ea3f89df2ed7",
       "harness/common_preparation.py": "be269c01abba5dd8a36db1c44b1d082a53b0ec493921a96cc7379bf7f8520c57",
       "harness/application_ui_release.py": "758268f0fb908a2b6c9bec0dd767deb2d8087a49bfc11665a718c83ac163cf0b",
-      "harness/ui_image_coverage.py": "123bc4f1696449c713109ce36d4b79407bc3b314aca8b579daa1aec648adab9a",
+      "harness/ui_image_coverage.py": "a8093fc24b35b0de7115b0d377d64374b3419f5b74e247889515216f30fa0f6e",
       "scripts/ui-image-observer.mjs": "1d466ce38404e096358ac89aa0e0047682145cb7711d892c042547abc26f3ef8",
       "scripts/release-development.mjs": "bab8cf17929f0fde229c309b828fea1592f6a0f9c2247662649a4509ca491943",
       "scripts/materialize-release-runtime.py": "9e4306015b8446ac0cacc90d787f1555ab22d6ffea0c2c814e9f2ccc68442e58",
