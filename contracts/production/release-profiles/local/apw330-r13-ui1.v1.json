@@ -3,7 +3,7 @@
   "repository": "Takuro-Kwkm/sash-app",
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "453228bd997b8b8f34c5bebb064071a8be85eea0"
+    "ref": "e25674089aa7676c2beb772f47a9371b55f2c7af"
   },
   "local_qa_release_policy": {
     "schema": "COMMON_NATIVE_LOCAL_RELEASE_V1",
